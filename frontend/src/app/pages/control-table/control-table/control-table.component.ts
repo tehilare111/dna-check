@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder, NbComponentStatus } from '@nebular/theme';
 
 
 interface TreeNode<T> {
@@ -24,6 +24,8 @@ interface FSEntry {
   ]
 })
 export class ControlTableComponent{
+
+  statuses: NbComponentStatus[] = [ 'primary', 'success', 'info', 'warning', 'danger' ];
 
   customColumn = 'name';
   defaultColumns = [ 'size', 'kind', 'items' ];
@@ -80,6 +82,10 @@ export class ControlTableComponent{
     const minWithForMultipleColumns = 400;
     const nextColumnStep = 100;
     return minWithForMultipleColumns + (nextColumnStep * index);
+  }
+
+  openForm(event){
+    console.log("click")
   }
 }
 
