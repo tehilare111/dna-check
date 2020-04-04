@@ -80,6 +80,20 @@ export const MENU_ITEMS: NbMenuItem[] = [
     ],
   },
   {
+    title: 'Events Forms',
+    icon: 'edit-2-outline',
+    children: [
+      {
+        title: 'Form Inputs',
+        link: '/pages/events-forms/inputs',
+      },
+      {
+        title: 'Form Layouts',
+        link: '/pages/events-forms/layouts',
+      },
+    ],
+  },
+  {
     title: 'UI Features',
     icon: 'keypad-outline',
     link: '/pages/ui-features',
