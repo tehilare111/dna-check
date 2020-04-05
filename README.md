@@ -10,26 +10,33 @@ We Are using:
   
  ## setup django environment
  **Pay attention, we are using python 3.6.x and pip 19.x.x.**
- Install django:
+ 
+ ### install django:
  ```
  $ git clone https://github.com/django/django.git
  $ python -m pip install -e django/
  ```
  In addition, we need the following django packages:
  ```
- pip install djangorestframework
- pip install psycopg2
- pip install django-cors-headers
+ $ pip install djangorestframework
+ $ pip install psycopg2
+ $ pip install django-cors-headers
  ```
- # run server:
- python manage.py makemigrations*(mainly used on first setup or after changes on db structure: new tables, new fields, etc.. )*
- python manage.py migrate*(mainly used on first setup or after changes on db structure: new tables, new fields, etc.. )*
- python manage.py runserver
-
+ ### run server:
+ _(mainly used on first setup or after changes on db structure: new tables, new fields, etc.. ):_
+ ```
+ $ python manage.py makemigrations
+ $ python manage.py migrate
+ ```
+ _running command:_
+ ```
+ $ python manage.py runserver
+ ```
 
  ## postgresql setup on linux:
  
- Watch this short tutorial to install and setup initial postgresql configurations - [link](https://youtu.be/yM2QSS-Lfb0)
+ Install and setup initial postgresql configurations - [link](https://youtu.be/yM2QSS-Lfb0).
+ 
  Follow the commands displayed on this tutorial to configure our DB, following those configuations:
  - user: postgres
  - password: 123
