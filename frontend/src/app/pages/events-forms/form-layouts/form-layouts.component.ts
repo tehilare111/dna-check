@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { Customer } from '../events-forms.templates';
+import { LostFormTemplate } from '../events-forms.templates';
 import { CustomerService } from '../../../services/rest-api.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { CustomerService } from '../../../services/rest-api.service';
   templateUrl: './form-layouts.component.html',
 })
 export class FormLayoutsComponent {
-  customer: Customer = new Customer();
+  lostForm: LostFormTemplate = new LostFormTemplate();
   submitted = false;
 
   constructor(private customerService: CustomerService) { }
@@ -19,21 +19,22 @@ export class FormLayoutsComponent {
 
   newCustomer(): void {
     this.submitted = false;
-    this.customer = new Customer();
+    this.lostForm = new LostFormTemplate();
   }
 
   save() {
-    this.customerService.createCustomer(this.customer)
+    this.customerService.createCustomer(this.lostForm)
       .subscribe(
         data => {
           console.log(data);
           this.submitted = true;
         },
         error => console.log(error));
-    this.customer = new Customer();
+    this.lostForm = new LostFormTemplate();
   }
 
   onSubmit() {
+    //console.log(this.lostForm);
     this.save();
   }
 }
