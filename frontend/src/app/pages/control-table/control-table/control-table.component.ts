@@ -1,6 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder, NbComponentStatus } from '@nebular/theme';
+import { Observable } from 'rxjs';
 
+//import { Customer } from '../events-forms.templates';
+import { CustomerService } from '../../../services/rest-api.service';
 
 interface TreeNode<T> {
   data: T;
@@ -23,7 +26,7 @@ interface FSEntry {
     NbTreeGridDataSourceBuilder,
   ]
 })
-export class ControlTableComponent{
+export class ControlTableComponent implements OnInit{
 
   statuses: NbComponentStatus[] = [ 'primary', 'success', 'info', 'warning', 'danger' ];
 
@@ -36,8 +39,18 @@ export class ControlTableComponent{
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
-  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>) {
+  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>, private customerService: CustomerService) {
     this.dataSource = this.dataSourceBuilder.create(this.data);
+  }
+
+  ngOnInit() {
+    this.loadData();
+  }
+
+  loadData() {
+    this.customerService.getCustomersList().subscribe((data_from_server) => {
+      console.log(data_from_server);
+    });
   }
 
   updateSort(sortRequest: NbSortRequest): void {
@@ -76,6 +89,9 @@ export class ControlTableComponent{
         { data: { name: 'secret-note.txt', kind: 'txt', size: '2 MB' } },
       ],
     },
+    {
+      data: {name: 'test', kind: 'test', size: '500', }
+    }
   ];
 
   getShowOn(index: number) {
@@ -84,9 +100,6 @@ export class ControlTableComponent{
     return minWithForMultipleColumns + (nextColumnStep * index);
   }
 
-  openForm(event){
-    console.log("click")
-  }
 }
 
 @Component({
@@ -107,4 +120,3 @@ export class FsIconComponent {
     return this.kind === 'dir';
   }
 }
-

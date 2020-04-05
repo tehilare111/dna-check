@@ -2,7 +2,7 @@
   <nb-card-body>
     <div class="row">
       <div class="col-md-4">
-          <button nbButton status="primary" (click)="openForm($event)" routerLink="/pages/events-forms/layouts" hero>
+          <button nbButton status="primary" routerLink="/pages/events-forms/layouts" hero>
             דווח אירוע
           </button>
           <button disabled nbButton hero>
@@ -17,6 +17,7 @@
 
         </div>
     </div>
+
     <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
 
       <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
