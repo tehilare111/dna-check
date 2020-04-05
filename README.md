@@ -23,7 +23,7 @@ We Are using:
  $ pip install django-cors-headers
  ```
  ### run server:
- _(mainly used on first setup or after changes on db structure: new tables, new fields, etc.. ):_
+ _mainly used on first setup or after changes on db structure: new tables, new fields, etc:_
  ```
  $ python manage.py makemigrations
  $ python manage.py migrate
@@ -42,7 +42,7 @@ We Are using:
  - password: 123
  - db_name: testdb
  
- Actually, you can fill in those fields any way you want, but make sure it fits to the specified values in the dna/setttings.py, in our django server:
+ Actually, you can fill in those fields any way you want, but make sure it fits to the specified values in the dna/settings.py, in our django server:
  ```
  DATABASES = {
    'default': {
@@ -59,7 +59,8 @@ Tip: make sure postgresql server is listening:
  - netstat -a | grep postgresql
  
  ## setup angular environment:
- **Pay attention, we are using node v12.16.x and npm 6.3.x**
+ **Pay attention, we are using node v12.16.x and npm 6.3.x**.
+ 
  Inside frontend folder:   
  ```
  npm install
