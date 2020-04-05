@@ -19,7 +19,7 @@ We Are using:
  In addition, we need the following django packages:
  ```
  $ pip install djangorestframework
- $ pip install psycopg2
+ $ pip install psycopg2 (In linux this will require you to run the following command : $ sudo apt-get install libpq-dev)
  $ pip install django-cors-headers
  ```
  ### run server:
@@ -35,9 +35,31 @@ We Are using:
 
  ## postgresql setup on linux:
  
- Install and setup initial postgresql configurations - [link](https://youtu.be/yM2QSS-Lfb0).
+ Install postgreSQL on your machinie:
+ ```
+  $ sudo sh -c "echo 'deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release --codename | cut -f2)-pgdg main' > /etc/apt/sources.list.d/pgdg.list"
+  $ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+  $ sudo apt-get update
+  $ sudo apt-get install postgresql postgresql-contrib libpq-dev
+ ```
+ Setup your user for postgreSQL:
+```
+  $ sudo -u postgres createuser --superuser postgres 
+  $ sudo -u postgres psql
+```
+ In the now opened commandline, change your user's password to 123 (Could be anything - we work with that password for now):
+ ```
+  $ \password postgres
+```
+ That's it with the basic installation.
+ For more info - see the Install and setup initial postgresql configurations video - [link](https://youtu.be/yM2QSS-Lfb0).
  
- Follow the commands displayed on this tutorial to configure our DB, following those configuations:
+ Create a DB From the installation before (The testdb is the name of the DB, chosen arbi):
+ ```
+  $ sudo -u postgres createdb testdb
+  ```
+ 
+ Follow the commands displayed on this tutorial to configure our DB, following those configuations (Shown in the commands):
  - user: postgres
  - password: 123
  - db_name: testdb
