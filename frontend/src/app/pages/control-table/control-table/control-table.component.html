@@ -33,13 +33,13 @@
         </td>
       </ng-container>
 
-      <ng-container *ngFor="let column of defaultColumns; let index = index"
-                    [nbTreeGridColumnDef]="column"
+      <ng-container *ngFor="let column of columns | keyvalue; let index = index"
+                    [nbTreeGridColumnDef]="column.key"
                     [showOn]="getShowOn(index)">
-        <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
-          {{column}}
+        <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column.key)" *nbTreeGridHeaderCellDef>
+          {{column.value}}
         </th>
-        <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+        <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column.key] || '-'}}</td>
       </ng-container>
 
     </table>

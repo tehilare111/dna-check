@@ -12,9 +12,11 @@ interface TreeNode<T> {
 }
 
 interface FSEntry {
-  name: string;
-  size: string;
-  kind: string;
+  eventType: string;
+  reference: string;
+  date: string;
+  reporterName: string;
+  reporterUnit: string;
   items?: number;
 }
 
@@ -28,11 +30,11 @@ interface FSEntry {
 })
 export class ControlTableComponent implements OnInit{
 
-  statuses: NbComponentStatus[] = [ 'primary', 'success', 'info', 'warning', 'danger' ];
-
-  customColumn = 'name';
-  defaultColumns = [ 'size', 'kind', 'items' ];
-  allColumns = [ this.customColumn, ...this.defaultColumns ];
+  customColumn = 'eventType';
+  customColumn2 = 'סוג האירוע'
+  // columns keys to read from json and its name in hebrew to display in the table
+  columns = {'reference': 'סימוכין', 'date': 'תאריך', 'reporterName': 'שם מדווח', 'reporterUnit': 'יחידת מדווח'};
+  allColumns = [ this.customColumn, ...Object.keys(this.columns) ];
 
   dataSource: NbTreeGridDataSource<FSEntry>;
 
@@ -40,7 +42,7 @@ export class ControlTableComponent implements OnInit{
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
   constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>, private customerService: CustomerService) {
-    this.dataSource = this.dataSourceBuilder.create(this.data);
+    //this.dataSource = this.dataSourceBuilder.create(this.data);
   }
 
   ngOnInit() {
@@ -49,7 +51,12 @@ export class ControlTableComponent implements OnInit{
 
   loadData() {
     this.customerService.getCustomersList().subscribe((data_from_server) => {
-      console.log(data_from_server);
+      let new_data: TreeNode<FSEntry>[] = data_from_server.map((event) => {
+        return {'data': event}
+      })
+      new_data = new_data.concat(this.data);
+      console.log(new_data)
+      this.dataSource = this.dataSourceBuilder.create(new_data);
     });
   }
 
@@ -67,30 +74,14 @@ export class ControlTableComponent implements OnInit{
 
   private data: TreeNode<FSEntry>[] = [
     {
-      data: { name: 'Projects', size: '1.8 MB', items: 5, kind: 'dir' },
+      data: {'eventType': 'אובדן', 'reference': '12345', 'date': '12.12.21', 'reporterName': 'עדי בן לולו', 'reporterUnit': 'הנועזים'},
       children: [
-        { data: { name: 'project-1.doc', kind: 'doc', size: '240 KB' } },
-        { data: { name: 'project-2.doc', kind: 'doc', size: '290 KB' } },
-        { data: { name: 'project-3', kind: 'txt', size: '466 KB' } },
-        { data: { name: 'project-4.docx', kind: 'docx', size: '900 KB' } },
+        { data: {'eventType': 'אובדן', 'reference': 'עוד מידע', 'date': 'עוד מידע', 'reporterName': 'עוד מידע', 'reporterUnit': 'עוד מידע'} },
+        { data: {'eventType': 'אובדן', 'reference': 'עוד מידע', 'date': 'עוד מידע', 'reporterName': 'עוד מידע', 'reporterUnit': 'עוד מידע'} },
       ],
     },
     {
-      data: { name: 'Reports', kind: 'dir', size: '400 KB', items: 2 },
-      children: [
-        { data: { name: 'Report 1', kind: 'doc', size: '100 KB' } },
-        { data: { name: 'Report 2', kind: 'doc', size: '300 KB' } },
-      ],
-    },
-    {
-      data: { name: 'Other', kind: 'dir', size: '109 MB', items: 2 },
-      children: [
-        { data: { name: 'backup.bkp', kind: 'bkp', size: '107 MB' } },
-        { data: { name: 'secret-note.txt', kind: 'txt', size: '2 MB' } },
-      ],
-    },
-    {
-      data: {name: 'test', kind: 'test', size: '500', }
+      data: {'eventType': 'אובדן', 'reference': 'עוד מידע', 'date': 'עוד מידע', 'reporterName': 'עוד מידע', 'reporterUnit': 'עוד מידע'},
     }
   ];
 
