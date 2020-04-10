@@ -3,7 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { FormsComponent } from './forms.component';
 import { FormInputsComponent } from './form-inputs/form-inputs.component';
-import { FormLayoutsComponent } from './form-layouts/form-layouts.component';
+import { LostFormComponent } from './lost-form/lost-form.component';
+import { CorruptionFormComponent } from './corruption-form/corruption-form.component';
 
 const routes: Routes = [
   {
@@ -15,12 +16,12 @@ const routes: Routes = [
         component: FormInputsComponent,
       },
       {
-        path: 'layouts',
-        component: FormLayoutsComponent,
+        path: 'lost-form',
+        component: LostFormComponent,
       },
       {
-        path: 'layouts',
-        component: FormLayoutsComponent,
+        path: 'corruption-form',
+        component: CorruptionFormComponent,
       },
     ],
   },

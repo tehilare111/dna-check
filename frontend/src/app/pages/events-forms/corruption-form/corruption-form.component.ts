@@ -1,21 +1,18 @@
 import { Component } from '@angular/core';
 
 import { LostFormTemplate } from '../events-forms.templates';
-import { CustomerService } from '../../../services/rest-api.service';
+import { RestApiService } from '../../../services/rest-api.service';
 
 @Component({
   selector: 'ngx-form-layouts',
-  styleUrls: ['./form-layouts.component.scss'],
-  templateUrl: './form-layouts.component.html',
+  styleUrls: ['./corruption-form.component.scss'],
+  templateUrl: './corruption-form.component.html',
 })
-export class FormLayoutsComponent {
+export class CorruptionFormComponent {
   lostForm: LostFormTemplate = new LostFormTemplate();
   submitted = false;
 
-  constructor(private customerService: CustomerService) { }
-
-  ngOnInit() {
-  }
+  constructor(private RestApiService: RestApiService) { }
 
   newCustomer(): void {
     this.submitted = false;
@@ -23,7 +20,7 @@ export class FormLayoutsComponent {
   }
 
   save() {
-    this.customerService.createCustomer(this.lostForm)
+    this.RestApiService.createCustomer(this.lostForm)
       .subscribe(
         data => {
           console.log(data);
@@ -34,7 +31,6 @@ export class FormLayoutsComponent {
   }
 
   onSubmit() {
-    //console.log(this.lostForm);
     this.save();
   }
 }

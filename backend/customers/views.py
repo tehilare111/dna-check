@@ -4,6 +4,8 @@ from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
+from django.db.models import Max
+from datetime import datetime
 
 from customers.models import LostForm
 from customers.serializers import CustomerSerializer
@@ -68,3 +70,16 @@ def customer_list_age(request, age):
         return JsonResponse(customers_serializer.data, safe=False)
         # In order to serialize objects, we must set 'safe=False'
     
+@csrf_exempt
+def new_event_form(request):
+    
+    if request.method == 'GET':
+        #print(LostForm.objects.filter(reference=0))
+        #return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+        #max__reference = LostForm.objects.aggregate(Max('reference'))['reference__max']
+        # customers_serializer = CustomerSerializer(max__reference, many=True)
+        # return JsonResponse(customers_serializer.data, safe=False)
+        dt = datetime.today()
+        payload = {'datetime': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
+
+        return JsonResponse(payload, safe=False)

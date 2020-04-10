@@ -15,7 +15,8 @@ import { ThemeModule } from '../../@theme/theme.module';
 import { FormsRoutingModule } from './forms-routing.module';
 import { FormsComponent } from './forms.component';
 import { FormInputsComponent } from './form-inputs/form-inputs.component';
-import { FormLayoutsComponent } from './form-layouts/form-layouts.component';
+import { LostFormComponent } from './lost-form/lost-form.component';
+import { CorruptionFormComponent } from './corruption-form/corruption-form.component';
 import { FormsModule as ngFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -37,7 +38,8 @@ import { FormsModule as ngFormsModule } from '@angular/forms';
   declarations: [
     FormsComponent,
     FormInputsComponent,
-    FormLayoutsComponent,
+    LostFormComponent,
+    CorruptionFormComponent
   ],
 })
 export class FormsModule { }

@@ -3,7 +3,7 @@ import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSou
 import { Observable } from 'rxjs';
 
 //import { Customer } from '../events-forms.templates';
-import { CustomerService } from '../../../services/rest-api.service';
+import { RestApiService } from '../../../services/rest-api.service';
 
 interface TreeNode<T> {
   data: T;
@@ -30,6 +30,12 @@ interface FSEntry {
 })
 export class ControlTableComponent implements OnInit{
 
+  pickedUpEvent = {'name':undefined, 'route': '/'};
+  eventsToPickUp = {
+    'CorruptionForm': {'name': 'השחתת/השמת ציוד', 'route': '/pages/events-forms/corruption-form'}, 
+    'LostForm': {'name': 'אובדן ציוד', 'route': '/pages/events-forms/lost-form'},
+  }
+
   customColumn = 'eventType';
   customColumn2 = 'סוג האירוע'
   // columns keys to read from json and its name in hebrew to display in the table
@@ -41,7 +47,7 @@ export class ControlTableComponent implements OnInit{
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
-  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>, private customerService: CustomerService) {
+  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>, private RestApiService: RestApiService) {
     //this.dataSource = this.dataSourceBuilder.create(this.data);
   }
 
@@ -50,7 +56,7 @@ export class ControlTableComponent implements OnInit{
   }
 
   loadData() {
-    this.customerService.getCustomersList().subscribe((data_from_server) => {
+    this.RestApiService.getCustomersList().subscribe((data_from_server) => {
       let new_data: TreeNode<FSEntry>[] = data_from_server.map((event) => {
         return {'data': event}
       })
