@@ -2,7 +2,7 @@
   <nb-card-body>
     <div class="row">
       <div class="col-md-4">
-          <button nbButton status="primary" (click)="openForm($event)" routerLink="/pages/events-forms/layouts" hero>
+          <button nbButton status="primary" [disabled]="(pickedUpEvent.name?false:true)" [routerLink]="[pickedUpEvent.route, {eventType: pickedUpEvent.name}]" hero>
             דווח אירוע
           </button>
           <button disabled nbButton hero>
@@ -14,9 +14,14 @@
           <input nbInput [nbFilterInput]="dataSource" id="search" class="search-input">
         </div>
         <div class="col-md-4">
-
         </div>
     </div>
+    <div class="row">
+      <div class="button-row">
+        <button *ngFor="let button of eventsToPickUp | keyvalue" nbButton status="info" (click)="pickedUpEvent=button.value" hero>{{button.value.name}}</button>
+      </div>
+    </div>
+
     <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
 
       <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
@@ -32,13 +37,13 @@
         </td>
       </ng-container>
 
-      <ng-container *ngFor="let column of defaultColumns; let index = index"
-                    [nbTreeGridColumnDef]="column"
+      <ng-container *ngFor="let column of columns | keyvalue; let index = index"
+                    [nbTreeGridColumnDef]="column.key"
                     [showOn]="getShowOn(index)">
-        <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
-          {{column}}
+        <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column.key)" *nbTreeGridHeaderCellDef>
+          {{column.value}}
         </th>
-        <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+        <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column.key] || '-'}}</td>
       </ng-container>
 
     </table>

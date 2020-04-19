@@ -4,8 +4,10 @@ from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
+from django.db.models import Max
+from datetime import datetime
 
-from customers.models import Customer
+from customers.models import LostForm
 from customers.serializers import CustomerSerializer
 
 
@@ -13,7 +15,7 @@ from customers.serializers import CustomerSerializer
 def customer_list(request):
     print("custumer-list", request.headers["Origin"])
     if request.method == 'GET':
-        customers = Customer.objects.all()
+        customers = LostForm.objects.all()
         customers_serializer = CustomerSerializer(customers, many=True)
 
         return JsonResponse(customers_serializer.data, safe=False)
@@ -28,7 +30,7 @@ def customer_list(request):
         return JsonResponse(customer_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     elif request.method == 'DELETE':
-        Customer.objects.all().delete()
+        LostForm.objects.all().delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -36,8 +38,8 @@ def customer_list(request):
 def customer_detail(request, pk):
     print("custumer-detail", request.method)
     try: 
-        customer = Customer.objects.get(pk=pk) 
-    except Customer.DoesNotExist: 
+        customer = LostForm.objects.get(pk=pk) 
+    except LostForm.DoesNotExist: 
         return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
  
     if request.method == 'GET': 
@@ -61,10 +63,23 @@ def customer_detail(request, pk):
     
 @csrf_exempt
 def customer_list_age(request, age):
-    customers = Customer.objects.filter(age=age)
+    customers = LostForm.objects.filter(age=age)
         
     if request.method == 'GET': 
         customers_serializer = CustomerSerializer(customers, many=True)
         return JsonResponse(customers_serializer.data, safe=False)
         # In order to serialize objects, we must set 'safe=False'
     
+@csrf_exempt
+def new_event_form(request):
+    
+    if request.method == 'GET':
+        #print(LostForm.objects.filter(reference=0))
+        #return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+        #max__reference = LostForm.objects.aggregate(Max('reference'))['reference__max']
+        # customers_serializer = CustomerSerializer(max__reference, many=True)
+        # return JsonResponse(customers_serializer.data, safe=False)
+        dt = datetime.today()
+        payload = {'datetime': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
+
+        return JsonResponse(payload, safe=False)

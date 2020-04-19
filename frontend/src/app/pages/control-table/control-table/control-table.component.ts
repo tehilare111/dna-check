@@ -1,6 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder, NbComponentStatus } from '@nebular/theme';
+import { Observable } from 'rxjs';
 
+//import { Customer } from '../events-forms.templates';
+import { RestApiService } from '../../../services/rest-api.service';
 
 interface TreeNode<T> {
   data: T;
@@ -9,9 +12,11 @@ interface TreeNode<T> {
 }
 
 interface FSEntry {
-  name: string;
-  size: string;
-  kind: string;
+  eventType: string;
+  reference: string;
+  date: string;
+  reporterName: string;
+  reporterUnit: string;
   items?: number;
 }
 
@@ -23,21 +28,42 @@ interface FSEntry {
     NbTreeGridDataSourceBuilder,
   ]
 })
-export class ControlTableComponent{
+export class ControlTableComponent implements OnInit{
 
-  statuses: NbComponentStatus[] = [ 'primary', 'success', 'info', 'warning', 'danger' ];
+  pickedUpEvent = {'name':undefined, 'route': '/'};
+  eventsToPickUp = {
+    'CorruptionForm': {'name': 'השחתת/השמת ציוד', 'route': '/pages/events-forms/corruption-form'}, 
+    'LostForm': {'name': 'אובדן ציוד', 'route': '/pages/events-forms/lost-form'},
+  }
 
-  customColumn = 'name';
-  defaultColumns = [ 'size', 'kind', 'items' ];
-  allColumns = [ this.customColumn, ...this.defaultColumns ];
+  customColumn = 'eventType';
+  customColumn2 = 'סוג האירוע'
+  // columns keys to read from json and its name in hebrew to display in the table
+  columns = {'reference': 'סימוכין', 'date': 'תאריך', 'reporterName': 'שם מדווח', 'reporterUnit': 'יחידת מדווח'};
+  allColumns = [ this.customColumn, ...Object.keys(this.columns) ];
 
   dataSource: NbTreeGridDataSource<FSEntry>;
 
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
-  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>) {
-    this.dataSource = this.dataSourceBuilder.create(this.data);
+  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>, private RestApiService: RestApiService) {
+    //this.dataSource = this.dataSourceBuilder.create(this.data);
+  }
+
+  ngOnInit() {
+    this.loadData();
+  }
+
+  loadData() {
+    this.RestApiService.getCustomersList().subscribe((data_from_server) => {
+      let new_data: TreeNode<FSEntry>[] = data_from_server.map((event) => {
+        return {'data': event}
+      })
+      new_data = new_data.concat(this.data);
+      console.log(new_data)
+      this.dataSource = this.dataSourceBuilder.create(new_data);
+    });
   }
 
   updateSort(sortRequest: NbSortRequest): void {
@@ -54,28 +80,15 @@ export class ControlTableComponent{
 
   private data: TreeNode<FSEntry>[] = [
     {
-      data: { name: 'Projects', size: '1.8 MB', items: 5, kind: 'dir' },
+      data: {'eventType': 'אובדן', 'reference': '12345', 'date': '12.12.21', 'reporterName': 'עדי בן לולו', 'reporterUnit': 'הנועזים'},
       children: [
-        { data: { name: 'project-1.doc', kind: 'doc', size: '240 KB' } },
-        { data: { name: 'project-2.doc', kind: 'doc', size: '290 KB' } },
-        { data: { name: 'project-3', kind: 'txt', size: '466 KB' } },
-        { data: { name: 'project-4.docx', kind: 'docx', size: '900 KB' } },
+        { data: {'eventType': 'אובדן', 'reference': 'עוד מידע', 'date': 'עוד מידע', 'reporterName': 'עוד מידע', 'reporterUnit': 'עוד מידע'} },
+        { data: {'eventType': 'אובדן', 'reference': 'עוד מידע', 'date': 'עוד מידע', 'reporterName': 'עוד מידע', 'reporterUnit': 'עוד מידע'} },
       ],
     },
     {
-      data: { name: 'Reports', kind: 'dir', size: '400 KB', items: 2 },
-      children: [
-        { data: { name: 'Report 1', kind: 'doc', size: '100 KB' } },
-        { data: { name: 'Report 2', kind: 'doc', size: '300 KB' } },
-      ],
-    },
-    {
-      data: { name: 'Other', kind: 'dir', size: '109 MB', items: 2 },
-      children: [
-        { data: { name: 'backup.bkp', kind: 'bkp', size: '107 MB' } },
-        { data: { name: 'secret-note.txt', kind: 'txt', size: '2 MB' } },
-      ],
-    },
+      data: {'eventType': 'אובדן', 'reference': 'עוד מידע', 'date': 'עוד מידע', 'reporterName': 'עוד מידע', 'reporterUnit': 'עוד מידע'},
+    }
   ];
 
   getShowOn(index: number) {
@@ -84,9 +97,6 @@ export class ControlTableComponent{
     return minWithForMultipleColumns + (nextColumnStep * index);
   }
 
-  openForm(event){
-    console.log("click")
-  }
 }
 
 @Component({
@@ -107,4 +117,3 @@ export class FsIconComponent {
     return this.kind === 'dir';
   }
 }
-
