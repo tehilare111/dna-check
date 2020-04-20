@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NbDialogService } from '@nebular/theme';
 
 import { LostFormTemplate } from '../events-forms.templates';
 import { RestApiService } from '../../../services/rest-api.service';
@@ -11,12 +12,15 @@ import { RestApiService } from '../../../services/rest-api.service';
 })
 export class LostFormComponent {
   lostForm: LostFormTemplate = new LostFormTemplate();
-  submitted = false;
+  uploadLoading = false;
+  @ViewChild("dialog") dialog : ElementRef;
+  reference = "";
 
-  constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute) { }
+  constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService) { }
 
   ngOnInit() {
     this.loadData();
+    // Recieve form type from navigation router
     this.lostForm.eventType = this.activatedRoute.snapshot.params.eventType;
   }
 
@@ -27,23 +31,32 @@ export class LostFormComponent {
   }
 
   newCustomer(): void {
-    this.submitted = false;
     this.lostForm = new LostFormTemplate();
   }
 
   save() {
-    this.RestApiService.createCustomer(this.lostForm)
+    this.RestApiService.createNewEventForm(this.lostForm)
       .subscribe(
         data => {
-          console.log(data);
-          this.submitted = true;
+          this.uploadLoading = false;
+          this.reference = data.reference;
         },
         error => console.log(error));
     this.lostForm = new LostFormTemplate();
   }
 
+  openWithoutBackdropClick(dialog) {
+    this.dialogService.open(
+      dialog,
+      {
+        //context: this.formUploadResult.reference,
+        closeOnBackdropClick: false,
+      });
+  }
+
   onSubmit() {
-    //console.log(this.lostForm);
+    this.uploadLoading = true;
+    this.openWithoutBackdropClick(this.dialog);
     this.save();
   }
 }

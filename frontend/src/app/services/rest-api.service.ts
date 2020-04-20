@@ -42,4 +42,8 @@ export class RestApiService {
   getNewEventForm(): Observable<any> {
     return this.http.get(`${this.baseUrl}event_forms/`);
   }
+
+  createNewEventForm(form: Object): Observable<Object> {
+    return this.http.post(`${this.baseUrl}event_forms/`, form);
+  }
 }

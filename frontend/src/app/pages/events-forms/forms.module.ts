@@ -4,11 +4,14 @@ import {
   NbButtonModule,
   NbCardModule,
   NbCheckboxModule,
-  NbDatepickerModule, NbIconModule,
+  NbDatepickerModule, 
+  NbIconModule,
   NbInputModule,
   NbRadioModule,
+  NbDialogModule,
   NbSelectModule,
   NbUserModule,
+  NbSpinnerModule,
 } from '@nebular/theme';
 
 import { ThemeModule } from '../../@theme/theme.module';
@@ -21,6 +24,7 @@ import { FormsModule as ngFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
+    NbDialogModule.forChild(),
     ThemeModule,
     NbInputModule,
     NbCardModule,
@@ -34,6 +38,7 @@ import { FormsModule as ngFormsModule } from '@angular/forms';
     NbSelectModule,
     NbIconModule,
     ngFormsModule,
+    NbSpinnerModule,
   ],
   declarations: [
     FormsComponent,

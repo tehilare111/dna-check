@@ -21,4 +21,11 @@ export class LostFormTemplate {
     equipmentMakat: string;
     eventRelevantPlacesAndFactors: string;
     eventInitialDetails: string;
+    investigationDate: string;
+    investigationFile: string;
+    handlingDate: string
+    findingDate: string;
+    findingFile:string;
+    handlingFile: string;
+    messages: string;
 }

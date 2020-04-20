@@ -22,6 +22,7 @@ def customer_list(request):
         # In order to serialize objects, we must set 'safe=False'
 
     elif request.method == 'POST':
+        print("yesss")
         customer_data = JSONParser().parse(request)
         customer_serializer = CustomerSerializer(data=customer_data)
         if customer_serializer.is_valid():
@@ -76,10 +77,15 @@ def new_event_form(request):
     if request.method == 'GET':
         #print(LostForm.objects.filter(reference=0))
         #return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-        #max__reference = LostForm.objects.aggregate(Max('reference'))['reference__max']
-        # customers_serializer = CustomerSerializer(max__reference, many=True)
-        # return JsonResponse(customers_serializer.data, safe=False)
         dt = datetime.today()
         payload = {'datetime': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
-
         return JsonResponse(payload, safe=False)
+
+    elif request.method == 'POST':
+        customer_data = JSONParser().parse(request)
+        customer_serializer = CustomerSerializer(data=customer_data)
+        if customer_serializer.is_valid():
+            customer_serializer.save(reference = str(int(LostForm.objects.aggregate(Max('reference'))['reference__max']) + 1))
+            return JsonResponse(customer_serializer.data, status=status.HTTP_201_CREATED ) 
+        return JsonResponse(customer_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    

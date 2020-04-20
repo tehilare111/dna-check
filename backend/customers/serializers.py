@@ -27,5 +27,12 @@ class CustomerSerializer(serializers.ModelSerializer):
             'equipmentMark',
             'equipmentMakat',
             'eventRelevantPlacesAndFactors',
-            'eventInitialDetails'
+            'eventInitialDetails',
+            'investigationDate',
+            'investigationFile',
+            'handlingDate',
+            'findingDate',
+            'findingFile',
+            'handlingFile',
+            'messages'
         )

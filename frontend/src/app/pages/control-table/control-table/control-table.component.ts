@@ -32,7 +32,7 @@ export class ControlTableComponent implements OnInit{
 
   pickedUpEvent = {'name':undefined, 'route': '/'};
   eventsToPickUp = {
-    'CorruptionForm': {'name': 'השחתת/השמת ציוד', 'route': '/pages/events-forms/corruption-form'}, 
+    'CorruptionForm': {'name': 'השחתת/השמדת ציוד', 'route': '/pages/events-forms/corruption-form'}, 
     'LostForm': {'name': 'אובדן ציוד', 'route': '/pages/events-forms/lost-form'},
   }
 
