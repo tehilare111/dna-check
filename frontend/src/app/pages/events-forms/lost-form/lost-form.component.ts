@@ -4,6 +4,7 @@ import { NbDialogService } from '@nebular/theme';
 
 import { LostFormTemplate } from '../events-forms.templates';
 import { RestApiService } from '../../../services/rest-api.service';
+import { EventStatusComponent } from '../components/event-status/event-status.component';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -14,6 +15,7 @@ export class LostFormComponent {
   lostForm: LostFormTemplate = new LostFormTemplate();
   uploadLoading = false;
   @ViewChild("dialog") dialog : ElementRef;
+  @ViewChild("status") eventStatusForm : EventStatusComponent;
   reference = "";
 
   constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService) { }
@@ -35,6 +37,7 @@ export class LostFormComponent {
   }
 
   save() {
+    this.lostForm = this.eventStatusForm.pushFormFields<LostFormTemplate>(this.lostForm);
     this.RestApiService.createNewEventForm(this.lostForm)
       .subscribe(
         (data: LostFormTemplate) => {

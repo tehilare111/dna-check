@@ -16,4 +16,11 @@ export class EventStatusComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  pushFormFields<T extends EventForm>(form: T): T {
+    form.caseIdOnMetzah = this.eventForm.caseIdOnMetzah;
+    form.handlingResults = this.eventForm.handlingResults;
+    form.eventStatus = this.eventForm.eventStatus;
+    form.handlingStatus = this.eventForm.handlingStatus;
+    return form;
+  }
 }
