@@ -37,12 +37,12 @@ export class LostFormComponent {
   save() {
     this.RestApiService.createNewEventForm(this.lostForm)
       .subscribe(
-        data => {
+        (data: LostFormTemplate) => {
           this.uploadLoading = false;
           this.reference = data.reference;
         },
         error => console.log(error));
-    this.lostForm = new LostFormTemplate();
+    //this.lostForm = new LostFormTemplate();
   }
 
   openWithoutBackdropClick(dialog) {

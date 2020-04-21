@@ -1,0 +1,33 @@
+<nb-card>
+    <nb-card-body>
+      <div style="display: flex; justify-content: center;">
+        <h6><u>סטאטוס אירוע</u></h6>
+      </div>
+      <form class="form-horizontal">
+        <div class="form-group row">
+          <label for="caseIdOnMetzah" class="label col-sm-3 form-control-label">מס' תיק במצ''ח</label>
+          <div class="col-sm-9">
+            <input type="email" nbInput fullWidth name="caseIdOnMetzah" id="caseIdOnMetzah" placeholder="מס' תיק במצ''ח" [(ngModel)]="eventForm.caseIdOnMetzah">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="handlingResults" class="label col-sm-3 form-control-label">תוצאות טיפול</label>
+          <div class="col-sm-9">
+            <input type="text" nbInput fullWidth name="handlingResults" id="handlingResults" placeholder="תוצאות טיפול" [(ngModel)]="eventForm.handlingResults">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="eventStatus" class="label col-sm-3 form-control-label">סטאטוס אירוע</label>
+          <div class="col-sm-9">
+            <input type="text" nbInput fullWidth name="eventStatus" id="eventStatus" placeholder="סטאטוס אירוע" [(ngModel)]="eventForm.eventStatus">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="handlingStatus" class="label col-sm-3 form-control-label">סטאטוס טיפול</label>
+          <div class="col-sm-9">
+            <input type="text" nbInput fullWidth name="handlingStatus" id="handlingStatus" placeholder="סטאטוס טיפול" [(ngModel)]="eventForm.handlingStatus">
+          </div>
+        </div>
+      </form>
+    </nb-card-body>
+</nb-card>

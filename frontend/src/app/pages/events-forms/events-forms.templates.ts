@@ -1,13 +1,19 @@
-export class LostFormTemplate {
+export class Form{
     reference: string;
     eventType: string;
     date: string;
     reporterName: string;
     reporterUnit: string;
+}
+
+export class EventForm extends Form{
     caseIdOnMetzah: string;
     handlingResults: string;
     eventStatus: string;
     handlingStatus: string;
+}
+
+export class LostFormTemplate extends EventForm {
     signerUnit: string;
     signerName: string;
     signerId: string;

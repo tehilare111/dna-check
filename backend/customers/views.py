@@ -10,6 +10,7 @@ from datetime import datetime
 from customers.models import LostForm
 from customers.serializers import CustomerSerializer
 
+import time
 
 @csrf_exempt
 def customer_list(request):
@@ -88,4 +89,3 @@ def new_event_form(request):
             customer_serializer.save(reference = str(int(LostForm.objects.aggregate(Max('reference'))['reference__max']) + 1))
             return JsonResponse(customer_serializer.data, status=status.HTTP_201_CREATED ) 
         return JsonResponse(customer_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
