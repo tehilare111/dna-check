@@ -20,6 +20,14 @@ export class LostFormComponent {
 
   constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService) { }
 
+  // ----------------------
+  fileToUpload: File = null;
+
+  handleFileInput(files: FileList) {
+    this.fileToUpload = files.item(0);
+  }
+  // ----------------------
+  
   ngOnInit() {
     this.loadData();
     // Recieve form type from navigation router
@@ -37,15 +45,25 @@ export class LostFormComponent {
   }
 
   save() {
+    const formData: FormData = new FormData();
     this.lostForm = this.eventStatusForm.pushFormFields<LostFormTemplate>(this.lostForm);
-    this.RestApiService.createNewEventForm(this.lostForm)
+  
+    // insert lostForm to FormData object
+    for(let [key, value] of Object.entries(this.lostForm)){
+      formData.append(key, value);
+    }
+    // insert all files to FormData object
+    formData.append('investigationFile', this.fileToUpload, this.fileToUpload.name);
+  
+    this.RestApiService.createNewEventFormWithFiles(formData)
       .subscribe(
         (data: LostFormTemplate) => {
+          console.log("response:", data)
           this.uploadLoading = false;
           this.reference = data.reference;
         },
         error => console.log(error));
-    //this.lostForm = new LostFormTemplate();
+    //this.lostForm = new LostFormTemplate(); // initialize form
   }
 
   openWithoutBackdropClick(dialog) {

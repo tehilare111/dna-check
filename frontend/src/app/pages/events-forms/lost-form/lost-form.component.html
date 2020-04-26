@@ -4,6 +4,7 @@
   </nb-card>
 </div>
 
+
 <div class="row">
   <div class="col-md-3">
     <ngx-event-details [form]="lostForm"></ngx-event-details>
@@ -124,7 +125,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="investigationFile" class="label">צרף קובץ</label>
-                <input type="text" nbInput fullWidth name="investigationFile" id="investigationFile" status="primary" placeholder="צרף קובץ" [(ngModel)]="lostForm.investigationFile">
+                <input type="file" (change)="handleFileInput($event.target.files)" name="investigationFile" id="investigationFile">
               </div>
             </div>
           </div>

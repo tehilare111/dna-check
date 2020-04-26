@@ -2,10 +2,12 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser 
+from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser, FormParser
 from rest_framework import status
 from django.db.models import Max
 from datetime import datetime
+
+from rest_framework.views import APIView
 
 from customers.models import LostForm
 from customers.serializers import CustomerSerializer
@@ -83,9 +85,39 @@ def new_event_form(request):
         return JsonResponse(payload, safe=False)
 
     elif request.method == 'POST':
-        customer_data = JSONParser().parse(request)
-        customer_serializer = CustomerSerializer(data=customer_data)
+        # customer_data = JSONParser().parse(request)
+        customer_serializer = CustomerSerializer(request.POST, request.FILES)
         if customer_serializer.is_valid():
             customer_serializer.save(reference = str(int(LostForm.objects.aggregate(Max('reference'))['reference__max']) + 1))
+            return HttpResponse(status=status.HTTP_204_NO_CONTENT)
             return JsonResponse(customer_serializer.data, status=status.HTTP_201_CREATED ) 
         return JsonResponse(customer_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+import json
+@csrf_exempt
+def new_event_form_file(request):    
+    print('hereeee')
+    if request.method == 'POST':
+        print("request POST: ", request.POST, "\n", "request FILES: ", request.FILES)
+        customer_data = MultiPartParser().parse(request)
+        customer_serializer = CustomerSerializer(customer_data)#, data=request.POST.dict()) # data=customer_data)
+        if customer_serializer.is_valid():
+            print("data:")
+            customer_serializer.save(reference = str(int(LostForm.objects.aggregate(Max('reference'))['reference__max']) + 1))
+        
+            return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+        else:
+            print(customer_serializer.errors)
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+
+class NewEventFrom(APIView):
+
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, *args, **kwargs):
+        file_serializer = CustomerSerializer(data=request.data)
+        if file_serializer.is_valid():
+            file_serializer.save()
+            return HttpResponse(file_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return HttpResponse(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
