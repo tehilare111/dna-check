@@ -20,13 +20,12 @@ export class LostFormComponent {
 
   constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService) { }
 
-  // ----------------------
-  fileToUpload: File = null;
+  formFiles : {'id': string, 'file': File}[] = []; 
 
-  handleFileInput(files: FileList) {
-    this.fileToUpload = files.item(0);
+  handleFileUpload(event){
+    var target = event.target || event.srcElement || event.currentTarget;
+    this.formFiles.push({'id': target.attributes.id.value, 'file': target.files.item(0)});
   }
-  // ----------------------
   
   ngOnInit() {
     this.loadData();
@@ -52,13 +51,15 @@ export class LostFormComponent {
     for(let [key, value] of Object.entries(this.lostForm)){
       formData.append(key, value);
     }
+
     // insert all files to FormData object
-    formData.append('investigationFile', this.fileToUpload, this.fileToUpload.name);
+    for( let formFile of this.formFiles ){
+      formData.append(formFile['id'], formFile['file'], formFile['file'].name);
+    }
   
     this.RestApiService.createNewEventFormWithFiles(formData)
       .subscribe(
         (data: LostFormTemplate) => {
-          console.log("response:", data)
           this.uploadLoading = false;
           this.reference = data.reference;
         },

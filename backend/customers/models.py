@@ -31,6 +31,6 @@ class LostForm(models.Model):
     investigationFile = models.FileField(upload_to='./', max_length=1000)
     handlingDate = models.CharField(max_length=70, blank=False, default='')
     findingDate = models.CharField(max_length=70, blank=False, default='')
-    findingFile = models.CharField(max_length=70, blank=False, default='')
-    handlingFile = models.CharField(max_length=70, blank=False, default='')
+    findingFile = models.FileField(upload_to='./', max_length=1000)
+    handlingFile = models.FileField(upload_to='./', max_length=1000)
     messages = models.CharField(max_length=70, blank=False, default='')

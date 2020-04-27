@@ -125,7 +125,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="investigationFile" class="label">צרף קובץ</label>
-                <input type="file" (change)="handleFileInput($event.target.files)" name="investigationFile" id="investigationFile">
+                <input type="file" (change)="handleFileUpload($event)" name="investigationFile" id="investigationFile">
               </div>
             </div>
           </div>
@@ -140,7 +140,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="findingFile" class="label">צרף קובץ</label>
-                <input type="text" nbInput fullWidth name="findingFile" id="findingFile" status="primary" placeholder="צרף קובץ" [(ngModel)]="lostForm.findingFile">
+                <input type="file" (change)="handleFileUpload($event)" name="findingFile" id="findingFile">
               </div>
             </div>
           </div>
@@ -155,7 +155,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="handlingFile" class="label">צרף קובץ</label>
-                <input type="text" nbInput fullWidth name="handlingFile" id="handlingFile" status="primary" placeholder="צרף קובץ" [(ngModel)]="lostForm.handlingFile">
+                <input type="file" (change)="handleFileUpload($event)" name="handlingFile" id="handlingFile">
               </div>
             </div>
           </div>
