@@ -43,6 +43,14 @@ export class RestApiService {
     return this.http.get(`${this.baseUrl}event_forms/`);
   }
 
+  getExistingEventForm(reference: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}event_forms/${reference}`);
+  }
+
+  updateExistingEventForm(reference, form): Observable<Object> {
+    return this.http.put(`${this.baseUrl}event_forms/${reference}`, form);
+  }
+
   createNewEventForm(form: Object): Observable<Object> {
     return this.http.post(`${this.baseUrl}event_forms/`, form);
   }
@@ -51,11 +59,6 @@ export class RestApiService {
     return this.http.post(`${this.baseUrl}event_forms/file`, form, {headers: {'enctype': 'multipart/form-data'}});
   }
 
-  postFile(fileToUpload: File): Observable<Object> {
-    const formData: FormData = new FormData();
-    formData.append('investigationFile', fileToUpload, fileToUpload.name);
-    formData.append('try', "{'equipment', 'bye'}");
-    return this.http.post(`${this.baseUrl}event_forms/file`, formData);
-      //catch((e) => {this.handleError(e); console.log("failed!");});
-  }
+
+
 }

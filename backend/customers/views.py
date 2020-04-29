@@ -92,23 +92,29 @@ def new_event_form(request):
             return HttpResponse(status=status.HTTP_204_NO_CONTENT)
             return JsonResponse(customer_serializer.data, status=status.HTTP_201_CREATED ) 
         return JsonResponse(customer_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-import json
-@csrf_exempt
-def new_event_form_file(request):    
-    print('hereeee')
-    if request.method == 'POST':
-        print("request POST: ", request.POST, "\n", "request FILES: ", request.FILES)
-        customer_data = MultiPartParser().parse(request)
-        customer_serializer = CustomerSerializer(customer_data)#, data=request.POST.dict()) # data=customer_data)
-        if customer_serializer.is_valid():
-            print("data:")
-            customer_serializer.save(reference = str(int(LostForm.objects.aggregate(Max('reference'))['reference__max']) + 1))
-        
-            return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-        else:
-            print(customer_serializer.errors)
-            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+@csrf_exempt
+def existing_event_form(request, reference):
+    try: 
+        event_form = LostForm.objects.get(reference=reference) 
+    except LostForm.DoesNotExist: 
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
+ 
+    if request.method == 'GET':
+        customer_serializer = CustomerSerializer(event_form)
+        return JsonResponse(customer_serializer.data)
+ 
+    elif request.method == 'PUT':
+        customer_data = JSONParser().parse(request)
+        customer_serializer = CustomerSerializer(event_form, data=customer_data)
+        if customer_serializer.is_valid():
+            customer_serializer.save()
+            return JsonResponse(customer_serializer.data)
+        return JsonResponse(customer_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+ 
+    elif request.method == 'DELETE': 
+        event_form.delete() 
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 class NewEventFrom(APIView):
 

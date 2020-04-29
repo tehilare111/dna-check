@@ -11,16 +11,20 @@ import { EventStatusComponent } from '../components/event-status/event-status.co
   styleUrls: ['./lost-form.component.scss'],
   templateUrl: './lost-form.component.html',
 })
+
 export class LostFormComponent {
+  eventType: string = 'אובדן ציוד';
+
   lostForm: LostFormTemplate = new LostFormTemplate();
   uploadLoading = false;
   @ViewChild("dialog") dialog : ElementRef;
   @ViewChild("status") eventStatusForm : EventStatusComponent;
-  reference = "";
+  reference = undefined;
 
   constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService) { }
 
   formFiles : {'id': string, 'file': File}[] = []; 
+  readonly : boolean = true;
 
   handleFileUpload(event){
     var target = event.target || event.srcElement || event.currentTarget;
@@ -28,19 +32,30 @@ export class LostFormComponent {
   }
   
   ngOnInit() {
-    this.loadData();
-    // Recieve form type from navigation router
-    this.lostForm.eventType = this.activatedRoute.snapshot.params.eventType;
+    // Set eventType field according to the form event type
+    this.lostForm.eventType = this.eventType
+    
+    // Recieve form data from db according to its reference
+    this.reference = this.activatedRoute.snapshot.params.reference;
+    if (this.reference){
+      this.exisitingFormLoadData(this.reference);
+    } else {
+      this.newFormLoadData();
+    }
   }
 
-  loadData() {
+  newFormLoadData() {
     this.RestApiService.getNewEventForm().subscribe((data_from_server) => {
       this.lostForm.date = data_from_server.datetime
     });
   }
 
-  newCustomer(): void {
-    this.lostForm = new LostFormTemplate();
+  exisitingFormLoadData(reference: string){
+    this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: LostFormTemplate) => {
+      console.log(data_from_server.date)
+      console.log(data_from_server.findingFile)
+      this.lostForm = data_from_server
+    });
   }
 
   save() {
@@ -56,14 +71,25 @@ export class LostFormComponent {
     for( let formFile of this.formFiles ){
       formData.append(formFile['id'], formFile['file'], formFile['file'].name);
     }
-  
-    this.RestApiService.createNewEventFormWithFiles(formData)
+
+    if (this.reference){
+      this.RestApiService.updateExistingEventForm(this.reference, formData)
+        .subscribe(
+          (data) => {
+            //this.uploadLoading = false;
+            //this.reference = data.reference;
+            console.log(data)
+          },
+          error => console.log(error));
+    } else {
+      this.RestApiService.createNewEventFormWithFiles(formData)
       .subscribe(
         (data: LostFormTemplate) => {
           this.uploadLoading = false;
           this.reference = data.reference;
         },
         error => console.log(error));
+    }
     //this.lostForm = new LostFormTemplate(); // initialize form
   }
 

@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^customers/age/(?P<age>[0-9]+)/$', views.customer_list_age),
     # url(r'^event_forms/file$', views.new_event_form_file),
     url(r'^event_forms/file$', views.NewEventFrom.as_view()),
+    url(r'^event_forms/(?P<reference>[0-9]+)$', views.existing_event_form),
     url(r'^event_forms/$', views.new_event_form),
 ]
 

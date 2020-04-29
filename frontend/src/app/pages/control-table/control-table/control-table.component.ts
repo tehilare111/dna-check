@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder, NbComponentStatus } from '@nebular/theme';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 //import { Customer } from '../events-forms.templates';
 import { RestApiService } from '../../../services/rest-api.service';
@@ -47,7 +48,7 @@ export class ControlTableComponent implements OnInit{
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
-  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>, private RestApiService: RestApiService) {
+  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>, private RestApiService: RestApiService, private router: Router) {
     //this.dataSource = this.dataSourceBuilder.create(this.data);
   }
 
@@ -95,6 +96,10 @@ export class ControlTableComponent implements OnInit{
     const minWithForMultipleColumns = 400;
     const nextColumnStep = 100;
     return minWithForMultipleColumns + (nextColumnStep * index);
+  }
+
+  formClicked(event, row) {
+    this.router.navigate(['/pages/events-forms/lost-form', {reference: row.data.reference}]);
   }
 
 }

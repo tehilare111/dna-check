@@ -10,6 +10,7 @@ import { EventForm } from '../../events-forms.templates';
 export class EventStatusComponent implements OnInit {
 
   @Input() eventForm: EventForm = new EventForm();
+  @Input() readonly: boolean = true;
 
   constructor() { }
 
