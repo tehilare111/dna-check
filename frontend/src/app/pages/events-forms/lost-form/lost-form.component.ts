@@ -20,13 +20,11 @@ export class LostFormComponent {
   @ViewChild("dialog") dialog : ElementRef;
   @ViewChild("status") eventStatusForm : EventStatusComponent;
   reference = undefined;
-
+  formFiles : {'id': string, 'file': File}[] = []; 
+  readonly : boolean = true;
   popUpDialogContext: string = '';
 
   constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { }
-
-  formFiles : {'id': string, 'file': File}[] = []; 
-  readonly : boolean = true;
 
   handleFileUpload(event){
     var target = event.target || event.srcElement || event.currentTarget;
@@ -42,6 +40,7 @@ export class LostFormComponent {
     if (this.reference){
       this.exisitingFormLoadData(this.reference);
     } else {
+      this.readonly = false;
       this.newFormLoadData();
     }
   }
@@ -112,19 +111,7 @@ export class LostFormComponent {
   }
 
   printForm() {
-    window.print();
-    /*var printHtml = document.getElementById('printSection').outerHTML;
-    var currentPage = window.location.pathname.split(';')[0];
-    console.log(currentPage);
-    var elementPage = '<html dir="rtl" lang="ar"><head><title></title></head><body>' + printHtml + '</body></html>';
-    //change the body
-    document.body.innerHTML = elementPage;
-    //print
-    window.print();
-    //go back to the original
-    console.log('return to window');
-    this.router.navigate([currentPage], {reference: this.reference});
-    console.log('return to window2');*/
+    window.print()
   }
 
   deleteEventForm(){

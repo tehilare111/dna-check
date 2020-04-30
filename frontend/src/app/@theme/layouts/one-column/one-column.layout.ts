@@ -5,11 +5,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./one-column.layout.scss'],
   template: `
     <nb-layout windowMode>
-      <nb-layout-header fixed>
+      <nb-layout-header fixed id="outOfPrint">
         <ngx-header></ngx-header>
       </nb-layout-header>
 
-      <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive start>
+      <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive start id="outOfPrint">
         <ng-content select="nb-menu"></ng-content>
       </nb-sidebar>
 
@@ -17,7 +17,7 @@ import { Component } from '@angular/core';
         <ng-content select="router-outlet"></ng-content>
       </nb-layout-column>
 
-      <nb-layout-footer fixed>
+      <nb-layout-footer fixed id="outOfPrint">
         <ngx-footer></ngx-footer>
       </nb-layout-footer>
     </nb-layout>

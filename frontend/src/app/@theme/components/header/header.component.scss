@@ -68,11 +68,3 @@
     }
   }
 }
-
-@media only print {
-  /* Intended for paged material and for documents
-     viewed on screen in print preview mode .*/
-  .outOfPrint {
-      display: none;
-  }
-}
