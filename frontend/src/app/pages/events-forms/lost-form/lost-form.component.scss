@@ -13,3 +13,11 @@ nb-checkbox {
 nb-card.inline-form-card nb-card-body {
   padding-bottom: 0;
 }
+
+@media only print {
+  /* Intended for paged material and for documents
+     viewed on screen in print preview mode .*/
+  .outOfPrint {
+      display: none;
+  }
+}

@@ -127,3 +127,34 @@ class NewEventFrom(APIView):
             return JsonResponse(file_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
             return HttpResponse(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, reference,*args, **kwargs):
+        try: 
+            event_form = LostForm.objects.get(reference=reference) 
+        except LostForm.DoesNotExist: 
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
+
+        file_serializer = CustomerSerializer(event_form, data=request.data)
+        if file_serializer.is_valid():
+            file_serializer.save()
+            return JsonResponse(file_serializer.data, status=status.HTTP_201_CREATED ) 
+        else:
+            return HttpResponse(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self, request, reference, *args, **kwargs):
+        try: 
+            event_form = LostForm.objects.get(reference=reference) 
+        except LostForm.DoesNotExist: 
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
+    
+        customer_serializer = CustomerSerializer(event_form)
+        return JsonResponse(customer_serializer.data)
+
+    def delete(self, request, reference, *args, **kwargs):
+        try: 
+            event_form = LostForm.objects.get(reference=reference) 
+        except LostForm.DoesNotExist: 
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
+
+        event_form.delete() 
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)

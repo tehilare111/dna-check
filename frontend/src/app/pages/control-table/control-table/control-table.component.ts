@@ -104,6 +104,7 @@ export class ControlTableComponent implements OnInit{
 
 }
 
+
 @Component({
   selector: 'ngx-fs-icon',
   template: `

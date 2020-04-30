@@ -59,6 +59,7 @@ export class RestApiService {
     return this.http.post(`${this.baseUrl}event_forms/file`, form, {headers: {'enctype': 'multipart/form-data'}});
   }
 
-
-
+  deleteExistingEventForm(reference: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}event_forms/${reference}`);
+  }
 }

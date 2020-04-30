@@ -3,18 +3,17 @@
     <button type="submit" nbButton status="primary" (click)="onSubmit()">שלח אירוע</button>
   </nb-card>
   <nb-card>
-    <button *ngIf="true" nbButton status="primary" (click)="readonly=!readonly">ערוך אירוע</button>
+    <button *ngIf="true" nbButton status="primary" (click)="readonly=!readonly">פתח אירוע לעריכה</button>
   </nb-card>
   <nb-card>
-    <button *ngIf="true" nbButton status="primary" (click)="x">הדפס אירוע</button>
+    <button *ngIf="true" nbButton status="primary" (click)="printForm()">הדפס אירוע</button>
   </nb-card>
   <nb-card>
-    <button *ngIf="true" nbButton status="primary" (click)="x">מחק אירוע</button>
+    <button *ngIf="true" nbButton status="primary" (click)="deleteEventForm()">מחק אירוע</button>
   </nb-card>
 </div>
 
-
-<div class="row">
+<div class="row" id="print-section">
   <div class="col-md-3">
     <ngx-event-details [form]="lostForm"></ngx-event-details>
     <ngx-event-status #status [eventForm]="lostForm" [readonly]="readonly"></ngx-event-status>
@@ -183,11 +182,10 @@
 </div>
 
 
-
 <ng-template #dialog let-data let-ref="dialogRef">
   <nb-card [nbSpinner]="uploadLoading" nbSpinnerSize="large" nbSpinnerStatus="primary">
     <nb-card-header>מעלה את הבקשה</nb-card-header>
-    <nb-card-body>מספר הסימוכין של בקשתך הוא: {{ this.reference }}</nb-card-body>
+    <nb-card-body>{{this.popUpDialogContext}}</nb-card-body>
     <nb-card-footer style="display: flex; justify-content: center;">
       <button nbButton (click)="ref.close()" status="primary" [disabled]="uploadLoading" routerLink="/pages/control-table/control-table" hero>סיום</button>
     </nb-card-footer>

@@ -1,5 +1,5 @@
 import { Component, TemplateRef, ElementRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NbDialogService } from '@nebular/theme';
 
 import { LostFormTemplate } from '../events-forms.templates';
@@ -21,7 +21,9 @@ export class LostFormComponent {
   @ViewChild("status") eventStatusForm : EventStatusComponent;
   reference = undefined;
 
-  constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService) { }
+  popUpDialogContext: string = '';
+
+  constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { }
 
   formFiles : {'id': string, 'file': File}[] = []; 
   readonly : boolean = true;
@@ -75,10 +77,10 @@ export class LostFormComponent {
     if (this.reference){
       this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
-          (data) => {
-            //this.uploadLoading = false;
-            //this.reference = data.reference;
-            console.log(data)
+          (data: LostFormTemplate) => {
+            this.uploadLoading = false;
+            this.reference = data.reference;
+            this.popUpDialogContext = `האירוע התעדכן בהצלחה, סימוכין: ${this.reference}`;
           },
           error => console.log(error));
     } else {
@@ -87,6 +89,7 @@ export class LostFormComponent {
         (data: LostFormTemplate) => {
           this.uploadLoading = false;
           this.reference = data.reference;
+          this.popUpDialogContext = `האירוע נוצר בהצלחה, סימוכין: ${this.reference}`;
         },
         error => console.log(error));
     }
@@ -106,5 +109,33 @@ export class LostFormComponent {
     this.uploadLoading = true;
     this.openWithoutBackdropClick(this.dialog);
     this.save();
+  }
+
+  printForm() {
+    window.print();
+    /*var printHtml = document.getElementById('printSection').outerHTML;
+    var currentPage = window.location.pathname.split(';')[0];
+    console.log(currentPage);
+    var elementPage = '<html dir="rtl" lang="ar"><head><title></title></head><body>' + printHtml + '</body></html>';
+    //change the body
+    document.body.innerHTML = elementPage;
+    //print
+    window.print();
+    //go back to the original
+    console.log('return to window');
+    this.router.navigate([currentPage], {reference: this.reference});
+    console.log('return to window2');*/
+  }
+
+  deleteEventForm(){
+    this.uploadLoading = true;
+    this.openWithoutBackdropClick(this.dialog);
+    this.RestApiService.deleteExistingEventForm(this.reference)
+      .subscribe(
+        (data: LostFormTemplate) => {
+          this.uploadLoading = false;
+          this.popUpDialogContext = `אירוע עם סימוכין ${this.reference} נמחק`;
+        },
+        error => console.log(error));
   }
 }
