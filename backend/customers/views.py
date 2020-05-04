@@ -8,7 +8,9 @@ from django.db.models import Max
 from datetime import datetime
 
 from customers.models import LostForm
+from customers.models import Destination
 from customers.serializers import CustomerSerializer
+
 
 
 @csrf_exempt
@@ -26,6 +28,7 @@ def customer_list(request):
         customer_serializer = CustomerSerializer(data=customer_data)
         if customer_serializer.is_valid():
             customer_serializer.save()
+            print ("shalom1")
             return JsonResponse(customer_serializer.data, status=status.HTTP_201_CREATED ) 
         return JsonResponse(customer_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -34,9 +37,26 @@ def customer_list(request):
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
+
+@csrf_exempt 
+def customer_insert(request):
+    if request.method=='GET':
+        print("custumer-list", request.headers["Origin"])
+        customer_data = JSONParser().parse(request)
+        customer_serializer = CustomerSerializer(data=customer_data)
+    elif request.method == 'POST':
+        customer_data = JSONParser().parse(request)
+        customer_serializer = CustomerSerializer(data=customer_data)
+        if customer_serializer.is_valid():
+            customer_serializer.save()
+            print("shalom")
+            return JsonResponse(customer_serializer.data, status=status.HTTP_201_CREATED ) 
+        return JsonResponse(customer_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+         
 @csrf_exempt 
 def customer_detail(request, pk):
     print("custumer-detail", request.method)
+
     try: 
         customer = LostForm.objects.get(pk=pk) 
     except LostForm.DoesNotExist: 
@@ -60,7 +80,20 @@ def customer_detail(request, pk):
         customer.delete() 
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-    
+@csrf_exempt 
+def customer_detail_Users(request,firstname):
+    print("custumer-detail", request.method)
+    try: 
+        customer1 =Destination.objects.get(firstname=firstname)
+
+    except Destination.DoesNotExist: 
+        print("shalom3")
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET': 
+        customer_serializer = CustomerSerializer(customer1) 
+        return JsonResponse(customer_serializer.data)  
+
 @csrf_exempt
 def customer_list_age(request, age):
     customers = LostForm.objects.filter(age=age)

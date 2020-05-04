@@ -24,11 +24,12 @@ SECRET_KEY = '9xtmlzwk)+o1b8l3me7^piq97^#hq^&4@$1ws9##a75p9-ohsg'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 # Application definition
 
 INSTALLED_APPS = [
+    'management.apps.ManagementConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +41,7 @@ INSTALLED_APPS = [
     # Customers application 
     'customers.apps.CustomersConfig',
     # CORS
-    'corsheaders',
+    #'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -55,10 +56,9 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
-
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = (
-        'http://127.0.0.1:4200',
+        'http://127.0.0.1:4200/',
 )
 
 ROOT_URLCONF = 'dna.urls'
@@ -86,13 +86,21 @@ WSGI_APPLICATION = 'dna.wsgi.application'
 
 DATABASES = {
    'default': {
+        #'ENGINE': 'django.db.backends.postgresql',
+        #'NAME': 'testdb',
+        #'USER': 'postgres',
+        #'PASSWORD': '123',
+        #'HOST': '192.168.1.112',
+        #'PORT': '5432',
+        
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'testdb',
+        'NAME': 'users_army',
         'USER': 'postgres',
-        'PASSWORD': '123',
-        'HOST': '192.168.1.112',
+        'PASSWORD': 'Bar_18041998B',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
+    
 }
 
 # Password validation

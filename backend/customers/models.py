@@ -27,3 +27,12 @@ class LostForm(models.Model):
     equipmentMakat = models.CharField(max_length=70, blank=False, default='')
     eventRelevantPlacesAndFactors = models.CharField(max_length=70, blank=False, default='')
     eventInitialDetails = models.CharField(max_length=70, blank=False, default='')
+    
+class Destination(models.Model):
+    username=models.CharField(max_length=70, blank=False, default='')
+    firstname=models.CharField(max_length=70, blank=False, default='')
+    lastname=models.CharField(max_length=70, blank=False, default='')
+    password=models.CharField(max_length=70, blank=False, default='')
+    personalnumber=models.CharField(max_length=70, blank=False, default='')
+    rank=models.CharField(max_length=70, blank=False, default='')
+    armyposistion=models.CharField(max_length=70, blank=False, default='')

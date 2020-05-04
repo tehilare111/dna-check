@@ -1,5 +1,6 @@
 from rest_framework import serializers 
 from customers.models import LostForm
+from customers.models import Destination
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -27,5 +28,14 @@ class CustomerSerializer(serializers.ModelSerializer):
             'equipmentMark',
             'equipmentMakat',
             'eventRelevantPlacesAndFactors',
-            'eventInitialDetails'
-        )
+            'eventInitialDetails',)
+            
+        model= Destination
+        fields=('username',
+            'firstname',
+            'lastname',
+            'password',
+            'personalnumber',
+            'rank',
+            'armyposistion',)
+        
