@@ -14,7 +14,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'ניהול ויחידות',
     icon: 'shopping-cart-outline',
-    link: '/pages/management',
+    children: [
+      {
+        title:"הרשמה",
+        link:'register'
+      },
+    ],
   },
   {
     title: 'E-commerce',

@@ -2,6 +2,7 @@
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
 module.exports = function (config) {
+  
   const configuration = {
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
@@ -13,7 +14,7 @@ module.exports = function (config) {
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     client:{
-      clearContext: false // leave Jasmine Spec Runner output visible in browser
+      clearContext: True // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, 'coverage'), reports: [ 'html', 'lcovonly' ],
@@ -41,5 +42,22 @@ module.exports = function (config) {
     configuration.browsers = ['Chrome_travis_ci'];
   }
 
-  config.set(configuration);
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+  });
+  
+  app.get('/jokes/random', (req, res) => {
+    request(
+      { url: 'http://127.0.0.1:4200' },
+      (error, response, body) => {
+        if (error || response.statusCode !== 200) {
+          return res.status(500).json({ type: 'error', message: err.message });
+        }
+  
+        res.json(JSON.parse(body));
+      }
+    )
+  });
+  
 };

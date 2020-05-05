@@ -8,6 +8,8 @@ import { ECommerceModule } from './e-commerce/e-commerce.module';
 import { PagesRoutingModule } from './pages-routing.module';
 import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 import { ManagementComponent } from './management/management.component';
+import { managementModule } from './management/management.module';
+import {HttpClientModule} from '@angular/common/http'
 //import { ControlTableComponent } from './control-table/control-table.component';
 
 
@@ -19,6 +21,8 @@ import { ManagementComponent } from './management/management.component';
     DashboardModule,
     ECommerceModule,
     MiscellaneousModule,
+    managementModule,
+    HttpClientModule,
   ],
   declarations: [
     PagesComponent,

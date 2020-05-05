@@ -1,0 +1,27 @@
+@import '../../../@theme/styles/themes';
+
+nb-card-body {
+    overflow: visible;
+    padding-top: 0;
+
+    > * {
+      margin-top: 1rem;
+      text-align: center;
+      margin:auto;
+    }
+  }
+
+
+.center {
+    width: 500px;
+    height: 150px;
+    position: absolute;
+    left: 60%;
+    right: 35%;
+    top: 20%;
+    transform: translate(-50%, -50%);
+    align-items: center;
+    justify-content: center;
+    font-size:10px;
+    text-align: center;
+  }
