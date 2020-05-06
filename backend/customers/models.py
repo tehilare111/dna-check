@@ -1,10 +1,21 @@
 from django.db import models
+from django.db.models import Max
 
+class UploadTo:
+  def __init__(self, field):
+    self.field = field
+
+  def __call__(self, instance, filename):
+    return '{}/{}/{}'.format(str(int(LostForm.objects.aggregate(Max('reference'))['reference__max'] or 0) + 1), self.field, filename)
+
+  def deconstruct(self):
+    return ('myapp.models.UploadTo', [self.fieldname], {})
 
 class LostForm(models.Model):
     # name = models.CharField(max_length=70, blank=False, default='')
     # age = models.IntegerField(blank=False, default=1)
     # active = models.BooleanField(default=False)
+    
     reference = models.CharField(max_length=70, blank=False, default='')
     eventType = models.CharField(max_length=70, blank=False, default='')
     date = models.CharField(max_length=70, blank=False, default='')
@@ -28,9 +39,9 @@ class LostForm(models.Model):
     eventRelevantPlacesAndFactors = models.CharField(max_length=70, blank=False, default='')
     eventInitialDetails = models.CharField(max_length=70, blank=False, default='')
     investigationDate = models.CharField(max_length=70, blank=False, default='')
-    investigationFile = models.FileField(upload_to='./{}/'.format(reference), max_length=1000, blank=True)
+    investigationFile = models.FileField(upload_to=UploadTo('investigationFile'), max_length=100, blank=True)
     handlingDate = models.CharField(max_length=70, blank=False, default='')
     findingDate = models.CharField(max_length=70, blank=False, default='')
-    findingFile = models.FileField(upload_to='./{}/'.format(reference), max_length=1000, blank=True)
-    handlingFile = models.FileField(upload_to='./{}/'.format(reference), max_length=1000, blank=True)
+    findingFile = models.FileField(upload_to=UploadTo('findingFile'), max_length=100, blank=True)
+    handlingFile = models.FileField(upload_to=UploadTo('handlingFile'), max_length=100, blank=True)
     messages = models.CharField(max_length=70, blank=False, default='')

@@ -64,7 +64,7 @@ CORS_ORIGIN_WHITELIST = (
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
         'enctype',
-        ]
+    ]
 
 ROOT_URLCONF = 'dna.urls'
 
@@ -95,7 +95,7 @@ DATABASES = {
         'NAME': 'testdb',
         'USER': 'postgres',
         'PASSWORD': '123',
-        'HOST': '192.168.1.99',
+        'HOST': '192.168.43.196',
         'PORT': '5432',
     }
 }

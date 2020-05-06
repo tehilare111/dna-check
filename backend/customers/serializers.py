@@ -3,9 +3,10 @@ from customers.models import LostForm
 
 
 class CustomerSerializer(serializers.ModelSerializer):
-
+    
     class Meta:
         model = LostForm
+        # print(model.upload_to())
         fields = ('reference',
             'eventType',
             'date',

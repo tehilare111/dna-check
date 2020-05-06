@@ -116,6 +116,12 @@ def existing_event_form(request, reference):
         event_form.delete() 
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
+
+@csrf_exempt
+def customer_detail_Users(request, firstname):
+    print("all fine: ", firstname)
+    return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
 class NewEventFrom(APIView):
 
     parser_classes = (MultiPartParser, FormParser)
