@@ -129,7 +129,7 @@ class NewEventFrom(APIView):
     def post(self, request, *args, **kwargs):
         file_serializer = CustomerSerializer(data=request.data)
         if file_serializer.is_valid():
-            file_serializer.save(reference = str(int(LostForm.objects.aggregate(Max('reference'))['reference__max'] or 0) + 1))
+            file_serializer.save(reference = int(LostForm.objects.aggregate(Max('reference'))['reference__max'] or 0) + 1)
             return JsonResponse(file_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
             return HttpResponse(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -9,14 +9,14 @@ class UploadTo:
     return '{}/{}/{}'.format(str(int(LostForm.objects.aggregate(Max('reference'))['reference__max'] or 0) + 1), self.field, filename)
 
   def deconstruct(self):
-    return ('myapp.models.UploadTo', [self.fieldname], {})
+    return ('customers.models.UploadTo', [self.field], {})
 
 class LostForm(models.Model):
     # name = models.CharField(max_length=70, blank=False, default='')
     # age = models.IntegerField(blank=False, default=1)
     # active = models.BooleanField(default=False)
     
-    reference = models.CharField(max_length=70, blank=False, default='')
+    reference = models.IntegerField(blank=False, default=0)
     eventType = models.CharField(max_length=70, blank=False, default='')
     date = models.CharField(max_length=70, blank=False, default='')
     reporterName = models.CharField(max_length=70, blank=False, default='')
