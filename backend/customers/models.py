@@ -6,7 +6,8 @@ class UploadTo:
     self.field = field
 
   def __call__(self, instance, filename):
-    return '{}/{}/{}'.format(str(int(LostForm.objects.aggregate(Max('reference'))['reference__max'] or 0) + 1), self.field, filename)
+    # reference = str(int(LostForm.objects.aggregate(Max('reference'))['reference__max'] or 0) + 1)
+    return '{}/{}/{}'.format(instance.reference, self.field, filename)
 
   def deconstruct(self):
     return ('customers.models.UploadTo', [self.field], {})
@@ -39,9 +40,9 @@ class LostForm(models.Model):
     eventRelevantPlacesAndFactors = models.CharField(max_length=70, blank=False, default='')
     eventInitialDetails = models.CharField(max_length=70, blank=False, default='')
     investigationDate = models.CharField(max_length=70, blank=False, default='')
-    investigationFile = models.FileField(upload_to=UploadTo('investigationFile'), max_length=100, blank=True)
+    investigationFile = models.FileField(upload_to=UploadTo('investigationFile'), max_length=100, blank=True, null=True)
     handlingDate = models.CharField(max_length=70, blank=False, default='')
     findingDate = models.CharField(max_length=70, blank=False, default='')
-    findingFile = models.FileField(upload_to=UploadTo('findingFile'), max_length=100, blank=True)
-    handlingFile = models.FileField(upload_to=UploadTo('handlingFile'), max_length=100, blank=True)
+    findingFile = models.FileField(upload_to=UploadTo('findingFile'), max_length=100, blank=True, null=True)
+    handlingFile = models.FileField(upload_to=UploadTo('handlingFile'), max_length=100, blank=True, null=True)
     messages = models.CharField(max_length=70, blank=False, default='')

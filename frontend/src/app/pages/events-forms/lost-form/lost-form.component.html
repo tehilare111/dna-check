@@ -130,6 +130,20 @@
                 <input [readonly]="readonly" type="text" nbInput fullWidth name="investigationDate" id="investigationDate" status="primary" placeholder="תאריך הבירור" [(ngModel)]="lostForm.investigationDate">
               </div>
             </div>
+            <div *ngIf="lostForm.investigationFile" class="col-md-3">
+              <div class="form-group">
+                <div class="row">
+                  <label class="label">
+                    {{this.getFileName(this.lostForm.investigationFile)}}
+                  </label>
+                </div>
+                <div class="row">
+                  <a [href]="baseUrl+lostForm.investigationFile" class="download">
+                    <nb-card status="primary"><nb-icon icon="arrow-circle-down-outline" pack="eva"></nb-icon></nb-card>
+                  </a>
+                </div>
+              </div>
+            </div>
             <div class="col-md-2">
               <div class="form-group">
                 <label for="investigationFile" class="label">צרף קובץ</label>
@@ -145,6 +159,20 @@
                 <input [readonly]="readonly" type="text" nbInput fullWidth name="findingDate" id="findingDate" status="primary" placeholder="תאריך המציאה" [(ngModel)]="lostForm.findingDate">
               </div>
             </div>
+            <div *ngIf="lostForm.findingFile" class="col-md-3">
+              <div class="form-group">
+                <div class="row">
+                  <label class="label">
+                    {{this.getFileName(this.lostForm.findingFile)}}
+                  </label>
+                </div>
+                <div class="row">
+                  <a [href]="baseUrl+lostForm.findingFile" class="download">
+                    <nb-card status="primary"><nb-icon icon="arrow-circle-down-outline" pack="eva"></nb-icon></nb-card>
+                  </a>
+                </div>
+              </div>
+            </div>
             <div class="col-md-2">
               <div class="form-group">
                 <label for="findingFile" class="label">צרף קובץ</label>
@@ -158,6 +186,20 @@
               <div class="form-group">
                 <label for="handlingDate" class="label">תאריך הטיפול</label>
                 <input [readonly]="readonly" type="text" nbInput fullWidth name="handlingDate" id="handlingDate" status="primary" placeholder="תאריך הטיפול" [(ngModel)]="lostForm.handlingDate">
+              </div>
+            </div>
+            <div *ngIf="lostForm.handlingFile" class="col-md-3">
+              <div class="form-group">
+                <div class="row">
+                  <label class="label">
+                    {{this.getFileName(this.lostForm.handlingFile)}}
+                  </label>
+                </div>
+                <div class="row">
+                  <a [href]="baseUrl+lostForm.handlingFile" class="download">
+                    <nb-card status="primary"><nb-icon icon="arrow-circle-down-outline" pack="eva"></nb-icon></nb-card>
+                  </a>
+                </div>
               </div>
             </div>
             <div class="col-md-2">

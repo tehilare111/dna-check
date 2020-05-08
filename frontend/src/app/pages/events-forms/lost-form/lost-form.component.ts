@@ -14,6 +14,7 @@ import { EventStatusComponent } from '../components/event-status/event-status.co
 
 export class LostFormComponent {
   eventType: string = 'אובדן ציוד';
+  eventFilesFields: string[] = ['handlingFile', 'findingFile', 'investigationFile'];
 
   lostForm: LostFormTemplate = new LostFormTemplate();
   uploadLoading = false;
@@ -24,7 +25,9 @@ export class LostFormComponent {
   readonly : boolean = true;
   popUpDialogContext: string = '';
 
-  constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { }
+  baseUrl: string = '';
+
+  constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { this.baseUrl = this.RestApiService.baseUrl; console.log(this.baseUrl) }
 
   handleFileUpload(event){
     var target = event.target || event.srcElement || event.currentTarget;
@@ -53,8 +56,6 @@ export class LostFormComponent {
 
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: LostFormTemplate) => {
-      console.log(data_from_server.date)
-      console.log(data_from_server.findingFile)
       this.lostForm = data_from_server
     });
   }
@@ -65,13 +66,21 @@ export class LostFormComponent {
   
     // insert lostForm to FormData object
     for(let [key, value] of Object.entries(this.lostForm)){
-      formData.append(key, value);
+      if (value && ! this.eventFilesFields.includes(key)) { formData.append(key, value); console.log('1:', formData); }
+    }
+
+    for (var pair of formData.entries()) {
+        console.log('1: ', pair[0]+ ', ' + pair[1]); 
     }
 
     // insert all files to FormData object
     for( let formFile of this.formFiles ){
       formData.append(formFile['id'], formFile['file'], formFile['file'].name);
     }
+
+    for (var pair of formData.entries()) {
+        console.log('2: ', pair[0]+ ', ' + pair[1]); 
+    }    
 
     if (this.reference){
       this.RestApiService.updateExistingEventForm(this.reference, formData)
@@ -124,5 +133,9 @@ export class LostFormComponent {
           this.popUpDialogContext = `אירוע עם סימוכין ${this.reference} נמחק`;
         },
         error => console.log(error));
+  }
+
+  getFileName(fileNameWithPath){
+    if (fileNameWithPath) return fileNameWithPath.substring(fileNameWithPath.lastIndexOf('/') + 1)
   }
 }

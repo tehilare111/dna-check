@@ -6,6 +6,7 @@ from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser
 from rest_framework import status
 from django.db.models import Max
 from datetime import datetime
+from django.conf import settings
 
 from rest_framework.views import APIView
 
@@ -13,6 +14,7 @@ from customers.models import LostForm
 from customers.serializers import CustomerSerializer
 
 import time
+import os
 
 @csrf_exempt
 def customer_list(request):
@@ -121,6 +123,18 @@ def existing_event_form(request, reference):
 def customer_detail_Users(request, firstname):
     print("all fine: ", firstname)
     return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+@csrf_exempt
+def download_file(request, path):
+    file_path = os.path.join(settings.MEDIA_ROOT, path)
+    print('file_path', file_path)
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
+            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+            return response
+    return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
 
 class NewEventFrom(APIView):
 

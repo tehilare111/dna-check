@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^event_forms/(?P<reference>[0-9]+)$', views.NewEventFrom.as_view()),
     # Not Used right now
     url(r'^event_forms/$', views.new_event_form),
+    url(r'^media/(?P<path>.+)$', views.download_file),
 ]
 
 if settings.DEBUG:

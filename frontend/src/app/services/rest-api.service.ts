@@ -7,59 +7,62 @@ import { Observable } from 'rxjs';
 })
 export class RestApiService {
 
-  private baseUrl = 'http://127.0.0.1:8000/api/';
+  baseUrl = 'http://127.0.0.1:8000/api';
 
   constructor(private http: HttpClient) { }
 
   getCustomer(id: number): Observable<Object> {
-    return this.http.get(`${this.baseUrl}customers/${id}`);
+    return this.http.get(`${this.baseUrl}/customers/${id}`);
   }
 
   createCustomer(customer: Object): Observable<Object> {
-    return this.http.post(`${this.baseUrl}customers/`, customer);
+    return this.http.post(`${this.baseUrl}/customers/`, customer);
   }
 
   updateCustomer(id: number, value: any): Observable<Object> {
-    return this.http.put(`${this.baseUrl}customers/${id}`, value);
+    return this.http.put(`${this.baseUrl}/customers/${id}`, value);
   }
 
   deleteCustomer(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}customers/${id}`);
+    return this.http.delete(`${this.baseUrl}/customers/${id}`);
   }
 
   getCustomersList(): Observable<any> {
-    return this.http.get(`${this.baseUrl}customers/`);
+    return this.http.get(`${this.baseUrl}/customers/`);
   }
 
   getCustomersByAge(age: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}customers/age/${age}/`);
+    return this.http.get(`${this.baseUrl}/customers/age/${age}/`);
   }
 
   deleteAll(): Observable<any> {
-    return this.http.delete(`${this.baseUrl}customers/`);
+    return this.http.delete(`${this.baseUrl}/customers/`);
   }
 
   getNewEventForm(): Observable<any> {
-    return this.http.get(`${this.baseUrl}event_forms/`);
+    return this.http.get(`${this.baseUrl}/event_forms/`);
   }
 
   getExistingEventForm(reference: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}event_forms/${reference}`);
+    return this.http.get(`${this.baseUrl}/event_forms/${reference}`);
   }
 
   updateExistingEventForm(reference, form): Observable<Object> {
-    return this.http.put(`${this.baseUrl}event_forms/${reference}`, form);
+    for (var pair of form.entries()) {
+        console.log('3: ', pair[0]+ ', ' + pair[1]); 
+    }
+    return this.http.put(`${this.baseUrl}/event_forms/${reference}`, form);
   }
 
   createNewEventForm(form: Object): Observable<Object> {
-    return this.http.post(`${this.baseUrl}event_forms/`, form);
+    return this.http.post(`${this.baseUrl}/event_forms/`, form);
   }
 
   createNewEventFormWithFiles(form: FormData): Observable<Object> {
-    return this.http.post(`${this.baseUrl}event_forms/file`, form, {headers: {'enctype': 'multipart/form-data'}});
+    return this.http.post(`${this.baseUrl}/event_forms/file`, form, {headers: {'enctype': 'multipart/form-data'}});
   }
 
   deleteExistingEventForm(reference: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}event_forms/${reference}`);
+    return this.http.delete(`${this.baseUrl}/event_forms/${reference}`);
   }
 }
