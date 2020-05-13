@@ -12,6 +12,7 @@ import {
   NbSelectModule,
   NbUserModule,
   NbAlertModule,
+  NbSearchModule,
 } from '@nebular/theme';
 
 import { NgxEchartsModule } from 'ngx-echarts';
@@ -40,6 +41,7 @@ const routes:Routes=[
     NbIconModule,
     NbAlertModule,
     ngFormsModule,
+    NbSearchModule,
   ],
   declarations: [RegisterComponent, PermissionsComponent],
 })

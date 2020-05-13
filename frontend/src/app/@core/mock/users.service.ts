@@ -42,6 +42,9 @@ export class UserService extends UserData {
   getUsers(): Observable<any> {
     return observableOf(this.users);
   }
+  getUsersLogin(): Observable<any> {
+    return observableOf(this.users);
+  }
 
   getContacts(): Observable<Contacts[]> {
     return observableOf(this.contacts);

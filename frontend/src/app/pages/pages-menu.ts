@@ -19,6 +19,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
         title:"הרשמה",
         link:'register'
       },
+      {
+        title:"הרשאות וניהול משתמשים",
+        link:'permiss'
+      },
+
     ],
   },
   {

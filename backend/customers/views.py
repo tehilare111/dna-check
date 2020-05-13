@@ -58,12 +58,16 @@ def customer_detail(request, pk):
     print("custumer-detail", request.method)
 
     try: 
-        customer = LostForm.objects.get(pk=pk) 
+        
+        customer = LostForm.objects.get(pk=pk)
+        print (customer,"shalom10010010") 
     except LostForm.DoesNotExist: 
         return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
  
     if request.method == 'GET': 
-        customer_serializer = CustomerSerializer(customer) 
+        customer_serializer = CustomerSerializer(customer)
+        for i in customer_serializer:
+            print (i) 
         return JsonResponse(customer_serializer.data) 
  
     elif request.method == 'PUT': 
@@ -81,18 +85,75 @@ def customer_detail(request, pk):
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 @csrf_exempt 
-def customer_detail_Users(request,firstname):
+def customer_detail_Users_username(request,username):
     print("custumer-detail", request.method)
     try: 
-        customer1 =Destination.objects.get(firstname=firstname)
-
+        users=[]
+        customer=Destination.objects.filter(username=username)
+        for i in customer:
+            users.append(i)
     except Destination.DoesNotExist: 
-        print("shalom3")
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        customer=None 
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
+    print(request.method)
+    if request.method == 'GET':
+        if (len(users)>0):
 
-    if request.method == 'GET': 
-        customer_serializer = CustomerSerializer(customer1) 
-        return JsonResponse(customer_serializer.data)  
+            customer_serializer=CustomerSerializer(users[0])
+        else:
+            customer_serializer=CustomerSerializer(users)
+        return JsonResponse(customer_serializer.data) 
+ 
+    elif request.method == 'PUT': 
+        print("reach here")
+        customer_data = JSONParser().parse(request) 
+        customer_serializer = CustomerSerializer(customer, data=customer_data) 
+        if customer_serializer.is_valid(): 
+            print("reach here2")
+            customer_serializer.save() 
+            return JsonResponse(customer_serializer.data) 
+        return JsonResponse(customer_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+ 
+    elif request.method == 'DELETE': 
+        customer.delete() 
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+@csrf_exempt 
+def customer_detail_Users_Personal_number(request,personalnumber):
+    print("custumer-detail", request.method)
+    try: 
+        users=[]
+        customer=Destination.objects.filter(personalnumber=personalnumber)
+        for i in customer:
+            users.append(i)
+    except Destination.DoesNotExist: 
+        customer=None 
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
+    print(request.method)
+    if request.method == 'GET':
+        if (len(users)>0):
+            users.append(personalnumber)
+            print (users)
+            customer_serializer=CustomerSerializer(users[0])
+        else:
+            print(users)
+            customer_serializer=CustomerSerializer(users)
+        return JsonResponse(customer_serializer.data) 
+ 
+    elif request.method == 'PUT': 
+        print("reach here")
+        customer_data = JSONParser().parse(request) 
+        customer_serializer = CustomerSerializer(customer, data=customer_data) 
+        if customer_serializer.is_valid(): 
+            print("reach here2")
+            customer_serializer.save() 
+            return JsonResponse(customer_serializer.data) 
+        return JsonResponse(customer_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+ 
+    elif request.method == 'DELETE': 
+        customer.delete() 
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
 
 @csrf_exempt
 def customer_list_age(request, age):

@@ -37,5 +37,6 @@ class CustomerSerializer(serializers.ModelSerializer):
             'password',
             'personalnumber',
             'rank',
-            'armyposistion',)
+            'armyposistion',
+            'permissions',)
         

@@ -1,8 +1,34 @@
-<div class="center">
-    <h2 class="text-heading" style="text-align: center;">Register Page</h2>
-      <nb-card>
-        <nb-card-body>
           <form>
+            <div class="center">
+              <h2 class="text-heading" id="text_head" style="text-align: center;">Register Page</h2>
+            <nb-card id="login_id">
+              <nb-card-body>
+            <div class="form-group row">
+              <label for="input_username_login" class="label col-sm-12 col-form-label">Username</label>
+              <div class="col-sm-12">
+                <input type="text" name="username_LOGIN"  nbInput #user fullWidth id="user_login" fieldSize="medium" placeholder="UserName" [(ngModel)]=users.username> 
+              </div>
+              
+              <label for="input_Password_login" class="label col-sm-12 col-form-label" >Password</label>
+              <div class="col-sm-12">
+                <input type="Password" name="password_LOGIN"  nbInput #password fullWidth id="password_login" fieldSize="medium" placeholder="Password" [(ngModel)]=users.password>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-sm-12">
+                <button fullWidth nbButton (click)="Login()" status="primary">Login</button>
+                <a (click)="pade_router_register()">if you dont login enter register</a>
+            </div>
+            </div>
+              </nb-card-body>
+            </nb-card>
+            </div>
+          </form>
+          <form id="register_id" style="visibility: hidden;">
+            <div class="center">
+              <h2 class="text-heading" id="text_head" style="text-align: center;">Register Page</h2>
+            <nb-card>
+              <nb-card-body>
             <div class="form-group row">
               <label for="input_username" class="label col-sm-12 col-form-label">Username</label>
               <div class="col-sm-12">
@@ -30,7 +56,7 @@
               </div>
               <label class="label col-sm-12 col-form-label" >Rank</label>
               <div class="col-sm-12"> 
-                  <nb-select fullWidth #rank  selected="1">
+                  <nb-select fullWidth #rank  selected="1" [(ngModel)]="users.rank" >
                     <nb-option value="1">rabat</nb-option>
                     <nb-option value="2">shamal</nb-option>
                     <nb-option value="3">shmar</nb-option>
@@ -48,14 +74,15 @@
             </div>
             <div class="form-group row">
               <div class="col-sm-12">
-                <button fullWidth nbButton (click)="getuser(firstname,PersonalNumber)" status="primary">Register</button>
-                <label id="stam" style="visibility:hidden">
+                <button fullWidth nbButton (click)="onSubmit()" status="primary">Register</button>
+                <label id="stam" style="visibility:hidden" style="font-size: medium;">
                   {{user21}}
                 </label>
             </div>
             </div>
+          </nb-card-body>
+          </nb-card>
+        </div>
           </form>
-        </nb-card-body>
-      </nb-card>
-  </div>
+  
       

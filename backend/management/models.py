@@ -9,3 +9,4 @@ class Destination(models.Model):
     personalnumber=models.CharField(max_length=100)
     rank=models.CharField(max_length=100)
     armyposistion=models.CharField(max_length=100)
+    permissions=models.IntegerField()

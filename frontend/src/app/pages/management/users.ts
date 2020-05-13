@@ -7,5 +7,6 @@ export class Users {
     public personalnumber:string;
     public rank:string;
     public position:string;
+    public permissions=5;
     
 }

@@ -15,15 +15,17 @@ export class RestApiService {
     return this.http.get(`${this.baseUrl}customers/${id}`);
   }
 
-  getCustomers2(reference:string): Observable<Object> {
-    return this.http.get(`${this.baseUrl}get_users/${reference}`);
+  getCustomers_username(reference:string): Observable<Object> {
+    return this.http.get(`${this.baseUrl}get_users_username/${reference}`);
   }
-
+  getCustomers_personal(reference:string): Observable<Object> {
+    return this.http.get(`${this.baseUrl}get_users_personalnumber/${reference}`);
+  }
   createCustomer(customer: Object): Observable<Object> {
     return this.http.post(`${this.baseUrl}customers/`, customer);
   }
   createCustomerUser(customer: Object): Observable<Object> {
-    return this.http.post(`${this.baseUrl}create-User`, customer);
+    return this.http.post(`${this.baseUrl}create-User/`, customer);
   }
 
   updateCustomer(id: number, value: any): Observable<Object> {

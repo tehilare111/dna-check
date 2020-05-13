@@ -31,34 +31,6 @@ const routes: Routes = [{
       component:PermissionsComponent,
     },
     {
-      path:'permiss:username',
-      component:PermissionsComponent,
-    },
-    {
-      path:'permiss:firstName',
-      component:PermissionsComponent,
-    },
-    {
-      path:'permiss:lastName',
-      component:PermissionsComponent,
-    },
-    {
-      path:'permiss:password',
-      component:PermissionsComponent,
-    },
-    {
-      path:'permiss:personalnumber',
-      component:PermissionsComponent,
-    },
-    {
-      path:'permiss:rank',
-      component:PermissionsComponent,
-    },
-    {
-      path:'permiss:position',
-      component:PermissionsComponent,
-    },
-    {
       path: 'dashboard',
       component: ECommerceComponent,
     },

@@ -1,37 +1,44 @@
 <div class="center">
-    <div class="col-lg-6">
-      
-        <h5 class="text-heading" style="background-color: cornflowerblue;text-shadow: lightblue;">Profile</h5>
-        <h5 class="text-heading" style="background-color: cornflowerblue;border: black;">hello {{first}} {{last}}</h5>
-        <nb-card>
-        <nb-card-body >
-          <div class="form-group row"style="text-align:center">
-            <nb-card-header  style="text-align:center" fullWidth class="text-info">username: {{users}}</nb-card-header>
-          </div>
-          <div class="form-group row ">
-            <nb-card-header  style="text-align:center" class="text-info">firstname: {{first}}</nb-card-header>
-          </div>
+  <h2 class="text-heading" style="text-align: center;">הרשאות משתמשים</h2>
+  <div class="col-sm-8">
+      <nb-card>
+        <nb-card-header >
+          חיפוש משתמשים
+        </nb-card-header>
+        <nb-card-body>
           <div class="form-group row">
-            <nb-card-header  style="text-align:center" class="text-info">lastname: {{last}}</nb-card-header>
+          <div class="col-sm-12">
+            <input type="text" placeholder="Search.." nbInput fullWidth id="search" name="search" [(ngModel)]=users.username>
           </div>
-          <div class="form-group row"style="text-align:center">
-            <nb-card-header  style="text-align:center" style="text-align:center" class="text-info">password: {{pass}}</nb-card-header>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-12">
+            <button nbButton type="submit" (click)="onsubmit()"><i class="fa fa-search" status="primary"></i></button>
           </div>
-
-          <div class="form-group row"style="text-align:center">
-            <nb-card-header  style="text-align:center" class="text-info">personalnumber: {{personalnumber}}</nb-card-header>
+        </div>
+          </nb-card-body>
+      </nb-card>
+      <nb-card id="stam" style="visibility: hidden;" >
+        <nb-card-header >
+          פרופיל משתמשים
+        </nb-card-header>
+        <nb-card-body>
+          
+          <div class="form-group row">
+            <div class="col-sm-12">
+          <label id="id_username" >שם משתמש: </label>
+          <b><label> {{user_page }}</label></b>
           </div>
-
-          <div class="form-group row "style="text-align:center">
-            <nb-card-header  style="text-align:center" class="text-info">rank: {{rank}}</nb-card-header>
           </div>
-
-          <div class="form-group row" style="text-align:center">
-            <nb-card-header  style="text-align:center" class="text-info">armypostion: {{armypostion}}</nb-card-header>
+          <label id="alertid">{{alert}}</label>
+          <div class="form-group row">
+            <div class="col-sm-12">
+          <label id="id_permiss">הרשאות: </label>
+          <b><label> {{permiss }}</label></b>
           </div>
+          </div>
+          
         </nb-card-body>
-        </nb-card>
-
-      </div>
-</div>
-  
+        <button id="id_button_permiss"  fullWidth nbButton status="primary">שינוי הרשאות</button>
+      </nb-card>
+    </div>
