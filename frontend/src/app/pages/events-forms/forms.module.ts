@@ -23,6 +23,13 @@ import { CorruptionFormComponent } from './corruption-form/corruption-form.compo
 import { FormsModule as ngFormsModule } from '@angular/forms';
 import { EventDetailsComponent } from './components/event-details/event-details.component';
 import { EventStatusComponent } from './components/event-status/event-status.component';
+import { DateDirective } from './validation-directives/date.directive';
+import { IdDirective } from './validation-directives/id.directive';
+import { StdFieldDirective } from './validation-directives/std-field.directive';
+import { TimeDirective } from './validation-directives/time.directive';
+import { MarkDirective } from './validation-directives/mark.directive';
+import { MakatCopyDirective } from './validation-directives/makat-copy.directive';
+import { TextDirective } from './validation-directives/text.directive';
 
 
 @NgModule({
@@ -50,6 +57,13 @@ import { EventStatusComponent } from './components/event-status/event-status.com
     CorruptionFormComponent,
     EventDetailsComponent,
     EventStatusComponent,
+    DateDirective,
+    IdDirective,
+    StdFieldDirective,
+    TimeDirective,
+    MarkDirective,
+    MakatCopyDirective,
+    TextDirective,
   ],
 })
 export class FormsModule { }
