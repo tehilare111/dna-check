@@ -13,19 +13,25 @@
         <div class="form-group row">
           <label for="handlingResults" class="label col-sm-3 form-control-label">תוצאות טיפול</label>
           <div class="col-sm-9">
-            <input [readonly]="readonly" type="text" nbInput fullWidth name="handlingResults" id="handlingResults" placeholder="תוצאות טיפול" [(ngModel)]="eventForm.handlingResults">
+            <nb-select [disabled]="readonly" name="handlingResults" id="handlingResults" placeholder="תוצאות טיפול" [(ngModel)]="eventForm.handlingResults">
+              <nb-option *ngFor="let result of results" value="result">{{result}}</nb-option>  
+            </nb-select>
           </div>
         </div>
         <div class="form-group row">
           <label for="eventStatus" class="label col-sm-3 form-control-label">סטאטוס אירוע</label>
           <div class="col-sm-9">
-            <input [readonly]="readonly" type="text" nbInput fullWidth name="eventStatus" id="eventStatus" placeholder="סטאטוס אירוע" [(ngModel)]="eventForm.eventStatus">
+            <nb-select [disabled]="readonly" name="eventStatus" id="eventStatus" placeholder="סטאטוס אירוע" [(ngModel)]="eventForm.eventStatus">
+              <nb-option *ngFor="let status of eventStatusOptions" value="status">{{status}}</nb-option>  
+            </nb-select>
           </div>
         </div>
         <div class="form-group row">
           <label for="handlingStatus" class="label col-sm-3 form-control-label">סטאטוס טיפול</label>
           <div class="col-sm-9">
-            <input [readonly]="readonly" type="text" nbInput fullWidth name="handlingStatus" id="handlingStatus" placeholder="סטאטוס טיפול" [(ngModel)]="eventForm.handlingStatus">
+            <nb-select [disabled]="readonly" name="handlingStatus" id="handlingStatus" placeholder="סטאטוס טיפול" [(ngModel)]="eventForm.handlingStatus">
+              <nb-option *ngFor="let status of handlingStatusOptions" value="status">{{status}}</nb-option>  
+            </nb-select>
           </div>
         </div>
       </form>

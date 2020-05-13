@@ -27,6 +27,15 @@ export class LostFormComponent {
 
   baseUrl: string = '';
 
+  // select fields options:
+  results = ["טופל", "טרם טופל"]
+  units = ["מצוב", "מעוף", "מצפן"]
+  ranks = ["סמל", "רבט", "טוראי"]
+  equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
+  materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
+  equipments = [{"name": "ציוד", "list" : this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+  equipmentsTypeOptions = []  
+  
   constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { this.baseUrl = this.RestApiService.baseUrl; console.log(this.baseUrl) }
 
   handleFileUpload(event){

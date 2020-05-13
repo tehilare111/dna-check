@@ -16,7 +16,7 @@
 <div class="row" id="print-section">
   <div class="col-md-3">
     <ngx-event-details [form]="lostForm"></ngx-event-details>
-    <ngx-event-status #status [eventForm]="lostForm" [readonly]="readonly"></ngx-event-status>
+    <ngx-event-status #status [eventForm]="lostForm" [readonly]="readonly" [results]="results"></ngx-event-status>
   </div>
 
   <div class="col-md-9">
@@ -25,13 +25,15 @@
         <div style="display: flex; justify-content: center;">
           <h6><u>פרטי האירוע</u></h6>
         </div>
-        <form>
+        <form [ngFormOptions]="{updateOn: 'blur'}">
           <h6>פרטי החתום האחרון:</h6>
           <div class="row">
             <div class="col-md-2">
               <div class="form-group">
                 <label for="signerUnit" class="label">יחידת החתום</label>
-                <input [readonly]="readonly" type="text" nbInput fullWidth name="signerUnit" id="signerUnit" status="primary" placeholder="יחידת החתום" [(ngModel)]="lostForm.signerUnit">
+                <nb-select [disabled]="readonly" name="signerUnit" id="signerUnit" status="primary" placeholder="יחידת החתום" [(ngModel)]="lostForm.signerUnit">
+                  <nb-option *ngFor="let unit of units" value="unit">{{unit}}</nb-option>  
+                </nb-select>
               </div>
             </div>
             <div class="col-md-2">
@@ -43,13 +45,16 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="signerId" class="label">מ.א./ת.ז.</label>
-                <input [readonly]="readonly" type="text" nbInput fullWidth name="signerId" id="signerId" status="primary" placeholder="מ.א./ת.ז." [(ngModel)]="lostForm.signerId">
+                <input [readonly]="readonly" type="text" nbInput fullWidth name="signerId" id="signerId" #signerId="ngModel" pattern="[0-9]{9}" status="primary" placeholder="מ.א./ת.ז." [(ngModel)]="lostForm.signerId">
+                <div *ngIf="signerId.invalid"><label class="label red">ת.ז מורכב מ-9 ספרות</label></div>
               </div>
             </div>
             <div class="col-md-2">
               <div class="form-group">
                 <label for="rank" class="label">דרגה</label>
-                <input [readonly]="readonly" type="text" nbInput fullWidth name="rank" id="rank" status="primary" placeholder="דרגה" [(ngModel)]="lostForm.rank">
+                <nb-select [disabled]="readonly" name="rank" id="rank" status="primary" placeholder="דרגה" [(ngModel)]="lostForm.rank">
+                  <nb-option *ngFor="let rank of ranks" value="rank">{{rank}}</nb-option>  
+                </nb-select>
               </div>
             </div>
             <div class="col-md-2">
@@ -76,16 +81,20 @@
           </div>
           <h6>פרטי האובדן:</h6>
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-2">
               <div class="form-group">
                 <label for="equipment" class="label">ציוד/חומר</label>
-                <input [readonly]="readonly" type="text" nbInput fullWidth name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="lostForm.equipment">
+                <nb-select [disabled]="readonly" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="lostForm.equipment">
+                  <nb-option *ngFor="let equipment of equipments" value="equipment.name" (click)="equipmentsTypeOptions=equipment.list; lostForm.equipmentType=''">{{equipment.name}}</nb-option>  
+                </nb-select>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
               <div class="form-group">
                 <label for="equipmentType" class="label">סוג ציוד/חומר</label>
-                <input [readonly]="readonly" type="text" nbInput fullWidth name="equipmentType" id="equipmentType" status="primary" placeholder="סוג ציוד/חומר" [(ngModel)]="lostForm.equipmentType">
+                <nb-select [disabled]="readonly" name="equipmentType" id="equipmentType" status="primary" placeholder="סוג ציוד/חומר" [(ngModel)]="lostForm.equipmentType">
+                  <nb-option *ngFor="let equipment of equipmentsTypeOptions" value="equipment">{{equipment}}</nb-option>  
+                </nb-select>
               </div>
             </div>
             <div class="col-md-3">

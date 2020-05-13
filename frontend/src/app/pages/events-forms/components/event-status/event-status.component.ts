@@ -12,6 +12,11 @@ export class EventStatusComponent implements OnInit {
   @Input() eventForm: EventForm = new EventForm();
   @Input() readonly: boolean = true;
 
+  @Input() results = [];
+
+  eventStatusOptions = ["פתוח", "סגור"]
+  handlingStatusOptions = ["אבד", "נמצא"]
+
   constructor() { }
 
   ngOnInit(): void {
