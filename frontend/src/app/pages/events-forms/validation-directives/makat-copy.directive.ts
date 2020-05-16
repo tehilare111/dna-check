@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import { NG_VALIDATORS, Validator, AbstractControl } from '@angular/forms';
+import { NG_VALIDATORS, Validator, AbstractControl, ValidatorFn } from '@angular/forms';
 
 @Directive({
   selector: '[makatCopyValidation]',
@@ -15,4 +15,12 @@ export class MakatCopyDirective implements Validator {
       
       return valid ? null : {'makatCopyValidation': true};
     }
+}
+
+export function makatCopyValidator(): ValidatorFn {
+  let nameRe = /^(.{0,12}|\d{3})$/i;
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    const forbidden = nameRe.test(control.value);
+    return !forbidden ? {'forbiddenName': {value: control.value}} : null;
+  };
 }

@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import { NG_VALIDATORS, Validator, AbstractControl } from '@angular/forms';
+import { NG_VALIDATORS, Validator, AbstractControl, ValidatorFn } from '@angular/forms';
 
 @Directive({
   selector: '[idValidation]',
@@ -15,4 +15,13 @@ export class IdDirective implements Validator {
       return valid ? null : {'idValidation': true};
     }
 
+}
+
+export function idValidator(): ValidatorFn {
+  let nameRe = /^[0-9]{9}$/i;
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    const forbidden = nameRe.test(control.value);
+    console.log('fo', forbidden)
+    return !forbidden ? {'signerId': {value: control.value}} : null;
+  };
 }

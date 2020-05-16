@@ -46,3 +46,4 @@ class LostForm(models.Model):
     findingFile = models.FileField(upload_to=UploadTo('findingFile'), max_length=100, blank=True, null=True)
     handlingFile = models.FileField(upload_to=UploadTo('handlingFile'), max_length=100, blank=True, null=True)
     messages = models.CharField(max_length=70, blank=False, default='')
+    editStateBlocked = models.BooleanField(default=True)

@@ -4,6 +4,7 @@ export class Form{
     date: string;
     reporterName: string;
     reporterUnit: string;
+    editStateBlocked: boolean;
 }
 
 export class EventForm extends Form{

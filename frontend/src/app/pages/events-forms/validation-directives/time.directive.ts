@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import { NG_VALIDATORS, Validator, AbstractControl } from '@angular/forms';
+import { NG_VALIDATORS, Validator, AbstractControl, ValidatorFn } from '@angular/forms';
 
 @Directive({
   selector: '[timeValidation]',
@@ -16,3 +16,13 @@ export class TimeDirective implements Validator {
       return valid ? null : {'timeValidation': true};
     }
 }
+
+export function timeValidator(): ValidatorFn {
+  let nameRe = /^\d\d\:\d\d$/i;
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    const forbidden = nameRe.test(control.value);
+    return !forbidden ? {'forbiddenName': {value: control.value}} : null;
+  };
+}
+
+

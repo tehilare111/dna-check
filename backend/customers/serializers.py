@@ -35,5 +35,6 @@ class CustomerSerializer(serializers.ModelSerializer):
             'findingDate',
             'findingFile',
             'handlingFile',
-            'messages'
+            'messages',
+            'editStateBlocked'
         )

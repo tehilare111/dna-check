@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import { NG_VALIDATORS, Validator, AbstractControl } from '@angular/forms';
+import { NG_VALIDATORS, Validator, AbstractControl, ValidatorFn } from '@angular/forms';
 
 @Directive({
   selector: '[stdFieldValidation]',
@@ -15,4 +15,12 @@ export class StdFieldDirective implements Validator {
       return valid ? null : {'stdFieldValidation': true};
     }
 
+}
+
+export function stdFieldValidator(): ValidatorFn {
+  let nameRe = /^.{0,30}$/i;
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    const forbidden = nameRe.test(control.value);
+    return !forbidden ? {'forbiddenName': {value: control.value}} : null;
+  };
 }
