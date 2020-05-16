@@ -11,25 +11,25 @@ from django.conf import settings
 from rest_framework.views import APIView
 
 from customers.models import LostForm
-from customers.serializers import CustomerSerializer
+from customers.serializers import LostFormSerializer
 
 import time
 import os
 
 @csrf_exempt
 def customer_list(request):
-    print("custumer-list", request.headers["Origin"])
+    
     if request.method == 'GET':
         customers = LostForm.objects.all()
-        customers_serializer = CustomerSerializer(customers, many=True)
+        form_serializer = LostFormSerializer(customers, many=True)
 
-        return JsonResponse(customers_serializer.data, safe=False)
+        return JsonResponse(form_serializer.data, safe=False)
         # In order to serialize objects, we must set 'safe=False'
 
     elif request.method == 'POST':
         print("yesss")
         customer_data = JSONParser().parse(request)
-        customer_serializer = CustomerSerializer(data=customer_data)
+        customer_serializer = LostFormSerializer(data=customer_data)
         if customer_serializer.is_valid():
             customer_serializer.save()
             return JsonResponse(customer_serializer.data, status=status.HTTP_201_CREATED ) 
@@ -49,13 +49,13 @@ def customer_detail(request, pk):
         return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
  
     if request.method == 'GET': 
-        customer_serializer = CustomerSerializer(customer) 
+        customer_serializer = LostFormSerializer(customer) 
         return JsonResponse(customer_serializer.data) 
  
     elif request.method == 'PUT': 
         print("reach here")
         customer_data = JSONParser().parse(request) 
-        customer_serializer = CustomerSerializer(customer, data=customer_data) 
+        customer_serializer = LostFormSerializer(customer, data=customer_data) 
         if customer_serializer.is_valid(): 
             print("reach here2")
             customer_serializer.save() 
@@ -72,7 +72,7 @@ def customer_list_age(request, age):
     customers = LostForm.objects.filter(age=age)
         
     if request.method == 'GET': 
-        customers_serializer = CustomerSerializer(customers, many=True)
+        customers_serializer = LostFormSerializer(customers, many=True)
         return JsonResponse(customers_serializer.data, safe=False)
         # In order to serialize objects, we must set 'safe=False'
     
@@ -88,7 +88,7 @@ def new_event_form(request):
 
     elif request.method == 'POST':
         # customer_data = JSONParser().parse(request)
-        customer_serializer = CustomerSerializer(request.POST, request.FILES)
+        customer_serializer = LostFormSerializer(request.POST, request.FILES)
         if customer_serializer.is_valid():
             customer_serializer.save(reference = str(int(LostForm.objects.aggregate(Max('reference'))['reference__max']) + 1))
             return HttpResponse(status=status.HTTP_204_NO_CONTENT)
@@ -103,12 +103,12 @@ def existing_event_form(request, reference):
         return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
  
     if request.method == 'GET':
-        customer_serializer = CustomerSerializer(event_form)
+        customer_serializer = LostFormSerializer(event_form)
         return JsonResponse(customer_serializer.data)
  
     elif request.method == 'PUT':
         customer_data = JSONParser().parse(request)
-        customer_serializer = CustomerSerializer(event_form, data=customer_data)
+        customer_serializer = LostFormSerializer(event_form, data=customer_data)
         if customer_serializer.is_valid():
             customer_serializer.save()
             return JsonResponse(customer_serializer.data)
@@ -141,7 +141,7 @@ class NewEventFrom(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request, *args, **kwargs):
-        file_serializer = CustomerSerializer(data=request.data)
+        file_serializer = LostFormSerializer(data=request.data)
         if file_serializer.is_valid():
             file_serializer.save(reference = int(LostForm.objects.aggregate(Max('reference'))['reference__max'] or 0) + 1)
             return JsonResponse(file_serializer.data, status=status.HTTP_201_CREATED ) 
@@ -154,7 +154,7 @@ class NewEventFrom(APIView):
         except LostForm.DoesNotExist: 
             return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
 
-        file_serializer = CustomerSerializer(event_form, data=request.data)
+        file_serializer = LostFormSerializer(event_form, data=request.data)
         if file_serializer.is_valid():
             file_serializer.save()
             return JsonResponse(file_serializer.data, status=status.HTTP_201_CREATED ) 
@@ -167,7 +167,7 @@ class NewEventFrom(APIView):
         except LostForm.DoesNotExist: 
             return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
     
-        customer_serializer = CustomerSerializer(event_form)
+        customer_serializer = LostFormSerializer(event_form)
         return JsonResponse(customer_serializer.data)
 
     def delete(self, request, reference, *args, **kwargs):

@@ -12,20 +12,30 @@ class UploadTo:
   def deconstruct(self):
     return ('customers.models.UploadTo', [self.field], {})
 
-class LostForm(models.Model):
-    # name = models.CharField(max_length=70, blank=False, default='')
-    # age = models.IntegerField(blank=False, default=1)
-    # active = models.BooleanField(default=False)
-    
+class Form(models.Model):
     reference = models.IntegerField(blank=False, default=0)
     eventType = models.CharField(max_length=70, blank=False, default='')
     date = models.CharField(max_length=70, blank=False, default='')
     reporterName = models.CharField(max_length=70, blank=False, default='')
     reporterUnit = models.CharField(max_length=70, blank=False, default='')
+    editStateBlocked = models.BooleanField(default=True)
+
+    class Meta:
+      abstract = True
+
+class EventForm(Form):
     caseIdOnMetzah = models.CharField(max_length=70, blank=False, default='')
     handlingResults = models.CharField(max_length=70, blank=False, default='')
     eventStatus = models.CharField(max_length=70, blank=False, default='')
     handlingStatus = models.CharField(max_length=70, blank=False, default='')
+
+    class Meta:
+      abstract = True
+
+class LostForm(EventForm):
+    # name = models.CharField(max_length=70, blank=False, default='')
+    # age = models.IntegerField(blank=False, default=1)
+    # active = models.BooleanField(default=False)
     signerUnit = models.CharField(max_length=70, blank=False, default='')
     signerName = models.CharField(max_length=70, blank=False, default='')
     signerId = models.CharField(max_length=70, blank=False, default='')
@@ -46,4 +56,3 @@ class LostForm(models.Model):
     findingFile = models.FileField(upload_to=UploadTo('findingFile'), max_length=100, blank=True, null=True)
     handlingFile = models.FileField(upload_to=UploadTo('handlingFile'), max_length=100, blank=True, null=True)
     messages = models.CharField(max_length=70, blank=False, default='')
-    editStateBlocked = models.BooleanField(default=True)
