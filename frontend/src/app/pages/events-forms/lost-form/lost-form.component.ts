@@ -110,7 +110,9 @@ export class LostFormComponent {
   save() {
     const formData: FormData = new FormData();
     this.lostForm = this.eventStatusForm.pushFormFields<LostFormTemplate>(this.lostForm);
-  
+
+    //console.log('form: ', this.lostForm)
+    
     // insert lostForm to FormData object
     for(let [key, value] of Object.entries(this.lostForm)){
       if (value && ! this.eventFilesFields.includes(key)) { formData.append(key, value); }

@@ -36,3 +36,36 @@ export class LostFormTemplate extends EventForm {
     handlingFile: string;
     messages: string;
 }
+
+export class CorruptionFormTemplate extends EventForm {
+    signerUnit: string;
+    signerName: string;
+    signerId: string;
+    rank: string;
+    position: string;
+    eventDate: string;
+    eventHour: string;
+    equipment: string;
+    equipmentType: string;
+    equipmentMark: string;
+    equipmentMakat: string;
+    eventRelevantPlacesAndFactors: string;
+    eventInitialDetails: string;
+    investigationDate: string;
+    investigationFile: string;
+    handlingDate: string
+    handlingFile: string;
+    messages: string;
+}
+
+export class EquipmentReviewTemplate extends EventForm {
+    reviewDate: string;
+    reviewFile: string;
+    isMatchToReport: boolean;
+    equipment: string;
+    equipmentType: string;
+    equipmentMark: string;
+    equipmentMakat: string;
+    reviewReference: string;
+    messages: string;
+}

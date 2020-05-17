@@ -1,0 +1,159 @@
+
+<div class="row col-md-12" id="outOfPrint">
+    <nb-card>
+      <button type="submit" nbButton status="primary" (click)="onSubmit()">שלח אירוע</button>
+    </nb-card>
+    <nb-card>
+      <button *ngIf="true" nbButton status="primary" (click)="updateEditState()">פתח/סגור אירוע לעריכה</button>
+    </nb-card>
+    <nb-card>
+      <button *ngIf="true" nbButton status="primary" (click)="printForm()">הדפס אירוע</button>
+    </nb-card>
+    <nb-card>
+      <button *ngIf="true" nbButton status="primary" (click)="deleteEventForm()">מחק אירוע</button>
+    </nb-card>
+  </div>
+  
+  <div class="row" id="print-section">
+    <div class="col-md-3">
+      <ngx-event-details [form]="equipmentReview"></ngx-event-details>
+      <ngx-event-status-shorted #status [eventForm]="equipmentReview" [readonly]="this.equipmentReview.editStateBlocked" [results]="results"></ngx-event-status-shorted>
+    </div>
+  
+    <div class="col-md-9">
+      <nb-card>
+        <nb-card-body>
+          <div style="display: flex; justify-content: center;">
+            <h6><u>פרטי האירוע</u></h6>
+          </div>
+          <form> <!--[ngFormOptions]="{updateOn: 'blur'}">-->
+            <h6>פרטי הביקורת:</h6>
+            <div class="row">
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="reviewDate" class="label">תאריך הביקורת</label>
+                  <input [readonly]="this.equipmentReview.editStateBlocked" type="text" nbInput fullWidth #reviewDate="ngModel" name="reviewDate" id="reviewDate" status="primary" placeholder="תאריך הביקורת" [(ngModel)]="equipmentReview.reviewDate"  dateValidation>
+                  <div *ngIf="reviewDate.invalid&&reviewDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div>
+                </div>
+              </div>
+              <div *ngIf="equipmentReview.reviewFile" class="col-md-3">
+                <div class="form-group">
+                  <div class="row">
+                    <label class="label">   
+                      {{this.getFileName(this.equipmentReview.reviewFile)}}
+                    </label>
+                  </div>
+                  <div class="row">
+                    <a [href]="baseUrl+equipmentReview.reviewFile" class="download">
+                      <nb-card status="primary"><nb-icon icon="arrow-circle-down-outline" pack="eva"></nb-icon></nb-card>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="reviewFile" class="label">צרף קובץ</label>
+                  <input [readonly]="this.equipmentReview.editStateBlocked" type="file" (change)="handleFileUpload($event)" name="reviewFile" id="reviewFile">
+                </div>
+              </div>
+            </div>
+            <div class="row col-md-12">
+                <div>
+                    <p>הרני מאשר שביצעתי ביקורת מצאי מכשירי צ' ומסט"בים ביחידתי,<br>
+                    המבוססת על ביקורת פיסית כמתואר בהוראת קשר"ר בתחום הצו"ב (510) 06-06-02 "ביקורת ציוד תקשוב מסווג"<br>
+                    ומצאתי כי:</p>
+                </div>
+                <div>
+                    <nb-radio-group [(value)]="equipmentReview.isMatchToReport" [(ngModel)]="equipmentReview.isMatchToReport">
+                        <nb-radio
+                        [value]="true">
+                        יש התאמה מלאה בין הנתונים שהופקו בדו"ח אל מול הבדיקה הפיסית שנערכה
+                        </nb-radio>
+                        <nb-radio
+                        [value]="false">
+                        אין התאמה מלאה בין הנתונים שהופקו בדו"ח אל מול הבדיקה הפיסית שנערכה. להלן רשימת הסימונים החסרים
+                        </nb-radio>
+                    </nb-radio-group>
+                </div>
+            </div>
+            <h6>פרטי החוסרים:</h6>
+            <div class="row">
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="equipment" class="label">ציוד/חומר</label>
+                  <nb-select [disabled]="this.equipmentReview.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="equipmentReview.equipment">
+                    <nb-option *ngFor="let equipment of equipments" value="equipment.name" (click)="equipmentsTypeOptions=equipment.list; equipmentReview.equipmentType=''">{{equipment.name}}</nb-option>  
+                  </nb-select>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="equipmentType" class="label">סוג ציוד/חומר</label>
+                  <nb-select [disabled]="this.equipmentReview.editStateBlocked" name="equipmentType" id="equipmentType" status="primary" placeholder="סוג ציוד/חומר" [(ngModel)]="equipmentReview.equipmentType">
+                    <nb-option *ngFor="let equipment of equipmentsTypeOptions" value="equipment">{{equipment}}</nb-option>  
+                  </nb-select>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="equipmentMark" class="label">סימון ציוד/חומר</label>
+                  <input [readonly]="this.equipmentReview.editStateBlocked" type="text" nbInput fullWidth #equipmentMark="ngModel" name="equipmentMark" id="equipmentMark" status="primary" placeholder="סימון ציוד/חומר" [(ngModel)]="equipmentReview.equipmentMark" markValidation>
+                  <div *ngIf="equipmentMark.invalid&&equipmentMark.dirty"><label class="label red">XXXXXXXXX או YYYYYY-XXX</label></div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="equipmentMakat" class="label">מק"ט ציוד/עותק חומר</label>
+                  <input [readonly]="this.equipmentReview.editStateBlocked" type="text" nbInput fullWidth #equipmentMakat="ngModel" name="equipmentMakat" id="equipmentMakat" status="primary" placeholder="מק''ט ציוד/עותק חומר" [(ngModel)]="equipmentReview.equipmentMakat" makatCopyValidation>
+                  <div *ngIf="equipmentMakat.invalid&&equipmentMakat.dirty"><label class="label red">3 ספרות או 12 תווים</label></div>
+                </div>
+              </div>
+            </div>
+            <h6>התייחסות לביקורת:</h6>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <input [readonly]="this.equipmentReview.editStateBlocked" type="text" nbInput fullWidth #reviewReference="ngModel" name="reviewReference" id="reviewReference" status="primary" placeholder="מלל חופשי" [(ngModel)]="equipmentReview.reviewReference" textValidation>
+                  <div *ngIf="reviewReference.invalid&&reviewReference.dirty"><label class="label red">עד 100 תווים</label></div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div style="display: flex; justify-content: center;">
+            <h6><u>טיפול באירוע</u></h6>
+          </div>
+          <form>
+            <h6>הודעות</h6>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <input [readonly]="this.equipmentReview.editStateBlocked" type="text" nbInput fullWidth name="messages" id="messages" status="primary" placeholder="מלל חופשי" [(ngModel)]="equipmentReview.messages">
+                </div>
+              </div>
+            </div>
+          </form>
+        </nb-card-body>
+      </nb-card>
+    </div>  
+  </div>
+  
+  
+  <ng-template #dialog let-data let-ref="dialogRef">
+    <nb-card [nbSpinner]="uploadLoading" nbSpinnerSize="large" nbSpinnerStatus="primary">
+      <nb-card-header>מעלה את הבקשה</nb-card-header>
+      <nb-card-body>{{this.popUpDialogContext}}</nb-card-body>
+      <nb-card-footer style="display: flex; justify-content: center;">
+        <button nbButton (click)="ref.close()" status="primary" [disabled]="uploadLoading" routerLink="/pages/control-table/control-table" hero>סיום</button>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+  
+  <ng-template #dialog2 let-data let-ref="dialogRef">
+    <nb-card [nbSpinner]="uploadLoading" nbSpinnerSize="large" nbSpinnerStatus="primary">
+      <nb-card-header>מטפל בבקשה</nb-card-header>
+      <nb-card-body>{{this.popUpDialogContext}}</nb-card-body>
+      <nb-card-footer style="display: flex; justify-content: center;">
+        <button nbButton (click)="ref.close()" status="primary" [disabled]="uploadLoading" hero>סיום</button>
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>

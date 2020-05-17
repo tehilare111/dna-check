@@ -31,17 +31,41 @@ interface FSEntry {
 })
 export class ControlTableComponent implements OnInit{
 
-  pickedUpEvent = {'name':undefined, 'route': '/'};
+  pickedUpEvent = {'name':undefined, 'route': undefined};
   eventsToPickUp = {
-    'CorruptionForm': {'name': 'השחתת/השמדת ציוד', 'route': '/pages/events-forms/corruption-form'}, 
-    'LostForm': {'name': 'אובדן ציוד', 'route': '/pages/events-forms/lost-form'},
+    'defaultForms': {
+      'name': 'כלל הטפסים',
+      'route': undefined,
+      'columns': {'reference': 'סימוכין', 'date': 'תאריך', 'reporterName': 'שם מדווח', 'reporterUnit': 'יחידת מדווח', 'eventStatus': 'סטאטוס אירוע'} 
+    },
+    'CorruptionForm': {
+      'name': 'השמדת ציוד',
+      'route': '/pages/events-forms/corruption-form',
+      'columns': {'reference': 'סימוכין', 'reporterUnit': 'יחידת מדווח'}
+    },
+    'LostForm': {
+      'name': 'אובדן ציוד',
+      'route': '/pages/events-forms/lost-form',
+      'columns': {'reference': 'סימוכין', 'reporterName': 'שם מדווח', 'reporterUnit': 'יחידת מדווח'}
+  },
+    'EquipmentReview': {
+      'name': 'ביקורת ציוד',
+      'route': '/pages/events-forms/equipment-review',
+      'columns': {'reference': 'סימוכין', 'date': 'תאריך', 'reporterName': 'שם מדווח', 'reporterUnit': 'יחידת מדווח'}
+    },
   }
 
   customColumn = 'eventType';
   customColumn2 = 'סוג האירוע'
   // columns keys to read from json and its name in hebrew to display in the table
-  columns = {'reference': 'סימוכין', 'date': 'תאריך', 'reporterName': 'שם מדווח', 'reporterUnit': 'יחידת מדווח'};
+  columns = {'reference': 'סימוכין', 'date': 'תאריך', 'reporterName': 'שם מדווח', 'reporterUnit': 'יחידת מדווח', 'eventStatus': 'סטאטוס אירוע'};
   allColumns = [ this.customColumn, ...Object.keys(this.columns) ];
+
+  loadTable(value){
+    this.loadData(value.route?value.name:'');
+    this.allColumns = [ this.customColumn, ...Object.keys(value.columns) ];
+  }
+
 
   dataSource: NbTreeGridDataSource<FSEntry>;
 
@@ -53,11 +77,11 @@ export class ControlTableComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.loadData();
+    this.loadData('');
   }
 
-  loadData() {
-    this.RestApiService.getCustomersList().subscribe((data_from_server) => {
+  loadData(eventType: string) {
+    this.RestApiService.getCustomersList(eventType).subscribe((data_from_server) => {
       let new_data: TreeNode<FSEntry>[] = data_from_server.map((event) => {
         return {'data': event}
       })
@@ -80,7 +104,7 @@ export class ControlTableComponent implements OnInit{
   }
 
   private data: TreeNode<FSEntry>[] = [
-    {
+    /*{
       data: {'eventType': 'אובדן', 'reference': '12345', 'date': '12.12.21', 'reporterName': 'עדי בן לולו', 'reporterUnit': 'הנועזים'},
       children: [
         { data: {'eventType': 'אובדן', 'reference': 'עוד מידע', 'date': 'עוד מידע', 'reporterName': 'עוד מידע', 'reporterUnit': 'עוד מידע'} },
@@ -89,7 +113,7 @@ export class ControlTableComponent implements OnInit{
     },
     {
       data: {'eventType': 'אובדן', 'reference': 'עוד מידע', 'date': 'עוד מידע', 'reporterName': 'עוד מידע', 'reporterUnit': 'עוד מידע'},
-    }
+    }*/
   ];
 
   getShowOn(index: number) {
@@ -99,7 +123,13 @@ export class ControlTableComponent implements OnInit{
   }
 
   formClicked(event, row) {
-    this.router.navigate(['/pages/events-forms/lost-form', {reference: row.data.reference}]);
+    let path = ''
+    for(let [key, value] of Object.entries(this.eventsToPickUp)){
+      if(value['name'] == row.data.eventType){
+        path = value['route']
+      }
+    }
+    this.router.navigate([path, {reference: row.data.reference}]);
   }
 
 }

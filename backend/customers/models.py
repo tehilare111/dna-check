@@ -6,7 +6,6 @@ class UploadTo:
     self.field = field
 
   def __call__(self, instance, filename):
-    # reference = str(int(LostForm.objects.aggregate(Max('reference'))['reference__max'] or 0) + 1)
     return '{}/{}/{}'.format(instance.reference, self.field, filename)
 
   def deconstruct(self):
@@ -18,7 +17,7 @@ class Form(models.Model):
     date = models.CharField(max_length=70, blank=False, default='')
     reporterName = models.CharField(max_length=70, blank=False, default='')
     reporterUnit = models.CharField(max_length=70, blank=False, default='')
-    editStateBlocked = models.BooleanField(default=True)
+    editStateBlocked = models.BooleanField(default=False)
 
     class Meta:
       abstract = True
@@ -32,10 +31,14 @@ class EventForm(Form):
     class Meta:
       abstract = True
 
-class LostForm(EventForm):
-    # name = models.CharField(max_length=70, blank=False, default='')
-    # age = models.IntegerField(blank=False, default=1)
-    # active = models.BooleanField(default=False)
+class FormsTable(EventForm):
+    messages = models.CharField(max_length=70, blank=False, default='')
+    equipment = models.CharField(max_length=70, blank=False, default='')
+    equipmentType = models.CharField(max_length=70, blank=False, default='')
+    equipmentMark = models.CharField(max_length=70, blank=False, default='')
+    equipmentMakat = models.CharField(max_length=70, blank=False, default='')
+    
+    # Events Form
     signerUnit = models.CharField(max_length=70, blank=False, default='')
     signerName = models.CharField(max_length=70, blank=False, default='')
     signerId = models.CharField(max_length=70, blank=False, default='')
@@ -43,10 +46,6 @@ class LostForm(EventForm):
     position = models.CharField(max_length=70, blank=False, default='')
     eventDate = models.CharField(max_length=70, blank=False, default='')
     eventHour = models.CharField(max_length=70, blank=False, default='')
-    equipment = models.CharField(max_length=70, blank=False, default='')
-    equipmentType = models.CharField(max_length=70, blank=False, default='')
-    equipmentMark = models.CharField(max_length=70, blank=False, default='')
-    equipmentMakat = models.CharField(max_length=70, blank=False, default='')
     eventRelevantPlacesAndFactors = models.CharField(max_length=70, blank=False, default='')
     eventInitialDetails = models.CharField(max_length=70, blank=False, default='')
     investigationDate = models.CharField(max_length=70, blank=False, default='')
@@ -55,4 +54,9 @@ class LostForm(EventForm):
     findingDate = models.CharField(max_length=70, blank=False, default='')
     findingFile = models.FileField(upload_to=UploadTo('findingFile'), max_length=100, blank=True, null=True)
     handlingFile = models.FileField(upload_to=UploadTo('handlingFile'), max_length=100, blank=True, null=True)
-    messages = models.CharField(max_length=70, blank=False, default='')
+    
+    # Reviews Form
+    reviewFile = models.FileField(upload_to=UploadTo('reviewFile'), max_length=100, blank=True, null=True)
+    reviewDate = models.CharField(max_length=70, blank=False, default='')
+    reviewReference = models.CharField(max_length=70, blank=False, default='')
+    isMatchToReport = models.BooleanField(default=False)

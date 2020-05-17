@@ -27,8 +27,8 @@ export class RestApiService {
     return this.http.delete(`${this.baseUrl}/customers/${id}`);
   }
 
-  getCustomersList(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/customers/`);
+  getCustomersList(eventType: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/customers/${eventType}`);
   }
 
   getCustomersByAge(age: number): Observable<any> {

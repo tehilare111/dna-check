@@ -2,11 +2,8 @@
   <nb-card-body>
     <div class="row">
       <div class="col-md-4">
-          <button nbButton status="primary" [disabled]="(pickedUpEvent.name?false:true)" [routerLink]="[pickedUpEvent.route, {eventType: pickedUpEvent.name}]" hero>
+          <button nbButton status="primary" [disabled]="(pickedUpEvent.route?false:true)" [routerLink]="[pickedUpEvent.route]" hero>
             דווח אירוע
-          </button>
-          <button disabled nbButton hero>
-            disabled
           </button>
       </div>
         <div class="col-md-4">
@@ -18,7 +15,7 @@
     </div>
     <div class="row">
       <div class="button-row">
-        <button *ngFor="let button of eventsToPickUp | keyvalue" nbButton status="info" (click)="pickedUpEvent=button.value" hero>{{button.value.name}}</button>
+        <button *ngFor="let button of eventsToPickUp | keyvalue" nbButton status="info" (click)="pickedUpEvent=button.value; loadTable(pickedUpEvent=button.value)" hero>{{button.value.name}}</button>
       </div>
     </div>
 

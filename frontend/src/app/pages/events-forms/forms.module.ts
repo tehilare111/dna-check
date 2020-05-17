@@ -30,6 +30,8 @@ import { TimeDirective } from './validation-directives/time.directive';
 import { MarkDirective } from './validation-directives/mark.directive';
 import { MakatCopyDirective } from './validation-directives/makat-copy.directive';
 import { TextDirective } from './validation-directives/text.directive';
+import { EquipmentReviewComponent } from './equipment-review/equipment-review.component';
+import { EventStatusShortedComponent } from './components/event-status-shorted/event-status-shorted.component';
 
 
 @NgModule({
@@ -64,6 +66,8 @@ import { TextDirective } from './validation-directives/text.directive';
     MarkDirective,
     MakatCopyDirective,
     TextDirective,
+    EquipmentReviewComponent,
+    EventStatusShortedComponent,
   ],
 })
 export class FormsModule { }

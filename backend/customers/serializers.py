@@ -1,5 +1,6 @@
+
 from rest_framework import serializers 
-from customers.models import Form, EventForm, LostForm
+from customers.models import Form, EventForm, FormsTable
 
 
 class FormSerializer(serializers.ModelSerializer):
@@ -26,9 +27,9 @@ class EventFormSerializer(FormSerializer):
             'handlingStatus',
         )
 
-class LostFormSerializer(EventFormSerializer):
+class FormsSerializer(EventFormSerializer):
     class Meta:
-        model = LostForm
+        model = FormsTable
         fields = EventFormSerializer.Meta.fields + (
             'signerUnit',
             'signerName',
@@ -44,10 +45,14 @@ class LostFormSerializer(EventFormSerializer):
             'eventRelevantPlacesAndFactors',
             'eventInitialDetails',
             'investigationDate',
-            'investigationFile',
             'handlingDate',
+            'investigationFile',
             'findingDate',
             'findingFile',
             'handlingFile',
             'messages',
+            'reviewDate',
+            'reviewFile',
+            'reviewReference',
+            'isMatchToReport'
         )
