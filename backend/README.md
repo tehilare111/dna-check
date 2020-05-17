@@ -23,3 +23,8 @@ In this app all of our main settings is setup -
   - **forms/serializers**:  
     Contains the model's serilalizer.  
     The serializer are responsible for the parsing of the http requests content into a model object, And vice versa.
+
+
+### backend flow - request handling
+e.g form create request:
+dna/urls.py -> forms/urls.py -> forms/views.py -> forms/serializer.py -> forms/models.py
