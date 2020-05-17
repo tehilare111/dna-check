@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     # Django REST framework 
     'rest_framework',
     # Customers application 
-    'customers.apps.CustomersConfig',
+    'forms.apps.FormsConfig',
     # CORS
     'corsheaders',
 ]

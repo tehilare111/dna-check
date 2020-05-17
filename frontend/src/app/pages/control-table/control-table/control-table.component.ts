@@ -81,7 +81,7 @@ export class ControlTableComponent implements OnInit{
   }
 
   loadData(eventType: string) {
-    this.RestApiService.getCustomersList(eventType).subscribe((data_from_server) => {
+    this.RestApiService.getFormsList(eventType).subscribe((data_from_server) => {
       let new_data: TreeNode<FSEntry>[] = data_from_server.map((event) => {
         return {'data': event}
       })
