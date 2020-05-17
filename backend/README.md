@@ -1,5 +1,5 @@
 # Exploit the backend
-our djange server contains of apps. each app responsible for different services in our app.
+our django server consists of apps. each app responsible for different services in our app.
 
 ### dna app
 Our dna app(**dna directory**) is our main app.  
@@ -18,7 +18,7 @@ In this app all of our main settings is setup -
     Those function responsible, among other things, to read and write data to the database.
   - **forms/models**:
     Contains the app main table. Each model is equivilent to a table in the specified db.  
-    Our forms app, has one model - one table. All of the app forms saved in the same table -  
+    All of our forms, has one model - one table. All of the app's forms saved in the same table -  
     the difference between them is that not all of their fields are filled in the table.
   -**forms/serializers**:  
     Contains the model's serilalizer.  
