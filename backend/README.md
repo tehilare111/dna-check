@@ -19,7 +19,7 @@ In this app all of our main settings is setup -
   - **forms/models**:
     Contains the app main table. Each model is equivilent to a table in the specified db.  
     All of our forms, has one model - one table. All of the app's forms saved in the same table -  
-    the difference between them is that not all of their fields are filled in the table.
-  -**forms/serializers**:  
+    the difference between them is that not all of their fields are filled in the table.  
+  - **forms/serializers**:  
     Contains the model's serilalizer.  
     The serializer are responsible for the parsing of the http requests content into a model object, And vice versa.
