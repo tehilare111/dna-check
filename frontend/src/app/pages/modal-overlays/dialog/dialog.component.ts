@@ -42,9 +42,9 @@ export class DialogComponent {
       });
   }
 
-  openWithoutBackdropClick(dialog: TemplateRef<any>) {
+  openWithoutBackdropClick(dialog2: TemplateRef<any>) {
     this.dialogService.open(
-      dialog,
+      dialog2,
       {
         context: 'this is some additional data passed to dialog',
         closeOnBackdropClick: false,
