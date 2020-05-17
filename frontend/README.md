@@ -11,7 +11,7 @@ All frontend displayed pages are under: **src/app/pages** directory.
     - **validation-directives** directory:  
       Contains all the regex directives for validation of the forms fields
     - **components**:  
-      Contains components used in the fields.
+      Contains components used in the forms.
     - **events-forms.template**:  
       Contains all the forms fields objects used in the forms.
    - **control-table** directory:  
@@ -21,7 +21,7 @@ All frontend displayed pages are under: **src/app/pages** directory.
 All requests to the django server leaning on the **rest-api.service.ts**.  
 File located under **src/app/services**  
 In this file you can spectat all the requests from the frontend client to the backend server,  
-With its url.
+With its urls.
 
 ## A bit about the flow on the frontend app
 Each page has its own ts file.  
