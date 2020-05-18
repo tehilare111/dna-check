@@ -36,4 +36,5 @@ class Destination(models.Model):
     personalnumber=models.CharField(max_length=70, blank=False, default='')
     rank=models.CharField(max_length=70, blank=False, default='')
     armyposistion=models.CharField(max_length=70, blank=False, default='')
-    permissions=models.IntegerField(blank=False, default='')
+    permissions=models.CharField(max_length=70, blank=False, default='')
+    armyunit=models.CharField(max_length=70,blank=False,default=' ')

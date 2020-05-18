@@ -1,12 +1,13 @@
 
 export class Users {
-    public username:string;
-    public firstname:string;
-    public lastname:string;
+    constructor(){}
+    public username:string
+    public Firstname:string
+    public lastname:string
     public password:string
-    public personalnumber:string;
-    public rank:string;
-    public position:string;
-    public permissions=5;
-    
+    public personalnumber:string
+    public rank:string
+    public position:string
+    public permissions="read"
+    public armyunit:string
 }

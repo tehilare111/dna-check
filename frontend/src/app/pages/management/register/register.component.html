@@ -1,30 +1,5 @@
-          <form>
-            <div class="center">
-              <h2 class="text-heading" id="text_head" style="text-align: center;">Register Page</h2>
-            <nb-card id="login_id">
-              <nb-card-body>
-            <div class="form-group row">
-              <label for="input_username_login" class="label col-sm-12 col-form-label">Username</label>
-              <div class="col-sm-12">
-                <input type="text" name="username_LOGIN"  nbInput #user fullWidth id="user_login" fieldSize="medium" placeholder="UserName" [(ngModel)]=users.username> 
-              </div>
-              
-              <label for="input_Password_login" class="label col-sm-12 col-form-label" >Password</label>
-              <div class="col-sm-12">
-                <input type="Password" name="password_LOGIN"  nbInput #password fullWidth id="password_login" fieldSize="medium" placeholder="Password" [(ngModel)]=users.password>
-              </div>
-            </div>
-            <div class="form-group row">
-              <div class="col-sm-12">
-                <button fullWidth nbButton (click)="Login()" status="primary">Login</button>
-                <a (click)="pade_router_register()">if you dont login enter register</a>
-            </div>
-            </div>
-              </nb-card-body>
-            </nb-card>
-            </div>
-          </form>
-          <form id="register_id" style="visibility: hidden;">
+          <form id="register_id" #userForm="ngForm">
+
             <div class="center">
               <h2 class="text-heading" id="text_head" style="text-align: center;">Register Page</h2>
             <nb-card>
@@ -32,31 +7,31 @@
             <div class="form-group row">
               <label for="input_username" class="label col-sm-12 col-form-label">Username</label>
               <div class="col-sm-12">
-                <input type="text" name="username"  nbInput #user fullWidth id="username" fieldSize="medium" placeholder="UserName" [(ngModel)]=users.username> 
+                <input type="text" name="username"  nbInput #user fullWidth id="username" fieldSize="small" placeholder="UserName" [(ngModel)]=users.username> 
               </div>
 
               <label for="input_FirstName" class="label col-sm-12 col-form-label" >FirstName</label>
               <div class="col-sm-12">
-                <input type="text" name=firstname  nbInput fullWidth #FirstName id="firstName" fieldSize="medium" placeholder="FirstName" [(ngModel)]=users.firstname>
+                <input type="text" name=firstname  nbInput fullWidth #FirstName id="firstName" fieldSize="small" placeholder="FirstName" [(ngModel)]=users.Firstname>
               </div>
   
               <label for="input_LastName" class="label col-sm-12 col-form-label">LastName</label>
               <div class="col-sm-12">
-                <input type="text" name="lastName"  nbInput fullWidth #LastName id="lastname" fieldSize="medium" placeholder="LastName" [(ngModel)]=users.lastname >
+                <input type="text" name="lastName"  nbInput fullWidth #LastName id="lastname" fieldSize="small" placeholder="LastName" [(ngModel)]=users.lastname >
               </div>
   
               <label for="input_Password" class="label col-sm-12 col-form-label" >Password</label>
               <div class="col-sm-12">
-                <input type="Password" name="password"  nbInput #password fullWidth id="password" fieldSize="medium" placeholder="Password" [(ngModel)]=users.password>
+                <input type="Password" name="password"  nbInput #password fullWidth id="password" fieldSize="small" placeholder="Password" [(ngModel)]=users.password>
               </div>
   
               <label for="input_PersonalNumber" class="label col-sm-12 col-form-label" >PersonalNumber</label>
               <div class="col-sm-12">
-                <input type="text" name="personalnumber" nbInput #PersonalNumber  fullWidth id="personalnumber" fieldSize="medium" placeholder="PersonalNumber" [(ngModel)]=users.personalnumber >
+                <input type="text" name="personalnumber" nbInput #PersonalNumber  fullWidth id="personalnumber" fieldSize="small" placeholder="PersonalNumber" [(ngModel)]=users.personalnumber >
               </div>
               <label class="label col-sm-12 col-form-label" >Rank</label>
               <div class="col-sm-12"> 
-                  <nb-select fullWidth #rank  selected="1" [(ngModel)]="users.rank" >
+                  <nb-select fullWidth #rank="ngModel"selected="1" fieldSize="small" [(ngModel)]="users.rank" >
                     <nb-option value="1">rabat</nb-option>
                     <nb-option value="2">shamal</nb-option>
                     <nb-option value="3">shmar</nb-option>
@@ -69,15 +44,16 @@
                 </div>
               <label for="input_PositonArmy" class="label col-sm-12 col-form-label" >PositonArmy</label>
               <div class="col-sm-12">
-                <input type="text" #positonarmy name="position" nbInput fullWidth id="position" fieldSize="medium" placeholder="PositonArmy" [(ngModel)]=users.position>
+                <input type="text" #positonarmy name="position" nbInput fullWidth id="position" fieldSize="small" placeholder="PositonArmy" [(ngModel)]=users.position >
+              </div>
+              <label for="input_PositonArmy" class="label col-sm-12 col-form-label" >ArmyUnit</label>
+              <div class="col-sm-12">
+                <input type="text" #positonarmy name="armyunit" nbInput fullWidth id="armyunit" fieldSize="small" placeholder="ArmyUnit" [(ngModel)]=users.armyunit >
               </div>
             </div>
             <div class="form-group row">
               <div class="col-sm-12">
                 <button fullWidth nbButton (click)="onSubmit()" status="primary">Register</button>
-                <label id="stam" style="visibility:hidden" style="font-size: medium;">
-                  {{user21}}
-                </label>
             </div>
             </div>
           </nb-card-body>

@@ -16,14 +16,9 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'shopping-cart-outline',
     children: [
       {
-        title:"הרשמה",
-        link:'register'
+        title:"LoginPage",
+        link:'login'
       },
-      {
-        title:"הרשאות וניהול משתמשים",
-        link:'permiss'
-      },
-
     ],
   },
   {

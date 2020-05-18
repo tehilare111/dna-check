@@ -9,6 +9,7 @@ import { NotFoundComponent } from './miscellaneous/not-found/not-found.component
 import { ManagementComponent } from './management/management.component';
 import { RegisterComponent } from './management/register/register.component';
 import { PermissionsComponent } from './management/permissions/permissions.component';
+import { LoginComponent } from './management/login/login.component';
 
 const routes: Routes = [{
   path: '',
@@ -25,6 +26,10 @@ const routes: Routes = [{
     {
       path:'register',
       component:RegisterComponent,
+    },
+    {
+      path:'login',
+      component:LoginComponent,
     },
     {
       path:'permiss',

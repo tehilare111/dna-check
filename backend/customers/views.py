@@ -40,12 +40,14 @@ def customer_list(request):
 
 @csrf_exempt 
 def customer_insert(request):
+    re
     if request.method=='GET':
         print("custumer-list", request.headers["Origin"])
         customer_data = JSONParser().parse(request)
         customer_serializer = CustomerSerializer(data=customer_data)
     elif request.method == 'POST':
         customer_data = JSONParser().parse(request)
+        print (customer_data)
         customer_serializer = CustomerSerializer(data=customer_data)
         if customer_serializer.is_valid():
             customer_serializer.save()

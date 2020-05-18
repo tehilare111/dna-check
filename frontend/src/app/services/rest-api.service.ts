@@ -24,7 +24,7 @@ export class RestApiService {
   createCustomer(customer: Object): Observable<Object> {
     return this.http.post(`${this.baseUrl}customers/`, customer);
   }
-  createCustomerUser(customer: Object): Observable<Object> {
+  createCustomerUser(customer: JSON): Observable<Object> {
     return this.http.post(`${this.baseUrl}create-User/`, customer);
   }
 

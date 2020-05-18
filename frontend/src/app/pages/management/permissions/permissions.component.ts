@@ -46,7 +46,7 @@ export class PermissionsComponent implements OnInit {
       this.permiss=data_from_server.permissions;
       this.users=data_from_server;
       if (this.permiss==5){
-        this.permiss="קריאה";
+        this.permiss="read";
         (<HTMLInputElement>document.getElementById("id_button_permiss")).disabled=true;
       }
     });

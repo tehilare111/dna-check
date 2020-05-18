@@ -21,6 +21,9 @@ class Migration(migrations.Migration):
                 ('personalnumber', models.CharField(default='', max_length=70)),
                 ('rank', models.CharField(default='', max_length=70)),
                 ('armyposistion', models.CharField(default='', max_length=70)),
+                ('premission',models.CharField(default=' ',max_length=70)),
+                ('armyunit',models.CharField(default='',max_length=70)),
+                
             ],
         ),
     ]

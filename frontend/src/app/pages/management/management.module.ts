@@ -21,6 +21,7 @@ import { FormsRoutingModule } from '../forms/forms-routing.module';
 import { RegisterComponent} from './register/register.component';
 import { PermissionsComponent } from './permissions/permissions.component';
 import { FormsModule as ngFormsModule } from '@angular/forms';
+import { LoginComponent } from './login/login.component';
 
 const routes:Routes=[
 ]
@@ -43,7 +44,7 @@ const routes:Routes=[
     ngFormsModule,
     NbSearchModule,
   ],
-  declarations: [RegisterComponent, PermissionsComponent],
+  declarations: [RegisterComponent, PermissionsComponent, LoginComponent],
 })
 export class managementModule { 
   constructor(){
