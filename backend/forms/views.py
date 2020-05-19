@@ -1,4 +1,4 @@
-from django.shortcuts import render 
+from django.shortcuts import render
 from django.http import HttpResponse
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -29,6 +29,7 @@ def forms_list(request, event_type):
     if request.method == 'GET':
         if event_type == '':
             forms = FormsTable.objects.all()
+            print('forms:', forms)
         else:
             forms = FormsTable.objects.filter(eventType=event_type)
         
@@ -40,30 +41,6 @@ def forms_list(request, event_type):
         FormsTable.objects.all().delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-'''
-@csrf_exempt 
-def customer_detail(request, pk):
-    try: 
-        form = FormsTable.objects.get(pk=pk) 
-    except FormsTable.DoesNotExist: 
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
- 
-    if request.method == 'GET': 
-        form_serializer = FormsSerializer(customer) 
-        return JsonResponse(form_serializer.data) 
- 
-    elif request.method == 'PUT': 
-        form_data = JSONParser().parse(request) 
-        form_serializer = FormsSerializer(form, data=form_data) 
-        if form_serializer.is_valid(): 
-            form_serializer.save() 
-            return JsonResponse(form_serializer.data) 
-        return JsonResponse(form_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
- 
-    elif request.method == 'DELETE': 
-        form.delete() 
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-'''
 
 @csrf_exempt
 def new_event_form(request):
