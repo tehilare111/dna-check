@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UserData } from '../../../@core/data/users';
 import { UserService } from '../../../@core/mock/users.service';
 import { NbMenuService } from '@nebular/theme';
+import { error } from '@angular/compiler/src/util';
 
 @Component({
   selector: 'ngx-register',
@@ -28,6 +29,7 @@ export class RegisterComponent implements OnInit {
   public rank;
   public postionarmy;
   public armyunit;
+  public errors:string;
   
   ngOnInit(): void {
 
@@ -40,9 +42,9 @@ export class RegisterComponent implements OnInit {
       this.password=(<HTMLInputElement>document.getElementById("password")).value;
       this.personalnumber=(<HTMLInputElement>document.getElementById("personalnumber")).value;
       this.rank=(<HTMLInputElement>document.getElementById("rank")).value;
-      this.postionarmy=(<HTMLInputElement>document.getElementById("postionarmy")).value;
+      this.postionarmy=(<HTMLInputElement>document.getElementById("position")).value;
       this.armyunit=(<HTMLInputElement>document.getElementById("armyunit")).value;
-      this.jesonreg={"username":this.username , "lastName":this.lastname,"firstname":this.firstname,"password":this.password,"personalnumber":this.personalnumber,"rank":this.rank,"postionarmy":this.postionarmy,"armyunit":this.armyunit}
+      this.jesonreg={"username":this.username , "lastname":this.lastname,"firstname":this.firstname,"password":this.password,"personalnumber":this.personalnumber,"rank":this.rank,"armyposistion":this.postionarmy,"armyunit":this.armyunit}
       this.save() 
       
     
@@ -50,13 +52,13 @@ export class RegisterComponent implements OnInit {
     
   
   save() {
-     return this.RestApiService.createCustomerUser(JSON.parse(this.jesonreg))
+      this.RestApiService.createCustomerUser(this.jesonreg)
       .subscribe(
-        data => {
-          console.log(data);
-          this.submitted = true;
-        },
-        error => console.log(error));
+        data=>{
+          this.errors=JSON.stringify(data["result"])
+          alert(this.errors)
+        },error => 
+          console.log())
       this.users = new Users();
     
   }

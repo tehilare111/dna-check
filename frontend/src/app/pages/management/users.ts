@@ -1,3 +1,4 @@
+import { of as observableOf,  Observable } from 'rxjs';
 
 export class Users {
     constructor(){}
@@ -10,4 +11,5 @@ export class Users {
     public position:string
     public permissions="read"
     public armyunit:string
+
 }

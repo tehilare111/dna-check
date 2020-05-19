@@ -12,7 +12,7 @@
 
               <label for="input_FirstName" class="label col-sm-12 col-form-label" >FirstName</label>
               <div class="col-sm-12">
-                <input type="text" name=firstname  nbInput fullWidth #FirstName id="firstName" fieldSize="small" placeholder="FirstName" [(ngModel)]=users.Firstname>
+                <input type="text" name=firstname  nbInput fullWidth #FirstName id="firstname" fieldSize="small" placeholder="FirstName" [(ngModel)]=users.Firstname>
               </div>
   
               <label for="input_LastName" class="label col-sm-12 col-form-label">LastName</label>
@@ -31,7 +31,7 @@
               </div>
               <label class="label col-sm-12 col-form-label" >Rank</label>
               <div class="col-sm-12"> 
-                  <nb-select fullWidth #rank="ngModel"selected="1" fieldSize="small" [(ngModel)]="users.rank" >
+                  <nb-select fullWidth #rank="ngModel"selected="1" fieldSize="small" [(ngModel)]="users.rank" id="rank" >
                     <nb-option value="1">rabat</nb-option>
                     <nb-option value="2">shamal</nb-option>
                     <nb-option value="3">shmar</nb-option>
@@ -54,11 +54,12 @@
             <div class="form-group row">
               <div class="col-sm-12">
                 <button fullWidth nbButton (click)="onSubmit()" status="primary">Register</button>
+                <small>{{errors}}</small>
+                
             </div>
             </div>
+            
           </nb-card-body>
           </nb-card>
         </div>
-          </form>
-  
-      
+        </form>

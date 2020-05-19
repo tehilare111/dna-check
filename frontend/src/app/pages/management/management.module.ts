@@ -22,6 +22,7 @@ import { RegisterComponent} from './register/register.component';
 import { PermissionsComponent } from './permissions/permissions.component';
 import { FormsModule as ngFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
+import { NbAuthModule, NbPasswordAuthStrategy, NbAuthJWTToken } from '@nebular/auth';
 
 const routes:Routes=[
 ]
@@ -43,6 +44,20 @@ const routes:Routes=[
     NbAlertModule,
     ngFormsModule,
     NbSearchModule,
+
+   // ...
+   NbAuthModule.forRoot({
+         strategies: [
+           NbPasswordAuthStrategy.setup({
+             name: 'email',
+
+             token: {
+               class: NbAuthJWTToken,
+             }
+           }),
+         ],
+         forms: {},
+       }), 
   ],
   declarations: [RegisterComponent, PermissionsComponent, LoginComponent],
 })

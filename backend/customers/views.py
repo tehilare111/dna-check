@@ -6,6 +6,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 from django.db.models import Max
 from datetime import datetime
+import json
 
 from customers.models import LostForm
 from customers.models import Destination
@@ -40,7 +41,13 @@ def customer_list(request):
 
 @csrf_exempt 
 def customer_insert(request):
-    re
+    users=""
+    usernamechack=''
+    username=""
+    personal=""
+    personalchack=''
+    customer=""
+    errorsdata={"errors":"the user name is exsist"}
     if request.method=='GET':
         print("custumer-list", request.headers["Origin"])
         customer_data = JSONParser().parse(request)
@@ -48,19 +55,47 @@ def customer_insert(request):
     elif request.method == 'POST':
         customer_data = JSONParser().parse(request)
         print (customer_data)
-        customer_serializer = CustomerSerializer(data=customer_data)
-        if customer_serializer.is_valid():
-            customer_serializer.save()
-            print("shalom")
-            return JsonResponse(customer_serializer.data, status=status.HTTP_201_CREATED ) 
-        return JsonResponse(customer_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if customer_data!=None:
+            customer_serializer = CustomerSerializer(data=customer_data)
+            if (customer_serializer.is_valid()):
+                users=customer_serializer.initial_data
+                username=users.pop("username").split(":")
+                username=username[0]
+                personal=users.pop("personalnumber").split(",")
+                personal=personal[0]
+                print ("username:",username,"personalnumber:",personal)
+                customer_username=Destination.objects.filter(username=username)
+                if len(customer_username)>0:
+                    customer_u=CustomerSerializer(customer_username[0])
+                    usernamechack=customer_u.data
+                    usernamechack=usernamechack.pop("username")
+                    if (username in usernamechack):
+                        print("username",username)
+                        return JsonResponse({"result":"The user name is exsist"}, status=status.HTTP_200_OK)
+                else:
+                    customer_personal=Destination.objects.filter(personalnumber=personal)
+                    if len(customer_personal)>0:
+                        customer_p=CustomerSerializer(customer_personal[0])
+                        personalchack=customer_p.data
+                        personalchack=personalchack.pop("personalnumber")
+                        if personal in personalchack:
+                           return JsonResponse({"result":"The personal number is exsist"}, status=status.HTTP_200_OK) 
+                        if len(usernamechack)==0:
+                             print ("seccsees")
+                        customer_data.update([('username',username),('personalnumber',personal),("rank","shamal"),("permissions","read")])
+                        #customer_serializer.update(customer_data)
+                        customer_serializer_new=CustomerSerializer(data=customer_data)
+                        print(customer_serializer)
+                        if customer_serializer_new.is_valid():
+                            customer_serializer_new.save()
+                            return JsonResponse({"result":"seccsess"}, status=status.HTTP_200_OK)
+            else:
+                return JsonResponse({"result":"the last and first nad password and pesonal and armyunit and posistion is null"}, status=status.HTTP_200_OK)
          
 @csrf_exempt 
 def customer_detail(request, pk):
     print("custumer-detail", request.method)
-
     try: 
-        
         customer = LostForm.objects.get(pk=pk)
         print (customer,"shalom10010010") 
     except LostForm.DoesNotExist: 

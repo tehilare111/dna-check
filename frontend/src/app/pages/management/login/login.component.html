@@ -6,9 +6,8 @@
             <div class="form-group row">
               <label for="username" class="label col-sm-12 col-form-label">Username</label>
               <div class="col-sm-12">
-                <input type="text" name="username" nbInput [class.is-invalid]="user.invalid && user.untouched" required pattern="^\d{4}$" #user="ngModel" class="form-control" fullWidth id="user_login" fieldSize="medium" placeholder="UserName"  [(ngModel)]=users.username> 
+                <input type="text" name="username" nbInput  required #user="ngModel" fullWidth id="user_login" fieldSize="medium" placeholder="UserName"  [(ngModel)]=users.username> 
               </div>
-              <small [class.d-none]="user.valid.length > 4 && user.untouched" style="color: red;"><strong>the user name is required</strong></small>
               <label for="input_Password_login" class="label col-sm-12 col-form-label" >Password</label>
               <div class="col-sm-12">
                 <input type="Password" name="password_LOGIN"  nbInput #password fullWidth id="password_login" fieldSize="medium" placeholder="Password" [(ngModel)]=users.password>

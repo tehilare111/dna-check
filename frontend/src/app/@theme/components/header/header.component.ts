@@ -59,9 +59,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((users: any) => this.user = users.userlogin);
 
-    this.userService.getUsersLogin()
+     this.userService.getUsersLogin()
      .pipe(takeUntil(this.destroy$))
-     .subscribe(() =>  this.user=localStorage.getItem("name"));
+     .subscribe(() =>  this.user.ActivatedRoute=localStorage.getItem("name"));
       console.log("bar")
 
     const { xl } = this.breakpointService.getBreakpointsMap();

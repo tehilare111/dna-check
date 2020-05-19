@@ -86,12 +86,12 @@ WSGI_APPLICATION = 'dna.wsgi.application'
 
 DATABASES = {
    'default': {
-        #'ENGINE': 'django.db.backends.postgresql',
-        #'NAME': 'testdb',
-        #'USER': 'postgres',
-        #'PASSWORD': '123',
-        #'HOST': '192.168.1.112',
-        #'PORT': '5432',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'testdb',
+        'USER': 'postgres',
+        'PASSWORD': '123',
+        'HOST': '192.168.1.112',
+        'PORT': '5432',
         
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'users_army',

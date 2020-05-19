@@ -15,10 +15,10 @@ const routes: Routes = [{
   path: '',
   component: PagesComponent,
   children: [
-  /*  {
+    {
       path: 'control-table',
       component: ControlTableComponent,
-      },*/
+      },
     {
       path: 'management',
       component: ManagementComponent,
