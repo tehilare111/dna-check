@@ -42,4 +42,12 @@ export class RestApiService {
   deleteExistingEventForm(reference: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/event_forms/${reference}`);
   }
+
+  getTreeUnits(): Observable<any>  {
+    return this.http.get(`${this.baseUrl}/units-management/`);
+  }
+
+  postTreeUnits(data): Observable<any>{
+    return this.http.post(`${this.baseUrl}/units-management/`, data);
+  }
 }

@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NbIconLibraries } from '@nebular/theme';
 import { TreeComponent, TreeNode } from 'angular-tree-component';
 
+import { RestApiService } from '../../services/rest-api.service';
+import { ToastService } from '../../services/toast.service';
 
 /*const actionMapping:IActionMapping = {
   mouse: {
@@ -10,35 +12,25 @@ import { TreeComponent, TreeNode } from 'angular-tree-component';
   }
 }*/
 
+class TreeNodeCustom{
+  id: number;
+  name: string;
+  children: any[];
+}
+
 @Component({
   selector: 'ngx-management',
   templateUrl: './management.component.html',
-  styleUrls: ['./management.component.scss']
+  styleUrls: ['./management.component.scss'],
+
 })
 export class ManagementComponent implements OnInit {
-
+  maxTreeNodeId = '1'
   nodes = [
     {
-      id: 1,
-      name: 'root1',
-      children: [
-        { id: 2, name: 'child1' },
-        { id: 3, name: 'child2' }
-      ]
-    },
-    {
-      id: 4,
-      name: 'root2',
-      children: [
-        { id: 5, name: 'child2.1' },
-        {
-          id: 6,
-          name: 'child2.2',
-          children: [
-            { id: 7, name: 'subsub' }
-          ]
-        }
-      ]
+      'id': 0,
+      'name': 'מצו"ב',
+      'children': []
     }
   ];
   options = {
@@ -51,10 +43,42 @@ export class ManagementComponent implements OnInit {
   addUnitInput = '';
   editUnitInput = '';
   @ViewChild("tree") private tree: TreeComponent;
+  uploadLoading = false
 
-  constructor(iconsLibrary: NbIconLibraries) { iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' }); }
+  constructor(iconsLibrary: NbIconLibraries,private RestApiService: RestApiService,private ToastService: ToastService) { iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' }); }
 
   ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData(){
+    this.uploadLoading = true
+    this.RestApiService.getTreeUnits().subscribe(
+      (data_from_server: {'maxTreeNodeId': string, 'treeNode': TreeNodeCustom[]}) => {
+        this.nodes = data_from_server.treeNode
+        this.maxTreeNodeId = data_from_server.maxTreeNodeId
+        this.uploadLoading = false
+      },
+      err => {
+        this.ToastService.showToast('fail', 'שגיאה בקריאה מהשרת', '')
+        this.uploadLoading = false
+      }
+      );
+  }
+
+  saveData(){
+    this.uploadLoading = true
+    let dataToServer = {'maxTreeNodeId': this.maxTreeNodeId, 'treeNode': this.nodes};
+    this.RestApiService.postTreeUnits(dataToServer).subscribe(
+      (data_from_server: {'maxTreeNodeId': string, 'treeNode': TreeNodeCustom[]}) => {
+        if(data_from_server) { this.ToastService.showToast('success', 'נשמר בהצלחה!', '') }
+        this.uploadLoading = false
+      },
+      err => {
+        this.ToastService.showToast('fail', 'לא נשמר בהצלחה!', '')
+        this.uploadLoading = false
+      }
+    )
   }
 
   onNodePickedUp(event) {
@@ -64,6 +88,8 @@ export class ManagementComponent implements OnInit {
   onNodeDeactivate(event){
     this.currentNode = undefined;
     this.action = '';
+    this.addUnitInput = '';
+    this.editUnitInput = '';
   }
 
   deleteUnit(){
@@ -80,7 +106,8 @@ export class ManagementComponent implements OnInit {
   addUnit(){
     // change id
     if (!this.currentNode.data['children']) { this.currentNode.data['children'] = []; }
-    this.currentNode.data['children'].push({'id':10, 'name':this.addUnitInput, 'children':[]});
+    this.maxTreeNodeId += 1;
+    this.currentNode.data['children'].push({'id':this.maxTreeNodeId, 'name':this.addUnitInput, 'children':[]});
     this.tree.treeModel.update();
     this.onNodeDeactivate(undefined);
   }
@@ -91,7 +118,4 @@ export class ManagementComponent implements OnInit {
     this.onNodeDeactivate(undefined);
   }
 
-  getNewId(){
-    return this.nodes
-  }
 }

@@ -6,6 +6,8 @@ import {
   NbIconModule, 
   NbActionsModule,
   NbButtonModule,
+  NbTabsetModule,
+  NbSpinnerModule,
 } from '@nebular/theme';
 import { FormsModule } from '@angular/forms';
 
@@ -32,9 +34,11 @@ import { TreeModule } from 'angular-tree-component';
     NbCardModule,
     NbIconModule,
     NbInputModule,
+    NbTabsetModule,
     NbActionsModule,
     NbButtonModule,
-    FormsModule
+    FormsModule,
+    NbSpinnerModule
   ],
   declarations: [
     PagesComponent,

@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Django REST framework 
     'rest_framework',
-    # Customers application 
+    # Forms application 
     'forms.apps.FormsConfig',
+    # Management application
+    'management.apps.ManagementConfig',
     # CORS
     'corsheaders',
 ]

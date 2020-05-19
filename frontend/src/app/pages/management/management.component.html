@@ -1,41 +1,52 @@
 
-
-<nb-card>
+<nb-card class="main-nb-card" status="primary" [nbSpinner]="uploadLoading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
     <nb-card-header>
         <h1>ניהול יחידות והרשאות</h1>
     </nb-card-header>
     <nb-card-body>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
+                <button nbButton status="primary" #saveButton (click)="saveData()">שמור עץ יחידות</button>
                 <tree-root #tree (activate)="onNodePickedUp($event)" (deactivate)="onNodeDeactivate($event)" [nodes]="nodes" [options]="options"></tree-root>
+                <!--<nb-card *ngIf="uploadLoading" [nbSpinner]="true" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+                    <nb-card-body #spinnerNbCard>
+                        
+                    </nb-card-body>
+                </nb-card>-->
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div *ngIf="currentNode">
-                    <nb-icon icon="plus-round" pack="ion" (click)="action='add'" class="clickable"></nb-icon>
-                    <nb-icon icon="edit" pack="ion" (click)="action='edit'" class="clickable"></nb-icon>
-                    <nb-icon icon="trash-a" pack="ion" (click)="action='delete'" class="clickable"></nb-icon>
-                    <div *ngIf="action=='add'">
-                        <input nbInput fullwidth placeholder="הוסף יחידה" [(ngModel)]="addUnitInput">
-                        <div class="buttonWrapper">
-                            <button nbButton (click)="onNodeDeactivate()">ביטול</button>
-                            <button nbButton status="primary" (click)="addUnit()">אישור</button>
-                        </div>
-                    </div>
-                    <div *ngIf="action=='edit'">
-                        <input nbInput fullwidth placeholder="ערוך שם יחידה" [(ngModel)]="editUnitInput">
-                        <div class="buttonWrapper">
-                            <button nbButton (click)="onNodeDeactivate()">ביטול</button>
-                            <button nbButton status="primary" (click)="editUnit()">אישור</button>
-                        </div>
-                    </div>
-                    <div *ngIf="action=='delete'">
-                        <p>האם למחוק את היחידה?</p>
-                        <div class="buttonWrapper">
-                            <button nbButton (click)="onNodeDeactivate()">ביטול</button>
-                            <button nbButton status="primary" (click)="deleteUnit()">אישור</button>
-                        </div>
-                    </div>
-                </div>
+                    <nb-card>
+                        <nb-card-header>
+                            <nb-icon icon="plus-round" pack="ion" (click)="action='add'" class="clickable"></nb-icon>
+                            <nb-icon icon="edit" pack="ion" (click)="action='edit'" class="clickable"></nb-icon>
+                            <nb-icon icon="trash-a" pack="ion" (click)="action='delete'" class="clickable"></nb-icon>
+                        </nb-card-header>
+                        <nb-card-body>
+                            <div *ngIf="action=='add'">
+                                <input nbInput fullwidth placeholder="הוסף יחידה" [(ngModel)]="addUnitInput">
+                                <div class="buttonWrapper">
+                                    <button nbButton (click)="onNodeDeactivate()">ביטול</button>
+                                    <button nbButton status="primary" (click)="addUnit()">אישור</button>
+                                </div>
+                            </div>
+                            <div *ngIf="action=='edit'">
+                                <input nbInput fullwidth placeholder="ערוך שם יחידה" [(ngModel)]="editUnitInput">
+                                <div class="buttonWrapper">
+                                    <button nbButton (click)="onNodeDeactivate()">ביטול</button>
+                                    <button nbButton status="primary" (click)="editUnit()">אישור</button>
+                                </div>
+                            </div>
+                            <div *ngIf="action=='delete'">
+                                <p>האם למחוק את היחידה?</p>
+                                <div class="buttonWrapper">
+                                    <button nbButton (click)="onNodeDeactivate()">ביטול</button>
+                                    <button nbButton status="primary" (click)="deleteUnit()">אישור</button>
+                                </div>
+                            </div>
+                        </nb-card-body>
+                    </nb-card>  
+                </div> 
             </div>
             <div class="col-md-6">
                 
