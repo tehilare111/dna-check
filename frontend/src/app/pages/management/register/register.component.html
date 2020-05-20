@@ -1,0 +1,66 @@
+<p>register works!</p>
+<form id="register_id" #userForm="ngForm">
+
+    <div class="center">
+      <h2 class="text-heading" id="text_head" style="text-align: center;">Register Page</h2>
+    <nb-card>
+      <nb-card-body>
+    <div class="form-group row">
+      <label for="input_username" class="label col-sm-12 col-form-label">Username</label>
+      <div class="col-sm-12">
+        <input type="text" name="username"  nbInput #user fullWidth id="username" fieldSize="small" placeholder="UserName" [(ngModel)]=users.username> 
+      </div>
+
+      <label for="input_FirstName" class="label col-sm-12 col-form-label" >FirstName</label>
+      <div class="col-sm-12">
+        <input type="text" name=firstname  nbInput fullWidth #FirstName id="firstname" fieldSize="small" placeholder="FirstName" [(ngModel)]=users.Firstname>
+      </div>
+
+      <label for="input_LastName" class="label col-sm-12 col-form-label">LastName</label>
+      <div class="col-sm-12">
+        <input type="text" name="lastName"  nbInput fullWidth #LastName id="lastname" fieldSize="small" placeholder="LastName" [(ngModel)]=users.lastname >
+      </div>
+
+      <label for="input_Password" class="label col-sm-12 col-form-label" >Password</label>
+      <div class="col-sm-12">
+        <input type="Password" name="password"  nbInput #password fullWidth id="password" fieldSize="small" placeholder="Password" [(ngModel)]=users.password>
+      </div>
+
+      <label for="input_PersonalNumber" class="label col-sm-12 col-form-label" >PersonalNumber</label>
+      <div class="col-sm-12">
+        <input type="text" name="personalnumber" nbInput #PersonalNumber  fullWidth id="personalnumber" fieldSize="small" placeholder="PersonalNumber" [(ngModel)]=users.personalnumber >
+      </div>
+      <label class="label col-sm-12 col-form-label" >Rank</label>
+      <div class="col-sm-12"> 
+          <nb-select fullWidth #rank="ngModel"selected="1" fieldSize="small" [(ngModel)]="users.rank" id="rank" >
+            <nb-option value="1">rabat</nb-option>
+            <nb-option value="2">shamal</nb-option>
+            <nb-option value="3">shmar</nb-option>
+            <nb-option value="4">ktzin aron1</nb-option>
+            <nb-option value="5">ktzin aron2</nb-option>
+            <nb-option value="6">ktzin aron3</nb-option>
+            <nb-option value="7">ktzin falafel</nb-option>
+            <nb-option value="8">ktzin 2 falafel</nb-option>
+          </nb-select>
+        </div>
+      <label for="input_PositonArmy" class="label col-sm-12 col-form-label" >PositonArmy</label>
+      <div class="col-sm-12">
+        <input type="text" #positonarmy name="position" nbInput fullWidth id="position" fieldSize="small" placeholder="PositonArmy" [(ngModel)]=users.position >
+      </div>
+      <label for="input_PositonArmy" class="label col-sm-12 col-form-label" >ArmyUnit</label>
+      <div class="col-sm-12">
+        <input type="text" #positonarmy name="armyunit" nbInput fullWidth id="armyunit" fieldSize="small" placeholder="ArmyUnit" [(ngModel)]=users.armyunit >
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-12">
+        <button fullWidth nbButton (click)="onSubmit()" status="primary">Register</button>
+        <small>{{errors}}</small>
+        
+    </div>
+    </div>
+    
+  </nb-card-body>
+  </nb-card>
+</div>
+</form>

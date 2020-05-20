@@ -1,6 +1,6 @@
 
 from rest_framework import serializers 
-from forms.models import Form, EventForm, FormsTable
+from forms.models import Form, EventForm, FormsTable,Destination
 
 
 class FormSerializer(serializers.ModelSerializer):
@@ -13,8 +13,18 @@ class FormSerializer(serializers.ModelSerializer):
             'date',
             'reporterName',
             'reporterUnit',            
-            'editStateBlocked'
-        )
+            'editStateBlocked',)
+
+        model = Destination
+        fields=('username',
+            'firstname',
+            'lastname',
+            'password',
+            'personalnumber',
+            'rank',
+            'armyposistion',
+            'permissions',
+            'armyunit',)
 
 class EventFormSerializer(FormSerializer):
     class Meta(FormSerializer.Meta):

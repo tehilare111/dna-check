@@ -23,8 +23,13 @@ import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 import { ManagementComponent } from './management/management.component';
 import { ControlTableComponent } from './control-table/control-table.component';
 import { TreeModule } from 'angular-tree-component';
+<<<<<<< HEAD
 import { ConstantsFieldsComponent } from './constants-fields/constants-fields.component';
 import { FieldBoxComponent } from './constants-fields/components/field-box.component';
+=======
+import { RegisterComponent } from './management/register/register.component';
+import { LoginComponent } from './management/login/login.component';
+>>>>>>> 1a2c54c... new file login page and register page and add model and function add user get user
 
 @NgModule({
   imports: [
@@ -50,9 +55,15 @@ import { FieldBoxComponent } from './constants-fields/components/field-box.compo
   declarations: [
     PagesComponent,
     ManagementComponent,
+<<<<<<< HEAD
     ControlTableComponent,
     ConstantsFieldsComponent,
     FieldBoxComponent,
+=======
+    RegisterComponent,
+    LoginComponent,
+    //  ControlTableComponent,
+>>>>>>> 1a2c54c... new file login page and register page and add model and function add user get user
     ],
 })
 export class PagesModule {
