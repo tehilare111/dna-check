@@ -82,10 +82,13 @@ Tip: make sure postgresql server is listening:
  
  ## setup angular environment:
  **Pay attention, we are using node v12.16.x and npm 6.3.x**.
- 
  Inside frontend folder:   
  ```
  npm install
+ ```
+ Download angular-tree-component
+ ```
+ npm install --save angular-tree-component
  ```
  Run server:
  ```
