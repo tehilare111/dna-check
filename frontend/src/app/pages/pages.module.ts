@@ -21,6 +21,8 @@ import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 import { ManagementComponent } from './management/management.component';
 //import { ControlTableComponent } from './control-table/control-table.component';
 import { TreeModule } from 'angular-tree-component';
+import { RegisterComponent } from './management/register/register.component';
+import { LoginComponent } from './management/login/login.component';
 
 @NgModule({
   imports: [
@@ -43,6 +45,8 @@ import { TreeModule } from 'angular-tree-component';
   declarations: [
     PagesComponent,
     ManagementComponent,
+    RegisterComponent,
+    LoginComponent,
     //  ControlTableComponent,
     ],
 })

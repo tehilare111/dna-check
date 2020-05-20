@@ -14,6 +14,15 @@ export class RestApiService {
   getFormsList(eventType: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/forms/${eventType}`);
   }
+  createCustomerUser(customer: Object): Observable<Object> {
+    return this.http.post(`${this.baseUrl}create-User/`, customer);
+  }
+  getCustomers_username(reference:string): Observable<Object> {
+    return this.http.get(`${this.baseUrl}get_users_username/${reference}`);
+  }
+  getCustomers_personal(reference:string): Observable<Object> {
+    return this.http.get(`${this.baseUrl}get_users_personalnumber/${reference}`);
+  }
 
   deleteAll(): Observable<any> {
     return this.http.delete(`${this.baseUrl}/forms/`);
