@@ -8,8 +8,23 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'ניהול ויחידות',
+<<<<<<< HEAD
     icon: 'settings',
     link: '/pages/management',
+=======
+    icon: 'shopping-cart-outline',
+    children:[
+      {
+        title:'ניהול יחידות',
+        link: '/pages/management',
+      },
+      {
+        title:'התחברות',
+        link:'login',
+      },
+    ],
+    
+>>>>>>> 713a471... update and check perosnal number and fix alert register and login page
   },
   {
     title: 'שדות קבועים',

@@ -8,11 +8,19 @@ import {
   NbButtonModule,
   NbTabsetModule,
   NbSpinnerModule,
+<<<<<<< HEAD
   NbTreeGridModule,
   NbSelectModule
 } from '@nebular/theme';
 import { FormsModule } from '@angular/forms';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
+=======
+  NbSelectModule,
+  NbOptionModule,
+} from '@nebular/theme';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+>>>>>>> 713a471... update and check perosnal number and fix alert register and login page
 
 import { ThemeModule } from '../@theme/theme.module';
 import { PagesComponent } from './pages.component';
@@ -48,9 +56,15 @@ import { LoginComponent } from './management/login/login.component';
     NbButtonModule,
     FormsModule,
     NbSpinnerModule,
+<<<<<<< HEAD
     NbTreeGridModule,
     Ng2SmartTableModule,
     NbSelectModule
+=======
+    NbSelectModule,
+    NbOptionModule,                              // <========== Add this line!
+    ReactiveFormsModule ,
+>>>>>>> 713a471... update and check perosnal number and fix alert register and login page
   ],
   declarations: [
     PagesComponent,

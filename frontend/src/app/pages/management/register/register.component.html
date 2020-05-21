@@ -1,4 +1,3 @@
-<p>register works!</p>
 <form id="register_id" #userForm="ngForm">
 
     <div class="center">
@@ -28,11 +27,12 @@
 
       <label for="input_PersonalNumber" class="label col-sm-12 col-form-label" >PersonalNumber</label>
       <div class="col-sm-12">
-        <input type="text" name="personalnumber" nbInput #PersonalNumber  fullWidth id="personalnumber" fieldSize="small" placeholder="PersonalNumber" [(ngModel)]=users.personalnumber >
+        <input  type="text" class="form-control" name="personalnumber" nbInput #PersonalNumber="ngModel"  fullWidth id="personalnumber" fieldSize="small" placeholder="PersonalNumber" [(ngModel)]=users.personalnumber maxlength="7" min="7" required>
+        <div *ngIf="PersonalNumber.invalid && (PersonalNumber.dirty || PersonalNumber.touched)" (click)="console.log(PersonalNumber)"><label class="label red" style="color: red;">"מ.א חייב להיות בעל 7 ספרות"</label></div>
       </div>
       <label class="label col-sm-12 col-form-label" >Rank</label>
       <div class="col-sm-12"> 
-          <nb-select fullWidth #rank="ngModel"selected="1" fieldSize="small" [(ngModel)]="users.rank" id="rank" >
+          <nb-select fullWidth selected="1" id="rank">
             <nb-option value="1">rabat</nb-option>
             <nb-option value="2">shamal</nb-option>
             <nb-option value="3">shmar</nb-option>
@@ -54,10 +54,8 @@
     </div>
     <div class="form-group row">
       <div class="col-sm-12">
-        <button fullWidth nbButton (click)="onSubmit()" status="primary">Register</button>
-        <small>{{errors}}</small>
-        
-    </div>
+        <button fullWidth nbButton (click)="onSubmit()" status="primary">Register</button>       
+      </div>
     </div>
     
   </nb-card-body>

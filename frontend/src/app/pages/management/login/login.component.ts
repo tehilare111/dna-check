@@ -10,6 +10,8 @@ import { ControlTableComponent } from '../../control-table/control-table/control
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { NbAlertModule } from '@nebular/theme';
+import { ToastService } from '../../../services/toast.service';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'ngx-login',
@@ -24,13 +26,15 @@ export class LoginComponent implements OnInit {
   users:Users=new Users();
   lengt=0;
   alertservice:NbAlertModule
+  form:FormGroup;
 
-  constructor(private userService: UserData,private router:Router,private userlogin:UserService,private RestApiService:RestApiService) { }
+  constructor(private userService: UserData,private router:Router,private userlogin:UserService,private RestApiService:RestApiService,private ToastService:ToastService){}
 
   ngOnInit(): void {
   
   }
     Login(){
+    const val = this.form.value;
     this.user_login=(<HTMLInputElement>document.getElementById("user_login")).value
     this.password_login=(<HTMLInputElement>document.getElementById("password_login")).value
     this.RestApiService.getCustomers_username(this.user_login).subscribe((data_from_server: Users) => {
@@ -40,19 +44,28 @@ export class LoginComponent implements OnInit {
       {
         if(this.user_login==data_from_server.username){
           if(this.password_login==data_from_server.password)
-          console.log("secssess")
-          this.users.username=this.user_login
-          localStorage.setItem('username',this.user_login)
-          alert('You are loged in.'+ this.user_login)
-          this.controlTable_page("/pages/control-table/control-table")
+          {
+            console.log("secssess")
+            this.users.username=this.user_login
+            localStorage.setItem('username',this.user_login)
+            this.ToastService.showToast("success","התחברות הושלמה שלום: "+this.user_login,"")
+            this.controlTable_page("/pages/control-table/control-table")
+          }
+          else{
+            this.ToastService.showToast("fail","שם משתמש או סיסמא לא נכונים","")
+          }
         }
       }
     });
     
   }
-  refresh(): void {
-    window.location.reload();
+checknullinput()
+{
+  this.user_login=(<HTMLInputElement>document.getElementById("user_login")).value
+  this.password_login=(<HTMLInputElement>document.getElementById("password_login")).value
+  console.log(this.user_login)
 }
+  
   controlTable_page(pagename:string){
     this.router.navigate([pagename]);
   }

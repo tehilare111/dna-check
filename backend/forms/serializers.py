@@ -15,17 +15,7 @@ class FormSerializer(serializers.ModelSerializer):
             'reporterUnit',            
             'editStateBlocked',)
 
-        model = Destination
-        fields=('username',
-            'firstname',
-            'lastname',
-            'password',
-            'personalnumber',
-            'rank',
-            'armyposistion',
-            'permissions',
-            'armyunit',)
-
+        
 class EventFormSerializer(FormSerializer):
     class Meta(FormSerializer.Meta):
         model = EventForm
@@ -66,3 +56,14 @@ class FormsSerializer(EventFormSerializer):
             'reviewReference',
             'isMatchToReport'
         )
+        model = Destination
+        fields=('username',
+            'firstname',
+            'lastname',
+            'password',
+            'personalnumber',
+            'rank',
+            'armyposistion',
+            'permissions',
+            'armyunit',)
+
