@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { RestApiService } from '../../../services/rest-api.service';
 import { Users } from '../users';
 import { ActivatedRoute } from '@angular/router';
 import { UserData } from '../../../@core/data/users';
 import { UserService } from '../../../@core/mock/users.service';
-import { NbMenuService } from '@nebular/theme';
-import { error } from '@angular/compiler/src/util';
+import { ToastService } from '../../../services/toast.service';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { idValidator } from '../../events-forms/validation-directives/id.directive';
 
 @Component({
   selector: 'ngx-register',
@@ -15,12 +16,12 @@ import { error } from '@angular/compiler/src/util';
 })
 export class RegisterComponent implements OnInit {
    users:Users=new Users();
-  registerJeson ='{ "employees" : ['+'{ "username":"" , "lastName":"","firstname":"","password":"","personalnumber":"","rank":"","postionarmy":"","armyunit":""}]}';
   public jesonreg;
   public count=0;
   submitted=false;
   ;
-  constructor(private router:Router,private RestApiService:RestApiService,private userService: UserData,private userlogin:UserService ) { }
+  @ViewChild("PersonalNumber",{'static': true}) PersonalNumber : ElementRef;
+  constructor(private router:Router,private RestApiService:RestApiService,private userService: UserData,private userlogin:UserService,private ToastService:ToastService ) { }
   public username;
   public lastname;
   public firstname;
@@ -30,11 +31,18 @@ export class RegisterComponent implements OnInit {
   public postionarmy;
   public armyunit;
   public errors:string;
-  
-  ngOnInit(): void {
+  formGroupEle: ElementRef[] = [
+    this.PersonalNumber,
+  ]
 
-    }
-  
+  ngOnInit(): void {
+   
+  }
+  chackvalid(){
+    let formGroup = new FormGroup({
+      'PersonalNumber': new FormControl(this.PersonalNumber, [idValidator()]),
+    })
+  }
     loadData() {
       this.username=(<HTMLInputElement>document.getElementById("username")).value;
       this.lastname=(<HTMLInputElement>document.getElementById("lastname")).value;
@@ -46,6 +54,7 @@ export class RegisterComponent implements OnInit {
       this.armyunit=(<HTMLInputElement>document.getElementById("armyunit")).value;
       this.jesonreg={"username":this.username , "lastname":this.lastname,"firstname":this.firstname,"password":this.password,"personalnumber":this.personalnumber,"rank":this.rank,"armyposistion":this.postionarmy,"armyunit":this.armyunit}
       this.save() 
+      this.chackvalid()
       
     
     }
@@ -56,7 +65,16 @@ export class RegisterComponent implements OnInit {
       .subscribe(
         data=>{
           this.errors=JSON.stringify(data["result"])
-          alert(this.errors)
+          console.log(this.errors)
+          console.log('success')
+          console.log((this.errors=='"success"'))   
+          if (this.errors=='"success"')
+          {
+            this.ToastService.showToast("success","ההרשמה הושלמה","")
+          }
+          else {
+            this.ToastService.showToast("fail",this.errors,"")
+          }
         },error => 
           console.log())
       this.users = new Users();

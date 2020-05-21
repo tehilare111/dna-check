@@ -10,7 +10,7 @@ from django.conf import settings
 
 from rest_framework.views import APIView
 
-from forms.models import FormsTable
+from forms.models import FormsTable,Destination
 from forms.serializers import FormsSerializer
 
 import time
@@ -58,12 +58,12 @@ def customer_create(request):
     if request.method=='GET':
         print("custumer-list", request.headers["Origin"])
         customer_data = JSONParser().parse(request)
-        customer_serializer = CustomerSerializer(data=customer_data)
+        customer_serializer = FormsSerializer(data=customer_data)
     elif request.method == 'POST':
         customer_data = JSONParser().parse(request)
         print (customer_data)
         if customer_data!=None:
-            customer_serializer = CustomerSerializer(data=customer_data)
+            customer_serializer = FormsSerializer(data=customer_data)
             if (customer_serializer.is_valid()):
                 users=customer_serializer.initial_data
                 username=users.pop("username").split(":")
@@ -72,30 +72,32 @@ def customer_create(request):
                 personal=personal[0]
                 print ("username:",username,"personalnumber:",personal)
                 customer_username=Destination.objects.filter(username=username)
+                print (len(customer_username))
                 if len(customer_username)>0:
-                    customer_u=CustomerSerializer(customer_username[0])
+                    customer_u=FormsSerializer(customer_username[0])
                     usernamechack=customer_u.data
                     usernamechack=usernamechack.pop("username")
+                    print (usernamechack)
                     if (username in usernamechack):
                         print("username",username)
-                        return JsonResponse({"result":"The user name is exsist"}, status=status.HTTP_200_OK)
+                        return JsonResponse({"result":"שם מתמש זה קיים במערכת"}, status=status.HTTP_200_OK)
                 else:
                     customer_personal=Destination.objects.filter(personalnumber=personal)
                     if len(customer_personal)>0:
-                        customer_p=CustomerSerializer(customer_personal[0])
+                        customer_p=FormsSerializer(customer_personal[0])
                         personalchack=customer_p.data
                         personalchack=personalchack.pop("personalnumber")
                         if personal in personalchack:
-                           return JsonResponse({"result":"The personal number is exsist"}, status=status.HTTP_200_OK) 
-                        if len(usernamechack)==0:
-                             print ("seccsees")
+                           return JsonResponse({"result":"מספר אישי זה קיים כבר במערכת"}, status=status.HTTP_200_OK) 
+                    else:
+                        print ("success")
                         customer_data.update([('username',username),('personalnumber',personal),("rank","shamal"),("permissions","read")])
                         #customer_serializer.update(customer_data)
-                        customer_serializer_new=CustomerSerializer(data=customer_data)
+                        customer_serializer_new=FormsSerializer(data=customer_data)
                         print(customer_serializer)
                         if customer_serializer_new.is_valid():
-                            customer_serializer_new.save()
-                            return JsonResponse({"result":"seccsess"}, status=status.HTTP_200_OK)
+                            #customer_serializer_new.save()
+                            return JsonResponse({"result":'success'}, status=status.HTTP_200_OK)
             else:
                 return JsonResponse({"result":"the last and first nad password and pesonal and armyunit and posistion is null"}, status=status.HTTP_200_OK)
 
@@ -118,15 +120,15 @@ def customer_detail_Users_username(request,username):
     if request.method == 'GET':
         if (len(users)>0):
 
-            customer_serializer=CustomerSerializer(users[0])
+            customer_serializer=FormsSerializer(users[0])
         else:
-            customer_serializer=CustomerSerializer(users)
+            customer_serializer=FormsSerializer(users)
         return JsonResponse(customer_serializer.data) 
  
     elif request.method == 'PUT': 
         print("reach here")
         customer_data = JSONParser().parse(request) 
-        customer_serializer = CustomerSerializer(customer, data=customer_data) 
+        customer_serializer = FormsSerializer(customer, data=customer_data) 
         if customer_serializer.is_valid(): 
             print("reach here2")
             customer_serializer.save() 

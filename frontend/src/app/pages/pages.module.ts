@@ -8,8 +8,10 @@ import {
   NbButtonModule,
   NbTabsetModule,
   NbSpinnerModule,
+  NbSelectModule,
+  NbOptionModule,
 } from '@nebular/theme';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 import { ThemeModule } from '../@theme/theme.module';
@@ -40,7 +42,10 @@ import { LoginComponent } from './management/login/login.component';
     NbActionsModule,
     NbButtonModule,
     FormsModule,
-    NbSpinnerModule
+    NbSpinnerModule,
+    NbSelectModule,
+    NbOptionModule,                              // <========== Add this line!
+    ReactiveFormsModule ,
   ],
   declarations: [
     PagesComponent,
