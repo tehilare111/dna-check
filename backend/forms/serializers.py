@@ -1,6 +1,6 @@
 
 from rest_framework import serializers 
-from forms.models import Form, EventForm, FormsTable,Destination
+from forms.models import Form, EventForm, FormsTable
 
 
 class FormSerializer(serializers.ModelSerializer):
@@ -56,14 +56,9 @@ class FormsSerializer(EventFormSerializer):
             'reviewReference',
             'isMatchToReport'
         )
-        model = Destination
-        fields=('username',
-            'firstname',
-            'lastname',
-            'password',
-            'personalnumber',
-            'rank',
-            'armyposistion',
-            'permissions',
-            'armyunit',)
+
+
+
+
+      
 

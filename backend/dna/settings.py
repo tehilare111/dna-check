@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'forms.apps.FormsConfig',
     # Management application
     'management.apps.ManagementConfig',
+    # User application
+    'users.apps.UsersConfig',
     # CORS
     'corsheaders',
 ]

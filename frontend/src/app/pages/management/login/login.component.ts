@@ -34,28 +34,26 @@ export class LoginComponent implements OnInit {
   
   }
     Login(){
-    const val = this.form.value;
     this.user_login=(<HTMLInputElement>document.getElementById("user_login")).value
     this.password_login=(<HTMLInputElement>document.getElementById("password_login")).value
     this.RestApiService.getCustomers_username(this.user_login).subscribe((data_from_server: Users) => {
-      console.log("username: ",data_from_server.username)
-      console.log("personalnumber: ",data_from_server.personalnumber)
-      if(this.user_login!=null)
-      {
         if(this.user_login==data_from_server.username){
           if(this.password_login==data_from_server.password)
           {
-            console.log("secssess")
             this.users.username=this.user_login
             localStorage.setItem('username',this.user_login)
             this.ToastService.showToast("success","התחברות הושלמה שלום: "+this.user_login,"")
+            localStorage.setItem("user",this.user_login)
             this.controlTable_page("/pages/control-table/control-table")
+
           }
           else{
             this.ToastService.showToast("fail","שם משתמש או סיסמא לא נכונים","")
           }
         }
-      }
+        else{
+            this.ToastService.showToast("fail","שם משתמש או סיסמא לא נכונים","")
+          }
     });
     
   }
@@ -63,7 +61,7 @@ checknullinput()
 {
   this.user_login=(<HTMLInputElement>document.getElementById("user_login")).value
   this.password_login=(<HTMLInputElement>document.getElementById("password_login")).value
-  console.log(this.user_login)
+
 }
   
   controlTable_page(pagename:string){

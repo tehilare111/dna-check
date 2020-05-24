@@ -35,7 +35,7 @@ export class LostFormComponent {
   popUpDialogContext: string = '';
 
   baseUrl: string = '';
-
+  
   // select fields options:
   results = ["טופל", "טרם טופל"]
   units = ["מצוב", "מעוף", "מצפן"]
@@ -92,6 +92,7 @@ export class LostFormComponent {
       this.readonly = false;
       this.newFormLoadData();
     }
+    
   }
 
   newFormLoadData() {
