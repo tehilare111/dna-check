@@ -32,15 +32,8 @@
       </div>
       <label class="label col-sm-12 col-form-label" >Rank</label>
       <div class="col-sm-12"> 
-          <nb-select fullWidth selected="1" id="rank">
-            <nb-option value="1">rabat</nb-option>
-            <nb-option value="2">shamal</nb-option>
-            <nb-option value="3">shmar</nb-option>
-            <nb-option value="4">ktzin aron1</nb-option>
-            <nb-option value="5">ktzin aron2</nb-option>
-            <nb-option value="6">ktzin aron3</nb-option>
-            <nb-option value="7">ktzin falafel</nb-option>
-            <nb-option value="8">ktzin 2 falafel</nb-option>
+          <nb-select fullWidth name="rank" status="privmary" placeholder="דרגה" id="rank" [(ngModel)]="users.rank" > 
+            <nb-option *ngFor="let rank of ranks" [value]="rank">{{rank}}</nb-option>
           </nb-select>
         </div>
       <label for="input_PositonArmy" class="label col-sm-12 col-form-label" >PositonArmy</label>
@@ -54,7 +47,7 @@
     </div>
     <div class="form-group row">
       <div class="col-sm-12">
-        <button fullWidth nbButton (click)="onSubmit()" status="primary">Register</button>       
+        <button [disabled]="PersonalNumber.invalid  && PersonalNumber.dirty || PersonalNumber.untouched" fullWidth nbButton (click)="onSubmit()" status="primary">Register</button>       
       </div>
     </div>
     
