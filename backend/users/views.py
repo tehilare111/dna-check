@@ -98,3 +98,45 @@ def check_user_and_personalnumbner(username,personalnumber):
                      return False
             else:
                 return True
+
+@csrf_exempt
+def groups_permissions_list(request, unit):
+    '''
+        Responsible to hendle requests froms main control table page.
+        Relevant urls: /api/forms/*
+        GET - Return all forms matching the given event type on the url.
+              Return all rows from table when no url specified.
+        DELETE - Delete all table content. 
+    '''
+    print("oved")
+    print(unit)
+    if request.method == 'GET':
+        users = Destination.objects.filter(armyunit=unit)
+        customer_u=DestinationSerilazers(users,many=True)
+        print(customer_u)
+        return JsonResponse(customer_u.data, safe=False)
+    
+    elif request.method == 'DELETE':
+        Destination.objects.all().delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+###############################################################
+#                      עדכון משתמש                           #
+###############################################################
+@csrf_exempt 
+def update_permissions_users(request,personalnumber):
+    try: 
+        event_form = Destination.objects.get(personalnumber=personalnumber) 
+    except Destination.DoesNotExist: 
+        print ("personalb",personalnumber)
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
+    if request.method=='GET':
+        customer_serializer = DestinationSerilazers(event_form)
+        return JsonResponse(customer_serializer.data)
+    elif request.method == 'PUT':
+        form_data = JSONParser().parse(request)
+        form_serializer = DestinationSerilazers(event_form, data=form_data)
+        if form_serializer.is_valid():
+            form_serializer.save()
+            return JsonResponse(form_serializer.data)
+        return JsonResponse(form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -9,28 +9,23 @@ import { ToastService } from '../../../services/toast.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  
   constructor(private router:Router,private RestApiService:RestApiService,private ToastService:ToastService){}
-  public Error_data="";
-  public jsonUser;
+
   ngOnInit(): void {
   }
+  
   Login(username,password){
-    this.jsonUser={"username":username,"password":password}
-    this.RestApiService.Check_Login(this.jsonUser)
+    this.RestApiService.CheckLogin({"username":username,"password":password})
       .subscribe(
-        data=>{
-      this.Error_data=JSON.stringify(data["result"])
-      if(this.Error_data=='"success"'){
-        this.ToastService.showToast("success","ההתחברות הושלמה ברוך הבא: "+username,"")
-      this.controlTable_page("/pages/control-table/control-table")
-      }
-      else{
-        this.ToastService.showToast("fail",this.Error_data," ")
-      }
-    }); 
+        data => {
+          this.ToastService.showToast("success","ההתחברות הושלמה ברוך הבא: "+username,"")
+          localStorage.setItem("user",username)
+          this.router.navigate(["/pages/control-table/control-table"])
+        },
+        error => {
+            this.ToastService.showToast("fail","אירעה שגיאה בהתחברות","")
+        }
+      ); 
   }
-  controlTable_page(pagename:string){
-    this.router.navigate([pagename]);
-  }
-
 }
