@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NbIconLibraries } from '@nebular/theme';
-import { TreeComponent, TreeNode } from 'angular-tree-component';
+import { NbIconLibraries, NbTreeGridDataSource, NbSortDirection, NbTreeGridDataSourceBuilder, NbSortRequest } from '@nebular/theme';
+import { TreeComponent} from 'angular-tree-component';
 
 import { RestApiService } from '../../services/rest-api.service';
 import { ToastService } from '../../services/toast.service';
+import { type } from 'os';
+import { Users } from './users';
 
 /*const actionMapping:IActionMapping = {
   mouse: {
@@ -18,6 +20,19 @@ class TreeNodeCustom{
   children: any[];
 }
 
+interface TreeNode<T> {
+  data: T;
+  children?: TreeNode<T>[];
+  expanded?: boolean;
+}
+
+interface FSEntry {
+  firstname: string;
+  lastname: string;
+  personalnumber: number;
+  permissions: string;
+}
+
 @Component({
   selector: 'ngx-management',
   templateUrl: './management.component.html',
@@ -25,6 +40,21 @@ class TreeNodeCustom{
 
 })
 export class ManagementComponent implements OnInit {
+  unit_name=" ";
+  jsonPermiss;
+  users:Users=new Users();
+  customColumn = 'firstname';
+  customColumn2 = 'שם';
+  defaultColumns = {'personalnumber':'מזהה','permissions':'הרשאות'};
+  allColumns = [ this.customColumn, ...Object.keys(this.defaultColumns)];
+  permission = ["מנהלן מערכת","מדווח אירועים","צופה אירועים",]
+  dataSource: NbTreeGridDataSource<FSEntry>;
+
+  sortColumn: string;
+  sortDirection: NbSortDirection = NbSortDirection.NONE;
+
+  
+  
   maxTreeNodeId = '1'
   nodes = [
     {
@@ -45,13 +75,47 @@ export class ManagementComponent implements OnInit {
   @ViewChild("tree") private tree: TreeComponent;
   uploadLoading = false
 
-  constructor(iconsLibrary: NbIconLibraries,private RestApiService: RestApiService,private ToastService: ToastService) { iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' }); }
+  constructor(iconsLibrary: NbIconLibraries,private RestApiService: RestApiService,private ToastService: ToastService,private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>) { iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });this.dataSource = this.dataSourceBuilder.create(this.data); }
 
+  private data: TreeNode<FSEntry>[] = [
+    /*{
+      data: { 'Firstname': 'שם', "Id":'מזהה','Permissions':'הרשאות'},
+      children: [
+
+      ],
+    },
+    */
+    
+  ];
   ngOnInit(): void {
-    this.loadData();
+    this.loadData("read");
   }
 
-  loadData(){
+  
+
+  updateSort(sortRequest: NbSortRequest): void {
+    this.sortColumn = sortRequest.column;
+    this.sortDirection = sortRequest.direction;
+  }
+
+  getSortDirection(column: string): NbSortDirection {
+    if (this.sortColumn === column) {
+      return this.sortDirection;
+    }
+    return NbSortDirection.NONE;
+  }
+  getShowOn(index: number) {
+    const minWithForMultipleColumns = 400;
+    const nextColumnStep = 100;
+    return minWithForMultipleColumns + (nextColumnStep * index);
+  }
+  loadTable(value){
+    this.loadData(value.route?value.name:'');
+    this.allColumns = [ this.customColumn, ...Object.keys(value.columns) ];
+    
+  }
+
+  loadData(permissions){
     this.uploadLoading = true
     this.RestApiService.getTreeUnits().subscribe(
       (data_from_server: {'maxTreeNodeId': string, 'treeNode': TreeNodeCustom[]}) => {
@@ -64,6 +128,8 @@ export class ManagementComponent implements OnInit {
         this.uploadLoading = false
       }
       );
+      
+    
   }
 
   saveData(){
@@ -81,8 +147,37 @@ export class ManagementComponent implements OnInit {
     )
   }
 
+  updatePermissionUser(personal){
+    if (personal!=null || this.users.permissions!=null)
+    {
+      this.jsonPermiss={"personal_number":personal,"permissions":this.users.permissions}
+      console.log(this.jsonPermiss)
+      this.RestApiService.updateCustomerUser(this.jsonPermiss,personal)
+      .subscribe(
+        data=>{console.log}
+      )
+    }
+  }
+
+
+
   onNodePickedUp(event) {
     this.currentNode = event.node;
+    console.log(this.currentNode.data.name)
+    this.unit_name=this.currentNode.data.name;
+    console.log(this.unit_name.toString())
+    this.RestApiService.getUsersList(this.unit_name).subscribe((data_from_server) => {
+      console.log(data_from_server)
+      let new_data: TreeNode<FSEntry>[] =
+       data_from_server.map((event) => {
+        
+        return {'data': event}
+      })
+      new_data = new_data.concat(this.data);
+      console.log(new_data)
+      this.dataSource = this.dataSourceBuilder.create(new_data);
+    });
+    
   }
 
   onNodeDeactivate(event){

@@ -14,8 +14,16 @@ export class RestApiService {
   getFormsList(eventType: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/forms/${eventType}`);
   }
+
+  getUsersList(unit:string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/get_group_permissions_List/${unit}`);
+  }
+
   createCustomerUser(customer: Object): Observable<Object> {
     return this.http.post(`${this.baseUrl}/create-User/`, customer);
+  }
+  updateCustomerUser(customer: Object,personalnumber:string): Observable<Object> {
+    return this.http.put(`${this.baseUrl}/update_permissions_user/${personalnumber}`, customer);
   }
   Check_Login(customer:object): Observable<Object> {
     return this.http.post(`${this.baseUrl}/CheckLogin/`, customer);

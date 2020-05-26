@@ -10,6 +10,7 @@ import {
   NbSpinnerModule,
   NbSelectModule,
   NbOptionModule,
+  NbTreeGridModule,
 } from '@nebular/theme';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -46,6 +47,7 @@ import { LoginComponent } from './management/login/login.component';
     NbSelectModule,
     NbOptionModule,                              // <========== Add this line!
     ReactiveFormsModule ,
+    NbTreeGridModule,
   ],
   declarations: [
     PagesComponent,
