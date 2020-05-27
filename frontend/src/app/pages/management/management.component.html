@@ -49,7 +49,48 @@
                 </div> 
             </div>
             <div class="col-md-6">
-                
+                <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
+
+                    <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+                    <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" (click)="formClicked($event, row)"></tr>
+              
+                    <ng-container [nbTreeGridColumnDef]="customColumn">
+                      <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(customColumn)" *nbTreeGridHeaderCellDef>
+                        {{customColumn2}}
+                      </th>
+                      <td nbTreeGridCell *nbTreeGridCellDef="let row">
+
+                        {{row.data[customColumn]}}
+                      </td>
+                    </ng-container>
+              
+                    <ng-container *ngFor="let column of defaultColumns|keyvalue; let index = index"
+                                  [nbTreeGridColumnDef]="column.key"
+                                  [showOn]="getShowOn(index)">
+                      <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column.key)" *nbTreeGridHeaderCellDef>
+                        {{column.value}}
+                      </th>
+                      <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column.key] || '-'}}</td>
+                    </ng-container>
+              
+                  </table>
+                  <tr>
+                  </tr>
+                  <div class="row show-grid">
+                  <div class="col-3 col-sm-4">
+                    <input type="text" fullWidth #Personal="ngModel" name="personalnumber" nbInput  id="personal" fieldSize="medium" placeholder="מספר מזהה" [(ngModel)]=users.personalnumber [nbFilterInput]="dataSource" required maxlength="7" min="7">
+                   </div>
+                  <div class="col-3 col-sm-4">
+                    <nb-select fullWidth name="permissions" status="privmary" placeholder="הרשאה" id="permissions" fieldSize="small" [(ngModel)]="users.permissions" > 
+                        <nb-option *ngFor="let permiss of permission" [value]="permiss">{{[permiss]}}</nb-option>
+                        </nb-select>
+                  </div>
+                  <div class="col-3 col-sm-4">
+                    <div class="col-sm-12">
+                        <button fullWidth nbButton [disabled]="Personal.invalid  || Personal.undirty"   status="primary" (click)=updatePermissionUser(Personal.value)>שנה הרשאות</button>
+                    </div>       
+                  </div>
+                </div>
             </div>
         </div>
     </nb-card-body>
