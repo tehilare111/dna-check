@@ -2,12 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { RestApiService } from '../../../services/rest-api.service';
 import { Users } from '../users';
-import { ActivatedRoute } from '@angular/router';
-import { UserData } from '../../../@core/data/users';
-import { UserService } from '../../../@core/mock/users.service';
 import { ToastService } from '../../../services/toast.service';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { idValidator } from '../../events-forms/validation-directives/id.directive';
+
 
 @Component({
   selector: 'ngx-register',
@@ -19,9 +15,7 @@ export class RegisterComponent implements OnInit {
   public jesonreg;
   public count=0;
   submitted=false;
-  constructor(private router:Router,private RestApiService:RestApiService,private ToastService:ToastService ) { }
-
-
+  constructor(private router:Router,private RestApiService:RestApiService,private ToastService:ToastService) { }
   public errors:string;
   ranks = ["טוראי","רבט","סמל","סמ''ר","רנ''ג","רס''ב","רס''ם","רס''ר","רס''ל","רמטכ''ל","אלוף","תא''ל","אל''ם","סא''ל","רס''ן","סרן","סגן","סג''ם",]
   ngOnInit(): void {
@@ -32,13 +26,14 @@ export class RegisterComponent implements OnInit {
       this.save() 
     }   
   save() {
-      this.RestApiService.createCustomerUser(this.jesonreg)
+      this.RestApiService.CreateUser(this.jesonreg)
       .subscribe(
         data=>{
           this.errors=JSON.stringify(data["result"])
           if (this.errors=='"success"')
           {
             this.ToastService.showToast("success","ההרשמה הושלמה","")
+            localStorage.setItem("user",this.users.username)
             this.controlTable_page("/pages/control-table/control-table")
           }
           else {

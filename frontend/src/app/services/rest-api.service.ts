@@ -19,14 +19,14 @@ export class RestApiService {
     return this.http.get(`${this.baseUrl}/get_group_permissions_List/${unit}`);
   }
 
-  createCustomerUser(customer: Object): Observable<Object> {
+  CreateUser(customer: Object): Observable<Object> {
     return this.http.post(`${this.baseUrl}/create-User/`, customer);
   }
-  updateCustomerUser(customer: Object,personalnumber:string): Observable<Object> {
+  UpdateUser(customer: Object,personalnumber:string): Observable<Object> {
     return this.http.put(`${this.baseUrl}/update_permissions_user/${personalnumber}`, customer);
   }
-  Check_Login(customer:object): Observable<Object> {
-    return this.http.post(`${this.baseUrl}/CheckLogin/`, customer);
+  CheckLogin(customer:object): Observable<Object> {
+    return this.http.post(`${this.baseUrl}/check_login/`, customer);
   }
 
   deleteAll(): Observable<any> {

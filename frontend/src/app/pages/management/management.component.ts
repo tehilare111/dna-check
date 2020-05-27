@@ -88,11 +88,8 @@ export class ManagementComponent implements OnInit {
     
   ];
   ngOnInit(): void {
-    this.loadData("read");
+    this.loadData();
   }
-
-  
-
   updateSort(sortRequest: NbSortRequest): void {
     this.sortColumn = sortRequest.column;
     this.sortDirection = sortRequest.direction;
@@ -109,13 +106,8 @@ export class ManagementComponent implements OnInit {
     const nextColumnStep = 100;
     return minWithForMultipleColumns + (nextColumnStep * index);
   }
-  loadTable(value){
-    this.loadData(value.route?value.name:'');
-    this.allColumns = [ this.customColumn, ...Object.keys(value.columns) ];
-    
-  }
 
-  loadData(permissions){
+  loadData(){
     this.uploadLoading = true
     this.RestApiService.getTreeUnits().subscribe(
       (data_from_server: {'maxTreeNodeId': string, 'treeNode': TreeNodeCustom[]}) => {
@@ -128,8 +120,6 @@ export class ManagementComponent implements OnInit {
         this.uploadLoading = false
       }
       );
-      
-    
   }
 
   saveData(){
@@ -151,35 +141,36 @@ export class ManagementComponent implements OnInit {
     if (personal!=null || this.users.permissions!=null)
     {
       this.jsonPermiss={"personal_number":personal,"permissions":this.users.permissions}
-      console.log(this.jsonPermiss)
-      this.RestApiService.updateCustomerUser(this.jsonPermiss,personal)
+      this.RestApiService.UpdateUser(this.jsonPermiss,personal)
       .subscribe(
-        data=>{console.log}
+        data=>{
+        this.load_users_for_unit()}
       )
     }
   }
 
-
-
   onNodePickedUp(event) {
     this.currentNode = event.node;
-    console.log(this.currentNode.data.name)
     this.unit_name=this.currentNode.data.name;
-    console.log(this.unit_name.toString())
+    this.load_users_for_unit()
+  }
+
+  load_users_for_unit(){
     this.RestApiService.getUsersList(this.unit_name).subscribe((data_from_server) => {
-      console.log(data_from_server)
       let new_data: TreeNode<FSEntry>[] =
        data_from_server.map((event) => {
-        
         return {'data': event}
       })
       new_data = new_data.concat(this.data);
-      console.log(new_data)
       this.dataSource = this.dataSourceBuilder.create(new_data);
-    });
-    
+    });  
   }
-
+  formClicked(event, row) {
+    for(let [value] of Object.entries(this.defaultColumns)){
+        this.users.personalnumber=row.data.personalnumber
+    }
+  }
+  
   onNodeDeactivate(event){
     this.currentNode = undefined;
     this.action = '';
