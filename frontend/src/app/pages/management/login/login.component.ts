@@ -16,12 +16,13 @@ export class LoginComponent implements OnInit {
   }
   Login(username,password){
     this.jsonUser={"username":username,"password":password}
-    this.RestApiService.Check_Login(this.jsonUser)
+    this.RestApiService.CheckLogin(this.jsonUser)
       .subscribe(
         data=>{
       this.Error_data=JSON.stringify(data["result"])
       if(this.Error_data=='"success"'){
         this.ToastService.showToast("success","ההתחברות הושלמה ברוך הבא: "+username,"")
+        localStorage.setItem("user",username)
       this.controlTable_page("/pages/control-table/control-table")
       }
       else{
