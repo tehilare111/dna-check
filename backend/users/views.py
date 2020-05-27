@@ -45,17 +45,18 @@ def create_user(request):
 def check_login(request):
     customer_data = JSONParser().parse(request)
     users_serializer = DestinationSerilazers(data=customer_data)
+    
     if request.method == 'POST':
-        if customer_data!=None:
-            if (users_serializer.is_valid()):
-                users=users_serializer
-                username=users.data.pop("username"),users.data.pop("password")
-                if(check_user_password(username[0],username[1])):
-                   return JsonResponse({"result":"success"}, status=status.HTTP_200_OK)
-                else:
-                    return JsonResponse({"result":"שם משתמש או סיסמא לא נכונים"}, status=status.HTTP_200_OK)
+        if (users_serializer.is_valid()):
+            users = users_serializer
+            username = users.data.pop("username"),users.data.pop("password")
+            if(check_user_password(username[0],username[1])):
+                return JsonResponse({"result":"success"}, status=status.HTTP_200_OK)
             else:
-                return JsonResponse({"result":"שם מתמש או סיסמא לא נכונים "}, status=status.HTTP_200_OK)
+                return JsonResponse({"result":"שם משתמש או סיסמא לא נכונים"}, status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return JsonResponse(users_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
 #################################################################
 #                  בדיקת תקינות שם משתמש                      #
 #################################################################   

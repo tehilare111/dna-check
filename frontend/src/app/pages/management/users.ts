@@ -11,5 +11,4 @@ export class Users {
     public position:string
     public permissions="read"
     public armyunit:string
-
 }

@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   
   Login(username,password){
 
+
     this.RestApiService.CheckLogin({"username":username,"password":password})
       .subscribe(
         data => {
@@ -28,8 +29,10 @@ export class LoginComponent implements OnInit {
             this.ToastService.showToast("fail","אירעה שגיאה בהתחברות","")
         }
       ); 
+
   }
   controlTable_page(pagename:string){
     this.router.navigate([pagename]);
+
   }
 }
