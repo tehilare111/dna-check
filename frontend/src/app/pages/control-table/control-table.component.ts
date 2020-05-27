@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 //import { Customer } from '../events-forms.templates';
-import { RestApiService } from '../../../services/rest-api.service';
+import { RestApiService } from '../../services/rest-api.service';
 
 interface TreeNode<T> {
   data: T;

@@ -1,5 +1,5 @@
 from rest_framework import serializers 
-from management.models import UnitsTree
+from management.models import UnitsTree, ConstantsFields
 
 class UnitsTreeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,3 +9,16 @@ class UnitsTreeSerializer(serializers.ModelSerializer):
             'maxTreeNodeId',
             'treeNode',
         )
+
+class ConstantsFieldsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConstantsFields
+        fields = (
+            'equipmentType',
+            'materialType',
+            'equipmentMakat',
+            'eventStatus',
+            'rank',
+            'handlingStatus'
+        )
+

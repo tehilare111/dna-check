@@ -2,19 +2,19 @@ import { NbMenuItem } from '@nebular/theme';
 
 export const MENU_ITEMS: NbMenuItem[] = [
   {
-    title: 'טבלת שליטה',
-    icon: 'grid-outline',
-    children: [
-    {
     	title: 'טבלת שליטה',
-	link: '/pages/control-table/control-table',
-    },
-    ],
+      icon: 'layout-outline',
+	    link: '/pages/control-table',
   },
   {
     title: 'ניהול ויחידות',
-    icon: 'shopping-cart-outline',
+    icon: 'settings',
     link: '/pages/management',
+  },
+  {
+    title: 'שדות קבועים',
+    icon: 'edit-2-outline',
+    link: '/pages/constants-fields',
   },
   {
     title: 'E-commerce',
