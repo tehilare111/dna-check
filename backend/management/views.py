@@ -65,7 +65,7 @@ def constants_fields(request):
             constants_fields = None
         
         data = JSONParser().parse(request) 
-        print(data)
+        
         if constants_fields:
             constants_fields_serializer = ConstantsFieldsSerializer(constants_fields, data=data) 
         else:

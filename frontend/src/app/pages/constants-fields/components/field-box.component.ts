@@ -36,8 +36,6 @@ export class FieldBoxComponent implements OnInit {
   editField(){
     const index: number = this.fieldOptions.indexOf(this.currentField);
     this.fieldOptions.splice(index, 1);
-    console.log('currentField', this.currentField, ' ;fieldOptions: ', this.fieldOptions)
-    console.log(this.tmpField)
     this.fieldOptions.push(this.tmpField);
     this.cancel()
   }

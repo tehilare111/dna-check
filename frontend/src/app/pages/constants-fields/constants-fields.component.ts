@@ -63,7 +63,6 @@ export class ConstantsFieldsComponent implements OnInit {
       (data_from_server: ConstantsFields) => {
         if(data_from_server) { this.ToastService.showToast('success', 'נשמר בהצלחה!', '') }
         this.uploadLoading = false
-        console.log(data_from_server)
       },
       err => {
         this.ToastService.showToast('fail', 'לא נשמר בהצלחה!', '')
