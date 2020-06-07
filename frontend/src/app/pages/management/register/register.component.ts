@@ -33,19 +33,13 @@ export class RegisterComponent implements OnInit {
       this.RestApiService.CreateUser(this.jesonreg)
       .subscribe(
         data=>{
-          this.errors=JSON.stringify(data["result"])
-          if (this.errors=='"success"')
-          {
             this.ToastService.showToast("success","ההרשמה הושלמה","")
             localStorage.setItem("user",this.users.username)
             this.router.navigate(["/pages/control-table/control-table"])
-          }
-          else {
-            this.ToastService.showToast("fail",this.errors,"")
-          }
-        },
-        error => this.ToastService.showToast("fail",this.errors,"")
-      )
+            },
+        error =>{ this.ToastService.showToast("fail","שגיאה בעת בהרשמה","")
+        }
+      );
       this.users = new Users();  
   }
 

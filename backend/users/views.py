@@ -14,28 +14,15 @@ from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt 
 def create_user(request):
-    users=""
-    username=""
-    customer_data = JSONParser().parse(request)
-    customer_serializer = DestinationSerilazers(data=customer_data)
+    user_data = JSONParser().parse(request)
+    user_serializer = DestinationSerilazers(data=user_data)
     if request.method == 'POST':
-        if customer_data==None:
-            return   
-        if (customer_serializer.is_valid()):
-            users=customer_serializer.initial_data
-            username=users.pop("username"),users.pop("personalnumber")
-            if(check_user_and_personalnumbner(username[0],username[1])):
-                customer_data.update([('username',username[0]),('personalnumber',username[1]),("permissions","read")])
-                customer_serializer_new=DestinationSerilazers(data=customer_data)
-                if customer_serializer_new.is_valid():
-                    #print(customer_serializer_new.data)
-                    customer_serializer_new.save()
-                    return JsonResponse({"result":'success'}, status=status.HTTP_200_OK)
+        if(user_serializer.is_valid()):
+            if(check_user_and_personalnumbner(user_data)):
+                return HttpResponse(status=status.HTTP_410_GONE)  
             else:
-                return JsonResponse({"result":"שם משתמש או מספר אישי אלה קימים במערכת"}, status=status.HTTP_200_OK)
-        else:
-            return JsonResponse({"result":"חלק מהשדות לא תקינים או ריקים  אנה מלא את כל השדות"}, status=status.HTTP_200_OK)
-           
+                user_serializer.save()
+                return HttpResponse(status=status.HTTP_204_NO_CONTENT) 
 
 ###############################################################
 #                      התחברות לאתר                          #
@@ -43,50 +30,43 @@ def create_user(request):
 
 @csrf_exempt 
 def check_login(request):
-    customer_data = JSONParser().parse(request)
-    users_serializer = DestinationSerilazers(data=customer_data)
-    
+    user_data = JSONParser().parse(request)
+    users_serializer = DestinationSerilazers(data=user_data)
     if request.method == 'POST':
-        if (users_serializer.is_valid()):
-            users = users_serializer
-            username = users.data.pop("username"),users.data.pop("password")
-            if(check_user_password(username[0],username[1])):
-                return JsonResponse({"result":"success"}, status=status.HTTP_200_OK)
-            else:
-                return JsonResponse({"result":"שם משתמש או סיסמא לא נכונים"}, status=status.HTTP_401_UNAUTHORIZED)
-        else:
-            return JsonResponse(users_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+        try:
+            if (users_serializer.is_valid()): 
+                users = Destination.objects.get(username=user_data["username"])
+                if check_user_password(users.username,user_data["password"]):
+                    return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+                else:
+                    return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+        except Destination.DoesNotExist: 
+            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)  
+    
+    
+     
 
-#################################################################
-#                  בדיקת תקינות שם משתמש                      #
-#################################################################   
+################################################################
+#                  בדיקת תקינות שם משתמש                     #
+################################################################   
 
 
 def check_user_password(username,password):
-    customer_username=Destination.objects.filter(username=username)
-    if len(customer_username)>0:
-        customer_u=DestinationSerilazers(customer_username[0])
-        if (username == customer_u.data.pop("username")):
-            if(password==customer_u.data.pop("password")):
-                return True
-               
-            else:
-                return False
+    customer_username=Destination.objects.filter(username=username,password=password).exists()
+    return customer_username
 
-def check_user_and_personalnumbner(username,personalnumber):
-        customer_username=Destination.objects.filter(username=username)
-        if len(customer_username)>0:
-            customer_u=DestinationSerilazers(customer_username[0])
-            if (username == customer_u.data.pop("username")):
-                return False
+def check_user_and_personalnumbner(user_data):
+    if(Destination.objects.filter(username=user_data["username"]).exists()):
+        return True
+    else:
+        if(Destination.objects.filter(personalnumber=user_data["personalnumber"]).exists()):
+            return True
         else:
-            customer_personal=Destination.objects.filter(personalnumber=personalnumber)
-            if len(customer_personal)>0:
-                customer_p=DestinationSerilazers(customer_personal[0])
-                if personalnumber == customer_p.data.pop("personalnumber"):
-                     return False
-            else:
-                return True
+            return False
+        
+###############################################################
+#                     קבלת קבוצת הרשאות                      #
+###############################################################
 
 @csrf_exempt
 def groups_permissions_list(request, unit):
