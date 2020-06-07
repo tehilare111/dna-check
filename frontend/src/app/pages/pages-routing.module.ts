@@ -2,23 +2,36 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
 import { PagesComponent } from './pages.component';
-import { ControlTableComponent } from './control-table/control-table/control-table.component';
+import { ControlTableComponent } from './control-table/control-table.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 import { ManagementComponent } from './management/management.component';
+import { ConstantsFieldsComponent } from './constants-fields/constants-fields.component';
 
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
   children: [
-  /*  {
+  /*{
       path: 'control-table',
       component: ControlTableComponent,
       },*/
     {
+      path: '',
+      component: ControlTableComponent,
+    },
+    {
+      path: 'control-table',
+      component: ControlTableComponent,
+    },
+    {
       path: 'management',
       component: ManagementComponent,
+    },
+    {
+      path: 'constants-fields',
+      component: ConstantsFieldsComponent,
     },
     {
       path: 'dashboard',
@@ -78,12 +91,12 @@ const routes: Routes = [{
       loadChildren: () => import('./tables/tables.module')
         .then(m => m.TablesModule),
     },
-    {
-    	path: 'control-table',
-	//component: ControlTableComponent,
+    /*{
+    	  path: 'control-table',
+	      component: ControlTableComponent,
       	loadChildren: () => import('./control-table/tables.module')
         .then(m => m.TablesModule),
-    },
+    },*/
     {
       path: 'miscellaneous',
       loadChildren: () => import('./miscellaneous/miscellaneous.module')

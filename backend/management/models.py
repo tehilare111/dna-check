@@ -1,4 +1,4 @@
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.db import models
 
 # Create your models here.
@@ -9,3 +9,13 @@ class UnitsTree(models.Model):
     maxTreeNodeId = models.IntegerField(blank=False, default=0)
     # the tree node itself
     treeNode = JSONField()
+
+class ConstantsFields(models.Model):
+    constantFieldId = models.CharField(max_length=20, blank=True)
+
+    equipmentType = ArrayField(models.CharField(max_length=20, blank=True))
+    materialType = ArrayField(models.CharField(max_length=20, blank=True))
+    equipmentMakat = ArrayField(models.CharField(max_length=20, blank=True))
+    eventStatus = ArrayField(models.CharField(max_length=20, blank=True))
+    rank = ArrayField(models.CharField(max_length=20, blank=True))
+    handlingStatus = ArrayField(models.CharField(max_length=20, blank=True))

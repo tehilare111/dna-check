@@ -18,9 +18,9 @@
                 <div *ngIf="currentNode">
                     <nb-card>
                         <nb-card-header>
-                            <nb-icon icon="plus-round" pack="ion" (click)="action='add'" class="clickable"></nb-icon>
-                            <nb-icon icon="edit" pack="ion" (click)="action='edit'" class="clickable"></nb-icon>
-                            <nb-icon icon="trash-a" pack="ion" (click)="action='delete'" class="clickable"></nb-icon>
+                            <nb-icon icon="plus-round" pack="ion" (click)="action='add'"></nb-icon>
+                            <nb-icon icon="edit" pack="ion" (click)="action='edit'"></nb-icon>
+                            <nb-icon icon="trash-a" pack="ion" (click)="action='delete'"></nb-icon>
                         </nb-card-header>
                         <nb-card-body>
                             <div *ngIf="action=='add'">

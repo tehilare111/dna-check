@@ -50,4 +50,12 @@ export class RestApiService {
   postTreeUnits(data): Observable<any>{
     return this.http.post(`${this.baseUrl}/units-management/`, data);
   }
+
+  getConstatnsFields(): Observable<any>{
+     return this.http.get(`${this.baseUrl}/constants-fields/`);
+  }
+
+  postConstatnsFields(data): Observable<any>{
+     return this.http.post(`${this.baseUrl}/constants-fields/`, data);
+  }
 }
