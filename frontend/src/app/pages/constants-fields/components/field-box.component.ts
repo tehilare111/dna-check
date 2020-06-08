@@ -25,6 +25,7 @@ export class FieldBoxComponent implements OnInit {
   deleteField(){
     const index: number = this.fieldOptions.indexOf(this.currentField);
     this.fieldOptions.splice(index, 1);
+    if(this.fieldOptions.length == 0) this.fieldOptions = ['']
     this.cancel()
   }
 
