@@ -27,6 +27,7 @@ import { ConstantsFieldsComponent } from './constants-fields/constants-fields.co
 import { FieldBoxComponent } from './constants-fields/components/field-box.component';
 import { RegisterComponent } from './management/register/register.component';
 import { LoginComponent } from './management/login/login.component';
+import { FsIconComponent } from './tables/tree-grid/tree-grid.component';
 
 
 @NgModule({
@@ -48,12 +49,14 @@ import { LoginComponent } from './management/login/login.component';
     NbSpinnerModule,
     NbTreeGridModule,
     Ng2SmartTableModule,
-    NbSelectModule
+    NbSelectModule,
+    
+    
   ],
   declarations: [
     PagesComponent,
     ManagementComponent,
-
+    FsIconComponent,
     ControlTableComponent,
     ConstantsFieldsComponent,
     FieldBoxComponent,

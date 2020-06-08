@@ -28,6 +28,9 @@ export class RestApiService {
   CheckLogin(customer:object): Observable<Object> {
     return this.http.post(`${this.baseUrl}/check_login/`, customer);
   }
+  Get_constans_fiald(customer:Object,constants:string):Observable<Object>{
+    return this.http.post(`${this.baseUrl}/get_constans_fiald${constants}`,customer)
+  }
 
   deleteAll(): Observable<any> {
     return this.http.delete(`${this.baseUrl}/forms/`);

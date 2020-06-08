@@ -79,3 +79,4 @@ def constants_fields(request):
     elif request.method == 'DELETE':
         ConstantsFields.objects.all().delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+   

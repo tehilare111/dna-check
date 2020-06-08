@@ -6,6 +6,10 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 
+from management.models import UnitsTree, ConstantsFields
+
+
+
 # Create your views here.
 # Create your views here.
 ###############################################################
@@ -105,3 +109,7 @@ def update_permissions_users(request,personalnumber):
             form_serializer.save()
             return JsonResponse(form_serializer.data)
         return JsonResponse(form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@csrf_exempt
+def get_constans_fiald(ConstantsField):
+    return ConstantsField
