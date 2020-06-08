@@ -25,6 +25,10 @@ import { ControlTableComponent } from './control-table/control-table.component';
 import { TreeModule } from 'angular-tree-component';
 import { ConstantsFieldsComponent } from './constants-fields/constants-fields.component';
 import { FieldBoxComponent } from './constants-fields/components/field-box.component';
+import { RegisterComponent } from './management/register/register.component';
+import { LoginComponent } from './management/login/login.component';
+import { FsIconComponent } from './tables/tree-grid/tree-grid.component';
+
 
 @NgModule({
   imports: [
@@ -45,14 +49,21 @@ import { FieldBoxComponent } from './constants-fields/components/field-box.compo
     NbSpinnerModule,
     NbTreeGridModule,
     Ng2SmartTableModule,
-    NbSelectModule
+    NbSelectModule,
+    
+    
   ],
   declarations: [
     PagesComponent,
     ManagementComponent,
+    FsIconComponent,
     ControlTableComponent,
     ConstantsFieldsComponent,
     FieldBoxComponent,
+
+    RegisterComponent,
+    LoginComponent,
+    //  ControlTableComponent,
     ],
 })
 export class PagesModule {

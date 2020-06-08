@@ -13,9 +13,9 @@ class FormSerializer(serializers.ModelSerializer):
             'date',
             'reporterName',
             'reporterUnit',            
-            'editStateBlocked'
-        )
+            'editStateBlocked',)
 
+        
 class EventFormSerializer(FormSerializer):
     class Meta(FormSerializer.Meta):
         model = EventForm
@@ -56,3 +56,9 @@ class FormsSerializer(EventFormSerializer):
             'reviewReference',
             'isMatchToReport'
         )
+
+
+
+
+      
+

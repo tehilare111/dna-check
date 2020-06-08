@@ -31,6 +31,7 @@ interface FSEntry {
 })
 export class ControlTableComponent implements OnInit{
 
+  public username_login="";
   pickedUpEvent = {'name':undefined, 'route': undefined};
   eventsToPickUp = {
     'defaultForms': {
@@ -64,7 +65,9 @@ export class ControlTableComponent implements OnInit{
   loadTable(value){
     this.loadData(value.route?value.name:'');
     this.allColumns = [ this.customColumn, ...Object.keys(value.columns) ];
+    
   }
+  
 
 
   dataSource: NbTreeGridDataSource<FSEntry>;
