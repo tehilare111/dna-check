@@ -8,8 +8,21 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'ניהול ויחידות',
+
     icon: 'settings',
     link: '/pages/management',
+    children:[
+      {
+        title:'ניהול יחידות',
+        link: '/pages/management',
+      },
+      {
+        title:'התחברות',
+        link:'login',
+      },
+    ],
+    
+
   },
   {
     title: 'שדות קבועים',

@@ -43,6 +43,7 @@ export class ConstantsFieldsComponent implements OnInit {
         console.log(data)
       },
       err => {
+        this.ConstantsFields = {eventStatus: [''], materialType: [''], equipmentType:[''], equipmentMakat:[''], handlingStatus:[''], rank:['']};
         this.ToastService.showToast('fail', 'שגיאה בקריאה מהשרת', '')
         this.uploadLoading = false
       } 

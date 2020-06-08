@@ -4,8 +4,8 @@ import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeServ
 import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-
+import { Subject, Observable } from 'rxjs';
+import { UserService } from '../../../@core/mock/users.service';
 @Component({
   selector: 'ngx-header',
   styleUrls: ['./header.component.scss'],
@@ -39,22 +39,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentTheme = 'default';
 
   userMenu = [ { title: 'Profile' }, { title: 'Log out' } ];
-
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
               private themeService: NbThemeService,
               private userService: UserData,
               private layoutService: LayoutService,
-              private breakpointService: NbMediaBreakpointsService) {
+              private breakpointService: NbMediaBreakpointsService){
   }
-
   ngOnInit() {
     this.currentTheme = this.themeService.currentTheme;
-
-    this.userService.getUsers()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((users: any) => this.user = users.nick);
-
     const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()
       .pipe(
@@ -69,8 +62,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
       )
       .subscribe(themeName => this.currentTheme = themeName);
+      this.login()
   }
-
+  login(){
+    this.userService.getUsers()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((users: any) => this.user = users.login);
+  }
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();

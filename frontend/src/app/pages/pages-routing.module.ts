@@ -9,6 +9,10 @@ import { NotFoundComponent } from './miscellaneous/not-found/not-found.component
 import { ManagementComponent } from './management/management.component';
 import { ConstantsFieldsComponent } from './constants-fields/constants-fields.component';
 
+import { LoginComponent } from './management/login/login.component';
+import { RegisterComponent } from './management/register/register.component';
+
+
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -30,8 +34,20 @@ const routes: Routes = [{
       component: ManagementComponent,
     },
     {
+
       path: 'constants-fields',
       component: ConstantsFieldsComponent,
+    },
+    {
+      path:'login',
+      component:LoginComponent,
+    },
+      
+    
+    {
+      path:'register',
+      component:RegisterComponent,
+
     },
     {
       path: 'dashboard',

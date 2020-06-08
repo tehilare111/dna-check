@@ -22,6 +22,8 @@ class Form(models.Model):
     class Meta:
       abstract = True
 
+
+
 class EventForm(Form):
     caseIdOnMetzah = models.CharField(max_length=70, blank=False, default='')
     handlingResults = models.CharField(max_length=70, blank=False, default='')

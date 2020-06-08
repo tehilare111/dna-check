@@ -48,6 +48,7 @@ def units_tree_management(request):
 
 @csrf_exempt 
 def constants_fields(request):
+    
     if request.method == 'GET': 
         try: 
             constants_fields = ConstantsFields.objects.get(constantFieldId=CONSTATNS_FIELDS_OBJECT_STATIC_ID) 
@@ -71,6 +72,9 @@ def constants_fields(request):
         else:
             constants_fields_serializer = ConstantsFieldsSerializer(data=data) 
         
+        print(constants_fields)
+        print(constants_fields_serializer)
+
         if constants_fields_serializer.is_valid(): 
             constants_fields_serializer.save(constantFieldId=CONSTATNS_FIELDS_OBJECT_STATIC_ID) 
             return JsonResponse(constants_fields_serializer.data) 
@@ -79,3 +83,4 @@ def constants_fields(request):
     elif request.method == 'DELETE':
         ConstantsFields.objects.all().delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+   

@@ -42,6 +42,7 @@ def forms_list(request, event_type):
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
+
 @csrf_exempt
 def new_event_form(request):
     '''
@@ -49,8 +50,8 @@ def new_event_form(request):
         Relevant url: /api/event_forms/
     '''
     if request.method == 'GET':
-        dt = datetime.today()
-        payload = {'datetime': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
+        dt = datetime.todadatetimey()
+        payload = {'': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
         return JsonResponse(payload, safe=False)
 '''
 @csrf_exempt
@@ -90,6 +91,7 @@ def download_file(request, path):
             response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
             return response
     return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
 
 
 class NewEventFrom(APIView):
@@ -134,3 +136,4 @@ class NewEventFrom(APIView):
 
         event_form.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
