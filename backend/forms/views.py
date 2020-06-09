@@ -50,8 +50,8 @@ def new_event_form(request):
         Relevant url: /api/event_forms/
     '''
     if request.method == 'GET':
-        dt = datetime.todadatetimey()
-        payload = {'': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
+        dt = datetime.today()
+        payload = {'datetime': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
         return JsonResponse(payload, safe=False)
 '''
 @csrf_exempt
