@@ -45,7 +45,7 @@ export class LostFormComponent {
   ranks = ["סמל", "רבט", "טוראי"]
   equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
   materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
-  equipments = [{"name": "ציוד", "list" : this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+  equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
   equipmentsTypeOptions = []  
   constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { this.baseUrl = this.RestApiService.baseUrl; }
 
@@ -94,9 +94,19 @@ export class LostFormComponent {
     } else {
       this.readonly = false;
       this.newFormLoadData();
+      this.get_constas_feilds()
     }
   }
-
+  get_constas_feilds() {
+    this.RestApiService.getConstatnsFields().subscribe((data_from_server) => {
+      this.equipmentsType=data_from_server.equipmentType
+      this.ranks = data_from_server.rank
+      this.materialsType=data_from_server.materialType
+      this.eventStatusForm=data_from_server.eventStatus
+      this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+      console.log(data_from_server)
+    });
+  }
   newFormLoadData() {
     this.RestApiService.getNewEventForm().subscribe((data_from_server) => {
       this.lostForm.date = data_from_server.datetime

@@ -1,9 +1,15 @@
+<nb-card class="main-nb-card" status="primary" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+  
 <form id="register_id" #userForm="ngForm">
 
     <div class="center">
-      <h2 class="text-heading" id="text_head" style="text-align: center;">Register Page</h2>
+    <nb-card-body>
+     
     <nb-card>
-      <nb-card-body>
+      <nb-card-header>
+        <h2 class="text-heading" id="text_head" style="text-align: center;color: white;">הרשמה</h2>
+      </nb-card-header>
+    <nb-card-body>
     <div class="form-group row">
       <label for="input_username" class="label col-sm-12 col-form-label">Username</label>
       <div class="col-sm-12">
@@ -53,5 +59,7 @@
     
   </nb-card-body>
   </nb-card>
+</nb-card-body>
 </div>
 </form>
+</nb-card>

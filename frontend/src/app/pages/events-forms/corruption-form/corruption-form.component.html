@@ -54,6 +54,8 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="rank" class="label">דרגה</label>
+                <div>
+                </div>
                 <nb-select [disabled]="this.corruptionForm.editStateBlocked" name="rank" id="rank" status="primary" placeholder="דרגה" [(ngModel)]="corruptionForm.rank">
                   <nb-option *ngFor="let rank of ranks" value="rank">{{rank}}</nb-option>  
                 </nb-select>
@@ -89,6 +91,8 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="equipment" class="label">ציוד/חומר</label>
+                <div>
+                </div>
                 <nb-select [disabled]="this.corruptionForm.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="corruptionForm.equipment">
                   <nb-option *ngFor="let equipment of equipments" value="equipment.name" (click)="equipmentsTypeOptions=equipment.list; corruptionForm.equipmentType=''">{{equipment.name}}</nb-option>  
                 </nb-select>

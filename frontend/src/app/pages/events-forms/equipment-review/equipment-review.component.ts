@@ -94,8 +94,21 @@ export class EquipmentReviewComponent {
     } else {
       this.readonly = false;
       this.newFormLoadData();
+      this.get_constas_feilds();
     }
   }
+
+  get_constas_feilds() {
+    this.RestApiService.getConstatnsFields().subscribe((data_from_server) => {
+      this.equipmentsType=data_from_server.equipmentType
+      this.ranks = data_from_server.rank
+      this.materialsType=data_from_server.materialType
+      this.results=data_from_server.handlingStatus
+      this.eventStatusForm=data_from_server.eventStatus
+      this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+    });
+  }
+
 
   newFormLoadData() {
     this.RestApiService.getNewEventForm().subscribe((data_from_server) => {
