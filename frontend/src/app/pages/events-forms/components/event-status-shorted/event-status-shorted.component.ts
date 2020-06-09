@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-
+import { RestApiService } from '../../../../services/rest-api.service';
 import { EventForm } from '../../events-forms.templates';
 
 @Component({
@@ -14,12 +14,20 @@ export class EventStatusShortedComponent implements OnInit {
 
   @Input() results = [];
 
-  eventStatusOptions = ["פתוח", "סגור"]
+  eventStatusOptions = ["פתוח","סגור"]
 
-  constructor() { }
+  constructor(private RestApiService:RestApiService) { }
 
   ngOnInit(): void {
+    this.get_constas_feilds()
   }
+  get_constas_feilds() {
+    this.RestApiService.getConstatnsFields().subscribe((data_from_server) => {
+      
+      this.eventStatusOptions=data_from_server.eventStatus
+    });
+  }
+  
 
   pushFormFields<T extends EventForm>(form: T): T {
     form.eventStatus = this.eventForm.eventStatus;

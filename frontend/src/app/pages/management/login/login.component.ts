@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
         data => {
           this.ToastService.showToast("success","ההתחברות הושלמה ברוך הבא: "+username,"")
           localStorage.setItem("user",username)
-          this.router.navigate(["/pages/control-table/control-table"])
+          this.router.navigate(["/pages/control-table"])
         },
         error => {
             this.ToastService.showToast("fail","אירעה שגיאה בהתחברות","")
