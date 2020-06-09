@@ -28,8 +28,8 @@ export class RestApiService {
   CheckLogin(customer:object): Observable<Object> {
     return this.http.post(`${this.baseUrl}/check_login/`, customer);
   }
-  Get_constans_fiald(customer:Object,constants:string):Observable<Object>{
-    return this.http.post(`${this.baseUrl}/get_constans_fiald${constants}`,customer)
+  Get_constans_fiald(faild:object):Observable<any> {
+    return this.http.get(`${this.baseUrl}/get_constats_fields/`,faild);
   }
 
   deleteAll(): Observable<any> {
@@ -39,6 +39,7 @@ export class RestApiService {
   getNewEventForm(): Observable<any> {
     return this.http.get(`${this.baseUrl}/event_forms/values`);
   }
+
 
   getExistingEventForm(reference: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/event_forms/${reference}`);

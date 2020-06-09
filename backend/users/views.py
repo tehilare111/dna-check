@@ -5,7 +5,7 @@ from rest_framework.parsers import JSONParser
 from django.http import HttpResponse, JsonResponse
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
-
+from management.utils import constants_fields_rank
 from management.models import UnitsTree, ConstantsFields
 
 
@@ -111,5 +111,5 @@ def update_permissions_users(request,personalnumber):
         return JsonResponse(form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt
-def get_constans_fiald(ConstantsField):
-    return ConstantsField
+def get_constans_fiald(fields_array):
+    return HttpResponse(constants_fields_rank(fields_array.data),status=status.HTTP_204_NO_CONTENT)

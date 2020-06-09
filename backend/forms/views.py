@@ -51,7 +51,11 @@ def new_event_form(request):
     '''
     if request.method == 'GET':
         dt = datetime.today()
+<<<<<<< HEAD
         payload = {'': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
+=======
+        payload = {'datetime': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
+>>>>>>> b869b00... fix bugs
         return JsonResponse(payload, safe=False)
 '''
 @csrf_exempt

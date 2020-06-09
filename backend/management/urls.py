@@ -1,5 +1,6 @@
 from django.conf.urls import url 
-from management import views 
+from management import views
+from management import utils 
 from django.conf import settings
 from django.conf.urls.static import static
  

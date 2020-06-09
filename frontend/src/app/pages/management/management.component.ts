@@ -7,6 +7,8 @@ import { ToastService } from '../../services/toast.service';
 import { type } from 'os';
 import { Users } from './users';
 
+import { Router } from '@angular/router';
+
 /*const actionMapping:IActionMapping = {
   mouse: {
     activate: (tree, node, $event) => // Open a modal with node content,
@@ -75,7 +77,7 @@ export class ManagementComponent implements OnInit {
   @ViewChild("tree") private tree: TreeComponent;
   uploadLoading = false
 
-  constructor(iconsLibrary: NbIconLibraries,private RestApiService: RestApiService,private ToastService: ToastService,private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>) { iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });this.dataSource = this.dataSourceBuilder.create(this.data); }
+  constructor(private router:Router , iconsLibrary: NbIconLibraries,private RestApiService: RestApiService,private ToastService: ToastService,private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>) { iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });this.dataSource = this.dataSourceBuilder.create(this.data); }
 
   private data: TreeNode<FSEntry>[] = [
     /*{
@@ -113,10 +115,9 @@ export class ManagementComponent implements OnInit {
       (data_from_server: {'maxTreeNodeId': string, 'treeNode': TreeNodeCustom[]}) => {
         this.nodes = data_from_server.treeNode
         this.maxTreeNodeId = data_from_server.maxTreeNodeId
-        this.uploadLoading = false
+        this.uploadLoading = true
       },
       err => {
-        this.ToastService.showToast('fail', 'שגיאה בקריאה מהשרת', '')
         this.uploadLoading = false
       }
       );
@@ -126,13 +127,11 @@ export class ManagementComponent implements OnInit {
     this.uploadLoading = true
     let dataToServer = {'maxTreeNodeId': this.maxTreeNodeId, 'treeNode': this.nodes};
     this.RestApiService.postTreeUnits(dataToServer).subscribe(
-      (data_from_server: {'maxTreeNodeId': string, 'treeNode': TreeNodeCustom[]}) => {
-        if(data_from_server) { this.ToastService.showToast('success', 'נשמר בהצלחה!', '') }
-        this.uploadLoading = false
+      data_from_server=> {
+        this.ToastService.showToast('success', 'נשמר בהצלחה!', '') 
+        this.uploadLoading = true
       },
       err => {
-        this.ToastService.showToast('fail', 'לא נשמר בהצלחה!', '')
-        this.uploadLoading = false
       }
     )
   }
@@ -144,7 +143,7 @@ export class ManagementComponent implements OnInit {
       this.RestApiService.UpdateUser(this.jsonPermiss,personal)
       .subscribe(
         data=>{
-        this.load_users_for_unit()}
+        this.LoadUsersForUnit()}
       )
     }
   }
@@ -152,18 +151,21 @@ export class ManagementComponent implements OnInit {
   onNodePickedUp(event) {
     this.currentNode = event.node;
     this.unit_name=this.currentNode.data.name;
-    this.load_users_for_unit()
+    this.LoadUsersForUnit()
   }
 
-  load_users_for_unit(){
-    this.RestApiService.getUsersList(this.unit_name).subscribe((data_from_server) => {
+  LoadUsersForUnit(){
+    this.RestApiService.getUsersList(this.unit_name).subscribe(
+      (data_from_server) => {
       let new_data: TreeNode<FSEntry>[] =
        data_from_server.map((event) => {
         return {'data': event}
       })
       new_data = new_data.concat(this.data);
       this.dataSource = this.dataSourceBuilder.create(new_data);
-    });  
+    },
+    err=>{
+   })
   }
   formClicked(event, row) {
     for(let [value] of Object.entries(this.defaultColumns)){

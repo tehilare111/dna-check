@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { RestApiService } from '../../../services/rest-api.service';
 import { Users } from '../users';
 import { ToastService } from '../../../services/toast.service';
+import { HttpHeaderResponse, HttpRequest, HttpResponseBase } from '@angular/common/http';
 
 
 @Component({
@@ -16,13 +17,17 @@ export class RegisterComponent implements OnInit {
   public count=0;
   submitted=false;
   public errors:string;
-  ranks = ["טוראי","רבט","סמל","סמ''ר","רנ''ג","רס''ב","רס''ם","רס''ר","רס''ל","רמטכ''ל","אלוף","תא''ל","אל''ם","סא''ל","רס''ן","סרן","סגן","סג''ם",]
-  
+  ranks = []
   constructor(private router:Router,private RestApiService:RestApiService,private ToastService:ToastService) { }
   
   ngOnInit(): void {
+    this.get_constatns_filds_rank()
   }
-
+  get_constatns_filds_rank() {
+    this.RestApiService.getConstatnsFields().subscribe((data_from_server) => {
+      this.ranks = data_from_server.rank
+    });
+  }
   loadData() {
     this.jesonreg={"username":this.users.username , "lastname":this.users.lastname,"firstname":this.users.Firstname,"password":this.users.password,"personalnumber":this.users.personalnumber,"rank":this.users.rank,"armyposistion":this.users.position,"armyunit":this.users.armyunit}
     if(this.jesonreg)
