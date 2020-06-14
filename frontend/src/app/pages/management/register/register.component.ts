@@ -5,6 +5,18 @@ import { Users } from '../users';
 import { ToastService } from '../../../services/toast.service';
 import { HttpHeaderResponse, HttpRequest, HttpResponseBase } from '@angular/common/http';
 
+class TreeNodeCustom{
+  id: number;
+  name: string;
+  children: any[];
+}
+
+interface TreeNode<T> {
+  data: T;
+  children?: TreeNode<T>[];
+  expanded?: boolean;
+}
+
 
 @Component({
   selector: 'ngx-register',
@@ -18,16 +30,47 @@ export class RegisterComponent implements OnInit {
   submitted=false;
   public errors:string;
   ranks = []
+  units_array=[]
+  maxTreeNodeId = '1'
+  nodes = [
+    {
+      'id': 0,
+      'name': 'מצו"ב',
+      'children': []
+    }
+  ];
   constructor(private router:Router,private RestApiService:RestApiService,private ToastService:ToastService) { }
   
   ngOnInit(): void {
     this.get_constatns_filds_rank()
+    this.get_tree_node()
   }
   get_constatns_filds_rank() {
     this.RestApiService.getConstatnsFields().subscribe((data_from_server) => {
       this.ranks = data_from_server.rank
     });
   }
+  get_tree_node(){
+  var i
+  var j
+  this.RestApiService.getTreeUnits().subscribe(
+    (data_from_server: {'maxTreeNodeId': string, 'treeNode': TreeNodeCustom[]}) => {
+      for(i=0;i<=data_from_server.treeNode.length-1;i+=1){
+        this.units_array.push(data_from_server.treeNode[i].name)
+        for(j=0;j<=data_from_server.treeNode[i].children.length-1;j+=1){
+          console.log(data_from_server.treeNode[i].children[j].name)
+          this.units_array.push(data_from_server.treeNode[i].children[j].name)
+          
+        } 
+      }
+        
+      this.maxTreeNodeId = data_from_server.maxTreeNodeId
+    },
+    err => {
+      this.ToastService.showToast('fail', 'שגיאה בקריאה מהשרת', '')
+    }
+    );
+}
   loadData() {
     this.jesonreg={"username":this.users.username , "lastname":this.users.lastname,"firstname":this.users.Firstname,"password":this.users.password,"personalnumber":this.users.personalnumber,"rank":this.users.rank,"armyposistion":this.users.position,"armyunit":this.users.armyunit}
     if(this.jesonreg)
@@ -40,7 +83,7 @@ export class RegisterComponent implements OnInit {
         data=>{
             this.ToastService.showToast("success","ההרשמה הושלמה","")
             localStorage.setItem("user",this.users.username)
-            this.router.navigate(["/pages/control-table/control-table"])
+            this.router.navigate(["/pages/control-table"])
             },
         error =>{ this.ToastService.showToast("fail","שגיאה בעת בהרשמה","")
         }
