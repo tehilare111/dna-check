@@ -64,6 +64,9 @@ export class RestApiService {
   getTreeUnits(): Observable<any>  {
     return this.http.get(`${this.baseUrl}/units-management/`);
   }
+  getTreeUnits_register(): Observable<any>  {
+    return this.http.get(`${this.baseUrl}/get_array_units/`);
+  }
 
   postTreeUnits(data): Observable<any>{
     return this.http.post(`${this.baseUrl}/units-management/`, data);

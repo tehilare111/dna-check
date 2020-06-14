@@ -47,8 +47,10 @@
         <input type="text" #positonarmy name="position" nbInput fullWidth id="position" fieldSize="small" placeholder="PositonArmy" [(ngModel)]=users.position >
       </div>
       <label for="input_PositonArmy" class="label col-sm-12 col-form-label" >ArmyUnit</label>
-      <div class="col-sm-12">
-        <input type="text" #armyunit name="armyunit" nbInput fullWidth id="armyunit" fieldSize="small" placeholder="ArmyUnit" [(ngModel)]=users.armyunit >
+      <div class="col-sm-12"> 
+        <nb-select fullWidth name="unit" status="privmary" placeholder="יחידה" id="units" [(ngModel)]="users.armyunit" > 
+          <nb-option *ngFor="let unit of units_array" [value]="unit">{{unit}}</nb-option>
+        </nb-select>
       </div>
     </div>
     <div class="form-group row">

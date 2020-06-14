@@ -47,6 +47,19 @@ def units_tree_management(request):
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 @csrf_exempt 
+def units_tree_register(request):
+    array_units=[]
+    if request.method == 'GET': 
+        try: 
+            units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
+        except UnitsTree.DoesNotExist: 
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
+        
+        units_tree_serializer = UnitsTreeSerializer(units_tree)
+        array_units.append(units_tree_serializer.data)
+        return HttpResponse(units_tree_serializer) 
+
+@csrf_exempt 
 def constants_fields(request):
     
     if request.method == 'GET': 
