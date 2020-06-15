@@ -9,6 +9,7 @@ import {
   NbInputModule,
   NbRadioModule,
   NbDialogModule,
+  NbChatModule,
   NbSelectModule,
   NbUserModule,
   NbSpinnerModule,
@@ -32,6 +33,7 @@ import { MakatCopyDirective } from './validation-directives/makat-copy.directive
 import { TextDirective } from './validation-directives/text.directive';
 import { EquipmentReviewComponent } from './equipment-review/equipment-review.component';
 import { EventStatusShortedComponent } from './components/event-status-shorted/event-status-shorted.component';
+import { ChatComponent } from './components/chat/chat.component';
 
 
 @NgModule({
@@ -47,6 +49,7 @@ import { EventStatusShortedComponent } from './components/event-status-shorted/e
     NbRadioModule,
     NbDatepickerModule,
     FormsRoutingModule,
+    NbChatModule,
     NbSelectModule,
     NbIconModule,
     ngFormsModule,
@@ -68,6 +71,7 @@ import { EventStatusShortedComponent } from './components/event-status-shorted/e
     TextDirective,
     EquipmentReviewComponent,
     EventStatusShortedComponent,
+    ChatComponent,
   ],
 })
 export class FormsModule { }

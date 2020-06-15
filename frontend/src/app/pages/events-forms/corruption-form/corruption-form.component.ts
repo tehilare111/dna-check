@@ -38,7 +38,7 @@ export class CorruptionFormComponent {
 
   // select fields options:
   results = ["טופל", "טרם טופל"]
-  units = ["מצוב", "מעוף", "מצפן"]
+  units = ["מצוב", "מעוף", "מצפן", "פלגת חוד"]
   ranks = ["סמל", "רבט", "טוראי"]
   equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
   materialsType = ["חומר 1" , "חומר 2", "חומר 3"]

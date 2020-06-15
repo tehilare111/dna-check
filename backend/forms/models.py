@@ -1,5 +1,7 @@
 from django.db import models
 from django.db.models import Max
+from django.contrib.postgres.fields import ArrayField
+
 
 class UploadTo:
   def __init__(self, field):
@@ -34,6 +36,7 @@ class EventForm(Form):
       abstract = True
 
 class FormsTable(EventForm):
+    # messages = ArrayField(models.CharField(max_length=120, blank=False, default=''), size=30)
     messages = models.CharField(max_length=70, blank=False, default='')
     equipment = models.CharField(max_length=70, blank=False, default='')
     equipmentType = models.CharField(max_length=70, blank=False, default='')

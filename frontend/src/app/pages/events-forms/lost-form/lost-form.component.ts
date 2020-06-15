@@ -38,7 +38,7 @@ export class LostFormComponent {
   
   // select fields options:
   results = ["טופל", "טרם טופל"]
-  units = ["מצוב", "מעוף", "מצפן"]
+  units = [,"מצוב", "מעוף", "מצפן", "פלגת החוד"]
   ranks = ["סמל", "רבט", "טוראי"]
   equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
   materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
@@ -102,6 +102,7 @@ export class LostFormComponent {
       this.materialsType=data_from_server.materialType
       this.eventStatusForm=data_from_server.eventStatus
       this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+      
       console.log(data_from_server)
     });
   }
