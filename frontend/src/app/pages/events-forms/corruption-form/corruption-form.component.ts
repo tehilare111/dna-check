@@ -33,6 +33,7 @@ export class CorruptionFormComponent {
   formFiles : {'id': string, 'file': File}[] = []; 
   readonly : boolean = true;
   popUpDialogContext: string = '';
+  msgs: any[] = [];
 
   baseUrl: string = '';
 
@@ -100,8 +101,8 @@ export class CorruptionFormComponent {
 
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: CorruptionFormTemplate) => {
-      console.log(data_from_server)
       this.corruptionForm = data_from_server
+      this.msgs = this.equipmentReview.messages.map( msg => { return JSON.parse(msg); } )
     });
   }
 

@@ -6,6 +6,7 @@ import { FormGroup, FormControl } from "@angular/forms";
 import { EquipmentReviewTemplate } from '../events-forms.templates';
 import { RestApiService } from '../../../services/rest-api.service';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
+import { ChatComponent } from '../components/chat/chat.component';
 import { textValidator } from "../validation-directives/text.directive";
 import { stdFieldValidator } from "../validation-directives/std-field.directive";
 import { dateValidator } from "../validation-directives/date.directive";
@@ -22,17 +23,19 @@ import { timeValidator } from "../validation-directives/time.directive";
 
 export class EquipmentReviewComponent {
   eventType: string = 'ביקורת ציוד';
-  eventFilesFields: string[] = ['reviewFile'];
+  eventFilesFields: string[] = ['reviewFile', 'messages'];
 
   equipmentReview: EquipmentReviewTemplate = new EquipmentReviewTemplate();
   uploadLoading = false;
   @ViewChild("dialog") dialog : ElementRef;
   @ViewChild("dialog2") dialog2 : ElementRef;
   @ViewChild("status") eventStatusForm : EventStatusComponent;
+  
   reference = undefined;
   formFiles : {'id': string, 'file': File}[] = []; 
   readonly : boolean = true;
   popUpDialogContext: string = '';
+  msgs: any[] = [];
 
   baseUrl: string = '';
 
@@ -61,7 +64,7 @@ export class EquipmentReviewComponent {
   @ViewChild("handlingDate") handlingDate : ElementRef;
 
   formGroupEle: ElementRef[] = [
-    this.signerName, 
+    this.signerName,
     this.signerId,
     this.position,
     this.eventDate,
@@ -102,24 +105,24 @@ export class EquipmentReviewComponent {
 
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: EquipmentReviewTemplate) => {
-      console.log(data_from_server)
       this.equipmentReview = data_from_server
+      this.msgs = this.equipmentReview.messages.map( msg => { return JSON.parse(msg); } )
     });
   }
 
   save() {
     const formData: FormData = new FormData();
     this.equipmentReview = this.eventStatusForm.pushFormFields<EquipmentReviewTemplate>(this.equipmentReview);
-  
+
     // insert equipmentReview to FormData object
     for(let [key, value] of Object.entries(this.equipmentReview)){
-      if (value && ! this.eventFilesFields.includes(key)) { formData.append(key, value); }
+      if (value && ! this.eventFilesFields.includes(key)) { formData.append(key, value);}
     }
 
     // insert all files to FormData object
     for( let formFile of this.formFiles ){
       formData.append(formFile['id'], formFile['file'], formFile['file'].name);
-    }    
+    }
 
     if (this.reference){
       this.RestApiService.updateExistingEventForm(this.reference, formData)

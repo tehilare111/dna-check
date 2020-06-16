@@ -208,6 +208,9 @@
               </div>
             </div>
           </div>-->
+          <div *ngIf="corruptionForm.reference" #chatWrapper>
+            <chat #chat [messages]="msgs" [reference]="corruptionForm.reference"></chat>
+          </div>
         </form>
       </nb-card-body>
     </nb-card>

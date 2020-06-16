@@ -119,17 +119,12 @@
               </div>
             </div>
           </form>
-          <div style="display: flex; justify-content: center;">
+          <div *ngIf="equipmentReview.reference" style="display: flex; justify-content: center;">
             <h6><u>טיפול באירוע</u></h6>
           </div>
           <form>
-            <h6>הודעות</h6>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group">
-                  <input [readonly]="this.equipmentReview.editStateBlocked" type="text" nbInput fullWidth name="messages" id="messages" status="primary" placeholder="מלל חופשי" [(ngModel)]="equipmentReview.messages">
-                </div>
-              </div>
+            <div *ngIf="equipmentReview.reference" #chatWrapper>
+              <chat #chat [messages]="msgs" [reference]="equipmentReview.reference"></chat>
             </div>
           </form>
         </nb-card-body>
