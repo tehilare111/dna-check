@@ -231,14 +231,9 @@
               </div>
             </div>
           </div>
-          <!--<h6>הודעות</h6>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="form-group">
-                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth name="messages" id="messages" status="primary" placeholder="מלל חופשי" [(ngModel)]="lostForm.messages">
-              </div>
-            </div>
-          </div>-->
+          <div *ngIf="lostForm.reference" #chatWrapper>
+            <chat #chat [messages]="msgs" [reference]="lostForm.reference"></chat>
+          </div>
         </form>
       </nb-card-body>
     </nb-card>

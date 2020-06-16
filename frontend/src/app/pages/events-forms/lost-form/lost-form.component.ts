@@ -6,6 +6,7 @@ import { FormGroup, FormControl } from "@angular/forms";
 import { LostFormTemplate } from '../events-forms.templates';
 import { RestApiService } from '../../../services/rest-api.service';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
+import { ChatComponent } from '../components/chat/chat.component';
 import { textValidator } from "../validation-directives/text.directive";
 import { stdFieldValidator } from "../validation-directives/std-field.directive";
 import { dateValidator } from "../validation-directives/date.directive";
@@ -29,10 +30,12 @@ export class LostFormComponent {
   @ViewChild("dialog") dialog : ElementRef;
   @ViewChild("dialog2") dialog2 : ElementRef;
   @ViewChild("status") eventStatusForm : EventStatusComponent;
+  @ViewChild("chat") chatMessages : ChatComponent;
   reference = undefined;
   formFiles : {'id': string, 'file': File}[] = []; 
   readonly : boolean = true;
   popUpDialogContext: string = '';
+  msgs: any[] = [];
 
   baseUrl: string = '';
   
@@ -92,7 +95,6 @@ export class LostFormComponent {
       this.readonly = false;
       this.newFormLoadData();
     }
-    
   }
 
   newFormLoadData() {
@@ -103,22 +105,20 @@ export class LostFormComponent {
 
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: LostFormTemplate) => {
-      console.log(data_from_server)
       this.lostForm = data_from_server
+      this.msgs = this.lostForm.messages.map( msg => { return JSON.parse(msg); } )
     });
   }
 
   save() {
     const formData: FormData = new FormData();
     this.lostForm = this.eventStatusForm.pushFormFields<LostFormTemplate>(this.lostForm);
-
-    //console.log('form: ', this.lostForm)
     
     // insert lostForm to FormData object
     for(let [key, value] of Object.entries(this.lostForm)){
-      if (value && ! this.eventFilesFields.includes(key)) { formData.append(key, value); }
+      if (value && ! this.eventFilesFields.includes(key)) {console.log(key, value); formData.append(key, value); }
+    
     }
-
     // insert all files to FormData object
     for( let formFile of this.formFiles ){
       formData.append(formFile['id'], formFile['file'], formFile['file'].name);

@@ -50,7 +50,7 @@ def new_event_form(request):
         Relevant url: /api/event_forms/
     '''
     if request.method == 'GET':
-        dt = datetime.todadatetimey()
+        dt = datetime.today()
         payload = {'': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
         return JsonResponse(payload, safe=False)
 '''
@@ -84,7 +84,6 @@ def download_file(request, path):
         Download file from given path in the request url.
     '''
     file_path = os.path.join(settings.MEDIA_ROOT, path)
-    print('file_path', file_path)
     if os.path.exists(file_path):
         with open(file_path, 'rb') as fh:
             response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
