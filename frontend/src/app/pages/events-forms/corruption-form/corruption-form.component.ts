@@ -102,7 +102,7 @@ export class CorruptionFormComponent {
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: CorruptionFormTemplate) => {
       this.corruptionForm = data_from_server
-      this.msgs = this.equipmentReview.messages.map( msg => { return JSON.parse(msg); } )
+      this.msgs = this.corruptionForm.messages.map( msg => { return JSON.parse(msg); } )
     });
   }
 
