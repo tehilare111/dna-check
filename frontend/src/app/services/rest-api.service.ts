@@ -26,6 +26,7 @@ export class RestApiService {
     return this.http.put(`${this.baseUrl}/update_permissions_user/${personalnumber}`, customer);
   }
   CheckLogin(customer:object): Observable<Object> {
+
     return this.http.post(`${this.baseUrl}/check_login/`, customer);
   }
   Get_constans_fiald(faild:object):Observable<any> {

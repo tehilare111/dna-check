@@ -1,0 +1,37 @@
+<div style="justify-content: center; width: 100%;"> 
+    <nb-card class="main-nb-card" status="primary" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+     <form>
+        <div class="center">
+          <nb-card-body>
+            <nb-card>
+              <nb-card-header>
+                <h2 class="text-heading" id="text_head" style="text-align: center;color: white;">דף כניסה</h2>
+              </nb-card-header>
+                <nb-card-body>
+                <div style="justify-content: center; width: 100%;"> 
+                <div class="form-group row">
+                  <label for="username" class="label col-sm-12 col-form-label">שם משתמש</label>
+                  <div class="col-sm-12">
+                    <input #username="ngModel" class="from-control" type="text" name="username" nbInput  required #user fullWidth id="user_login" fieldSize="medium" placeholder="שם משתמש"  [(ngModel)]=user.username> 
+                  </div>
+                  <label for="input_Password_login" class="label col-sm-12 col-form-label" >סיסמא</label>
+                  <div class="col-sm-12">
+                    <input type="Password" name="password_LOGIN"  nbInput #password fullWidth id="password_login" fieldSize="medium" placeholder="סיסמא" [(ngModel)]=user.password required>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-12">
+                    <button id="loginbutton" class="from-control" fullWidth nbButton (click)="Login(user.value,password.value)" status="primary">התחברות</button>
+                    <u routerLink='/pages/register' style="color: royalblue;">
+                      <strong>אם אינך רשום לחץ להרשמה</strong>
+                    </u>
+                  </div>
+                </div>
+                </div>
+              </nb-card-body>
+            </nb-card>
+          </nb-card-body>
+        </div>
+    </form> 
+</nb-card>
+</div>

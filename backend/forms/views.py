@@ -12,13 +12,14 @@ from rest_framework.views import APIView
 
 from forms.models import FormsTable
 from forms.serializers import FormsSerializer
+from users import utils
 
 import time
 import os
 import csv
 
 @csrf_exempt
-def forms_list(request, event_type):
+def forms_list(request, event_type,token):
     '''
         Responsible to hendle requests froms main control table page.
         Relevant urls: /api/forms/*
@@ -26,20 +27,27 @@ def forms_list(request, event_type):
               Return all rows from table when no url specified.
         DELETE - Delete all table content. 
     '''
-    
-    if request.method == 'GET':
-        if event_type == '':
-            forms = FormsTable.objects.all()
-        else:
-            forms = FormsTable.objects.filter(eventType=event_type)
+    if utils.check_token_not_login(token)is not False:
         
-        form_serializer = FormsSerializer(forms, many=True)
+        if request.method == 'GET':
 
-        return JsonResponse(form_serializer.data, safe=False)
-    
+        
+
+                if event_type == '':
+                    forms = FormsTable.objects.all()
+                    print('forms:', forms)
+                else:
+                    forms = FormsTable.objects.filter(eventType=event_type)
+                
+                form_serializer = FormsSerializer(forms, many=True)
+
+                return JsonResponse(form_serializer.data, safe=False)
+        else:
+                return HttpResponse(status=status.HTTP_401_UNAUTHORIZED) 
+        
     elif request.method == 'DELETE':
-        FormsTable.objects.all().delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+            FormsTable.objects.all().delete()
+            return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
 
@@ -51,11 +59,7 @@ def new_event_form(request):
     '''
     if request.method == 'GET':
         dt = datetime.today()
-<<<<<<< HEAD
-        payload = {'': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
-=======
         payload = {'datetime': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
->>>>>>> b869b00... fix bugs
         return JsonResponse(payload, safe=False)
 '''
 @csrf_exempt

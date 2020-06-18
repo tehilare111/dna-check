@@ -1,10 +1,6 @@
 from django.db import models
 from django.db.models import Max
 from django.contrib.postgres.fields import ArrayField
-<<<<<<< HEAD
-=======
-
->>>>>>> b240bcf... fix bugs and build chat
 
 class UploadTo:
   def __init__(self, field):

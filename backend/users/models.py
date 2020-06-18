@@ -1,7 +1,10 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser
+
+
 
 # Create your models here.
-class Destination(models.Model):
+class Destination(AbstractBaseUser):
     username=models.CharField(max_length=70, blank=False, default='')
     firstname=models.CharField(max_length=70, blank=False, default='')
     lastname=models.CharField(max_length=70, blank=False, default='')
@@ -11,3 +14,4 @@ class Destination(models.Model):
     armyposistion=models.CharField(max_length=70, blank=False, default='')
     permissions=models.CharField(max_length=70, blank=False, default='')
     armyunit=models.CharField(max_length=70,blank=False,default=' ')
+    USERNAME_FIELD = 'username'

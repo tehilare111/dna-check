@@ -6,7 +6,6 @@ import { RestApiService } from '../../services/rest-api.service';
 import { ToastService } from '../../services/toast.service';
 import { type } from 'os';
 import { Users } from './users';
-
 import { Router } from '@angular/router';
 
 /*const actionMapping:IActionMapping = {
@@ -76,8 +75,8 @@ export class ManagementComponent implements OnInit {
   editUnitInput = '';
   @ViewChild("tree") private tree: TreeComponent;
   uploadLoading = false
-
   constructor(private router:Router , iconsLibrary: NbIconLibraries,private RestApiService: RestApiService,private ToastService: ToastService,private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>) { iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });this.dataSource = this.dataSourceBuilder.create(this.data); }
+
 
   private data: TreeNode<FSEntry>[] = [
     /*{
@@ -118,6 +117,8 @@ export class ManagementComponent implements OnInit {
         this.uploadLoading = true
       },
       err => {
+        this.ToastService.showToast('fail', 'שגיאה בקריאה מהשרת נא להתחבר מחדש', '')
+
         this.uploadLoading = false
       }
       );
@@ -139,7 +140,7 @@ export class ManagementComponent implements OnInit {
   updatePermissionUser(personal){
     if (personal!=null || this.users.permissions!=null)
     {
-      this.jsonPermiss={"personal_number":personal,"permissions":this.users.permissions}
+      this.jsonPermiss={"personal_number":personal,"permissions":this.users.permissions,"token":this.users.token}
       this.RestApiService.UpdateUser(this.jsonPermiss,personal)
       .subscribe(
         data=>{
