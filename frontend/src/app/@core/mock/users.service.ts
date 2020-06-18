@@ -1,11 +1,13 @@
 import { of as observableOf,  Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Contacts, RecentUsers, UserData } from '../data/users';
+import { Users } from '../../pages/management/users';
 
 @Injectable()
 export class UserService extends UserData {
 
   private time: Date = new Date;
+  private user:Users=new Users()
 
   private users = {
     nick: { name: 'Nick Jones', picture: 'assets/images/nick.png' },
@@ -14,7 +16,7 @@ export class UserService extends UserData {
     lee: { name: 'Lee Wong', picture: 'assets/images/lee.png' },
     alan: { name: 'Alan Thompson', picture: 'assets/images/alan.png' },
     kate: { name: 'Kate Martinez', picture: 'assets/images/kate.png' },
-    login: {name:localStorage.getItem("user"),picture: 'assets/images/kate.png' },
+    login: {name:this.user.username,picture: 'assets/images/kate.png' },
   };
   private types = {
     mobile: 'mobile',

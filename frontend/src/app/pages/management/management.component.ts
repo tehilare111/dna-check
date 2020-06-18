@@ -6,6 +6,8 @@ import { RestApiService } from '../../services/rest-api.service';
 import { ToastService } from '../../services/toast.service';
 import { type } from 'os';
 import { Users } from './users';
+import { JwtService } from '../../services/jwt.service';
+import { Router } from '@angular/router';
 
 /*const actionMapping:IActionMapping = {
   mouse: {
@@ -75,7 +77,7 @@ export class ManagementComponent implements OnInit {
   @ViewChild("tree") private tree: TreeComponent;
   uploadLoading = false
 
-  constructor(iconsLibrary: NbIconLibraries,private RestApiService: RestApiService,private ToastService: ToastService,private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>) { iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });this.dataSource = this.dataSourceBuilder.create(this.data); }
+  constructor(private router:Router ,private jwt:JwtService, iconsLibrary: NbIconLibraries,private RestApiService: RestApiService,private ToastService: ToastService,private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>) { iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });this.dataSource = this.dataSourceBuilder.create(this.data); }
 
   private data: TreeNode<FSEntry>[] = [
     /*{
@@ -109,14 +111,15 @@ export class ManagementComponent implements OnInit {
 
   loadData(){
     this.uploadLoading = true
-    this.RestApiService.getTreeUnits().subscribe(
+    this.jwt.getTreeUnits().subscribe(
       (data_from_server: {'maxTreeNodeId': string, 'treeNode': TreeNodeCustom[]}) => {
         this.nodes = data_from_server.treeNode
         this.maxTreeNodeId = data_from_server.maxTreeNodeId
         this.uploadLoading = false
       },
       err => {
-        this.ToastService.showToast('fail', 'שגיאה בקריאה מהשרת', '')
+
+        this.ToastService.showToast('fail', 'שגיאה בקריאה מהשרת נא להתחבר מחדש', '')
         this.uploadLoading = false
       }
       );
@@ -125,14 +128,15 @@ export class ManagementComponent implements OnInit {
   saveData(){
     this.uploadLoading = true
     let dataToServer = {'maxTreeNodeId': this.maxTreeNodeId, 'treeNode': this.nodes};
-    this.RestApiService.postTreeUnits(dataToServer).subscribe(
-      (data_from_server: {'maxTreeNodeId': string, 'treeNode': TreeNodeCustom[]}) => {
-        if(data_from_server) { this.ToastService.showToast('success', 'נשמר בהצלחה!', '') }
+    this.jwt.postTreeUnits(dataToServer).subscribe(
+      data_from_server=> {
+        this.ToastService.showToast('success', 'נשמר בהצלחה!', '') 
         this.uploadLoading = false
       },
       err => {
-        this.ToastService.showToast('fail', 'לא נשמר בהצלחה!', '')
+        this.ToastService.showToast('fail', ' נא להתחבר מחדש לא נשמר בהצלחה!', '')
         this.uploadLoading = false
+        this.router.navigate(["pages/login"])
       }
     )
   }
@@ -140,8 +144,8 @@ export class ManagementComponent implements OnInit {
   updatePermissionUser(personal){
     if (personal!=null || this.users.permissions!=null)
     {
-      this.jsonPermiss={"personal_number":personal,"permissions":this.users.permissions}
-      this.RestApiService.UpdateUser(this.jsonPermiss,personal)
+      this.jsonPermiss={"personal_number":personal,"permissions":this.users.permissions,"token":this.users.token}
+      this.jwt.UpdateUser(this.jsonPermiss,personal)
       .subscribe(
         data=>{
         this.load_users_for_unit()}
@@ -156,14 +160,18 @@ export class ManagementComponent implements OnInit {
   }
 
   load_users_for_unit(){
-    this.RestApiService.getUsersList(this.unit_name).subscribe((data_from_server) => {
+    this.jwt.getUsersList(this.unit_name).subscribe(
+      (data_from_server) => {
+        console.log(data_from_server)
       let new_data: TreeNode<FSEntry>[] =
        data_from_server.map((event) => {
         return {'data': event}
       })
       new_data = new_data.concat(this.data);
       this.dataSource = this.dataSourceBuilder.create(new_data);
-    });  
+    },
+    err=>{
+   })
   }
   formClicked(event, row) {
     for(let [value] of Object.entries(this.defaultColumns)){

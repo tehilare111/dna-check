@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { RestApiService } from '../../../services/rest-api.service';
-import { Users } from '../users';
 import { ToastService } from '../../../services/toast.service';
 import { HttpHeaderResponse, HttpRequest, HttpResponseBase } from '@angular/common/http';
+import { Users } from '../../management/users';
 
 class TreeNodeCustom{
   id: number;

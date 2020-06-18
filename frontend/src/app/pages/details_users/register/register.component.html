@@ -1,0 +1,74 @@
+<div style="justify-content: center; width: 100%;"> 
+    <nb-card class="main-nb-card" status="primary" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      
+    <form id="register_id" #userForm="ngForm">
+    
+        <div class="center">
+        <nb-card-body>
+         
+        <nb-card>
+          <nb-card-header>
+            <h2 class="text-heading" id="text_head" style="text-align: center;color: white;">דף הרשמה</h2>
+          </nb-card-header>
+        <nb-card-body>
+        <div style="justify-content: center; width: 100%;"> 
+        <div class="form-group row">
+          <label for="input_username" class="label col-sm-12 col-form-label">שם משתמש</label>
+          <div class="col-sm-12">
+            <input type="text" name="username"  nbInput #user fullWidth id="username" fieldSize="small" placeholder="שם משתמש" [(ngModel)]=users.username> 
+          </div>
+    
+          <label for="input_FirstName" class="label col-sm-12 col-form-label" >שם פרטי</label>
+          <div class="col-sm-12">
+            <input type="text" name=firstname  nbInput fullWidth #FirstName id="firstname" fieldSize="small" placeholder="שם פרטי" [(ngModel)]=users.Firstname>
+          </div>
+    
+          <label for="input_LastName" class="label col-sm-12 col-form-label">שם משפחה</label>
+          <div class="col-sm-12">
+            <input type="text" name="lastName"  nbInput fullWidth #LastName id="lastname" fieldSize="small" placeholder="שם משפחה" [(ngModel)]=users.lastname >
+          </div>
+    
+          <label for="input_Password" class="label col-sm-12 col-form-label" >סיסמא</label>
+          <div class="col-sm-12">
+            <input type="Password" name="password"  nbInput #password fullWidth id="password" fieldSize="small" placeholder="סיסמא" [(ngModel)]=users.password>
+          </div>
+    
+          <label for="input_PersonalNumber" class="label col-sm-12 col-form-label" >מספר אישי</label>
+          <div class="col-sm-12">
+            <input  type="text" class="form-control" name="personalnumber" nbInput #PersonalNumber="ngModel"  fullWidth id="personalnumber" fieldSize="small" placeholder="מספר אישי" [(ngModel)]=users.personalnumber maxlength="7" min="7" required>
+            <div *ngIf="PersonalNumber.invalid && (PersonalNumber.dirty || PersonalNumber.touched)" (click)="console.log(PersonalNumber)"><label class="label red" style="color: red;">"מ.א חייב להיות בעל 7 ספרות"</label></div>
+          </div>
+          <label class="label col-sm-12 col-form-label" >דרגה</label>
+          <div class="col-sm-12"> 
+              <nb-select fullWidth name="rank" status="privmary" placeholder="דרגה" id="rank" [(ngModel)]="users.rank" > 
+                <nb-option *ngFor="let rank of ranks" [value]="rank">{{rank}}</nb-option>
+              </nb-select>
+            </div>
+          <label for="input_PositonArmy" class="label col-sm-12 col-form-label" >איזור חיל</label>
+          <div class="col-sm-12">
+            <input type="text" #positonarmy name="position" nbInput fullWidth id="position" fieldSize="small" placeholder="איזור חיל" [(ngModel)]=users.position >
+          </div>
+          <label for="input_PositonArmy" class="label col-sm-12 col-form-label" >יחידה</label>
+          <div class="col-sm-12"> 
+            <nb-select fullWidth name="unit" status="privmary" placeholder="יחידה" id="units" [(ngModel)]="users.armyunit" > 
+              <nb-option *ngFor="let unit of units_array" [value]="unit">{{unit}}</nb-option>
+            </nb-select>
+          </div>
+        </div>
+        
+        <div class="form-group row">
+          <div class="col-sm-12">
+            <button [disabled]="PersonalNumber.invalid  && PersonalNumber.dirty || PersonalNumber.untouched" fullWidth nbButton (click)="onSubmit()" status="primary">הרשמה</button>
+            <u routerLink='/pages/login' style="color: royalblue;">
+              <strong>אם קיים שם משתמש לחץ כאן להתחברות</strong></u>
+                     
+          </div>
+        </div>
+      </div>
+      </nb-card-body>
+      </nb-card>
+    </nb-card-body>
+    </div>
+    </form>
+    </nb-card>
+    </div>

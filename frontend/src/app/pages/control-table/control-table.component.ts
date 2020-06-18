@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 
 //import { Customer } from '../events-forms.templates';
 import { RestApiService } from '../../services/rest-api.service';
+import { Users } from '../management/users';
+import { JwtService } from '../../services/jwt.service';
 
 interface TreeNode<T> {
   data: T;
@@ -31,7 +33,7 @@ interface FSEntry {
 })
 export class ControlTableComponent implements OnInit{
 
-  public username_login="";
+  public username_login:Users=new Users();
   pickedUpEvent = {'name':undefined, 'route': undefined};
   eventsToPickUp = {
     'defaultForms': {
@@ -75,16 +77,17 @@ export class ControlTableComponent implements OnInit{
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
-  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>, private RestApiService: RestApiService, private router: Router) {
+  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>, private RestApiService: RestApiService, private router: Router,private jwt:JwtService) {
     //this.dataSource = this.dataSourceBuilder.create(this.data);
   }
 
   ngOnInit() {
     this.loadData('');
+    console.log(this.username_login.username)
   }
 
   loadData(eventType: string) {
-    this.RestApiService.getFormsList(eventType).subscribe((data_from_server) => {
+    this.jwt.getFormsList(eventType).subscribe((data_from_server) => {
       let new_data: TreeNode<FSEntry>[] = data_from_server.map((event) => {
         return {'data': event}
       })
