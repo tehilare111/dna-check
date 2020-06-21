@@ -4,6 +4,8 @@ from django.conf import settings
 from django.conf.urls.static import static
  
 urlpatterns = [
+    # control table xl export requests
+    url(r'^forms/xl/(?P<event_type>[א-ת\-\/ ]*)$', views.download_xl_file),
     # control table requests
     url(r'^forms/(?P<event_type>[א-ת\-\/ ]*)$', views.forms_list),
     # requests to load values from server - time/determined fields

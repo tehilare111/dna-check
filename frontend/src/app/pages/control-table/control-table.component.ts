@@ -2,9 +2,11 @@ import { Component, OnInit, Input } from '@angular/core';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder, NbComponentStatus } from '@nebular/theme';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import 'rxjs/Rx' ;
 
 //import { Customer } from '../events-forms.templates';
 import { RestApiService } from '../../services/rest-api.service';
+import { ToastService } from '../../services/toast.service';
 
 interface TreeNode<T> {
   data: T;
@@ -68,14 +70,12 @@ export class ControlTableComponent implements OnInit{
     
   }
   
-
-
   dataSource: NbTreeGridDataSource<FSEntry>;
 
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
-  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>, private RestApiService: RestApiService, private router: Router) {
+  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>, private RestApiService: RestApiService, private router: Router, private ToastService: ToastService) {
     //this.dataSource = this.dataSourceBuilder.create(this.data);
   }
 
@@ -135,8 +135,22 @@ export class ControlTableComponent implements OnInit{
     this.router.navigate([path, {reference: row.data.reference}]);
   }
 
-}
+  exportToXL(value){
+    this.RestApiService.getXlFile(value.route?value.name:'').subscribe(
+      data => { this.downloadFile(data); },
+      error => { this.ToastService.showToast('fail', 'בעיה בהורדת הקובץ', '') },
+    );
+  }
 
+  downloadFile(data) {
+    var blob = new Blob([data], { type: 'text/csv' });
+    var url = window.URL.createObjectURL(blob);
+    var anchor = document.createElement("a");
+    anchor.download = "סיכום טבלת שליטה.csv";
+    anchor.href = url;
+    anchor.click();
+  }
+}
 
 @Component({
   selector: 'ngx-fs-icon',
