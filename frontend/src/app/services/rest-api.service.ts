@@ -75,4 +75,8 @@ export class RestApiService {
   postConstatnsFields(data): Observable<any>{
      return this.http.post(`${this.baseUrl}/constants-fields/`, data);
   }
+
+  getXlFile(eventType: string){
+    return this.http.get(`${this.baseUrl}/forms/xl/${eventType}`, { responseType: 'blob' });
+  }
 }

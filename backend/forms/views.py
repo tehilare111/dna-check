@@ -15,7 +15,8 @@ from forms.serializers import FormsSerializer
 
 import time
 import os
-    
+import csv
+
 @csrf_exempt
 def forms_list(request, event_type):
     '''
@@ -29,7 +30,6 @@ def forms_list(request, event_type):
     if request.method == 'GET':
         if event_type == '':
             forms = FormsTable.objects.all()
-            print('forms:', forms)
         else:
             forms = FormsTable.objects.filter(eventType=event_type)
         
@@ -90,6 +90,29 @@ def download_file(request, path):
             response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
             return response
     return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+
+@csrf_exempt
+def download_xl_file(request, event_type):
+    '''
+        Export xl file following the given url
+    '''
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachement;filename=\"report.csv\"'
+
+    response.write(u'\ufeff'.encode('utf8'))
+    writer = csv.writer(response)
+    writer.writerow(['reference', 'eventType', 'date', 'reporterName', 'reporterUnit', 'caseIdOnMetzah', 'handlingResults', 'eventStatus', 'handlingStatus', 'equipment', 'equipmentType' ,'equipmentMark', 'equipmentMakat', 'signerUnit', 'signerName', 'signerId', 'rank', 'position', 'eventDate', 'eventHour', 'reviewReference','isMatchToReport'])
+
+    if event_type == '':
+        forms = FormsTable.objects.all()
+    else:
+        forms = FormsTable.objects.filter(eventType=event_type)
+
+    for form in forms.values_list('reference', 'eventType', 'date', 'reporterName', 'reporterUnit', 'caseIdOnMetzah', 'handlingResults', 'eventStatus', 'handlingStatus', 'equipment', 'equipmentType' ,'equipmentMark', 'equipmentMakat', 'signerUnit', 'signerName', 'signerId', 'rank', 'position', 'eventDate', 'eventHour', 'reviewReference','isMatchToReport'):
+        writer.writerow(form)
+
+    return response
 
 
 
