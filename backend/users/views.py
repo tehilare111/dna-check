@@ -47,6 +47,7 @@ def create_user(request):
 @csrf_exempt 
 def check_login(request):
     token=get_token(request)
+    print (token)
     user_data = JSONParser().parse(request)
     users_serializer = DestinationSerilazers(data=user_data)
     if request.method == 'POST':

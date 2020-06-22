@@ -33,7 +33,7 @@ interface FSEntry {
 })
 export class ControlTableComponent implements OnInit{
 
-  public username_login:Users=new Users();
+  public username_login=""
   pickedUpEvent = {'name':undefined, 'route': undefined};
   eventsToPickUp = {
     'defaultForms': {
@@ -67,7 +67,6 @@ export class ControlTableComponent implements OnInit{
   loadTable(value){
     this.loadData(value.route?value.name:'');
     this.allColumns = [ this.customColumn, ...Object.keys(value.columns) ];
-    
   }
   
 
@@ -83,7 +82,7 @@ export class ControlTableComponent implements OnInit{
 
   ngOnInit() {
     this.loadData('');
-    console.log(this.username_login.username)
+    
   }
 
   loadData(eventType: string) {

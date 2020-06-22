@@ -17,8 +17,15 @@ from users import utils
 import time
 import os
     
+
+def get_token(request):
+    token=request.headers['Authorization']
+    token=token.split(" ")
+    token=token[1]
+    return token
+
 @csrf_exempt
-def forms_list(request, event_type,token):
+def forms_list(request, event_type):
     '''
         Responsible to hendle requests froms main control table page.
         Relevant urls: /api/forms/*
@@ -26,7 +33,7 @@ def forms_list(request, event_type,token):
               Return all rows from table when no url specified.
         DELETE - Delete all table content. 
     '''
-    if utils.check_token_not_login(token)is not False:
+    if utils.check_token_not_login(get_token(request))is not False:
         
         if request.method == 'GET':
         
@@ -55,10 +62,14 @@ def new_event_form(request):
         New Event Form load all its initial values from here.
         Relevant url: /api/event_forms/
     '''
+    token=get_token(request)
     if request.method == 'GET':
         dt = datetime.today()
         payload = {'datetime': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
-        return JsonResponse(payload, safe=False)
+        if(utils.check_token_not_login(token)) is not False:       
+            return JsonResponse(payload, safe=False)
+        else:
+            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
 '''
 @csrf_exempt
 def existing_event_form(request, reference):
@@ -96,7 +107,7 @@ def download_file(request, path):
             response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
             response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
             return response
-    return HttpResponse(status=status.HTTP_401_UN)
+    return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
 
 
 
@@ -110,7 +121,7 @@ class NewEventFrom(APIView):
             form_serializer.save(reference = int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0) + 1)
             return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
-            return HttpResponse(form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
 
     def put(self, request, reference,*args, **kwargs):
         try: 
