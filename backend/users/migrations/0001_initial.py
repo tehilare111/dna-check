@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
             name='Destination',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
+                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login' ,max_length=70)),
                 ('username', models.CharField(default='', max_length=70)),
                 ('firstname', models.CharField(default='', max_length=70)),
                 ('lastname', models.CharField(default='', max_length=70)),

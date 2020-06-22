@@ -7,7 +7,7 @@ urlpatterns = [
     # control table xl export requests
     url(r'^forms/xl/(?P<event_type>[א-ת\-\/ ]*)$', views.download_xl_file),
     # control table requests
-    url(r'^forms/(?P<event_type>[א-ת\-\/ ]*)$', views.forms_list),
+    url(r'^forms/(?P<event_type>[א-ת\-\/ ]*)/(?P<token>.*)$', views.forms_list),
     # requests to load values from server - time/determined fields
     url(r'^event_forms/values$', views.new_event_form),
     # requests for a new form creation

@@ -133,6 +133,7 @@ export class ManagementComponent implements OnInit {
         this.uploadLoading = true
       },
       err => {
+        this.ToastService.showToast('fail', ' נא להתחבר מחדש לא נשמר בהצלחה!', '')
       }
     )
   }

@@ -23,8 +23,7 @@ def get_token(request):
 
 # Create your views here.
 @csrf_exempt 
-def units_tree_management(request):
-    token=get_token(request)
+def units_tree_management(request,token):
     if request.method == 'GET': 
         try: 
             units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
@@ -32,12 +31,14 @@ def units_tree_management(request):
         except UnitsTree.DoesNotExist: 
             return HttpResponse(status=status.HTTP_401_UNAUTHORIZED) 
         units_tree_serializer = UnitsTreeSerializer(units_tree)
+        print("tokensssS:",units_tree_serializer)
         if utils.check_token_not_login(token) is not False:
             return JsonResponse(units_tree_serializer.data, safe=False)
         else:
             return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     elif request.method == 'POST':
         try: 
+            
             units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
         except UnitsTree.DoesNotExist: 
             units_tree = None
@@ -67,7 +68,7 @@ def units_tree_register(request):
         try: 
             units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
         except UnitsTree.DoesNotExist: 
-            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED) 
+            return HttpResponse(status=status.HTTP_204_NO_CONTENT) 
         
         units_tree_serializer = UnitsTreeSerializer(units_tree)
         array_units.append(units_tree_serializer.data)
@@ -81,13 +82,13 @@ def constants_fields(request):
             constants_fields = ConstantsFields.objects.get(constantFieldId=CONSTATNS_FIELDS_OBJECT_STATIC_ID) 
             
         except ConstantsFields.DoesNotExist: 
-            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED) 
+            return HttpResponse(status=status.HTTP_204_NO_CONTENT) 
         
         constants_fields_serializer = ConstantsFieldsSerializer(constants_fields)
         if utils.check_token_not_login(token) is not False:
             return JsonResponse(constants_fields_serializer.data, safe=False)
         else:
-            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED) 
+            return HttpResponse(status=status.HTTP_204_NO_CONTENT) 
         
 
     elif request.method == 'POST':
