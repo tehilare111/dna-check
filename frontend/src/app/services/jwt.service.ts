@@ -22,18 +22,17 @@ export class JwtService {
     return this.httpClient.post<{access_token:  string}>(`${this.baseUrl}/check_login/`,this.array_user).pipe(tap(res => {
     this.users.token=res.access_token
     this.users.username=username
-    localStorage.setItem('access_token', res.access_token);
-    console.log(localStorage.getItem('access_token'))
+    localStorage.setItem('access_token', this.users.token);
+    console.log("token",localStorage.getItem('access_token'))
 }))
 
 }
     
 //////////////////////////////////////////////////////////////////////////////
 
-register(username:string, firstname:string,lastname:string, password:string,personalnumber:string, position_army:string,rank:string,units:string) {
-  return this.httpClient.post<{access_token: string}>('http://127.0.0.1:4200/pages/register', {username, personalnumber}).pipe(tap(res => {
-  this.login(username, password)
-}))
+CreateUser(customer: Object): Observable<Object> {
+  return this.httpClient.post<{access_token:string}>(`${this.baseUrl}/create-User/`, customer);
+  
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -62,14 +61,16 @@ public get loggedIn():Boolean{
 ///////////////////////////////////////////////////////////////////////////////
 
 getTreeUnits(): Observable<any>  {
-  return this.httpClient.get<{access_token:string}>(`${this.baseUrl}/units-management/`);
+  return this.httpClient.get<{access_token:string}>(`${this.baseUrl}/units-management/${this.users.token}`).pipe(tap(res=>{
+    console.log("token",localStorage.getItem('access_token'))
+  }));
 }
 
 //////////////////////////////////////////////////////////////////////////////
 
 postTreeUnits(data){
-  return this.httpClient.post<{access_token:string}>(`${this.baseUrl}/units-management/`,{"data":data}).pipe(tap(res => {
-    console.log(res.access_token)
+  return this.httpClient.post<{access_token:string}>(`${this.baseUrl}/units-management/`,{data}).pipe(tap(res => {
+    console.log("token",localStorage.getItem('access_token'))
 }))
 }
 ///////////////////////////////////////////////////////////////////////////////

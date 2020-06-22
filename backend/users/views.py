@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from users.models import Destination
+from users.models import  Destination
 from users.serializers import DestinationSerilazers
 from rest_framework.parsers import JSONParser
 from django.http import HttpResponse, JsonResponse
@@ -30,14 +30,14 @@ def create_user(request):
     user_data = JSONParser().parse(request)
     print(user_data)
     user_serializer = DestinationSerilazers(data=user_data)
-    user_per=User.objects.create_user(user_serializer)
+    #user_per=User.objects.create_user(user_serializer)
     if request.method == 'POST':
         if(user_serializer.is_valid()):
             if(check_user_and_personalnumbner(user_data)):
-                return HttpResponse(status=status.HTTP_409_CONFLICT)  
+                return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)  
             else:
                 user_serializer.save()
-                user_per.save()
+                #user_per.save()
                 return HttpResponse(status=status.HTTP_204_NO_CONTENT) 
 
 ###############################################################
@@ -90,7 +90,6 @@ def groups_permissions_list(request, unit,token):
     
     print("u",unit)
     if request.method == 'GET':
-        token=get_token(request)
         print(token)
         if utils.check_token_not_login(token) is not False:
             users = Destination.objects.filter(armyunit=unit)
@@ -98,7 +97,7 @@ def groups_permissions_list(request, unit,token):
             print(customer_u.data)
             return JsonResponse(customer_u.data, safe=False)
         else:
-             return HttpResponse(status=status.HTTP_401_BAD_REQUEST)
+             return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     
     elif request.method == 'DELETE':
         Destination.objects.all().delete()
@@ -113,7 +112,7 @@ def update_permissions_users(request,personalnumber):
     try: 
         event_form = Destination.objects.get(personalnumber=personalnumber)
     except Destination.DoesNotExist:
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
+        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED) 
     if request.method=='GET':
             customer_serializer = DestinationSerilazers(event_form)
             return JsonResponse(customer_serializer.data)
@@ -128,7 +127,7 @@ def update_permissions_users(request,personalnumber):
                 if form_serializer.is_valid():
                     form_serializer.save()
                     return JsonResponse({"access_token":token,"data":form_serializer.data})
-        return JsonResponse({"form_serializer.errors":"error"}, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse(status=status.HTTP_401_UNAUTHORIZED)
 
 @csrf_exempt
 def get_constans_fiald(fields_array):

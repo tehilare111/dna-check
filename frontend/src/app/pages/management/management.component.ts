@@ -131,12 +131,11 @@ export class ManagementComponent implements OnInit {
     this.jwt.postTreeUnits(dataToServer).subscribe(
       data_from_server=> {
         this.ToastService.showToast('success', 'נשמר בהצלחה!', '') 
-        this.uploadLoading = false
+        this.uploadLoading = true
       },
       err => {
         this.ToastService.showToast('fail', ' נא להתחבר מחדש לא נשמר בהצלחה!', '')
-        this.uploadLoading = false
-        this.router.navigate(["pages/login"])
+
       }
     )
   }

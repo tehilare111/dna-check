@@ -96,7 +96,7 @@ def download_file(request, path):
             response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
             response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
             return response
-    return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    return HttpResponse(status=status.HTTP_401_UN)
 
 
 

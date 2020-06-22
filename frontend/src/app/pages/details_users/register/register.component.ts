@@ -4,6 +4,7 @@ import { RestApiService } from '../../../services/rest-api.service';
 import { ToastService } from '../../../services/toast.service';
 import { HttpHeaderResponse, HttpRequest, HttpResponseBase } from '@angular/common/http';
 import { Users } from '../../management/users';
+import { JwtService } from '../../../services/jwt.service';
 
 class TreeNodeCustom{
   id: number;
@@ -29,8 +30,8 @@ export class RegisterComponent implements OnInit {
   public count=0;
   submitted=false;
   public errors:string;
-  ranks = []
-  units_array=[]
+  ranks = ["טוראי","רבט","סמל"]
+  units_array=["מצו''ב"]
   maxTreeNodeId = '1'
   nodes = [
     {
@@ -39,7 +40,7 @@ export class RegisterComponent implements OnInit {
       'children': []
     }
   ];
-  constructor(private router:Router,private RestApiService:RestApiService,private ToastService:ToastService) { }
+  constructor(private jwt:JwtService,private router:Router,private RestApiService:RestApiService,private ToastService:ToastService) { }
   
   ngOnInit(): void {
     this.get_constatns_filds_rank()
@@ -78,7 +79,7 @@ export class RegisterComponent implements OnInit {
   }
 
   save() {
-      this.RestApiService.CreateUser(this.jesonreg)
+      this.jwt.CreateUser(this.jesonreg)
       .subscribe(
         data=>{
             this.ToastService.showToast("success","ההרשמה הושלמה","")
