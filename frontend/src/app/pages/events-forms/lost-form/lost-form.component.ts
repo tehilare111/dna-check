@@ -14,6 +14,7 @@ import { idValidator } from "../validation-directives/id.directive";
 import { makatCopyValidator } from "../validation-directives/makat-copy.directive";
 import { markValidator } from "../validation-directives/mark.directive";
 import { timeValidator } from "../validation-directives/time.directive";
+import { JwtService } from '../../../services/jwt.service';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -47,7 +48,7 @@ export class LostFormComponent {
   materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
   equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
   equipmentsTypeOptions = []  
-  constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { this.baseUrl = this.RestApiService.baseUrl; }
+  constructor(private jwt:JwtService,private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { this.baseUrl = this.RestApiService.baseUrl; }
 
   // id of all validation fields
   @ViewChild("signerName") signerName : ElementRef;
@@ -98,7 +99,7 @@ export class LostFormComponent {
     }
   }
   get_constas_feilds() {
-    this.RestApiService.getConstatnsFields().subscribe((data_from_server) => {
+    this.jwt.getConstatnsFields().subscribe((data_from_server) => {
       this.equipmentsType=data_from_server.equipmentType
       this.ranks = data_from_server.rank
       this.materialsType=data_from_server.materialType
@@ -109,13 +110,14 @@ export class LostFormComponent {
     });
   }
   newFormLoadData() {
-    this.RestApiService.getNewEventForm().subscribe((data_from_server) => {
+    this.jwt.getNewEventForm().subscribe((data_from_server) => {
       this.lostForm.date = data_from_server.datetime
     });
   }
 
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: LostFormTemplate) => {
+
       this.lostForm = data_from_server
       this.msgs = this.lostForm.messages.map( msg => { return JSON.parse(msg); } )
     });
@@ -136,7 +138,7 @@ export class LostFormComponent {
     }    
 
     if (this.reference){
-      this.RestApiService.updateExistingEventForm(this.reference, formData)
+      this.jwt.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: LostFormTemplate) => {
             this.uploadLoading = false;
@@ -145,7 +147,7 @@ export class LostFormComponent {
           },
           error => console.log(error));
     } else {
-      this.RestApiService.createNewEventFormWithFiles(formData)
+      this.jwt.createNewEventFormWithFiles(formData)
       .subscribe(
         (data: LostFormTemplate) => {
           this.uploadLoading = false;
@@ -211,7 +213,7 @@ export class LostFormComponent {
   deleteEventForm(){
     this.uploadLoading = true;
     this.openWithoutBackdropClick(this.dialog);
-    this.RestApiService.deleteExistingEventForm(this.reference)
+    this.jwt.deleteExistingEventForm(this.reference)
       .subscribe(
         (data: LostFormTemplate) => {
           this.uploadLoading = false;
@@ -233,7 +235,7 @@ export class LostFormComponent {
     const formData: FormData = new FormData();
     formData.append('editStateBlocked', (this.lostForm.editStateBlocked).toString())
     
-    this.RestApiService.updateExistingEventForm(this.reference, formData)
+    this.jwt.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: LostFormTemplate) => {
             this.uploadLoading = false;

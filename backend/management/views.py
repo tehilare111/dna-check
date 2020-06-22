@@ -23,16 +23,17 @@ def get_token(request):
 
 # Create your views here.
 @csrf_exempt 
-def units_tree_management(request,token):
+def units_tree_management(request):
+    tokens=get_token(request)
     if request.method == 'GET': 
         try: 
-            units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
+            units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID)
+            print(units_tree)
             
         except UnitsTree.DoesNotExist: 
             return HttpResponse(status=status.HTTP_401_UNAUTHORIZED) 
         units_tree_serializer = UnitsTreeSerializer(units_tree)
-        print("tokensssS:",units_tree_serializer)
-        if utils.check_token_not_login(token) is not False:
+        if utils.check_token_not_login(tokens) is not False:
             return JsonResponse(units_tree_serializer.data, safe=False)
         else:
             return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
@@ -46,16 +47,15 @@ def units_tree_management(request,token):
         if (len(data)<=1):
             return JsonResponse({"Error":"error"},status=status.HTTP_204_NO_CONTENT)
         else:
-            tokens=utils.check_token_not_login(token)
-            print(tokens)
-            if tokens is not False:
+            
+            if utils.check_token_not_login(tokens) is not False:
                 if units_tree:
                     units_tree_serializer = UnitsTreeSerializer(units_tree, data=data["data"]) 
                 else:
                     units_tree_serializer = UnitsTreeSerializer(data=data["data"]) 
                 if units_tree_serializer.is_valid():
                     units_tree_serializer.save(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
-                    return JsonResponse({"access_token":token},safe=False) 
+                    return JsonResponse({"access_token":tokens},safe=False) 
             return HttpResponse({"result":"error invalid tokens"}, status=status.HTTP_400_BAD_REQUEST) 
     elif request.method == 'DELETE':
         UnitsTree.objects.all().delete()
@@ -76,19 +76,20 @@ def units_tree_register(request):
 
 @csrf_exempt 
 def constants_fields(request):
-    token=get_token(request)                         
+    token=get_token(request) 
+    print(request.headers)                        
     if request.method == 'GET': 
         try: 
             constants_fields = ConstantsFields.objects.get(constantFieldId=CONSTATNS_FIELDS_OBJECT_STATIC_ID) 
             
         except ConstantsFields.DoesNotExist: 
-            return HttpResponse(status=status.HTTP_204_NO_CONTENT) 
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
         
         constants_fields_serializer = ConstantsFieldsSerializer(constants_fields)
         if utils.check_token_not_login(token) is not False:
             return JsonResponse(constants_fields_serializer.data, safe=False)
         else:
-            return HttpResponse(status=status.HTTP_204_NO_CONTENT) 
+            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED) 
         
 
     elif request.method == 'POST':

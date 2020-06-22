@@ -23,7 +23,6 @@ export class JwtService {
     this.users.token=res.access_token
     this.users.username=username
     localStorage.setItem('access_token', this.users.token);
-    console.log("token",localStorage.getItem('access_token'))
 }))
 
 }
@@ -61,8 +60,8 @@ public get loggedIn():Boolean{
 ///////////////////////////////////////////////////////////////////////////////
 
 getTreeUnits(): Observable<any>  {
-  return this.httpClient.get<{access_token:string}>(`${this.baseUrl}/units-management/${this.users.token}`).pipe(tap(res=>{
-    console.log("token",localStorage.getItem('access_token'))
+  return this.httpClient.get<{access_token:string}>(`${this.baseUrl}/units-management/`).pipe(tap(res=>{
+
   }));
 }
 
@@ -70,28 +69,27 @@ getTreeUnits(): Observable<any>  {
 
 postTreeUnits(data){
   return this.httpClient.post<{access_token:string}>(`${this.baseUrl}/units-management/`,{data}).pipe(tap(res => {
-    console.log("token",localStorage.getItem('access_token'))
+
 }))
 }
 ///////////////////////////////////////////////////////////////////////////////
 UpdateUser(customer: Object,personalnumber:string){
   return this.httpClient.put<{access_token:string}>(`${this.baseUrl}/update_permissions_user/${personalnumber}`,{"customer":customer}).pipe(tap(res => {
-    console.log(res.access_token)
 }))
 }
 ////////////////////////////////////////////////////////////////////////////////
 
 getUsersList(unit:string): Observable<any> {
-  return this.httpClient.get(`${this.baseUrl}/get_group_permissions_List/${unit}/${this.check_token_undefined(this.users.token)}`);
+  return this.httpClient.get<{access_token:string}>(`${this.baseUrl}/get_group_permissions_List/${unit}/${this.check_token_undefined(this.users.token)}`);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 getConstatnsFields(): Observable<any>{
   return this.httpClient.get<{access_token:string}>(`${this.baseUrl}/constants-fields/`).pipe(tap(res => {
-    console.log(res.access_token)
 })) 
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -102,7 +100,30 @@ postConstatnsFields(data): Observable<any>{
 //////////////////////////////////////////////////////////////////////////////
 
 getFormsList(eventType: string): Observable<any> {
-  return this.httpClient.get(`${this.baseUrl}/forms/${eventType}`);
+  return this.httpClient.get<{access_token:string}>(`${this.baseUrl}/forms/${eventType}`);
 }
 
+getNewEventForm(): Observable<any> {
+  return this.httpClient.get(`${this.baseUrl}/event_forms/values`);
 }
+
+getExistingEventForm(reference: string): Observable<any> {
+  return this.httpClient.get<{access_token:string}>(`${this.baseUrl}/event_forms/${reference}`);
+}
+
+updateExistingEventForm(reference, form): Observable<Object> {
+    return this.httpClient.put<{access_token:string}>(`${this.baseUrl}/event_forms/${reference}`, form);
+  }
+
+
+  createNewEventFormWithFiles(form: FormData): Observable<Object> {
+    return this.httpClient.post<{access_token:string}>(`${this.baseUrl}/event_forms/`, form, {headers: {'enctype': 'multipart/form-data'}});
+  }
+
+  deleteExistingEventForm(reference: string): Observable<any> {
+    return this.httpClient.delete<{access_token:string}>(`${this.baseUrl}/event_forms/${reference}`);
+  }
+
+}
+
+

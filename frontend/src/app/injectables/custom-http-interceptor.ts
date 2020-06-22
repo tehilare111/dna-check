@@ -13,14 +13,14 @@ import { Users } from '../pages/management/users';
 import { catchError } from 'rxjs/operators';
 import 'rxjs/add/operator/do';
 import { Router } from '@angular/router';
-
+import { ToastService } from '../services/toast.service';
 
 
 
 export class CustomHttpInterceptor implements HttpInterceptor {
     
     users_login:Users=new Users()
-    constructor(private router:Router){}
+    constructor(private router:Router,private ToastService:ToastService){}
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     
       request = request.clone({
@@ -38,7 +38,7 @@ export class CustomHttpInterceptor implements HttpInterceptor {
             // redirect to the login route
             // or show a modal
             console.log("שגיאה מקריאה מהשרת")
-            //this.router.navigate(["pages/login"])
+            this.router.navigate(["pages/login"])
           }
         }
       });
