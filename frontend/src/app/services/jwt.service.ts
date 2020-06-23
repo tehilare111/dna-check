@@ -31,7 +31,6 @@ export class JwtService {
 
 CreateUser(customer: Object): Observable<Object> {
   return this.httpClient.post<{access_token:string}>(`${this.baseUrl}/create-User/`, customer);
-  
 }
 
 ///////////////////////////////////////////////////////////////////////////////
