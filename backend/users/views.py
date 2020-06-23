@@ -9,7 +9,7 @@ from management.utils import constants_fields_rank
 from management.models import UnitsTree, ConstantsFields
 from users import utils 
 from django.contrib.auth.models import User
-
+PERMISSIONS_PAGE_LOGIN="מנהלן מערכת"
 
 
 # Create your views here.
@@ -17,6 +17,13 @@ from django.contrib.auth.models import User
 ###############################################################
 #                      יצירת משתמש חדש                       #
 ###############################################################
+
+def check_permissions(permissions):
+    if permissions==PERMISSIONS_PAGE_LOGIN:
+        return True
+    else:
+        return False
+
 
 def get_token(request):
     token=request.headers['Authorization']
@@ -110,6 +117,7 @@ def groups_permissions_list(request, unit,token):
 @csrf_exempt 
 def update_permissions_users(request,personalnumber):
     token=get_token(request)
+    print("request")
     try: 
         event_form = Destination.objects.get(personalnumber=personalnumber)
     except Destination.DoesNotExist:
@@ -118,17 +126,12 @@ def update_permissions_users(request,personalnumber):
             customer_serializer = DestinationSerilazers(event_form)
             return JsonResponse(customer_serializer.data)
     elif request.method == 'PUT':
-        form_data = JSONParser().parse(request)
-        if (len(form_data)<=1):
-            return JsonResponse({"Error":"error"},status=status.HTTP_204_NO_CONTENT)
-        else:  
-            token=utils.check_token_not_login(token)
-            form_serializer = DestinationSerilazers(event_form, data=form_data["customer"])
-            if token is not False:
-                if form_serializer.is_valid():
-                    form_serializer.save()
-                    return JsonResponse({"access_token":token,"data":form_serializer.data})
-        return JsonResponse(status=status.HTTP_401_UNAUTHORIZED)
+        form_data = JSONParser().parse(request)  
+        permissions_users=utils.check_token_not_login(token)
+        form_serializer = DestinationSerilazers(event_form, data=form_data["permissions"])
+        if form_serializer.is_valid():
+            form_serializer.save()
+            return JsonResponse({"access_token":token,"data":form_serializer.data})
 
 @csrf_exempt
 def get_constans_fiald(fields_array):

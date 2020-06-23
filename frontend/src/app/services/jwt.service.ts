@@ -72,8 +72,8 @@ postTreeUnits(data){
 }))
 }
 ///////////////////////////////////////////////////////////////////////////////
-UpdateUser(customer: Object,personalnumber:string){
-  return this.httpClient.put<{access_token:string}>(`${this.baseUrl}/update_permissions_user/${personalnumber}`,{"customer":customer}).pipe(tap(res => {
+UpdateUser(permissions:string,personalnumber:string){
+  return this.httpClient.put<{access_token:string}>(`${this.baseUrl}/update_permissions_user/${personalnumber}`,{"permissions":permissions}).pipe(tap(res => {
 }))
 }
 ////////////////////////////////////////////////////////////////////////////////

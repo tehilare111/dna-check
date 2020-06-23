@@ -13,12 +13,19 @@ from management.serializers import UnitsTreeSerializer, ConstantsFieldsSerialize
 # static value only for represting it and pull it from db
 UNITS_TREE_OBJECT_STATIC_ID = '111999'
 CONSTATNS_FIELDS_OBJECT_STATIC_ID = '28032018'
+PERMISSIONS_PAGE_MANAGEMENT="מנהלן מערכת"
 
 def get_token(request):
     token=request.headers['Authorization']
     token=token.split(" ")
     token=token[1]
     return token
+
+def check_permissions(permissions):
+    if permissions==PERMISSIONS_PAGE_MANAGEMENT:
+        return True
+    else:
+        return False
 
 
 # Create your views here.
@@ -33,30 +40,30 @@ def units_tree_management(request):
         except UnitsTree.DoesNotExist: 
             return HttpResponse(status=status.HTTP_401_UNAUTHORIZED) 
         units_tree_serializer = UnitsTreeSerializer(units_tree)
-        if utils.check_token_not_login(tokens) is not False:
-            return JsonResponse(units_tree_serializer.data, safe=False)
+        permissions_user=utils.check_token_not_login(tokens)
+        if permissions_user is not None:
+            if(check_permissions(permissions_user)):
+                return JsonResponse(units_tree_serializer.data, safe=False)
+            else:
+                return HttpResponse(status=status.HTTP_403_FORBIDDEN)
         else:
             return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     elif request.method == 'POST':
         try: 
-            
             units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
         except UnitsTree.DoesNotExist: 
             units_tree = None
         data = JSONParser().parse(request)
-        if (len(data)<=1):
-            return JsonResponse({"Error":"error"},status=status.HTTP_204_NO_CONTENT)
+        print(data)
+        if units_tree:
+                units_tree_serializer = UnitsTreeSerializer(units_tree, data=data["data"]) 
         else:
-            
-            if utils.check_token_not_login(tokens) is not False:
-                if units_tree:
-                    units_tree_serializer = UnitsTreeSerializer(units_tree, data=data["data"]) 
-                else:
-                    units_tree_serializer = UnitsTreeSerializer(data=data["data"]) 
-                if units_tree_serializer.is_valid():
-                    units_tree_serializer.save(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
-                    return JsonResponse({"access_token":tokens},safe=False) 
-            return HttpResponse({"result":"error invalid tokens"}, status=status.HTTP_400_BAD_REQUEST) 
+            units_tree_serializer = UnitsTreeSerializer(data=data["data"]) 
+            print(data["data"])
+        if units_tree_serializer.is_valid():
+            units_tree_serializer.save(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
+            return JsonResponse(units_tree_serializer.data,safe=False) 
+        return HttpResponse({"result":"error invalid tokens"}, status=status.HTTP_400_BAD_REQUEST) 
     elif request.method == 'DELETE':
         UnitsTree.objects.all().delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
@@ -72,12 +79,11 @@ def units_tree_register(request):
         
         units_tree_serializer = UnitsTreeSerializer(units_tree)
         array_units.append(units_tree_serializer.data)
-        return HttpResponse(units_tree_serializer) 
+        return HttpResponse(array_units) 
 
 @csrf_exempt 
 def constants_fields(request):
-    token=get_token(request) 
-    print(request.headers)                        
+    token=get_token(request)                       
     if request.method == 'GET': 
         try: 
             constants_fields = ConstantsFields.objects.get(constantFieldId=CONSTATNS_FIELDS_OBJECT_STATIC_ID) 
@@ -86,11 +92,14 @@ def constants_fields(request):
             return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
         
         constants_fields_serializer = ConstantsFieldsSerializer(constants_fields)
-        if utils.check_token_not_login(token) is not False:
-            return JsonResponse(constants_fields_serializer.data, safe=False)
+        permissions_user=utils.check_token_not_login(token)
+        if permissions_user is not None:
+            if(check_permissions(permissions_user)):
+                return JsonResponse(constants_fields_serializer.data, safe=False)
+            else:
+                return HttpResponse(status=status.HTTP_403_FORBIDDEN)
         else:
-            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED) 
-        
+            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)    
 
     elif request.method == 'POST':
         

@@ -16,18 +16,15 @@ from users import utils
 
 import time
 import os
-<<<<<<< HEAD
+
 import csv
-=======
-    
 
 def get_token(request):
     token=request.headers['Authorization']
     token=token.split(" ")
     token=token[1]
     return token
->>>>>>> 5ba42ac... for michael and fix bugs
-
+    
 @csrf_exempt
 def forms_list(request, event_type):
     '''

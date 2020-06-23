@@ -40,6 +40,10 @@ export class CustomHttpInterceptor implements HttpInterceptor {
             console.log("שגיאה מקריאה מהשרת")
             this.router.navigate(["pages/login"])
           }
+          if (err.status===403){
+            this.ToastService.showToast('fail', ' אין לך הרשאות נא ליצור קשר עם מנהל המערכת','') 
+            this.router.navigate(["pages/login"])
+          }
         }
       });
     }

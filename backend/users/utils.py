@@ -6,6 +6,9 @@ from _datetime import timedelta
 from users import views
 from rest_framework import status
 from django.http.response import JsonResponse
+from management import views
+from users.models import  Destination
+from users.serializers import DestinationSerilazers
 
 secret='''PDvnOudatcLzb/i2cCVFQgIEUgTbehke5iN2QRF7Vqo2zYOzdXMuelzf5/DL+g7+
         sdXic+dLR+obFfHNwMjmaQLFRM8IAtjT2iLlIBc1amcUMx2Vy5dIlVWTA0p79bkL
@@ -44,9 +47,15 @@ def check_token(tokens):
     except Exception as e:
         return False 
 
+def get_permissions(username):
+    event_form = Destination.objects.get(username=username)
+    customer_serializer = DestinationSerilazers(event_form)
+    return customer_serializer.data["permissions"]
+
 def check_token_not_login(tokens):
     try:
         auth=jwt.decode(tokens,'secret', algorithms=['HS256'])
-        return {"token":tokens,"bool":True}
+        return get_permissions(auth["username"])
+        
     except Exception as e:
         return False 
