@@ -9,6 +9,7 @@ from django.http.response import JsonResponse
 from management import views
 from users.models import  Destination
 from users.serializers import DestinationSerilazers
+from django.contrib.auth import get_user_model
 
 secret='''PDvnOudatcLzb/i2cCVFQgIEUgTbehke5iN2QRF7Vqo2zYOzdXMuelzf5/DL+g7+
         sdXic+dLR+obFfHNwMjmaQLFRM8IAtjT2iLlIBc1amcUMx2Vy5dIlVWTA0p79bkL

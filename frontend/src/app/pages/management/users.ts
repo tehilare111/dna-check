@@ -9,7 +9,7 @@ export class Users {
     public personalnumber:string
     public rank:string
     public position:string
-    public permissions="read"
+    public permissions="מנהל מערכת"
     public armyunit:string
     public token:string
 }

@@ -30,8 +30,6 @@ export class LoginComponent implements OnInit {
         
       },
       error => {
-        console.log(error)
-          this.ToastService.showToast("fail","אירעה שגיאה בהתחברות","")
       }
     ); 
     /*this.RestApiService.CheckLogin({"username":username,"password":password})

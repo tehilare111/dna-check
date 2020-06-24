@@ -75,7 +75,7 @@ def units_tree_register(request):
         try: 
             units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
         except UnitsTree.DoesNotExist: 
-            return HttpResponse(status=status.HTTP_204_NO_CONTENT) 
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
         
         units_tree_serializer = UnitsTreeSerializer(units_tree)
         array_units.append(units_tree_serializer.data)
@@ -89,7 +89,7 @@ def constants_fields(request):
             constants_fields = ConstantsFields.objects.get(constantFieldId=CONSTATNS_FIELDS_OBJECT_STATIC_ID) 
             
         except ConstantsFields.DoesNotExist: 
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
+            return HttpResponse(status=status.HTTP_403_FORBIDDEN) 
         
         constants_fields_serializer = ConstantsFieldsSerializer(constants_fields)
         permissions_user=utils.check_token_not_login(token)

@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from management.utils import constants_fields_rank
 from management.models import UnitsTree, ConstantsFields
 from users import utils 
-from django.contrib.auth.models import User
+from django.contrib.auth.decorators import permission_required
 PERMISSIONS_PAGE_LOGIN="מנהלן מערכת"
 
 
@@ -18,18 +18,17 @@ PERMISSIONS_PAGE_LOGIN="מנהלן מערכת"
 #                      יצירת משתמש חדש                       #
 ###############################################################
 
-def check_permissions(permissions):
+def check_permissions(request):
+    token=request.headers['Authorization']
+    token=token.split(" ")
+    token=token[1]
+    permissions=utils.check_token_not_login(token)
     if permissions==PERMISSIONS_PAGE_LOGIN:
         return True
     else:
         return False
 
 
-def get_token(request):
-    token=request.headers['Authorization']
-    token=token.split(" ")
-    token=token[1]
-    return token
 
 @csrf_exempt 
 def create_user(request):
@@ -53,18 +52,18 @@ def create_user(request):
 
 @csrf_exempt 
 def check_login(request):
-    token=get_token(request)
+    token=check_permissions(request)
     print (token)
     user_data = JSONParser().parse(request)
     users_serializer = DestinationSerilazers(data=user_data)
+    print(users_serializer) 
     if request.method == 'POST':
         try:
-            if (users_serializer.is_valid()): 
-                users = Destination.objects.get(username=user_data["username"])
-                if check_user_password(users.username,user_data["password"]):
-                    return JsonResponse({"access_token":utils.create_jwt(user_data)}, safe=False)
-                else:
-                    return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+            users = Destination.objects.get(username=user_data["username"])
+            if check_user_password(users.username,user_data["password"]):
+                return JsonResponse({"access_token":utils.create_jwt(user_data)}, safe=False)
+            else:
+                return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
         except Destination.DoesNotExist: 
             return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)  
     
@@ -85,8 +84,7 @@ def check_user_and_personalnumbner(user_data):
 ###############################################################
 #                     קבלת קבוצת הרשאות                      #
 ###############################################################
-
-@csrf_exempt
+@csrf_exempt 
 def groups_permissions_list(request, unit,token):
     '''
         Responsible to hendle requests froms main control table page.
@@ -117,7 +115,6 @@ def groups_permissions_list(request, unit,token):
 @csrf_exempt 
 def update_permissions_users(request,personalnumber):
     token=get_token(request)
-    print("request")
     try: 
         event_form = Destination.objects.get(personalnumber=personalnumber)
     except Destination.DoesNotExist:
@@ -126,7 +123,7 @@ def update_permissions_users(request,personalnumber):
             customer_serializer = DestinationSerilazers(event_form)
             return JsonResponse(customer_serializer.data)
     elif request.method == 'PUT':
-        form_data = JSONParser().parse(request)  
+        form_data = JSONParser().parse(request)
         permissions_users=utils.check_token_not_login(token)
         form_serializer = DestinationSerilazers(event_form, data=form_data["permissions"])
         if form_serializer.is_valid():

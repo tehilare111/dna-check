@@ -13,18 +13,29 @@ from rest_framework.views import APIView
 from forms.models import FormsTable
 from forms.serializers import FormsSerializer
 from users import utils
-
+from django.contrib.auth.decorators import permissions_requird
 import time
 import os
-
 import csv
 
+
+PERMISSIONS_PAGE_FROM_MANAGER="מנהלן מערכת"
+PERMISSIONS_PAGE_FROM_EDIT_EVENTS="מדווח אירועים"
+PERMISSIONS_PAGE_FROM_WATCHING_EVENTS="צופה אירועים"
+
+
+
+def check_permissions(permissions):
+    if permissions==PERMISSIONS_PAGE_FROM_EDIT_EVENTS or permissions==PERMISSIONS_PAGE_FROM_MANAGER:
+        return True
+    else:
+        return False
 def get_token(request):
     token=request.headers['Authorization']
     token=token.split(" ")
     token=token[1]
     return token
-    
+
 @csrf_exempt
 def forms_list(request, event_type):
     '''
@@ -34,7 +45,8 @@ def forms_list(request, event_type):
               Return all rows from table when no url specified.
         DELETE - Delete all table content. 
     '''
-    if utils.check_token_not_login(get_token(request))is not False:
+
+    if utils.check_token(get_token(request)) is not False:
         
         if request.method == 'GET':
 
@@ -48,13 +60,13 @@ def forms_list(request, event_type):
                 
                 form_serializer = FormsSerializer(forms, many=True)
 
-                return JsonResponse(form_serializer.data, safe=False)
-        else:
-                return HttpResponse(status=status.HTTP_401_UNAUTHORIZED) 
+                return JsonResponse(form_serializer.data, safe=False) 
         
-    elif request.method == 'DELETE':
+        elif request.method == 'DELETE':
             FormsTable.objects.all().delete()
             return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+    else:
+        return HttpResponse(status=status.HTTP_401_FORBIDDEN)
 
 
 
@@ -68,10 +80,10 @@ def new_event_form(request):
     if request.method == 'GET':
         dt = datetime.today()
         payload = {'datetime': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
-        if(utils.check_token_not_login(token)) is not False:       
+        if(check_permissions(utils.check_token_not_login(token))) is not False:       
             return JsonResponse(payload, safe=False)
         else:
-            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+            return HttpResponse({"error":"אין לך הרשאות לדווח על קובץ"},status=status.HTTP_403_FORBIDDEN)
 '''
 @csrf_exempt
 def existing_event_form(request, reference):
