@@ -36,7 +36,7 @@ export class LostFormComponent {
   readonly : boolean = true;
   popUpDialogContext: string = '';
   msgs: any[] = [];
-
+  draft:boolean = false;
   baseUrl: string = '';
   
   // select fields options:
@@ -87,6 +87,9 @@ export class LostFormComponent {
     // Set eventType field according to the form event type
     this.lostForm.eventType = this.eventType
     
+    // Is this form a draft? - compared to string 'true' because activatedRoute return a json with strings
+    this.draft = this.activatedRoute.snapshot.params.draft=='true';
+
     // Recieve form data from db according to its reference
     this.reference = this.activatedRoute.snapshot.params.reference;
     if (this.reference){
@@ -104,13 +107,13 @@ export class LostFormComponent {
   }
 
   exisitingFormLoadData(reference: string){
-    this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: LostFormTemplate) => {
+    this.RestApiService.getExistingEventForm(reference, this.draft).subscribe((data_from_server: LostFormTemplate) => {
       this.lostForm = data_from_server
       this.msgs = this.lostForm.messages.map( msg => { return JSON.parse(msg); } )
     });
   }
 
-  save() {
+  save(draft: boolean=false) {
     const formData: FormData = new FormData();
     this.lostForm = this.eventStatusForm.pushFormFields<LostFormTemplate>(this.lostForm);
     
@@ -125,7 +128,7 @@ export class LostFormComponent {
     }    
 
     if (this.reference){
-      this.RestApiService.updateExistingEventForm(this.reference, formData)
+      this.RestApiService.updateExistingEventForm(this.reference, formData, draft)
         .subscribe(
           (data: LostFormTemplate) => {
             this.uploadLoading = false;
@@ -134,7 +137,7 @@ export class LostFormComponent {
           },
           error => console.log(error));
     } else {
-      this.RestApiService.createNewEventFormWithFiles(formData)
+      this.RestApiService.createNewEventFormWithFiles(formData, draft)
       .subscribe(
         (data: LostFormTemplate) => {
           this.uploadLoading = false;
@@ -181,15 +184,15 @@ export class LostFormComponent {
     return fieldsValid
   }
 
-  onSubmit() {
+  onSubmit(draft=false) {
     this.uploadLoading = true
-    if (this.checkFieldsValid()){
-      this.openWithoutBackdropClick(this.dialog);
-      this.save();
-    } else {
+    if(!draft && !this.checkFieldsValid()){
       this.uploadLoading = false
       this.popUpDialogContext = `שדה אחד לפחות לא תקין או חסר`;
       this.openWithoutBackdropClick(this.dialog2)
+    } else {
+      this.openWithoutBackdropClick(this.dialog);
+      this.save(draft);
     }
   }
 

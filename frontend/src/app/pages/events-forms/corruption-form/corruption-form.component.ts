@@ -34,6 +34,7 @@ export class CorruptionFormComponent {
   readonly : boolean = true;
   popUpDialogContext: string = '';
   msgs: any[] = [];
+  draft = false;
 
   baseUrl: string = '';
 
@@ -83,6 +84,9 @@ export class CorruptionFormComponent {
     // Set eventType field according to the form event type
     this.corruptionForm.eventType = this.eventType
     
+    // Is this form a draft? - compared to string 'true' because activatedRoute return a json with strings
+    this.draft = this.activatedRoute.snapshot.params.draft=='true';
+
     // Recieve form data from db according to its reference
     this.reference = this.activatedRoute.snapshot.params.reference;
     if (this.reference){
@@ -100,13 +104,13 @@ export class CorruptionFormComponent {
   }
 
   exisitingFormLoadData(reference: string){
-    this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: CorruptionFormTemplate) => {
+    this.RestApiService.getExistingEventForm(reference, this.draft).subscribe((data_from_server: CorruptionFormTemplate) => {
       this.corruptionForm = data_from_server
       this.msgs = this.corruptionForm.messages.map( msg => { return JSON.parse(msg); } )
     });
   }
 
-  save() {
+  save(draft=false) {
     const formData: FormData = new FormData();
     this.corruptionForm = this.eventStatusForm.pushFormFields<CorruptionFormTemplate>(this.corruptionForm);
   
@@ -121,7 +125,7 @@ export class CorruptionFormComponent {
     }    
 
     if (this.reference){
-      this.RestApiService.updateExistingEventForm(this.reference, formData)
+      this.RestApiService.updateExistingEventForm(this.reference, formData, draft)
         .subscribe(
           (data: CorruptionFormTemplate) => {
             this.uploadLoading = false;
@@ -130,7 +134,7 @@ export class CorruptionFormComponent {
           },
           error => console.log(error));
     } else {
-      this.RestApiService.createNewEventFormWithFiles(formData)
+      this.RestApiService.createNewEventFormWithFiles(formData, draft)
       .subscribe(
         (data: CorruptionFormTemplate) => {
           this.uploadLoading = false;
@@ -176,15 +180,15 @@ export class CorruptionFormComponent {
     return fieldsValid
   }
 
-  onSubmit() {
+  onSubmit(draft=false) {
     this.uploadLoading = true
-    if (this.checkFieldsValid()){
-      this.openWithoutBackdropClick(this.dialog);
-      this.save();
-    } else {
+    if(!draft && !this.checkFieldsValid()){
       this.uploadLoading = false
       this.popUpDialogContext = `שדה אחד לפחות לא תקין או חסר`;
       this.openWithoutBackdropClick(this.dialog2)
+    } else {
+      this.openWithoutBackdropClick(this.dialog);
+      this.save(draft);
     }
   }
 

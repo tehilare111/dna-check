@@ -56,6 +56,11 @@ export class ControlTableComponent implements OnInit{
       'route': '/pages/events-forms/equipment-review',
       'columns': {'reference': 'סימוכין', 'date': 'תאריך', 'reporterName': 'שם מדווח', 'reporterUnit': 'יחידת מדווח'}
     },
+    'Drafts': {
+      'name': 'הטיוטות שלי',
+      'route': undefined,
+      'columns': {'reference': 'סימוכין', 'date': 'תאריך', 'reporterName': 'שם מדווח', 'reporterUnit': 'יחידת מדווח', 'eventStatus': 'סטאטוס האירוע'}
+    },
   }
 
   customColumn = 'eventType';
@@ -65,9 +70,10 @@ export class ControlTableComponent implements OnInit{
   allColumns = [ this.customColumn, ...Object.keys(this.columns) ];
 
   loadTable(value){
-    this.loadData(value.route?value.name:'');
-    this.allColumns = [ this.customColumn, ...Object.keys(value.columns) ];
+    if (value.name == this.eventsToPickUp.Drafts.name) { this.loadDraftsData(); }
+    else { this.loadData(value.route?value.name:''); }
     
+    this.allColumns = [ this.customColumn, ...Object.keys(value.columns) ];
   }
   
   dataSource: NbTreeGridDataSource<FSEntry>;
@@ -84,12 +90,21 @@ export class ControlTableComponent implements OnInit{
   }
 
   loadData(eventType: string) {
-    this.RestApiService.getFormsList(eventType).subscribe((data_from_server) => {
+    this.RestApiService.getFormsList(eventType, ).subscribe((data_from_server) => {
       let new_data: TreeNode<FSEntry>[] = data_from_server.map((event) => {
         return {'data': event}
       })
       new_data = new_data.concat(this.data);
-      console.log(new_data)
+      this.dataSource = this.dataSourceBuilder.create(new_data);
+    });
+  }
+
+  loadDraftsData() {
+    this.RestApiService.getDraftFormsList().subscribe((data_from_server) => {
+      let new_data: TreeNode<FSEntry>[] = data_from_server.map((event) => {
+        return {'data': event}
+      })
+      new_data = new_data.concat(this.data);
       this.dataSource = this.dataSourceBuilder.create(new_data);
     });
   }
@@ -105,6 +120,7 @@ export class ControlTableComponent implements OnInit{
     }
     return NbSortDirection.NONE;
   }
+
 
   private data: TreeNode<FSEntry>[] = [
     /*{
@@ -127,12 +143,13 @@ export class ControlTableComponent implements OnInit{
 
   formClicked(event, row) {
     let path = ''
+    let draft = false
     for(let [key, value] of Object.entries(this.eventsToPickUp)){
       if(value['name'] == row.data.eventType){
         path = value['route']
       }
     }
-    this.router.navigate([path, {reference: row.data.reference}]);
+    this.router.navigate([path, {reference: row.data.reference, draft: (this.pickedUpEvent.name==this.eventsToPickUp.Drafts.name) }]);
   }
 
   exportToXL(value){

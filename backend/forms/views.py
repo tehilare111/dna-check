@@ -12,6 +12,7 @@ from rest_framework.views import APIView
 
 from forms.models import FormsTable
 from forms.serializers import FormsSerializer
+from draft_forms.models import DraftFormsTable
 
 import time
 import os
@@ -51,7 +52,7 @@ def new_event_form(request):
     '''
     if request.method == 'GET':
         dt = datetime.today()
-        payload = {'': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
+        payload = {'datetime': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
         return JsonResponse(payload, safe=False)
 '''
 @csrf_exempt
@@ -123,7 +124,8 @@ class NewEventFrom(APIView):
     def post(self, request, *args, **kwargs):
         form_serializer = FormsSerializer(data=request.data)
         if form_serializer.is_valid():
-            form_serializer.save(reference = int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0) + 1)
+            max_reference = max(int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0), int(DraftFormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0))
+            form_serializer.save(reference = max_reference + 1)
             return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
             return HttpResponse(form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -131,11 +133,16 @@ class NewEventFrom(APIView):
     def put(self, request, reference,*args, **kwargs):
         try: 
             event_form = FormsTable.objects.get(reference=reference) 
+            form_serializer = FormsSerializer(event_form, data=request.data)
         except FormsTable.DoesNotExist: 
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
+            if DraftFormsTable.objects.filter(reference=reference).exists():
+                form_serializer = FormsSerializer(data=request.data)
 
-        form_serializer = FormsSerializer(event_form, data=request.data)
         if form_serializer.is_valid():
+            # delete form's draft:
+            if DraftFormsTable.objects.filter(reference=reference).exists():
+                DraftFormsTable.objects.get(reference=reference).delete()
+            
             form_serializer.save()
             return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:

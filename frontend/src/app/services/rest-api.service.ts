@@ -15,6 +15,10 @@ export class RestApiService {
     return this.http.get(`${this.baseUrl}/forms/${eventType}`);
   }
 
+  getDraftFormsList(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/draft_forms/`);
+  }
+
   getUsersList(unit:string): Observable<any> {
     return this.http.get(`${this.baseUrl}/get_group_permissions_List/${unit}`);
   }
@@ -40,20 +44,22 @@ export class RestApiService {
     return this.http.get(`${this.baseUrl}/event_forms/values`);
   }
 
-  getExistingEventForm(reference: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/event_forms/${reference}`);
+  getExistingEventForm(reference: string, draft: boolean): Observable<any> {
+    let url = `${this.baseUrl}/${(!draft)?'event_forms':'draft_event_forms'}/${reference}`;    
+
+    return this.http.get(url);
   }
 
-  updateExistingEventForm(reference, form): Observable<Object> {
-    return this.http.put(`${this.baseUrl}/event_forms/${reference}`, form);
+  updateExistingEventForm(reference, form, draft=false): Observable<Object> {
+    let url = `${this.baseUrl}/${(!draft)?'event_forms':'draft_event_forms'}/${reference}`;
+    
+    return this.http.put(url, form);
   }
 
-  //createNewEventForm(form: Object): Observable<Object> {
-  //  return this.http.post(`${this.baseUrl}/event_forms/`, form);
-  //}
+  createNewEventFormWithFiles(form: FormData, draft=false): Observable<Object> {
+    let url = `${this.baseUrl}/${(!draft)?'event_forms':'draft_event_forms'}/`;
 
-  createNewEventFormWithFiles(form: FormData): Observable<Object> {
-    return this.http.post(`${this.baseUrl}/event_forms/`, form, {headers: {'enctype': 'multipart/form-data'}});
+    return this.http.post(url, form, {headers: {'enctype': 'multipart/form-data'}});
   }
 
   deleteExistingEventForm(reference: string): Observable<any> {

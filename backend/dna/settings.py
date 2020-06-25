@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     # Forms application 
     'forms.apps.FormsConfig',
+    # Forms application 
+    'draft_forms.apps.DraftFormsConfig',
     # Management application
     'management.apps.ManagementConfig',
     # User application

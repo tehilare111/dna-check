@@ -12,7 +12,8 @@ import {
   NbSelectModule,
   NbUserModule,
   NbSpinnerModule,
-  NbChatModule
+  NbChatModule,
+  NbTooltipModule,
 } from '@nebular/theme';
 
 import { ThemeModule } from '../../@theme/theme.module';
@@ -53,7 +54,8 @@ import { ChatComponent } from './components/chat/chat.component';
     NbIconModule,
     ngFormsModule,
     NbSpinnerModule,
-    NbChatModule
+    NbChatModule,
+    NbTooltipModule
   ],
   declarations: [
     FormsComponent,

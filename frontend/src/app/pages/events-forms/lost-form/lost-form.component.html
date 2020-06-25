@@ -2,7 +2,10 @@
 <div class="row col-md-12" id="outOfPrint">
   
   <nb-card>
-    <button type="submit" nbButton status="primary" (click)="onSubmit()">שלח אירוע</button>
+    <button type="submit" nbButton status="primary" (click)="onSubmit()" nbTooltip="האירוע יוגש לגורמים הרלוונטים" nbTooltipPlacement="top">שלח אירוע</button>
+  </nb-card>
+  <nb-card>
+    <button type="submit" nbButton status="primary" (click)="onSubmit(draft=true)" nbTooltip="האירוע יישמר בטיוטות שלך" nbTooltipPlacement="top">שמור אירוע</button>
   </nb-card>
   <nb-card>
     <button *ngIf="true" nbButton status="primary" (click)="updateEditState()">פתח/סגור אירוע לעריכה</button>

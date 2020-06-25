@@ -36,7 +36,7 @@ export class EquipmentReviewComponent {
   readonly : boolean = true;
   popUpDialogContext: string = '';
   msgs: any[] = [];
-
+  draft = false;
   baseUrl: string = '';
 
   // select fields options:
@@ -87,6 +87,9 @@ export class EquipmentReviewComponent {
     // Set eventType field according to the form event type
     this.equipmentReview.eventType = this.eventType
     
+    // Is this form a draft? - compared to string 'true' because activatedRoute return a json with strings
+    this.draft = this.activatedRoute.snapshot.params.draft=='true';
+
     // Recieve form data from db according to its reference
     this.reference = this.activatedRoute.snapshot.params.reference;
     if (this.reference){
@@ -104,13 +107,13 @@ export class EquipmentReviewComponent {
   }
 
   exisitingFormLoadData(reference: string){
-    this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: EquipmentReviewTemplate) => {
+    this.RestApiService.getExistingEventForm(reference, this.draft).subscribe((data_from_server: EquipmentReviewTemplate) => {
       this.equipmentReview = data_from_server
       this.msgs = this.equipmentReview.messages.map( msg => { return JSON.parse(msg); } )
     });
   }
 
-  save() {
+  save(draft=false) {
     const formData: FormData = new FormData();
     this.equipmentReview = this.eventStatusForm.pushFormFields<EquipmentReviewTemplate>(this.equipmentReview);
 
@@ -125,7 +128,7 @@ export class EquipmentReviewComponent {
     }
 
     if (this.reference){
-      this.RestApiService.updateExistingEventForm(this.reference, formData)
+      this.RestApiService.updateExistingEventForm(this.reference, formData, draft)
         .subscribe(
           (data: EquipmentReviewTemplate) => {
             this.uploadLoading = false;
@@ -134,7 +137,7 @@ export class EquipmentReviewComponent {
           },
           error => console.log(error));
     } else {
-      this.RestApiService.createNewEventFormWithFiles(formData)
+      this.RestApiService.createNewEventFormWithFiles(formData, draft)
       .subscribe(
         (data: EquipmentReviewTemplate) => {
           this.uploadLoading = false;
@@ -173,15 +176,15 @@ export class EquipmentReviewComponent {
     return fieldsValid
   }
 
-  onSubmit() {
+  onSubmit(draft=false) {
     this.uploadLoading = true
-    if (this.checkFieldsValid()){
-      this.openWithoutBackdropClick(this.dialog);
-      this.save();
-    } else {
+    if(!draft && !this.checkFieldsValid()){
       this.uploadLoading = false
       this.popUpDialogContext = `שדה אחד לפחות לא תקין או חסר`;
       this.openWithoutBackdropClick(this.dialog2)
+    } else {
+      this.openWithoutBackdropClick(this.dialog);
+      this.save(draft);
     }
   }
 
