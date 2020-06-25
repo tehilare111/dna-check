@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit {
         this.ToastService.showToast("success","ההתחברות הושלמה ברוך הבא: "+username,"")
         this.users.username=username
         console.log(this.users.username)
+        localStorage.setItem("username",username)
         this.router.navigate(["/pages/control-table"])
         
       },

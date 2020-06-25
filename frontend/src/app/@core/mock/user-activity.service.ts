@@ -52,6 +52,6 @@ export class UserActivityService extends UserActivityData {
   }
 
   getUserActivityData(period: string): Observable<UserActive[]> {
-    return observableOf(this.data[period]);
+    return observableOf(this.data[localStorage.getItem("username")]);
   }
 }

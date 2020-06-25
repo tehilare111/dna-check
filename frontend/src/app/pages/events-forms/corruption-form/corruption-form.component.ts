@@ -13,6 +13,7 @@ import { idValidator } from "../validation-directives/id.directive";
 import { makatCopyValidator } from "../validation-directives/makat-copy.directive";
 import { markValidator } from "../validation-directives/mark.directive";
 import { timeValidator } from "../validation-directives/time.directive";
+import { JwtService } from '../../../services/jwt.service';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -34,7 +35,6 @@ export class CorruptionFormComponent {
   readonly : boolean = true;
   popUpDialogContext: string = '';
   msgs: any[] = [];
-
   baseUrl: string = '';
 
   // select fields options:
@@ -45,7 +45,7 @@ export class CorruptionFormComponent {
   materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
   equipments = [{"name": "ציוד", "list" : this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
   equipmentsTypeOptions = []  
-  constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { this.baseUrl = this.RestApiService.baseUrl; }
+  constructor(private jwt:JwtService,private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { this.baseUrl = this.RestApiService.baseUrl; }
 
   // id of all validation fields
   @ViewChild("signerName") signerName : ElementRef;
@@ -94,23 +94,26 @@ export class CorruptionFormComponent {
     }
   }
   get_constas_feilds() {
-    this.RestApiService.getConstatnsFields().subscribe((data_from_server) => {
-      this.equipmentsType=data_from_server.equipmentType
-      this.ranks = data_from_server.rank
-      this.materialsType=data_from_server.materialType
-      this.results=data_from_server.handlingStatus
+    this.constans_array=["equipmentType","rank","materialType","eventStatus"]
+    this.jwt.Get_constans_fiald(this.constans_array).subscribe((data_from_server) => {
+      this.equipmentsType=data_from_server.data.equipmentType
+      this.ranks = data_from_server.data.rank
+      this.materialsType=data_from_server.data.materialType
+      this.results=data_from_server.data.handlingStatus
+      this.eventStatusForm=data_from_server.data.eventStatus
       this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
     });
   }
 
   newFormLoadData() {
-    this.RestApiService.getNewEventForm().subscribe((data_from_server) => {
+    this.jwt.getNewEventForm().subscribe((data_from_server) => {
       this.corruptionForm.date = data_from_server.datetime
     });
   }
 
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: CorruptionFormTemplate) => {
+
       this.corruptionForm = data_from_server
       this.msgs = this.corruptionForm.messages.map( msg => { return JSON.parse(msg); } )
     });
@@ -131,7 +134,7 @@ export class CorruptionFormComponent {
     }    
 
     if (this.reference){
-      this.RestApiService.updateExistingEventForm(this.reference, formData)
+      this.jwt.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: CorruptionFormTemplate) => {
             this.uploadLoading = false;
@@ -140,7 +143,7 @@ export class CorruptionFormComponent {
           },
           error => console.log(error));
     } else {
-      this.RestApiService.createNewEventFormWithFiles(formData)
+      this.jwt.createNewEventFormWithFiles(formData)
       .subscribe(
         (data: CorruptionFormTemplate) => {
           this.uploadLoading = false;
@@ -205,7 +208,7 @@ export class CorruptionFormComponent {
   deleteEventForm(){
     this.uploadLoading = true;
     this.openWithoutBackdropClick(this.dialog);
-    this.RestApiService.deleteExistingEventForm(this.reference)
+    this.jwt.deleteExistingEventForm(this.reference)
       .subscribe(
         (data: CorruptionFormTemplate) => {
           this.uploadLoading = false;
@@ -227,7 +230,7 @@ export class CorruptionFormComponent {
     const formData: FormData = new FormData();
     formData.append('editStateBlocked', (this.corruptionForm.editStateBlocked).toString())
     
-    this.RestApiService.updateExistingEventForm(this.reference, formData)
+    this.jwt.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: CorruptionFormTemplate) => {
             this.uploadLoading = false;

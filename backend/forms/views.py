@@ -13,7 +13,6 @@ from rest_framework.views import APIView
 from forms.models import FormsTable
 from forms.serializers import FormsSerializer
 from users import utils
-from django.contrib.auth.decorators import permissions_requird
 import time
 import os
 import csv
@@ -22,19 +21,20 @@ import csv
 PERMISSIONS_PAGE_FROM_MANAGER="מנהלן מערכת"
 PERMISSIONS_PAGE_FROM_EDIT_EVENTS="מדווח אירועים"
 PERMISSIONS_PAGE_FROM_WATCHING_EVENTS="צופה אירועים"
+PERMISSIONS_ARRAY=[]
 
 
 
-def check_permissions(permissions):
-    if permissions==PERMISSIONS_PAGE_FROM_EDIT_EVENTS or permissions==PERMISSIONS_PAGE_FROM_MANAGER:
-        return True
-    else:
-        return False
-def get_token(request):
+def check_permissions(request,permissions_array):
     token=request.headers['Authorization']
     token=token.split(" ")
     token=token[1]
-    return token
+    permission=utils.check_token_not_login(token)
+    if permission in permissions_array:
+        print("wowowow")
+        return True
+    else:
+        return False
 
 @csrf_exempt
 def forms_list(request, event_type):
@@ -45,8 +45,8 @@ def forms_list(request, event_type):
               Return all rows from table when no url specified.
         DELETE - Delete all table content. 
     '''
-
-    if utils.check_token(get_token(request)) is not False:
+    PERMISSIONS_ARRAY=[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS,PERMISSIONS_PAGE_FROM_WATCHING_EVENTS]
+    if check_permissions(request,PERMISSIONS_ARRAY):
         
         if request.method == 'GET':
 
@@ -76,11 +76,11 @@ def new_event_form(request):
         New Event Form load all its initial values from here.
         Relevant url: /api/event_forms/
     '''
-    token=get_token(request)
+    PERMISSIONS_ARRAY=[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS]
     if request.method == 'GET':
         dt = datetime.today()
         payload = {'datetime': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
-        if(check_permissions(utils.check_token_not_login(token))) is not False:       
+        if(check_permissions(request,PERMISSIONS_ARRAY)):       
             return JsonResponse(payload, safe=False)
         else:
             return HttpResponse({"error":"אין לך הרשאות לדווח על קובץ"},status=status.HTTP_403_FORBIDDEN)

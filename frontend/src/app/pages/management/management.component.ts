@@ -118,7 +118,6 @@ export class ManagementComponent implements OnInit {
       },
       err => {
         this.ToastService.showToast('fail', 'שגיאה בקריאה מהשרת נא להתחבר מחדש', '')
-
         this.uploadLoading = false
       }
       );

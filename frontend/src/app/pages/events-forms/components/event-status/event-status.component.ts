@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { RestApiService } from '../../../../services/rest-api.service';
 import { EventForm } from '../../events-forms.templates';
+import { JwtService } from '../../../../services/jwt.service';
 
 @Component({
   selector: 'ngx-event-status',
@@ -11,22 +12,21 @@ export class EventStatusComponent implements OnInit {
 
   @Input() eventForm: EventForm = new EventForm();
   @Input() readonly: boolean = true;
-
+  constatns_array=[]
   @Input() results = [];
-
   eventStatusOptions = ["פתוח", "סגור"]
   handlingStatusOptions = ["אבד", "נמצא"]
 
-  constructor(private RestApiService:RestApiService) { }
+  constructor(private jwt:JwtService,private RestApiService:RestApiService) { }
 
   ngOnInit(): void {
     this.get_constas_feilds()
   }
   get_constas_feilds() {
-    this.RestApiService.getConstatnsFields().subscribe((data_from_server) => {
-      
-      this.eventStatusOptions=data_from_server.eventStatus
-      this.handlingStatusOptions=data_from_server.handlingStatus
+    this.constatns_array=["eventStatus","hamdlingStatus"]
+    this.jwt.Get_constans_fiald(this.constatns_array).subscribe((data_from_server) => {
+      this.eventStatusOptions=data_from_server.data.eventStatus
+      this.handlingStatusOptions=data_from_server.data.handlingStatus
     });
   }
   pushFormFields<T extends EventForm>(form: T): T {

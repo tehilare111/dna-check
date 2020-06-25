@@ -14,16 +14,18 @@ from management.serializers import UnitsTreeSerializer, ConstantsFieldsSerialize
 
 
 @csrf_exempt 
-def constants_fields_rank(array):
-    required={} 
-    print("shalom")
+def constants_fields_array(array):
+    print("array",len(array))
+    required=[]
     try: 
-        constants_fields = ConstantsFields.objects.get(constantFieldId=views.CONSTATNS_FIELDS_OBJECT_STATIC_ID) 
+        constants_fields = ConstantsFields.objects.get(constantFieldId=views.CONSTATNS_FIELDS_OBJECT_STATIC_ID)
+        
+        constants_fields_serilazers = ConstantsFieldsSerializer( constants_fields)
+       
     except ConstantsFields.DoesNotExist: 
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-        
-    for objects in array:
-        print(objects)
-        required[objects]=constants_fields[objects]
-        
-    return required
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND
+        )
+    if len(array)>1:
+        return constants_fields_serilazers.data
+    else:
+        return constants_fields_serilazers.data[array]

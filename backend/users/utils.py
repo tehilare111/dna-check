@@ -41,9 +41,9 @@ def create_jwt(user_data):
         else:
             return False
 
-def check_token(tokens):
+def check_token(token):
     try:
-        auth=jwt.decode(tokens,'secret', algorithms=['HS256'])
+        auth=jwt.decode(token,'secret', algorithms=['HS256'])
         return True
     except Exception as e:
         return False 

@@ -30,8 +30,9 @@ export class RegisterComponent implements OnInit {
   public count=0;
   submitted=false;
   public errors:string;
-  ranks = ["טוראי","רבט","סמל"]
-  units_array=["מצו''ב"]
+  ranks = []
+  rank_array=[]
+  units_array=['מצו"ב']
   maxTreeNodeId = '1'
   nodes = [
     {
@@ -47,14 +48,16 @@ export class RegisterComponent implements OnInit {
     this.get_tree_node()
   }
   get_constatns_filds_rank() {
-    this.RestApiService.getConstatnsFields().subscribe((data_from_server) => {
-      this.ranks = data_from_server.rank
+    this.rank_array=["rank"]
+    this.jwt.Get_constans_fiald(this.rank_array).subscribe((data_from_server) => {
+      console.log("data_from_server:",data_from_server.data)
+      this.ranks = data_from_server.data.rank
     });
   }
   get_tree_node(){
   var i
   var j
-  this.RestApiService.getTreeUnits().subscribe(
+  this.jwt.getTreeUnits().subscribe(
     (data_from_server: {'maxTreeNodeId': string, 'treeNode': TreeNodeCustom[]}) => {
       for(i=0;i<=data_from_server.treeNode.length-1;i+=1){
         this.units_array.push(data_from_server.treeNode[i].name)
@@ -68,7 +71,6 @@ export class RegisterComponent implements OnInit {
       this.maxTreeNodeId = data_from_server.maxTreeNodeId
     },
     err => {
-      this.ToastService.showToast('fail', 'שגיאה בקריאה מהשרת', '')
     }
     );
 }

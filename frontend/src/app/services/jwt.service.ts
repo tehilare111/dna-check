@@ -50,6 +50,10 @@ check_token_undefined(token){
     return token
 }
 
+Get_constans_fiald(faild:string[]):Observable<any> {
+  return this.httpClient.get(`${this.baseUrl}/get_constats_fields/${faild}`,);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 public get loggedIn():Boolean{

@@ -37,7 +37,6 @@ export class LostFormComponent {
   readonly : boolean = true;
   popUpDialogContext: string = '';
   msgs: any[] = [];
-
   baseUrl: string = '';
   
   // select fields options:
@@ -77,6 +76,7 @@ export class LostFormComponent {
     this.investigationDate,
     this.findingDate,
     this.handlingDate
+    
   ] 
 
   handleFileUpload(event){
@@ -99,11 +99,13 @@ export class LostFormComponent {
     }
   }
   get_constas_feilds() {
-    this.jwt.getConstatnsFields().subscribe((data_from_server) => {
-      this.equipmentsType=data_from_server.equipmentType
-      this.ranks = data_from_server.rank
-      this.materialsType=data_from_server.materialType
-      this.eventStatusForm=data_from_server.eventStatus
+   this.constans_array=["equipmentType","rank","materialType","eventStatus"]
+    this.jwt.Get_constans_fiald(this.constans_array).subscribe((data_from_server) => {
+      console.log(data_from_server)
+      this.equipmentsType=data_from_server.data.equipmentType
+      this.ranks = data_from_server.data.rank
+      this.materialsType=data_from_server.data.materialType
+      this.eventStatusForm=data_from_server.data.eventStatus
       this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
       
       console.log(data_from_server)
