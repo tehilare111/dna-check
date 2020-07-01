@@ -15,6 +15,7 @@ import { makatCopyValidator } from "../validation-directives/makat-copy.directiv
 import { markValidator } from "../validation-directives/mark.directive";
 import { timeValidator } from "../validation-directives/time.directive";
 import { JwtService } from '../../../services/jwt.service';
+import { AuthService } from '../../../services/auth-service';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -38,7 +39,8 @@ export class EquipmentReviewComponent {
   popUpDialogContext: string = '';
   msgs: any[] = [];
   baseUrl: string = '';
-
+  array_permission;
+  auth:AuthService=new AuthService();
   // select fields options:
   results = ["טופל", "טרם טופל"]
   units = ["מצוב", "מעוף", "מצפן"]
@@ -98,9 +100,18 @@ export class EquipmentReviewComponent {
     }
   }
 
+  checkPermissions(){
+    this.array_permission=["מדווח אירועים","מנהלן מערכת",]
+    return this.auth.check_pernissions(this.array_permission)
+  }
+  checkPermissions_manager()
+  {
+    this.array_permission=["מנהלן מערכת"]
+    return this.auth.check_pernissions(this.array_permission)
+  }
   get_constas_feilds() {
     this.constans_array=["equipmentType","rank","materialType","eventStatus"]
-    this.jwt.Get_constans_fiald(this.constans_array).subscribe((data_from_server) => {
+    this.RestApiService.getConstansFialdsNotPermissions(this.constans_array).subscribe((data_from_server) => {
       this.equipmentsType=data_from_server.data.equipmentType
       this.ranks = data_from_server.data.rank
       this.materialsType=data_from_server.data.materialType
@@ -112,14 +123,13 @@ export class EquipmentReviewComponent {
 
 
   newFormLoadData() {
-    this.jwt.getNewEventForm().subscribe((data_from_server) => {
+    this.RestApiService.getNewEventForm().subscribe((data_from_server) => {
       this.equipmentReview.date = data_from_server.datetime
     });
   }
 
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: EquipmentReviewTemplate) => {
-
       this.equipmentReview = data_from_server
       this.msgs = this.equipmentReview.messages.map( msg => { return JSON.parse(msg); } )
     });
@@ -140,7 +150,7 @@ export class EquipmentReviewComponent {
     }
 
     if (this.reference){
-      this.jwt.updateExistingEventForm(this.reference, formData)
+      this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: EquipmentReviewTemplate) => {
             this.uploadLoading = false;
@@ -149,7 +159,7 @@ export class EquipmentReviewComponent {
           },
           error => console.log(error));
     } else {
-      this.jwt.createNewEventFormWithFiles(formData)
+      this.RestApiService.createNewEventFormWithFiles(formData)
       .subscribe(
         (data: EquipmentReviewTemplate) => {
           this.uploadLoading = false;
@@ -207,7 +217,7 @@ export class EquipmentReviewComponent {
   deleteEventForm(){
     this.uploadLoading = true;
     this.openWithoutBackdropClick(this.dialog);
-    this.jwt.deleteExistingEventForm(this.reference)
+    this.RestApiService.deleteExistingEventForm(this.reference)
       .subscribe(
         (data: EquipmentReviewTemplate) => {
           this.uploadLoading = false;
@@ -229,7 +239,7 @@ export class EquipmentReviewComponent {
     const formData: FormData = new FormData();
     formData.append('editStateBlocked', (this.equipmentReview.editStateBlocked).toString())
     
-    this.jwt.updateExistingEventForm(this.reference, formData)
+    this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: EquipmentReviewTemplate) => {
             this.uploadLoading = false;

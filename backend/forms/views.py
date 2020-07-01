@@ -45,28 +45,22 @@ def forms_list(request, event_type):
               Return all rows from table when no url specified.
         DELETE - Delete all table content. 
     '''
-    PERMISSIONS_ARRAY=[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS,PERMISSIONS_PAGE_FROM_WATCHING_EVENTS]
-    if check_permissions(request,PERMISSIONS_ARRAY):
-        
-        if request.method == 'GET':
-
-        
-
-                if event_type == '':
-                    forms = FormsTable.objects.all()
-                    print('forms:', forms)
-                else:
-                    forms = FormsTable.objects.filter(eventType=event_type)
-                
-                form_serializer = FormsSerializer(forms, many=True)
-
-                return JsonResponse(form_serializer.data, safe=False) 
-        
-        elif request.method == 'DELETE':
-            FormsTable.objects.all().delete()
-            return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-    else:
+    if not utils.check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS,PERMISSIONS_PAGE_FROM_WATCHING_EVENTS]):
         return HttpResponse(status=status.HTTP_401_FORBIDDEN)
+    if request.method == 'GET':
+            if event_type == '':
+                forms = FormsTable.objects.all()
+            else:
+                forms = FormsTable.objects.filter(eventType=event_type)
+            
+            form_serializer = FormsSerializer(forms, many=True)
+
+            return JsonResponse(form_serializer.data, safe=False) 
+    
+    elif request.method == 'DELETE':
+        FormsTable.objects.all().delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
 
 
 
@@ -76,14 +70,13 @@ def new_event_form(request):
         New Event Form load all its initial values from here.
         Relevant url: /api/event_forms/
     '''
-    PERMISSIONS_ARRAY=[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS]
+    if not utils.check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS,PERMISSIONS_PAGE_FROM_WATCHING_EVENTS]):
+        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == 'GET':
         dt = datetime.today()
         payload = {'datetime': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
-        if(check_permissions(request,PERMISSIONS_ARRAY)):       
-            return JsonResponse(payload, safe=False)
-        else:
-            return HttpResponse({"error":"אין לך הרשאות לדווח על קובץ"},status=status.HTTP_403_FORBIDDEN)
+        return JsonResponse(payload, safe=False)
+            
 '''
 @csrf_exempt
 def existing_event_form(request, reference):
@@ -114,13 +107,15 @@ def download_file(request, path):
     '''
         Download file from given path in the request url.
     '''
+    if not utils.check_permissions(request,PERMISSIONS_PAGE_FROM_MANAGER):
+        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     file_path = os.path.join(settings.MEDIA_ROOT, path)
     if os.path.exists(file_path):
         with open(file_path, 'rb') as fh:
             response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
             response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
             return response
-    return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+    
 
 
 @csrf_exempt

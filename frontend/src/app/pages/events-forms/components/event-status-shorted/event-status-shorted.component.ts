@@ -24,9 +24,9 @@ export class EventStatusShortedComponent implements OnInit {
   }
   get_constas_feilds() {
     this.constatns_array=["eventStatus"]
-    this.jwt.Get_constans_fiald(this.constatns_array).subscribe((data_from_server) => {
+    this.RestApiService.getConstansFialdsNotPermissions(this.constatns_array).subscribe((data_from_server) => {
       
-      this.eventStatusOptions=data_from_server.data
+      this.eventStatusOptions=data_from_server.data.eventStatusOptions
     });
   }
   

@@ -143,7 +143,6 @@ export class ManagementComponent implements OnInit {
     {
       this.jsonPermiss={"personal_number":personal,"permissions":this.users.permissions,"token":this.users.token}
       this.RestApiService.UpdateUser(this.jsonPermiss,personal)
-
       .subscribe(
         data=>{
         this.LoadUsersForUnit()}

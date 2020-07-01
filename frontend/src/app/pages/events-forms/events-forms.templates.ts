@@ -35,10 +35,6 @@ export class LostFormTemplate extends EventForm {
     findingDate: string;
     findingFile:string;
     handlingFile: string;
-<<<<<<< HEAD
-=======
-    messages: any[];
->>>>>>> b240bcf... fix bugs and build chat
 }
 
 export class CorruptionFormTemplate extends EventForm {
@@ -59,10 +55,6 @@ export class CorruptionFormTemplate extends EventForm {
     investigationFile: string;
     handlingDate: string
     handlingFile: string;
-<<<<<<< HEAD
-=======
-    messages: any[];
->>>>>>> b240bcf... fix bugs and build chat
 }
 
 export class EquipmentReviewTemplate extends EventForm {
@@ -74,8 +66,4 @@ export class EquipmentReviewTemplate extends EventForm {
     equipmentMark: string;
     equipmentMakat: string;
     reviewReference: string;
-<<<<<<< HEAD
-=======
-    messages: any[];
->>>>>>> b240bcf... fix bugs and build chat
 }

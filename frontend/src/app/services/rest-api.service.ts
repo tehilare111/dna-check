@@ -16,23 +16,20 @@ export class RestApiService {
   }
 
   getUsersList(unit:string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/get_group_permissions_List/${unit}`);
+    return this.http.get(`${this.baseUrl}/get_group_permissions_List/${unit}/`);
   }
 
   CreateUser(customer: Object): Observable<Object> {
     return this.http.post(`${this.baseUrl}/create-User/`, customer);
   }
   UpdateUser(customer: Object,personalnumber:string): Observable<Object> {
-    return this.http.put(`${this.baseUrl}/update_permissions_user/${personalnumber}`, customer);
+    return this.http.put(`${this.baseUrl}/update_permissions_user/${personalnumber}`, {"permissions":customer});
   }
   CheckLogin(customer:object): Observable<Object> {
 
     return this.http.post(`${this.baseUrl}/check_login/`, customer);
   }
-  Get_constans_fiald(faild:object):Observable<any> {
-    return this.http.get(`${this.baseUrl}/get_constats_fields/`,faild);
-  }
-
+  
   deleteAll(): Observable<any> {
     return this.http.delete(`${this.baseUrl}/forms/`);
   }
@@ -76,6 +73,10 @@ export class RestApiService {
   getConstatnsFields(): Observable<any>{
      return this.http.get(`${this.baseUrl}/constants-fields/`);
   }
+  getConstansFialdsNotPermissions(faild:string[]):Observable<any> {
+    return this.http.get(`${this.baseUrl}/get_constats_fields/${faild}`,);
+  }
+
 
   postConstatnsFields(data): Observable<any>{
      return this.http.post(`${this.baseUrl}/constants-fields/`, data);

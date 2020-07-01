@@ -1,16 +1,21 @@
 import { NbMenuItem } from '@nebular/theme';
 
-export const MENU_ITEMS: NbMenuItem[] = [
+export class pagesmenu{
+public MENU_ITEMS:NbMenuItem[] = [
   {
     	title: 'טבלת שליטה',
       icon: 'layout-outline',
 	    link: '/pages/control-table',
   },
+ 
+
+  
   {
     title:'ניהול יחידות',
     icon: 'settings',
     link: '/pages/management',
   },
+  
   {
     title: 'שדות קבועים',
     icon: 'edit-2-outline',
@@ -278,3 +283,18 @@ export const MENU_ITEMS: NbMenuItem[] = [
     ],
   },*/
 ];
+
+public MENU_ITEMS_2:NbMenuItem[] = [
+  {
+    title: 'טבלת שליטה',
+    icon: 'layout-outline',
+    link: '/pages/control-table',
+},
+{
+  title:'התחברות',
+  icon: 'people-outline',
+  link:'login',
+},
+];
+
+}

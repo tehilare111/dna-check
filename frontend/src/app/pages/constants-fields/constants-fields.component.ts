@@ -38,7 +38,7 @@ export class ConstantsFieldsComponent implements OnInit {
   
   loadData(){
     this.uploadLoading = true
-    this.jwt.getConstatnsFields().subscribe(
+    this.RestApiService.getConstatnsFields().subscribe(
       (data: ConstantsFields) => {
         this.ConstantsFields = data;
         this.uploadLoading = false
@@ -62,7 +62,7 @@ export class ConstantsFieldsComponent implements OnInit {
     this.ConstantsFields.handlingStatus = this.handlingStatus.getFieldValue()
     this.ConstantsFields.equipmentMakat = this.equipmentMakat.getFieldValue()
     
-    this.jwt.postConstatnsFields(this.ConstantsFields).subscribe(
+    this.RestApiService.postConstatnsFields(this.ConstantsFields).subscribe(
       (data_from_server: ConstantsFields) => {
         if(data_from_server) { this.ToastService.showToast('success', 'נשמר בהצלחה!', '') }
         this.uploadLoading = false

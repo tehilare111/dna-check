@@ -1,16 +1,16 @@
 
 <div class="row col-md-12" id="outOfPrint">
   
-  <nb-card>
+  <nb-card *ngIf ="this.auth.check_pernissions(['מדווח אירועים','מנהלן מערכת'])">
     <button type="submit" nbButton status="primary" (click)="onSubmit()">שלח אירוע</button>
   </nb-card>
-  <nb-card>
+  <nb-card *ngIf ="this.auth.check_pernissions(['מנהלן מערכת'])"> 
     <button *ngIf="true" nbButton status="primary" (click)="updateEditState()">פתח/סגור אירוע לעריכה</button>
   </nb-card>
   <nb-card>
     <button *ngIf="true" nbButton status="primary" (click)="printForm()">הדפס אירוע</button>
   </nb-card>
-  <nb-card>
+  <nb-card *ngIf ="this.auth.check_pernissions(['מנהלן מערכת'])">
     <button *ngIf="true" nbButton status="primary" (click)="deleteEventForm()">מחק אירוע</button>
   </nb-card>
 </div>
@@ -33,7 +33,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="signerUnit" class="label">יחידת החתום</label>
-                <nb-select [disabled]="this.lostForm.editStateBlocked" name="signerUnit" id="signerUnit" status="primary" placeholder="יחידת החתום" [(ngModel)]="lostForm.signerUnit">
+                <nb-select [disabled]="this.disableEdit" name="signerUnit" id="signerUnit" status="primary" placeholder="יחידת החתום" [(ngModel)]="lostForm.signerUnit">
                   <nb-option *ngFor="let unit of units" value="unit">{{unit}}</nb-option>  
                 </nb-select>
               </div>
@@ -41,14 +41,14 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="signerName" class="label">שם החתום</label>
-                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #signerName="ngModel" name="signerName" id="signerName" status="primary" placeholder="שם החתום" [(ngModel)]="lostForm.signerName" stdFieldValidation>
+                <input [readonly]="this.lostForm.disableEdit" type="text" nbInput fullWidth #signerName="ngModel" name="signerName" id="signerName" status="primary" placeholder="שם החתום" [(ngModel)]="lostForm.signerName" stdFieldValidation>
                 <div *ngIf="signerName.invalid&&signerName.dirty"><label class="label red">מוגבל ל-30 תווים</label></div>
               </div>
             </div>
             <div class="col-md-2">
               <div class="form-group">
                 <label for="signerId" class="label">מ.א./ת.ז.</label>
-                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth name="signerId" id="signerId" #signerId="ngModel" status="primary" placeholder="מ.א./ת.ז." [(ngModel)]="lostForm.signerId" idValidation>
+                <input [readonly]="disableEdit" type="text" nbInput fullWidth name="signerId" id="signerId" #signerId="ngModel" status="primary" placeholder="מ.א./ת.ז." [(ngModel)]="lostForm.signerId" idValidation>
                 <div *ngIf="signerId.invalid&&signerId.dirty" (click)="console.log(signerId)"><label class="label red">ת.ז מורכב מ-9 ספרות</label></div>
               </div>
             </div>
@@ -57,7 +57,7 @@
                 <label for="rank" class="label">דרגה</label>
                 <div>
                 </div>
-                <nb-select [disabled]="this.lostForm.editStateBlocked" name="rank" id="rank" status="primary" placeholder="דרגה" [(ngModel)]="lostForm.rank">
+                <nb-select [disabled]="this.disableEdit" name="rank" id="rank" status="primary" placeholder="דרגה" [(ngModel)]="lostForm.rank">
                   <nb-option *ngFor="let rank of ranks" value="rank">{{rank}}</nb-option>  
                 </nb-select>
               </div>
@@ -65,7 +65,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="position" class="label">תפקיד</label>
-                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #position="ngModel" name="position" id="position" status="primary" placeholder="תפקיד" [(ngModel)]="lostForm.position" stdFieldValidation>
+                <input [readonly]="this.disableEdit" type="text" nbInput fullWidth #position="ngModel" name="position" id="position" status="primary" placeholder="תפקיד" [(ngModel)]="lostForm.position" stdFieldValidation>
                 <div *ngIf="position.invalid&&position.dirty"><label class="label red">מוגבל ל-30 תווים</label></div>
               </div>
             </div>
@@ -75,14 +75,14 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="eventDate" class="label">תאריך גילוי האירוע</label>
-                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth name="eventDate" id="eventDate" #eventDate="ngModel" status="primary" placeholder="תאריך גילוי האירוע" [(ngModel)]="lostForm.eventDate" dateValidation>
+                <input [readonly]="this.disableEdit" type="text" nbInput fullWidth name="eventDate" id="eventDate" #eventDate="ngModel" status="primary" placeholder="תאריך גילוי האירוע" [(ngModel)]="lostForm.eventDate" dateValidation>
                 <div *ngIf="eventDate.invalid&&eventDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="eventHour" class="label">שעת גילוי האירוע</label>
-                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #eventHour name="eventHour" id="eventHour" status="primary" placeholder="שעת גילוי האירוע" [(ngModel)]="lostForm.eventHour" timeValidation>
+                <input [readonly]="this.disableEdit" type="text" nbInput fullWidth #eventHour name="eventHour" id="eventHour" status="primary" placeholder="שעת גילוי האירוע" [(ngModel)]="lostForm.eventHour" timeValidation>
                 <div *ngIf="eventHour.invalid&&eventHour.dirty"><label class="label red">פורמט השעה: 00:00</label></div>
               </div>
             </div>
@@ -94,7 +94,7 @@
                 <label for="equipment" class="label">ציוד/חומר</label>
                 <div>
                 </div>
-                <nb-select [disabled]="this.lostForm.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="lostForm.equipment">
+                <nb-select [disabled]="this.disableEdit" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="lostForm.equipment">
                   <nb-option *ngFor="let equipment of equipments" value="equipment.name" (click)="equipmentsTypeOptions=equipment.list; lostForm.equipmentType=''">{{equipment.name}}</nb-option>  
                 </nb-select>
               </div>
@@ -102,7 +102,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="equipmentType" class="label">סוג ציוד/חומר</label>
-                <nb-select [disabled]="this.lostForm.editStateBlocked" name="equipmentType" id="equipmentType" status="primary" placeholder="סוג ציוד/חומר" [(ngModel)]="lostForm.equipmentType">
+                <nb-select [disabled]="this.disableEdit" name="equipmentType" id="equipmentType" status="primary" placeholder="סוג ציוד/חומר" [(ngModel)]="lostForm.equipmentType">
                   <nb-option *ngFor="let equipment of equipmentsTypeOptions" value="equipment">{{equipment}}</nb-option>  
                 </nb-select>
               </div>
@@ -110,14 +110,14 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="equipmentMark" class="label">סימון ציוד/חומר</label>
-                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #equipmentMark="ngModel" name="equipmentMark" id="equipmentMark" status="primary" placeholder="סימון ציוד/חומר" [(ngModel)]="lostForm.equipmentMark" markValidation>
+                <input [readonly]="this.disableEdit" type="text" nbInput fullWidth #equipmentMark="ngModel" name="equipmentMark" id="equipmentMark" status="primary" placeholder="סימון ציוד/חומר" [(ngModel)]="lostForm.equipmentMark" markValidation>
                 <div *ngIf="equipmentMark.invalid&&equipmentMark.dirty"><label class="label red">XXXXXXXXX או YYYYYY-XXX</label></div>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="equipmentMakat" class="label">מק"ט ציוד/עותק חומר</label>
-                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #equipmentMakat="ngModel" name="equipmentMakat" id="equipmentMakat" status="primary" placeholder="מק''ט ציוד/עותק חומר" [(ngModel)]="lostForm.equipmentMakat" makatCopyValidation>
+                <input [readonly]="this.disableEdit" type="text" nbInput fullWidth #equipmentMakat="ngModel" name="equipmentMakat" id="equipmentMakat" status="primary" placeholder="מק''ט ציוד/עותק חומר" [(ngModel)]="lostForm.equipmentMakat" makatCopyValidation>
                 <div *ngIf="equipmentMakat.invalid&&equipmentMakat.dirty"><label class="label red">3 ספרות או 12 תווים</label></div>
               </div>
             </div>
@@ -126,7 +126,7 @@
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
-                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #eventRelevantPlacesAndFactors="ngModel" name="eventRelevantPlacesAndFactors" id="eventRelevantPlacesAndFactors" status="primary" placeholder="מלל חופשי" [(ngModel)]="lostForm.eventRelevantPlacesAndFactors" textValidation>
+                <input [readonly]="this.disableEdit" type="text" nbInput fullWidth #eventRelevantPlacesAndFactors="ngModel" name="eventRelevantPlacesAndFactors" id="eventRelevantPlacesAndFactors" status="primary" placeholder="מלל חופשי" [(ngModel)]="lostForm.eventRelevantPlacesAndFactors" textValidation>
                 <div *ngIf="eventRelevantPlacesAndFactors.invalid&&eventRelevantPlacesAndFactors.dirty"><label class="label red">עד 100 תווים</label></div>
               </div>
             </div>
@@ -135,7 +135,7 @@
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
-                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #eventInitialDetails="ngModel" name="eventInitialDetails" id="eventInitialDetails" status="primary" placeholder="מלל חופשי" [(ngModel)]="lostForm.eventInitialDetails" textValidation>
+                <input [readonly]="this.disableEdit" type="text" nbInput fullWidth #eventInitialDetails="ngModel" name="eventInitialDetails" id="eventInitialDetails" status="primary" placeholder="מלל חופשי" [(ngModel)]="lostForm.eventInitialDetails" textValidation>
                 <div *ngIf="eventInitialDetails.invalid&&eventInitialDetails.dirty"><label class="label red">עד 100 תווים</label></div>
               </div>
             </div>
@@ -150,7 +150,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="investigationDate" class="label">תאריך הבירור</label>
-                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth name="investigationDate" #investigationDate="ngModel" id="investigationDate" status="primary" placeholder="תאריך הבירור" [(ngModel)]="lostForm.investigationDate"  dateValidation>
+                <input [readonly]="this.disableEdit" type="text" nbInput fullWidth name="investigationDate" #investigationDate="ngModel" id="investigationDate" status="primary" placeholder="תאריך הבירור" [(ngModel)]="lostForm.investigationDate"  dateValidation>
                 <div *ngIf="investigationDate.invalid&&investigationDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div>
               </div>
             </div>
@@ -171,7 +171,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="investigationFile" class="label">צרף קובץ</label>
-                <input [readonly]="this.lostForm.editStateBlocked" type="file" (change)="handleFileUpload($event)" name="investigationFile" id="investigationFile">
+                <input [readonly]="this.disableEdit" type="file" (change)="handleFileUpload($event)" name="investigationFile" id="investigationFile">
               </div>
             </div>
           </div>
@@ -180,7 +180,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="findingDate" class="label">תאריך המציאה</label>
-                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #findingDate="ngModel" name="findingDate" id="findingDate" status="primary" placeholder="תאריך המציאה" [(ngModel)]="lostForm.findingDate"  dateValidation>
+                <input [readonly]="this.disableEdit" type="text" nbInput fullWidth #findingDate="ngModel" name="findingDate" id="findingDate" status="primary" placeholder="תאריך המציאה" [(ngModel)]="lostForm.findingDate"  dateValidation>
                 <div *ngIf="findingDate.invalid&&findingDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div>
               </div>
             </div>
@@ -201,7 +201,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="findingFile" class="label">צרף קובץ</label>
-                <input [readonly]="this.lostForm.editStateBlocked" type="file" (change)="handleFileUpload($event)" name="findingFile" id="findingFile">
+                <input [readonly]="this.disableEdit" type="file" (change)="handleFileUpload($event)" name="findingFile" id="findingFile">
               </div>
             </div>
           </div>
@@ -210,7 +210,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="handlingDate" class="label">תאריך הטיפול</label>
-                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #handlingDate="ngModel" name="handlingDate" id="handlingDate" status="primary" placeholder="תאריך הטיפול" [(ngModel)]="lostForm.handlingDate"  dateValidation>
+                <input [readonly]="this.disableEdit" type="text" nbInput fullWidth #handlingDate="ngModel" name="handlingDate" id="handlingDate" status="primary" placeholder="תאריך הטיפול" [(ngModel)]="lostForm.handlingDate"  dateValidation>
                 <div *ngIf="handlingDate.invalid&&handlingDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div>
               </div>
             </div>
@@ -231,7 +231,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="handlingFile" class="label">צרף קובץ</label>
-                <input [readonly]="this.lostForm.editStateBlocked" type="file" (change)="handleFileUpload($event)" name="handlingFile" id="handlingFile">
+                <input [readonly]="disableEdit" type="file" (change)="handleFileUpload($event)" name="handlingFile" id="handlingFile">
               </div>
             </div>
           </div>

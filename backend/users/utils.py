@@ -28,10 +28,8 @@ def create_jwt(user_data):
         the above token need to be saved in database, and a one-to-one
         relation should exist with the username/user_pk
         """
-        
         username = user_data['username']
         password = user_data['password']
-        
         user = authenticate(username=username, password=password)
         if user is not None:
             expiry = datetime.date.today() + timedelta(days=50)
@@ -60,3 +58,13 @@ def check_token_not_login(tokens):
         
     except Exception as e:
         return False 
+
+def check_permissions(request,permissions_array):
+    token=request.headers['Authorization']
+    token=token.split(" ")
+    token=token[1]
+    permission=check_token_not_login(token)
+    if permission in permissions_array:
+        return True
+    else:
+        return False

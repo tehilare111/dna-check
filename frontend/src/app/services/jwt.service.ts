@@ -103,7 +103,7 @@ postConstatnsFields(data): Observable<any>{
 //////////////////////////////////////////////////////////////////////////////
 
 getFormsList(eventType: string): Observable<any> {
-  return this.httpClient.get<{access_token:string}>(`${this.baseUrl}/forms/${eventType}`);
+  return this.httpClient.get<{access_token:string}>(`${this.baseUrl}/forms/${eventType}/${this.check_token_undefined(this.users.token)}`,);
 }
 
 getNewEventForm(): Observable<any> {

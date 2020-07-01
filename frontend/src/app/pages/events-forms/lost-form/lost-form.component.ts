@@ -15,6 +15,7 @@ import { makatCopyValidator } from "../validation-directives/makat-copy.directiv
 import { markValidator } from "../validation-directives/mark.directive";
 import { timeValidator } from "../validation-directives/time.directive";
 import { JwtService } from '../../../services/jwt.service';
+import { AuthService } from '../../../services/auth-service';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -38,7 +39,10 @@ export class LostFormComponent {
   popUpDialogContext: string = '';
   msgs: any[] = [];
   baseUrl: string = '';
-  
+  array_permission;
+  auth:AuthService=new AuthService();
+  disableEdit;
+
   // select fields options:
   results = ["טופל", "טרם טופל"]
   units = [,"מצוב", "מעוף", "מצפן", "פלגת החוד"]
@@ -93,10 +97,20 @@ export class LostFormComponent {
     if (this.reference){
       this.exisitingFormLoadData(this.reference);
     } else {
-      this.readonly = false;
+      // this.readonly = false;
       this.newFormLoadData();
       this.get_constas_feilds()
     }
+  }
+
+  checkPermissions(){
+    this.array_permission=['מדווח אירועים','מנהלן מערכת']
+    return this.auth.check_pernissions(this.array_permission)
+  }
+  checkPermissions_manager()
+  {
+    this.array_permission=['מנהלן מערכת']
+    return this.auth.check_pernissions(this.array_permission)
   }
   get_constas_feilds() {
    this.constans_array=["equipmentType","rank","materialType","eventStatus"]
@@ -112,7 +126,7 @@ export class LostFormComponent {
     });
   }
   newFormLoadData() {
-    this.jwt.getNewEventForm().subscribe((data_from_server) => {
+    this.RestApiService.getNewEventForm().subscribe((data_from_server) => {
       this.lostForm.date = data_from_server.datetime
     });
   }
@@ -120,9 +134,15 @@ export class LostFormComponent {
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: LostFormTemplate) => {
 
+      
+      console.log(data_from_server)
       this.lostForm = data_from_server
-      this.msgs = this.lostForm.messages.map( msg => { return JSON.parse(msg); } )
-    });
+      if(this.lostForm.editStateBlocked || this.checkPermissions())
+        {
+          this.disableEdit = true
+        }else{
+          this.disableEdit = true
+        }    });  
   }
 
   save() {
@@ -140,7 +160,7 @@ export class LostFormComponent {
     }    
 
     if (this.reference){
-      this.jwt.updateExistingEventForm(this.reference, formData)
+      this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: LostFormTemplate) => {
             this.uploadLoading = false;
@@ -149,7 +169,7 @@ export class LostFormComponent {
           },
           error => console.log(error));
     } else {
-      this.jwt.createNewEventFormWithFiles(formData)
+      this.RestApiService.createNewEventFormWithFiles(formData)
       .subscribe(
         (data: LostFormTemplate) => {
           this.uploadLoading = false;
@@ -215,7 +235,7 @@ export class LostFormComponent {
   deleteEventForm(){
     this.uploadLoading = true;
     this.openWithoutBackdropClick(this.dialog);
-    this.jwt.deleteExistingEventForm(this.reference)
+    this.RestApiService.deleteExistingEventForm(this.reference)
       .subscribe(
         (data: LostFormTemplate) => {
           this.uploadLoading = false;
@@ -237,7 +257,7 @@ export class LostFormComponent {
     const formData: FormData = new FormData();
     formData.append('editStateBlocked', (this.lostForm.editStateBlocked).toString())
     
-    this.jwt.updateExistingEventForm(this.reference, formData)
+    this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: LostFormTemplate) => {
             this.uploadLoading = false;

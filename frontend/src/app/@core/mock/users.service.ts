@@ -2,6 +2,7 @@ import { of as observableOf,  Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Contacts, RecentUsers, UserData } from '../data/users';
 import { Users } from '../../pages/management/users';
+import { AlertComponent } from '../../pages/extra-components/alert/alert.component';
 
 @Injectable()
 export class UserService extends UserData {
@@ -45,7 +46,7 @@ export class UserService extends UserData {
   ];
 
   getUsers(): Observable<any> {
-    return observableOf(this.users);
+    return observableOf(this.users.login.name=localStorage.getItem("username"));
   }
 
   getContacts(): Observable<Contacts[]> {
@@ -55,4 +56,9 @@ export class UserService extends UserData {
   getRecentUsers(): Observable<RecentUsers[]> {
     return observableOf(this.recentUsers);
   }
+  getAlerting():Observable<any>{
+    alert("אין הודעות חדשות")
+    return observableOf(alert("אין הודעות חדשות"))
+  }
+  
 }

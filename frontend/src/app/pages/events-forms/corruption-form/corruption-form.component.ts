@@ -14,6 +14,7 @@ import { makatCopyValidator } from "../validation-directives/makat-copy.directiv
 import { markValidator } from "../validation-directives/mark.directive";
 import { timeValidator } from "../validation-directives/time.directive";
 import { JwtService } from '../../../services/jwt.service';
+import { AuthService } from '../../../services/auth-service';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -36,7 +37,8 @@ export class CorruptionFormComponent {
   popUpDialogContext: string = '';
   msgs: any[] = [];
   baseUrl: string = '';
-
+  array_permission;
+  auth:AuthService=new AuthService();
   // select fields options:
   results = ["טופל", "טרם טופל"]
   units = ["מצוב", "מעוף", "מצפן", "פלגת חוד"]
@@ -44,6 +46,7 @@ export class CorruptionFormComponent {
   equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
   materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
   equipments = [{"name": "ציוד", "list" : this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+  
   equipmentsTypeOptions = []  
   constructor(private jwt:JwtService,private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { this.baseUrl = this.RestApiService.baseUrl; }
 
@@ -189,6 +192,15 @@ export class CorruptionFormComponent {
     return fieldsValid
   }
 
+  checkPermissions(){
+    this.array_permission=["מדווח אירועים","מנהלן מערכת",]
+    return this.auth.check_pernissions(this.array_permission)
+  }
+  checkPermissions_manager()
+  {
+    this.array_permission=["מנהלן מערכת"]
+    return this.auth.check_pernissions(this.array_permission)
+  }
   onSubmit() {
     this.uploadLoading = true
     if (this.checkFieldsValid()){
@@ -208,7 +220,7 @@ export class CorruptionFormComponent {
   deleteEventForm(){
     this.uploadLoading = true;
     this.openWithoutBackdropClick(this.dialog);
-    this.jwt.deleteExistingEventForm(this.reference)
+    this.RestApiService.deleteExistingEventForm(this.reference)
       .subscribe(
         (data: CorruptionFormTemplate) => {
           this.uploadLoading = false;
@@ -230,7 +242,8 @@ export class CorruptionFormComponent {
     const formData: FormData = new FormData();
     formData.append('editStateBlocked', (this.corruptionForm.editStateBlocked).toString())
     
-    this.jwt.updateExistingEventForm(this.reference, formData)
+
+    this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: CorruptionFormTemplate) => {
             this.uploadLoading = false;
