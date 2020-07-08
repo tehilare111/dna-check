@@ -41,7 +41,7 @@ export class LostFormComponent {
   baseUrl: string = '';
   array_permission;
   auth:AuthService=new AuthService();
-  disableEdit;
+  disableEdit:boolean;
 
   // select fields options:
   results = ["טופל", "טרם טופל"]
@@ -91,7 +91,7 @@ export class LostFormComponent {
   ngOnInit() {
     // Set eventType field according to the form event type
     this.lostForm.eventType = this.eventType
-    
+    this.get_constas_feilds()
     // Recieve form data from db according to its reference
     this.reference = this.activatedRoute.snapshot.params.reference;
     if (this.reference){
@@ -115,14 +115,14 @@ export class LostFormComponent {
   get_constas_feilds() {
    this.constans_array=["equipmentType","rank","materialType","eventStatus"]
     this.jwt.Get_constans_fiald(this.constans_array).subscribe((data_from_server) => {
-      console.log(data_from_server)
+       
       this.equipmentsType=data_from_server.data.equipmentType
       this.ranks = data_from_server.data.rank
       this.materialsType=data_from_server.data.materialType
       this.eventStatusForm=data_from_server.data.eventStatus
       this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
-      
-      console.log(data_from_server)
+      this.equipmentsTypeOptions = this.equipments.map(el => {console.log(el, "- ", this.lostForm.equipment);if(el['name']==this.lostForm.equipment) return el['list']; else return undefined; }).filter(el => el!=null)[0]
+      console.log("this:",this.equipmentsTypeOptions)
     });
   }
   newFormLoadData() {
@@ -133,16 +133,18 @@ export class LostFormComponent {
 
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: LostFormTemplate) => {
-
-      
-      console.log(data_from_server)
       this.lostForm = data_from_server
+      console.log("load_server",this.lostForm)
       if(this.lostForm.editStateBlocked || this.checkPermissions())
         {
-          this.disableEdit = true
+          this.lostForm.editStateBlocked = false
         }else{
-          this.disableEdit = true
-        }    });  
+          this.lostForm.editStateBlocked = true
+        }    });
+    this.get_constas_feilds()  
+  }
+  print_stamm(){
+    console.log("bar agever",this.lostForm)
   }
 
   save() {
@@ -163,6 +165,7 @@ export class LostFormComponent {
       this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: LostFormTemplate) => {
+            
             this.uploadLoading = false;
             this.reference = data.reference;
             this.popUpDialogContext = `האירוע התעדכן בהצלחה, סימוכין: ${this.reference}`;
