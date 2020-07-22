@@ -6,6 +6,8 @@ import { ECommerceModule } from './e-commerce/e-commerce.module';
 import { PagesRoutingModule } from './pages-routing.module';
 import { ThemeModule } from '../@theme/theme.module';
 import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
+import { ManagementComponent } from './management/management.component';
+import { TreeModule } from 'angular-tree-component';
 
 const PAGES_COMPONENTS = [
   PagesComponent,
@@ -18,9 +20,11 @@ const PAGES_COMPONENTS = [
     DashboardModule,
     ECommerceModule,
     MiscellaneousModule,
+    TreeModule,
   ],
   declarations: [
     ...PAGES_COMPONENTS,
+    ManagementComponent,
   ],
 })
 export class PagesModule {
