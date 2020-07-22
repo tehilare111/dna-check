@@ -8,6 +8,16 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
+    title: 'ניהול יחידות',
+    icon: 'nb-gear',
+    link: '/pages/management',
+    children:[
+      {
+        title:'ניהול יחידות',
+        link: '/pages/management',
+      }],
+  },
+  {
     title: 'IoT Dashboard',
     icon: 'nb-home',
     link: '/pages/iot-dashboard',

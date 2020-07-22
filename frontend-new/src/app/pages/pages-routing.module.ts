@@ -6,6 +6,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { ControlTableComponent } from './control-table/control-table.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
+import { ManagementComponent } from './management/management.component';
 
 const routes: Routes = [{
   path: '',
@@ -13,7 +14,10 @@ const routes: Routes = [{
   children: [{
     path: 'dashboard',
     component: ECommerceComponent,
-  }, {
+  },{
+    path: 'management',
+    component: ManagementComponent,
+  },{
     path: 'iot-dashboard',
     component: DashboardComponent,
   },{
