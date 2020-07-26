@@ -6,6 +6,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 import { ManagementComponent } from './management/management.component';
+import { LostFormComponent } from './events-forms/lost-form/lost-form.component';
 
 const routes: Routes = [{
   path: '',
@@ -16,6 +17,9 @@ const routes: Routes = [{
   },{
     path: 'management',
     component: ManagementComponent,
+  },{
+      path: 'lost-form',
+      component: LostFormComponent,
   },{
     path: 'iot-dashboard',
     component: DashboardComponent,

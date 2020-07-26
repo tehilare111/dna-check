@@ -8,6 +8,7 @@ import { ThemeModule } from '../@theme/theme.module';
 import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 import { ManagementComponent } from './management/management.component';
 import { TreeModule } from 'angular-tree-component';
+import { LostFormComponent } from './events-forms/lost-form/lost-form.component';
 
 const PAGES_COMPONENTS = [
   PagesComponent,
@@ -25,6 +26,7 @@ const PAGES_COMPONENTS = [
   declarations: [
     ...PAGES_COMPONENTS,
     ManagementComponent,
+    LostFormComponent,
   ],
 })
 export class PagesModule {

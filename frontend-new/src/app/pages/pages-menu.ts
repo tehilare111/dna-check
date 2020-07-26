@@ -18,6 +18,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
       }],
   },
   {
+    title:'טפסים',
+    icon:'nb-gear',
+    link:'/pages/lost-form'
+  },
+  {
     title: 'IoT Dashboard',
     icon: 'nb-home',
     link: '/pages/iot-dashboard',
