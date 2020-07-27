@@ -1,4 +1,5 @@
 import { NbMenuItem } from '@nebular/theme';
+import { icon } from 'leaflet';
 
 export const MENU_ITEMS: NbMenuItem[] = [
   {
@@ -17,6 +18,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
         link: '/pages/management',
       }],
   },
+  // {
+  //   title: 'IoT Dashboard',
+  //   icon: 'nb-home',
+  //   link: '/pages/iot-dashboard',
+  // },
   {
     title: 'IoT Dashboard',
     icon: 'nb-home',
@@ -28,6 +34,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/control-table',
   },
   {
+    title:'טפסים',
+    icon:'nb-home',
+    link:'/pages/events-forms/lost-form'
+  },{
+
     title: 'FEATURES',
     group: true,
   },

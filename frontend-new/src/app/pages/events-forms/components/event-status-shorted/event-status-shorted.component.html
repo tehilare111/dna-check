@@ -1,0 +1,17 @@
+<nb-card>
+    <nb-card-body>
+      <div style="display: flex; justify-content: center;">
+        <h6><u>סטאטוס אירוע</u></h6>
+      </div>
+      <form class="form-horizontal">
+        <div class="form-group row">
+          <label for="eventStatus" class="label col-sm-3 form-control-label">סטאטוס אירוע</label>
+          <div class="col-sm-9">
+            <nb-select [disabled]="readonly" name="eventStatus" id="eventStatus" placeholder="סטאטוס אירוע" [(ngModel)]="eventForm.eventStatus">
+              <nb-option *ngFor="let status of eventStatusOptions" [value]="status">{{status}}</nb-option>
+            </nb-select>
+          </div>
+        </div>
+      </form>
+    </nb-card-body>
+</nb-card>
