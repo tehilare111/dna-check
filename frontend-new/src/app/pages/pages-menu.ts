@@ -36,7 +36,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title:'טפסים',
     icon:'nb-home',
-    link:'/pages/events-forms/lost-form'
+    link:'/pages/events-forms/equipment-review'
   },{
 
     title: 'FEATURES',

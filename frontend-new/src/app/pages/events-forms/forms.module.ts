@@ -31,6 +31,8 @@ import { MakatCopyDirective } from './validation-directives/makat-copy.directive
 import { TextDirective } from './validation-directives/text.directive';
 import { EventStatusComponent } from './components/event-status/event-status.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { EquipmentReviewComponent } from './equipment-review/equipment-review.component';
+import { EventStatusShortedComponent } from './components/event-status-shorted/event-status-shorted.component';
 
 
 
@@ -67,6 +69,8 @@ import { ChatComponent } from './components/chat/chat.component';
     TextDirective,
     EventStatusComponent,
     ChatComponent,
+    EquipmentReviewComponent,
+    EventStatusShortedComponent,
   ],
 })
 export class FormsModule { }
