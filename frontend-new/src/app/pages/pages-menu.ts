@@ -1,4 +1,5 @@
 import { NbMenuItem } from '@nebular/theme';
+import { icon } from 'leaflet';
 
 export const MENU_ITEMS: NbMenuItem[] = [
   {
@@ -11,8 +12,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
     title: 'IoT Dashboard',
     icon: 'nb-home',
     link: '/pages/iot-dashboard',
-  },
-  {
+  },{
+    title:'טפסים',
+    icon:'nb-home',
+    link:'/pages/events-forms/lost-form'
+  },{
     title: 'FEATURES',
     group: true,
   },

@@ -42,6 +42,9 @@ const routes: Routes = [{
   }, {
     path: 'tables',
     loadChildren: './tables/tables.module#TablesModule',
+  },{
+    path: 'events-forms',
+    loadChildren: './events-forms/forms.module#FormsModule',
   }, {
     path: 'miscellaneous',
     loadChildren: './miscellaneous/miscellaneous.module#MiscellaneousModule',
