@@ -7,6 +7,7 @@ import { SmartTableData } from '../../@core/data/smart-table';
 import { TreeModule } from 'angular-tree-component';
 import {NbTreeGridDataSource, NbSortDirection, NbTreeGridDataSourceBuilder, NbSortRequest } from '@nebular/theme';
 import { RestApiService } from '../../services/rest-api.service';
+import { ToastService } from '../../services/toast.service';
 
 class TreeNodeCustom{
   id: number;
@@ -50,7 +51,7 @@ export class ManagementComponent implements OnInit {
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
-  constructor(private service:SmartTableData,private RestApiService:RestApiService){
+  constructor(private service:SmartTableData,private RestApiService:RestApiService,private ToastService: ToastService){
     this.evaIcons = Object.keys(icons).filter(icon => icon.indexOf('outline') === -1);
   }
   maxTreeNodeId = '1'
@@ -83,10 +84,12 @@ export class ManagementComponent implements OnInit {
       (data_from_server: {'maxTreeNodeId': string, 'treeNode': TreeNodeCustom[]}) => {
         this.nodes = data_from_server.treeNode
         this.maxTreeNodeId = data_from_server.maxTreeNodeId
-        this.uploadLoading = true
+        
+        this.uploadLoading = false
       },
       err => {
-        this.uploadLoading = false
+        this.ToastService.showToast("fail", 'שגיאה בקריאה מהשרת', '')
+        this.uploadLoading = true
       }
       );
   }
@@ -95,7 +98,7 @@ export class ManagementComponent implements OnInit {
     let dataToServer = {'maxTreeNodeId': this.maxTreeNodeId, 'treeNode': this.nodes};
     this.RestApiService.postTreeUnits(dataToServer).subscribe(
       data_from_server=> {
-        // this.ToastService.showToast('success', 'נשמר בהצלחה!', '') 
+        this.ToastService.showToast('success', 'נשמר בהצלחה!', '') 
         this.uploadLoading = true
       },
       err => {
