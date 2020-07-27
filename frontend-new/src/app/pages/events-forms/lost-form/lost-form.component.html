@@ -1,0 +1,262 @@
+<div class="row col-md-12" id="outOfPrint">
+  
+  <nb-card >
+    <button type="submit" nbButton status="primary" (click)="onSubmit()">שלח אירוע</button>
+  </nb-card>
+  <nb-card> 
+    <button *ngIf="true" nbButton status="primary" (click)="updateEditState()">פתח/סגור אירוע לעריכה</button>
+  </nb-card>
+  <nb-card>
+    <button *ngIf="true" nbButton status="primary" (click)="printForm()">הדפס אירוע</button>
+  </nb-card>
+  <nb-card >
+    <button *ngIf="true" nbButton status="primary" (click)="deleteEventForm()">מחק אירוע</button>
+  </nb-card>
+</div> 
+<div class="row" id="print-section">
+<div class="col-md-3">
+  <ngx-event-details [form]="lostForm"></ngx-event-details>
+  <ngx-event-status #status [eventForm]="lostForm" [readonly]="this.lostForm.editStateBlocked" [results]="results"></ngx-event-status>
+</div>
+<div class="col-md-9">
+  <nb-card>
+    <nb-card-body>
+      <div style="display: flex; justify-content: center;">
+        <h6><u>פרטי האירוע</u></h6>
+      </div>
+      <form> <!--[ngFormOptions]="{updateOn: 'blur'}">-->
+        <h6><b>פרטי החתום האחרון:</b></h6>
+        <div class="row">
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="signerUnit" class="label">יחידת החתום</label>
+              <nb-select name="signerUnit" id="signerUnit" status="primary" placeholder="יחידת החתום">
+                <nb-option *ngFor="let unit of units" [value]="unit">{{unit}}</nb-option>  
+              </nb-select>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="signerName" class="label">שם החתום</label>
+              <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #signerName="ngModel" name="signerName" id="signerName" status="primary" placeholder="שם החתום" [(ngModel)]="lostForm.signerName" stdFieldValidation>
+              <div *ngIf="signerName.invalid&&signerName.dirty"><label class="label red">מוגבל ל-30 תווים</label></div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="signerId" class="label">מ.א./ת.ז.</label>
+              <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth name="signerId" id="signerId" #signerId="ngModel" status="primary" placeholder="מ.א./ת.ז." [(ngModel)]="lostForm.signerId" idValidation>
+              <div *ngIf="signerId.invalid&&signerId.dirty" (click)="console.log(signerId)"><label class="label red">ת.ז מורכב מ-9 ספרות</label></div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="rank" class="label">דרגה</label>
+              <nb-select [disabled]="this.lostForm.editStateBlocked" name="rank" id="rank" status="primary" placeholder="דרגה" [(ngModel)]="lostForm.rank">
+                <nb-option *ngFor="let rank of ranks" value="rank">{{rank}}</nb-option>  
+              </nb-select>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="position" class="label">תפקיד</label>
+              <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #position="ngModel" name="position" id="position" status="primary" placeholder="תפקיד" [(ngModel)]="lostForm.position" stdFieldValidation>
+              <div *ngIf="position.invalid&&position.dirty"><label class="label red">מוגבל ל-30 תווים</label></div>
+            </div>
+          </div>
+        </div>
+
+        <h6> <b>פרטי הדיווח:</b></h6>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="eventDate" class="label">תאריך גילוי האירוע</label>
+                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth name="eventDate" id="eventDate" #eventDate="ngModel" status="primary" placeholder="תאריך גילוי האירוע" [(ngModel)]="lostForm.eventDate" dateValidation>
+                <div *ngIf="eventDate.invalid&&eventDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="eventHour" class="label">שעת גילוי האירוע</label>
+                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #eventHour name="eventHour" id="eventHour" status="primary" placeholder="שעת גילוי האירוע" [(ngModel)]="lostForm.eventHour" timeValidation>
+                <div *ngIf="eventHour.invalid&&eventHour.dirty"><label class="label red">פורמט השעה: 00:00</label></div>
+              </div>
+            </div>
+          </div>
+
+          <h6><b>פרטי האובדן:</b></h6>
+          <div class="row">
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="equipment" class="label">ציוד/חומר</label>
+                <nb-select [disabled]="this.lostForm.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="lostForm.equipment">
+                  <nb-option *ngFor="let equipment of equipments" value="equipment.name" (click)="equipmentsTypeOptions=equipment.list; lostForm.equipmentType=''">{{equipment.name}}</nb-option>  
+                </nb-select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="equipmentType" class="label">סוג ציוד/חומר</label>
+                <nb-select [disabled]="this.lostForm.editStateBlocked" name="equipmentType" id="equipmentType" status="primary" placeholder="סוג ציוד/חומר" [(ngModel)]="lostForm.equipmentType">
+                  <nb-option *ngFor="let equipment of equipmentsTypeOptions" value="equipment">{{equipment}}</nb-option>  
+                </nb-select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="equipmentMark" class="label">סימון ציוד/חומר</label>
+                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #equipmentMark="ngModel" name="equipmentMark" id="equipmentMark" status="primary" placeholder="סימון ציוד/חומר" [(ngModel)]="lostForm.equipmentMark" markValidation>
+                <div *ngIf="equipmentMark.invalid&&equipmentMark.dirty"><label class="label red">XXXXXXXXX או YYYYYY-XXX</label></div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="equipmentMakat" class="label">מק"ט ציוד/עותק חומר</label>
+                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #equipmentMakat="ngModel" name="equipmentMakat" id="equipmentMakat" status="primary" placeholder="מק''ט ציוד/עותק חומר" [(ngModel)]="lostForm.equipmentMakat" makatCopyValidation>
+                <div *ngIf="equipmentMakat.invalid&&equipmentMakat.dirty"><label class="label red">3 ספרות או 12 תווים</label></div>
+              </div>
+            </div>
+          </div>
+          <h6><b>גורמים ומקומות רלוונטים לאירוע:</b></h6>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #eventRelevantPlacesAndFactors="ngModel" name="eventRelevantPlacesAndFactors" id="eventRelevantPlacesAndFactors" status="primary" placeholder="מלל חופשי" [(ngModel)]="lostForm.eventRelevantPlacesAndFactors" textValidation>
+                <div *ngIf="eventRelevantPlacesAndFactors.invalid&&eventRelevantPlacesAndFactors.dirty"><label class="label red">עד 100 תווים</label></div>
+              </div>
+            </div>
+          </div>
+          <h6><b>פרטי המקרה כפי שידועים מהבירור הראשוני:</b></h6>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #eventInitialDetails="ngModel" name="eventInitialDetails" id="eventInitialDetails" status="primary" placeholder="מלל חופשי" [(ngModel)]="lostForm.eventInitialDetails" textValidation>
+                <div *ngIf="eventInitialDetails.invalid&&eventInitialDetails.dirty"><label class="label red">עד 100 תווים</label></div>
+              </div>
+            </div>
+          </div>
+      </form>
+      <div style="display: flex; justify-content: center;">
+        <h6><b><u>טיפול באירוע</u></b></h6>
+      </div>
+      <form>
+        <h6><b>פרטי הבירור:</b></h6>
+        <div class="row">
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="investigationDate" class="label">תאריך הבירור</label>
+              <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth name="investigationDate" #investigationDate="ngModel" id="investigationDate" status="primary" placeholder="תאריך הבירור" [(ngModel)]="lostForm.investigationDate"  dateValidation>
+              <div *ngIf="investigationDate.invalid&&investigationDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div>
+            </div>
+          </div>
+        
+        <div *ngIf="lostForm.investigationFile" class="col-md-3">
+          <div class="form-group">
+            <div class="row">
+              <label class="label">
+                {{this.getFileName(this.lostForm.investigationFile)}}
+              </label>
+            </div>
+            <div class="row">
+              <a [href]="baseUrl+lostForm.investigationFile" class="download">
+                <nb-card status="primary"><i class="arrow-circle-down-outline"></i></nb-card>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="investigationFile" class="label">צרף קובץ</label>
+            <input [readonly]="this.lostForm.editStateBlocked" type="file" (change)="handleFileUpload($event)" name="investigationFile" id="investigationFile">
+          </div>
+        </div>
+      </div>
+      <h6><b>פרטי המציאה:</b></h6>
+      <div class="row">
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="findingDate" class="label">תאריך המציאה</label>
+            <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #findingDate="ngModel" name="findingDate" id="findingDate" status="primary" placeholder="תאריך המציאה" [(ngModel)]="lostForm.findingDate"  dateValidation>
+            <div *ngIf="findingDate.invalid&&findingDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div>
+          </div>
+        </div>
+        <div *ngIf="lostForm.findingFile" class="col-md-3">
+          <div class="form-group">
+            <div class="row">
+              <label class="label">
+                {{this.getFileName(this.lostForm.findingFile)}}
+              </label>
+            </div>
+            <div class="row">
+              <a [href]="baseUrl+lostForm.findingFile" class="download">
+                <nb-card status="primary"><i class="arrow-circle-down-outline"></i></nb-card>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="findingFile" class="label">צרף קובץ</label>
+            <input [readonly]="this.lostForm.editStateBlocked" type="file" (change)="handleFileUpload($event)" name="findingFile" id="findingFile">
+          </div>
+        </div>
+      </div>
+      <h6><b>פרטי הטיפול:</b></h6>
+      <div class="row">
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="handlingDate" class="label">תאריך הטיפול</label>
+            <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #handlingDate="ngModel" name="handlingDate" id="handlingDate" status="primary" placeholder="תאריך הטיפול" [(ngModel)]="lostForm.handlingDate"  dateValidation>
+            <div *ngIf="handlingDate.invalid&&handlingDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div>
+          </div>
+        </div>
+        <div *ngIf="lostForm.handlingFile" class="col-md-3">
+          <div class="form-group">
+            <div class="row">
+              <label class="label">
+                {{this.getFileName(this.lostForm.handlingFile)}}
+              </label>
+            </div>
+            <div class="row">
+              <a [href]="baseUrl+lostForm.handlingFile" class="download">
+                <nb-card status="primary"><i class="arrow-circle-down-outline" ></i></nb-card>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="handlingFile" class="label">צרף קובץ</label>
+            <input [readonly]="this.lostForm.editStateBlocked" type="file" (change)="handleFileUpload($event)" name="handlingFile" id="handlingFile">
+          </div>
+        </div>
+      </div>
+      <!-- <div *ngIf="lostForm.reference" #chatWrapper>
+        <chat #chat [messages]="msgs" [reference]="lostForm.reference"></chat>
+      </div> -->
+      <chat id="outOfPrint" messages="lostForm.messages"></chat>
+    </form>
+    </nb-card-body>
+  </nb-card>
+</div>
+</div>
+
+<ng-template #dialog let-data let-ref="dialogRef">
+  <nb-card [nbSpinner]="uploadLoading" nbSpinnerSize="large" nbSpinnerStatus="primary">
+    <nb-card-header>מעלה את הבקשה</nb-card-header>
+    <nb-card-body>{{this.popUpDialogContext}}</nb-card-body>
+    <nb-card-footer style="display: flex; justify-content: center;">
+      <button nbButton (click)="ref.close()" status="primary" [disabled]="uploadLoading" routerLink="/pages/control-table/control-table" hero>סיום</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<ng-template #dialog2 let-data let-ref="dialogRef">
+  <nb-card [nbSpinner]="uploadLoading" nbSpinnerSize="large" nbSpinnerStatus="primary">
+    <nb-card-header>מטפל בבקשה</nb-card-header>
+    <nb-card-body>{{this.popUpDialogContext}}</nb-card-body>
+    <nb-card-footer style="display: flex; justify-content: center;">
+      <button nbButton (click)="ref.close()" status="primary" [disabled]="uploadLoading" hero>סיום</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
