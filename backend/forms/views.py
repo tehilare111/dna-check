@@ -16,22 +16,12 @@ from users import utils
 import time
 import os
 import csv
-
-
-PERMISSIONS_PAGE_FROM_MANAGER="מנהלן מערכת"
-PERMISSIONS_PAGE_FROM_EDIT_EVENTS="מדווח אירועים"
-PERMISSIONS_PAGE_FROM_WATCHING_EVENTS="צופה אירועים"
-PERMISSIONS_ARRAY=[]
-
-
-
 def check_permissions(request,permissions_array):
     token=request.headers['Authorization']
     token=token.split(" ")
     token=token[1]
     permission=utils.check_token_not_login(token)
     if permission in permissions_array:
-        print("wowowow")
         return True
     else:
         return False
@@ -45,7 +35,7 @@ def forms_list(request, event_type):
               Return all rows from table when no url specified.
         DELETE - Delete all table content. 
     '''
-    if not utils.check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS,PERMISSIONS_PAGE_FROM_WATCHING_EVENTS]):
+    if not utils.check_permissions(request,[utils.PERMISSIONS_PAGE_FROM_MANAGER,utils.PERMISSIONS_PAGE_FROM_EDIT_EVENTS,utils.PERMISSIONS_PAGE_FROM_WATCHING_EVENTS]):
         return HttpResponse(status=status.HTTP_401_FORBIDDEN)
     if request.method == 'GET':
             if event_type == '':
@@ -70,7 +60,7 @@ def new_event_form(request):
         New Event Form load all its initial values from here.
         Relevant url: /api/event_forms/
     '''
-    if not utils.check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS,PERMISSIONS_PAGE_FROM_WATCHING_EVENTS]):
+    if not utils.check_permissions(request,[utils.PERMISSIONS_PAGE_FROM_MANAGER,utils.PERMISSIONS_PAGE_FROM_EDIT_EVENTS,utils.PERMISSIONS_PAGE_FROM_WATCHING_EVENTS]):
         return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == 'GET':
         dt = datetime.today()
@@ -107,7 +97,7 @@ def download_file(request, path):
     '''
         Download file from given path in the request url.
     '''
-    if not utils.check_permissions(request,PERMISSIONS_PAGE_FROM_MANAGER):
+    if not utils.check_permissions(request,utils.PERMISSIONS_PAGE_FROM_MANAGER):
         return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     file_path = os.path.join(settings.MEDIA_ROOT, path)
     if os.path.exists(file_path):

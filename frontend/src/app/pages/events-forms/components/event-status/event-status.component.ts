@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { RestApiService } from '../../../../services/rest-api.service';
 import { EventForm } from '../../events-forms.templates';
-import { JwtService } from '../../../../services/jwt.service';
+
 
 @Component({
   selector: 'ngx-event-status',
@@ -17,7 +17,7 @@ export class EventStatusComponent implements OnInit {
   eventStatusOptions = ["פתוח", "סגור"]
   handlingStatusOptions = ["אבד", "נמצא"]
 
-  constructor(private jwt:JwtService,private RestApiService:RestApiService) { }
+  constructor(private RestApiService:RestApiService) { }
 
   ngOnInit(): void {
     this.get_constas_feilds()

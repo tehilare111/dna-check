@@ -13,16 +13,13 @@ from management.serializers import UnitsTreeSerializer, ConstantsFieldsSerialize
 # static value only for represting it and pull it from db
 UNITS_TREE_OBJECT_STATIC_ID = '111999'
 CONSTATNS_FIELDS_OBJECT_STATIC_ID = '28032018'
-PERMISSIONS_PAGE_ARRAY=[]
-PERMISSIONS_PAGE_FROM_MANAGER="מנהלן מערכת"
-PERMISSIONS_PAGE_FROM_EDIT_EVENTS="מדווח אירועים"
-PERMISSIONS_PAGE_FROM_WATCHING_EVENTS="צופה אירועים"
+
 #############################################################
 #                        Units tree                         #
 #############################################################        
 @csrf_exempt 
 def units_tree_management(request):
-    if not utils.check_permissions(request,PERMISSIONS_PAGE_FROM_MANAGER):
+    if not utils.check_permissions(request,utils.PERMISSIONS_PAGE_FROM_MANAGER):
         return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == 'GET':
         try: 
@@ -66,7 +63,7 @@ def units_tree_register(request):
 ###############################################################
 @csrf_exempt 
 def constants_fields(request):
-    if not utils.check_permissions(request,PERMISSIONS_PAGE_FROM_MANAGER):  
+    if not utils.check_permissions(request,utils.PERMISSIONS_PAGE_FROM_MANAGER):  
         return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)   
     if request.method == 'GET':
         try: 

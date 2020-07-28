@@ -4,7 +4,6 @@ import { RestApiService } from '../../../services/rest-api.service';
 import { ToastService } from '../../../services/toast.service';
 import { HttpHeaderResponse, HttpRequest, HttpResponseBase } from '@angular/common/http';
 import { Users } from '../../management/users';
-import { JwtService } from '../../../services/jwt.service';
 
 class TreeNodeCustom{
   id: number;
@@ -41,7 +40,7 @@ export class RegisterComponent implements OnInit {
       'children': []
     }
   ];
-  constructor(private jwt:JwtService,private router:Router,private RestApiService:RestApiService,private ToastService:ToastService) { }
+  constructor(private router:Router,private RestApiService:RestApiService,private ToastService:ToastService) { }
   
   ngOnInit(): void {
     this.get_constatns_filds_rank()
@@ -49,7 +48,7 @@ export class RegisterComponent implements OnInit {
   }
   get_constatns_filds_rank() {
     this.rank_array=["rank"]
-    this.jwt.Get_constans_fiald(this.rank_array).subscribe((data_from_server) => {
+    this.RestApiService.Get_constans_fiald(this.rank_array).subscribe((data_from_server) => {
       console.log("data_from_server:",data_from_server.data)
       this.ranks = data_from_server.data.rank
     });
@@ -57,7 +56,7 @@ export class RegisterComponent implements OnInit {
   get_tree_node(){
   var i
   var j
-  this.jwt.getTreeUnits().subscribe(
+  this.RestApiService.getTreeUnits().subscribe(
     (data_from_server: {'maxTreeNodeId': string, 'treeNode': TreeNodeCustom[]}) => {
       for(i=0;i<=data_from_server.treeNode.length-1;i+=1){
         this.units_array.push(data_from_server.treeNode[i].name)
@@ -81,7 +80,7 @@ export class RegisterComponent implements OnInit {
   }
 
   save() {
-      this.jwt.CreateUser(this.jesonreg)
+      this.RestApiService.CreateUser(this.jesonreg)
       .subscribe(
         data=>{
             this.ToastService.showToast("success","ההרשמה הושלמה","")

@@ -11,6 +11,11 @@ from users.models import  Destination
 from users.serializers import DestinationSerilazers
 from django.contrib.auth import get_user_model
 
+PERMISSIONS_PAGE_FROM_MANAGER="מנהלן מערכת"
+PERMISSIONS_PAGE_FROM_EDIT_EVENTS="מדווח אירועים"
+PERMISSIONS_PAGE_FROM_WATCHING_EVENTS="צופה אירועים"
+
+
 secret='''PDvnOudatcLzb/i2cCVFQgIEUgTbehke5iN2QRF7Vqo2zYOzdXMuelzf5/DL+g7+
         sdXic+dLR+obFfHNwMjmaQLFRM8IAtjT2iLlIBc1amcUMx2Vy5dIlVWTA0p79bkL
         syRrY+HK8IGok4tmPAOgDIesVnWeT1i1R/7gc6jX2J84UeKM0f4wIqE/zx0oR8XI

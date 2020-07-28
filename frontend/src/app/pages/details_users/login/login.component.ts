@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { RestApiService } from '../../../services/rest-api.service';
 import { Router } from '@angular/router';
 import { ToastService } from '../../../services/toast.service';
-import { JwtService } from '../../../services/jwt.service';
 import { Users } from '../../management/users';
 import { HeaderComponent } from '../../../@theme/components';
 import { Subject } from 'rxjs';
@@ -20,7 +19,7 @@ export class LoginComponent implements OnInit {
   private destroy$: Subject<void> = new Subject<void>();
   userPictureOnly: boolean = false;
   user: any;
-  constructor(private router:Router,private RestApiService:RestApiService,private ToastService:ToastService,private jwt:JwtService,private userService: UserData){}
+  constructor(private router:Router,private RestApiService:RestApiService,private ToastService:ToastService,private userService: UserData){}
 
 
   ngOnInit(): void {

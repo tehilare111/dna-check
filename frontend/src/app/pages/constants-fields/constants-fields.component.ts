@@ -2,7 +2,6 @@ import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import { RestApiService } from '../../services/rest-api.service';
 import { ToastService } from '../../services/toast.service';
 import { FieldBoxComponent } from './components/field-box.component';
-import { JwtService } from '../../services/jwt.service';
 import { Router } from '@angular/router';
 
 class ConstantsFields{
@@ -30,7 +29,7 @@ export class ConstantsFieldsComponent implements OnInit {
   @ViewChild('handlingStatus') handlingStatus: FieldBoxComponent;
   @ViewChild('equipmentMakat') equipmentMakat: FieldBoxComponent;
 
-  constructor(private router:Router,private jwt:JwtService,private RestApiService: RestApiService  ,private ToastService: ToastService) { }
+  constructor(private RestApiService: RestApiService  ,private ToastService: ToastService) { }
 
   ngOnInit(): void {
     this.loadData();
