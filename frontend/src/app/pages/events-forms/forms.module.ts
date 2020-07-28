@@ -9,7 +9,6 @@ import {
   NbInputModule,
   NbRadioModule,
   NbDialogModule,
-  NbChatModule,
   NbSelectModule,
   NbUserModule,
   NbSpinnerModule,

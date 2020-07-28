@@ -122,13 +122,10 @@
               </div>
             </div>
           </form>
-          <div *ngIf="equipmentReview.reference" style="display: flex; justify-content: center;">
+          <div style="display: flex; justify-content: center;">
             <h6><u>טיפול באירוע</u></h6>
           </div>
           <form>
-            <div *ngIf="equipmentReview.reference" #chatWrapper>
-              <chat #chat [messages]="msgs" [reference]="equipmentReview.reference"></chat>
-            </div>
             <chat id="outOfPrint" messages="lostForm.messages"></chat>
           </form>
         </nb-card-body>

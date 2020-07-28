@@ -15,6 +15,10 @@ export class RestApiService {
     return this.http.get(`${this.baseUrl}/forms/${eventType}`);
   }
 
+  Get_constans_fiald(faild:string[]):Observable<any> {
+    return this.http.get(`${this.baseUrl}/get_constats_fields/${faild}`,);
+  }
+
   getUsersList(unit:string): Observable<any> {
     return this.http.get(`${this.baseUrl}/get_group_permissions_List/${unit}/`);
   }

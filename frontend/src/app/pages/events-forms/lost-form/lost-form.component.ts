@@ -14,7 +14,7 @@ import { idValidator } from "../validation-directives/id.directive";
 import { makatCopyValidator } from "../validation-directives/makat-copy.directive";
 import { markValidator } from "../validation-directives/mark.directive";
 import { timeValidator } from "../validation-directives/time.directive";
-import { JwtService } from '../../../services/jwt.service';
+
 import { AuthService } from '../../../services/auth-service';
 
 @Component({
@@ -42,6 +42,7 @@ export class LostFormComponent {
   array_permission;
   auth:AuthService=new AuthService();
   disableEdit:boolean;
+  constans_array=[]
 
   // select fields options:
   results = ["טופל", "טרם טופל"]
@@ -51,7 +52,7 @@ export class LostFormComponent {
   materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
   equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
   equipmentsTypeOptions = []  
-  constructor(private jwt:JwtService,private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { this.baseUrl = this.RestApiService.baseUrl; }
+  constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { this.baseUrl = this.RestApiService.baseUrl; }
 
   // id of all validation fields
   @ViewChild("signerName") signerName : ElementRef;
@@ -114,7 +115,7 @@ export class LostFormComponent {
   }
   get_constas_feilds() {
    this.constans_array=["equipmentType","rank","materialType","eventStatus"]
-    this.jwt.Get_constans_fiald(this.constans_array).subscribe((data_from_server) => {
+    this.RestApiService.Get_constans_fiald(this.constans_array).subscribe((data_from_server) => {
        
       this.equipmentsType=data_from_server.data.equipmentType
       this.ranks = data_from_server.data.rank

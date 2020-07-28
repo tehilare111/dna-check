@@ -8,6 +8,7 @@ import { messages } from './messages';
   selector: 'chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
+  providers: [ ChatService ],
 
 })
 export class ChatComponent implements OnInit {

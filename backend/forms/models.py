@@ -35,12 +35,7 @@ class EventForm(Form):
       abstract = True
 
 class FormsTable(EventForm):
-<<<<<<< HEAD
     messages = ArrayField(models.CharField(max_length=150, blank=True, null=True), size=100, null=True, blank=True)
-=======
-    # messages = ArrayField(models.CharField(max_length=120, blank=False, default=''), size=30)
-    messages = models.CharField(max_length=70, blank=False, default='')
->>>>>>> b240bcf... fix bugs and build chat
     equipment = models.CharField(max_length=70, blank=False, default='')
     equipmentType = models.CharField(max_length=70, blank=False, default='')
     equipmentMark = models.CharField(max_length=70, blank=False, default='')
