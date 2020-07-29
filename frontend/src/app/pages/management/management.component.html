@@ -1,11 +1,14 @@
 
-<nb-card class="main-nb-card" status="primary" [nbSpinner]="uploadLoading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
-    <nb-card-header>
-        <h1>ניהול יחידות והרשאות</h1>
-    </nb-card-header>
-    <nb-card-body>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-6">
+                <nb-card nb-card class="main-nb-card" status="primary" nbSpinnerStatus="primary">
+                    <nb-card-header>
+                        
+                        <h4 style="color: white;">ניהול יחידות</h4>
+                    </nb-card-header>
+                <nb-card-body>
+                    <div class="row">
+                 <div class="col-md-6">
                 <button nbButton status="primary" #saveButton (click)="saveData()">שמור עץ יחידות</button>
                 <tree-root #tree (activate)="onNodePickedUp($event)" (deactivate)="onNodeDeactivate($event)" [nodes]="nodes" [options]="options"></tree-root>
                 <!--<nb-card *ngIf="uploadLoading" [nbSpinner]="true" nbSpinnerStatus="primary" nbSpinnerSize="giant">
@@ -13,10 +16,12 @@
                         
                     </nb-card-body>
                 </nb-card>-->
+                
             </div>
-            <div class="col-md-3">
+        
+            <div class="col-md-6">
                 <div *ngIf="currentNode">
-                    <nb-card>
+                    <nb-card nbSpinnerSize="giant" status="primary" nbSpinnerStatus="primary">
                         <nb-card-header>
                             <nb-icon icon="plus-round" pack="ion" (click)="action='add'"></nb-icon>
                             <nb-icon icon="edit" pack="ion" (click)="action='edit'"></nb-icon>
@@ -48,7 +53,17 @@
                     </nb-card>  
                 </div> 
             </div>
+        </div>
+        
+    </nb-card-body>
+</nb-card>
+</div>
             <div class="col-md-6">
+                <nb-card nb-card class="main-nb-card" status="primary" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+                    <nb-card-header>
+                        <h4 style="color: white;">ניהול הרשאות</h4>
+                    </nb-card-header>
+                    <nb-card-body>
                 <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
 
                     <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
@@ -74,24 +89,21 @@
                     </ng-container>
               
                   </table>
-                  <tr>
-                  </tr>
-                  <div class="row show-grid">
-                  <div class="col-3 col-sm-4">
+                <br/>
+                  <div class="row " style="width: 100%;">
+                      <div class="col">
                     <input type="text" fullWidth #Personal="ngModel" name="personalnumber" nbInput  id="personal" fieldSize="medium" placeholder="מספר מזהה" [(ngModel)]=users.personalnumber [nbFilterInput]="dataSource" required maxlength="7" min="7">
-                   </div>
-                  <div class="col-3 col-sm-4">
+                </div>
+                  <div class="col">
                     <nb-select fullWidth name="permissions" status="privmary" placeholder="הרשאה" id="permissions" fieldSize="small" [(ngModel)]="users.permissions" > 
                         <nb-option *ngFor="let permiss of permission" [value]="permiss">{{[permiss]}}</nb-option>
                         </nb-select>
                   </div>
-                  <div class="col-3 col-sm-4">
-                    <div class="col-sm-12">
-                        <button fullWidth nbButton [disabled]="Personal.invalid  || Personal.undirty"   status="primary" (click)=updatePermissionUser(Personal.value)>שנה הרשאות</button>
-                    </div>       
+                  <div class="col">
+                        <button fullWidth nbButton [disabled]="Personal.invalid  || Personal.undirty"   status="primary" (click)=updatePermissionUser(Personal.value)>שנה הרשאות</button>     
                   </div>
                 </div>
+            </nb-card-body>
+        </nb-card>
             </div>
         </div>
-    </nb-card-body>
-</nb-card>

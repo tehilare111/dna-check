@@ -7,7 +7,7 @@ import 'rxjs/Rx' ;
 //import { Customer } from '../events-forms.templates';
 import { RestApiService } from '../../services/rest-api.service';
 import { ToastService } from '../../services/toast.service';
-
+import { Users } from '../management/users';
 interface TreeNode<T> {
   data: T;
   children?: TreeNode<T>[];
@@ -33,7 +33,7 @@ interface FSEntry {
 })
 export class ControlTableComponent implements OnInit{
 
-  public username_login="";
+  public username_login=""
   pickedUpEvent = {'name':undefined, 'route': undefined};
   eventsToPickUp = {
     'defaultForms': {
@@ -67,20 +67,19 @@ export class ControlTableComponent implements OnInit{
   loadTable(value){
     this.loadData(value.route?value.name:'');
     this.allColumns = [ this.customColumn, ...Object.keys(value.columns) ];
-    
   }
   
   dataSource: NbTreeGridDataSource<FSEntry>;
 
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
-
   constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>, private RestApiService: RestApiService, private router: Router, private ToastService: ToastService) {
     //this.dataSource = this.dataSourceBuilder.create(this.data);
   }
 
   ngOnInit() {
     this.loadData('');
+    
   }
 
   loadData(eventType: string) {

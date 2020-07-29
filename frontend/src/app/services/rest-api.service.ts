@@ -15,23 +15,25 @@ export class RestApiService {
     return this.http.get(`${this.baseUrl}/forms/${eventType}`);
   }
 
+  Get_constans_fiald(faild:string[]):Observable<any> {
+    return this.http.get(`${this.baseUrl}/get_constats_fields/${faild}`,);
+  }
+
   getUsersList(unit:string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/get_group_permissions_List/${unit}`);
+    return this.http.get(`${this.baseUrl}/get_group_permissions_List/${unit}/`);
   }
 
   CreateUser(customer: Object): Observable<Object> {
     return this.http.post(`${this.baseUrl}/create-User/`, customer);
   }
   UpdateUser(customer: Object,personalnumber:string): Observable<Object> {
-    return this.http.put(`${this.baseUrl}/update_permissions_user/${personalnumber}`, customer);
+    return this.http.put(`${this.baseUrl}/update_permissions_user/${personalnumber}`, {"permissions":customer});
   }
   CheckLogin(customer:object): Observable<Object> {
+
     return this.http.post(`${this.baseUrl}/check_login/`, customer);
   }
-  Get_constans_fiald(customer:Object,constants:string):Observable<Object>{
-    return this.http.post(`${this.baseUrl}/get_constans_fiald${constants}`,customer)
-  }
-
+  
   deleteAll(): Observable<any> {
     return this.http.delete(`${this.baseUrl}/forms/`);
   }
@@ -39,6 +41,7 @@ export class RestApiService {
   getNewEventForm(): Observable<any> {
     return this.http.get(`${this.baseUrl}/event_forms/values`);
   }
+
 
   getExistingEventForm(reference: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/event_forms/${reference}`);
@@ -63,6 +66,9 @@ export class RestApiService {
   getTreeUnits(): Observable<any>  {
     return this.http.get(`${this.baseUrl}/units-management/`);
   }
+  getTreeUnits_register(): Observable<any>  {
+    return this.http.get(`${this.baseUrl}/get_array_units/`);
+  }
 
   postTreeUnits(data): Observable<any>{
     return this.http.post(`${this.baseUrl}/units-management/`, data);
@@ -71,6 +77,10 @@ export class RestApiService {
   getConstatnsFields(): Observable<any>{
      return this.http.get(`${this.baseUrl}/constants-fields/`);
   }
+  getConstansFialdsNotPermissions(faild:string[]):Observable<any> {
+    return this.http.get(`${this.baseUrl}/get_constats_fields/${faild}`,);
+  }
+
 
   postConstatnsFields(data): Observable<any>{
      return this.http.post(`${this.baseUrl}/constants-fields/`, data);

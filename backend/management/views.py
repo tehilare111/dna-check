@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser, FormParser
 from rest_framework import status
 from django.conf import settings
+from users.utils import check_permissions, PERMISSIONS_PAGE_FROM_MANAGER, PERMISSIONS_PAGE_FROM_EDIT_EVENTS, PERMISSIONS_PAGE_FROM_WATCHING_EVENTS
 
 from management.models import UnitsTree, ConstantsFields
 from management.serializers import UnitsTreeSerializer, ConstantsFieldsSerializer
@@ -13,73 +14,77 @@ from management.serializers import UnitsTreeSerializer, ConstantsFieldsSerialize
 UNITS_TREE_OBJECT_STATIC_ID = '111999'
 CONSTATNS_FIELDS_OBJECT_STATIC_ID = '28032018'
 
-# Create your views here.
+#############################################################
+#                        Units tree                         #
+#############################################################        
 @csrf_exempt 
 def units_tree_management(request):
-    if request.method == 'GET': 
+    if not check_permissions(request,PERMISSIONS_PAGE_FROM_MANAGER):
+        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+    if request.method == 'GET':
         try: 
-            units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
+            units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID)
         except UnitsTree.DoesNotExist: 
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
-        
+            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED) 
         units_tree_serializer = UnitsTreeSerializer(units_tree)
-        return JsonResponse(units_tree_serializer.data, safe=False) 
-
+        return JsonResponse(units_tree_serializer.data, safe=False)
     elif request.method == 'POST':
         try: 
             units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
         except UnitsTree.DoesNotExist: 
             units_tree = None
-        
-        data = JSONParser().parse(request) 
+        data = JSONParser().parse(request)
         if units_tree:
-            units_tree_serializer = UnitsTreeSerializer(units_tree, data=data) 
+                units_tree_serializer = UnitsTreeSerializer(units_tree, data=data["data"]) 
         else:
-            units_tree_serializer = UnitsTreeSerializer(data=data) 
-        
-        if units_tree_serializer.is_valid(): 
-            units_tree_serializer.save(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
-            return JsonResponse(units_tree_serializer.data) 
-        return JsonResponse(units_tree_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
- 
+            units_tree_serializer = UnitsTreeSerializer(data=data["data"]) 
+            if units_tree_serializer.is_valid():
+                units_tree_serializer.save(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
+                return JsonResponse(units_tree_serializer.data,safe=False)  
     elif request.method == 'DELETE':
         UnitsTree.objects.all().delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-
+################################################################
+#                     Units tree update                        #
+################################################################       
+@csrf_exempt 
+def units_tree_register(request):
+    array_units=[]
+    if request.method == 'GET': 
+        try: 
+            units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
+        except UnitsTree.DoesNotExist: 
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
+        units_tree_serializer = UnitsTreeSerializer(units_tree)
+        array_units.append(units_tree_serializer.data)
+        return HttpResponse(array_units) 
+###############################################################
+#                     Constants fields                        #
+###############################################################
 @csrf_exempt 
 def constants_fields(request):
-    
-    if request.method == 'GET': 
+    if not check_permissions(request,PERMISSIONS_PAGE_FROM_MANAGER):  
+        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)   
+    if request.method == 'GET':
         try: 
             constants_fields = ConstantsFields.objects.get(constantFieldId=CONSTATNS_FIELDS_OBJECT_STATIC_ID) 
         except ConstantsFields.DoesNotExist: 
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
-        
+            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED) 
         constants_fields_serializer = ConstantsFieldsSerializer(constants_fields)
-        return JsonResponse(constants_fields_serializer.data, safe=False) 
-
+        return JsonResponse(constants_fields_serializer.data, safe=False)
     elif request.method == 'POST':
-        
         try: 
             constants_fields = ConstantsFields.objects.get(constantFieldId=CONSTATNS_FIELDS_OBJECT_STATIC_ID) 
         except ConstantsFields.DoesNotExist: 
             constants_fields = None
-        
         data = JSONParser().parse(request) 
-        
         if constants_fields:
             constants_fields_serializer = ConstantsFieldsSerializer(constants_fields, data=data) 
-        else:
-            constants_fields_serializer = ConstantsFieldsSerializer(data=data) 
-        
-        print(constants_fields)
-        print(constants_fields_serializer)
-
-        if constants_fields_serializer.is_valid(): 
-            constants_fields_serializer.save(constantFieldId=CONSTATNS_FIELDS_OBJECT_STATIC_ID) 
-            return JsonResponse(constants_fields_serializer.data) 
-        return JsonResponse(constants_fields_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
- 
+        else: 
+            constants_fields_serializer = ConstantsFieldsSerializer(data=data)
+            if constants_fields_serializer.is_valid():              
+                constants_fields_serializer.save(constantFieldId=CONSTATNS_FIELDS_OBJECT_STATIC_ID) 
+                return JsonResponse(constants_fields_serializer.data) 
     elif request.method == 'DELETE':
         ConstantsFields.objects.all().delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)

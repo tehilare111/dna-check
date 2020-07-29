@@ -1,16 +1,16 @@
 
 <div class="row col-md-12" id="outOfPrint">
   
-  <nb-card>
+  <nb-card *ngIf ="this.auth.check_pernissions(['מדווח אירועים','מנהלן מערכת'])">
     <button type="submit" nbButton status="primary" (click)="onSubmit()">שלח אירוע</button>
   </nb-card>
-  <nb-card>
+  <nb-card *ngIf ="this.auth.check_pernissions(['מנהלן מערכת'])"> 
     <button *ngIf="true" nbButton status="primary" (click)="updateEditState()">פתח/סגור אירוע לעריכה</button>
   </nb-card>
   <nb-card>
     <button *ngIf="true" nbButton status="primary" (click)="printForm()">הדפס אירוע</button>
   </nb-card>
-  <nb-card>
+  <nb-card *ngIf ="this.auth.check_pernissions(['מנהלן מערכת'])">
     <button *ngIf="true" nbButton status="primary" (click)="deleteEventForm()">מחק אירוע</button>
   </nb-card>
 </div>
@@ -34,7 +34,7 @@
               <div class="form-group">
                 <label for="signerUnit" class="label">יחידת החתום</label>
                 <nb-select [disabled]="this.lostForm.editStateBlocked" name="signerUnit" id="signerUnit" status="primary" placeholder="יחידת החתום" [(ngModel)]="lostForm.signerUnit">
-                  <nb-option *ngFor="let unit of units" value="unit">{{unit}}</nb-option>  
+                  <nb-option *ngFor="let unit of units" [value]="unit">{{unit}}</nb-option>  
                 </nb-select>
               </div>
             </div>
@@ -55,8 +55,10 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="rank" class="label">דרגה</label>
+                <div>
+                </div>
                 <nb-select [disabled]="this.lostForm.editStateBlocked" name="rank" id="rank" status="primary" placeholder="דרגה" [(ngModel)]="lostForm.rank">
-                  <nb-option *ngFor="let rank of ranks" value="rank">{{rank}}</nb-option>  
+                  <nb-option *ngFor="let rank of ranks" [value]="rank">{{rank}}</nb-option>  
                 </nb-select>
               </div>
             </div>
@@ -90,8 +92,10 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="equipment" class="label">ציוד/חומר</label>
-                <nb-select [disabled]="this.lostForm.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="lostForm.equipment">
-                  <nb-option *ngFor="let equipment of equipments" value="equipment.name" (click)="equipmentsTypeOptions=equipment.list; lostForm.equipmentType=''">{{equipment.name}}</nb-option>  
+                <div>
+                </div>
+                <nb-select  (ngModelChange)="print_stamm()" [disabled]="this.lostForm.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="lostForm.equipment">
+                  <nb-option *ngFor="let equipment of equipments" [value]="equipment.name" (click)="equipmentsTypeOptions=equipment.list; lostForm.equipmentType=''">{{equipment.name}}</nb-option>  
                 </nb-select>
               </div>
             </div>
@@ -99,7 +103,7 @@
               <div class="form-group">
                 <label for="equipmentType" class="label">סוג ציוד/חומר</label>
                 <nb-select [disabled]="this.lostForm.editStateBlocked" name="equipmentType" id="equipmentType" status="primary" placeholder="סוג ציוד/חומר" [(ngModel)]="lostForm.equipmentType">
-                  <nb-option *ngFor="let equipment of equipmentsTypeOptions" value="equipment">{{equipment}}</nb-option>  
+                  <nb-option *ngFor="let equipment of equipmentsTypeOptions" [value]="equipment">{{equipment}}</nb-option>  
                 </nb-select>
               </div>
             </div>
@@ -231,9 +235,15 @@
               </div>
             </div>
           </div>
-          <div *ngIf="lostForm.reference" #chatWrapper>
-            <chat #chat [messages]="msgs" [reference]="lostForm.reference"></chat>
-          </div>
+          <!--<h6>הודעות</h6>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth name="messages" id="messages" status="primary" placeholder="מלל חופשי" [(ngModel)]="lostForm.messages">
+              </div>
+            </div>
+          </div>-->
+          <chat id="outOfPrint" messages="lostForm.messages"></chat>
         </form>
       </nb-card-body>
     </nb-card>
@@ -245,7 +255,7 @@
     <nb-card-header>מעלה את הבקשה</nb-card-header>
     <nb-card-body>{{this.popUpDialogContext}}</nb-card-body>
     <nb-card-footer style="display: flex; justify-content: center;">
-      <button nbButton (click)="ref.close()" status="primary" [disabled]="uploadLoading" routerLink="/pages/control-table/control-table" hero>סיום</button>
+      <button nbButton (click)="ref.close()" status="primary" [disabled]="uploadLoading" routerLink="/pages/control-table" hero>סיום</button>
     </nb-card-footer>
   </nb-card>
 </ng-template>

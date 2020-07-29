@@ -49,6 +49,7 @@ import { ChatComponent } from './components/chat/chat.component';
     NbRadioModule,
     NbDatepickerModule,
     FormsRoutingModule,
+    NbChatModule,
     NbSelectModule,
     NbIconModule,
     ngFormsModule,

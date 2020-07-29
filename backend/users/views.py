@@ -1,115 +1,102 @@
 from django.shortcuts import render
-from users.models import Destination
+from users.models import  Destination
 from users.serializers import DestinationSerilazers
 from rest_framework.parsers import JSONParser
 from django.http import HttpResponse, JsonResponse
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
-
+from management.utils import constants_fields_array
 from management.models import UnitsTree, ConstantsFields
+from users.utils import check_permissions, PERMISSIONS_PAGE_FROM_MANAGER, PERMISSIONS_PAGE_FROM_EDIT_EVENTS, PERMISSIONS_PAGE_FROM_WATCHING_EVENTS
 
 
-
-# Create your views here.
-# Create your views here.
 ###############################################################
-#                      יצירת משתמש חדש                       #
+#                      Create new user                        #
 ###############################################################
-
 @csrf_exempt 
 def create_user(request):
     user_data = JSONParser().parse(request)
     user_serializer = DestinationSerilazers(data=user_data)
+    #user_per=User.objects.create_user(user_serializer)
     if request.method == 'POST':
         if(user_serializer.is_valid()):
             if(check_user_and_personalnumbner(user_data)):
-                return HttpResponse(status=status.HTTP_410_GONE)  
+                return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)  
             else:
                 user_serializer.save()
+                #user_per.save()
                 return HttpResponse(status=status.HTTP_204_NO_CONTENT) 
-
 ###############################################################
-#                      התחברות לאתר                          #
+#                         Login page                          #
 ###############################################################
-
 @csrf_exempt 
 def check_login(request):
+    token=request.headers['Authorization']
+    token=token.split(" ")
+    token=token[1]
     user_data = JSONParser().parse(request)
     users_serializer = DestinationSerilazers(data=user_data)
     if request.method == 'POST':
         try:
-            if (users_serializer.is_valid()): 
+            if utils.check_token(token) is not False:
                 users = Destination.objects.get(username=user_data["username"])
+               
                 if check_user_password(users.username,user_data["password"]):
-                    return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-                else:
-                    return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+                    user_form=DestinationSerilazers(users)
+                    return JsonResponse({"access_token":utils.create_jwt(user_data),"permissions":user_form.data["permissions"]}, safe=False)
+            else:
+                return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
         except Destination.DoesNotExist: 
-            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)  
-    
-    
-     
-
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)  
 ################################################################
-#                  בדיקת תקינות שם משתמש                     #
-################################################################   
-
-
+#                     Check propriety user                     #
+################################################################
+################## Check password ##############################
 def check_user_password(username,password):
-    customer_username=Destination.objects.filter(username=username,password=password).exists()
-    return customer_username
-
+    return Destination.objects.filter(username=username,password=password).exists()
+################### Check personal number ######################
 def check_user_and_personalnumbner(user_data):
-    if(Destination.objects.filter(username=user_data["username"]).exists()):
-        return True
-    else:
-        if(Destination.objects.filter(personalnumber=user_data["personalnumber"]).exists()):
-            return True
-        else:
-            return False
-        
+    return (Destination.objects.filter(username=user_data["username"]).exists() or Destination.objects.filter(personalnumber=user_data["personalnumber"]).exists())
 ###############################################################
-#                     קבלת קבוצת הרשאות                      #
+#                    Get groups permissions                   #
 ###############################################################
-
-@csrf_exempt
-def groups_permissions_list(request, unit):
-    '''
-        Responsible to hendle requests froms main control table page.
-        Relevant urls: /api/forms/*
-        GET - Return all forms matching the given event type on the url.
-              Return all rows from table when no url specified.
-        DELETE - Delete all table content. 
-    '''
+@csrf_exempt 
+def groups_permissions_list(request, unit,token):
+    if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER]):
+        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == 'GET':
-        users = Destination.objects.filter(armyunit=unit)
-        customer_u=DestinationSerilazers(users,many=True)
-        return JsonResponse(customer_u.data, safe=False)
-    
+            users = Destination.objects.filter(armyunit=unit)
+            customer_u=DestinationSerilazers(users,many=True)
+            return JsonResponse(customer_u.data, safe=False)     
     elif request.method == 'DELETE':
         Destination.objects.all().delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-
 ###############################################################
-#                      עדכון משתמש                           #
+#                         Update user                         #
 ###############################################################
 @csrf_exempt 
 def update_permissions_users(request,personalnumber):
+    
+    if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER]):
+        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED) 
     try: 
-        event_form = Destination.objects.get(personalnumber=personalnumber) 
-    except Destination.DoesNotExist: 
+        event_form = Destination.objects.get(personalnumber=personalnumber)
+    except Destination.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
     if request.method=='GET':
-        customer_serializer = DestinationSerilazers(event_form)
-        return JsonResponse(customer_serializer.data)
+            customer_serializer = DestinationSerilazers(event_form)
+            return JsonResponse(customer_serializer.data)
     elif request.method == 'PUT':
         form_data = JSONParser().parse(request)
-        form_serializer = DestinationSerilazers(event_form, data=form_data)
+        form_serializer = DestinationSerilazers(event_form, data=form_data["permissions"])
         if form_serializer.is_valid():
             form_serializer.save()
-            return JsonResponse(form_serializer.data)
-        return JsonResponse(form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+            return JsonResponse({"data":form_serializer.data},status=status.HTTP_204_NO_CONTENT)
+          
+#################################################################
+#                Constanas fiald not permissions                #
+#################################################################
 @csrf_exempt
-def get_constans_fiald(ConstantsField):
-    return ConstantsField
+def get_constans_fiald(requerst,fields_array):
+    data=constants_fields_array(fields_array)
+    return JsonResponse({"data":data})

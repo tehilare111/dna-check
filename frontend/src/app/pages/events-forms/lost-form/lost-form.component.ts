@@ -15,6 +15,8 @@ import { makatCopyValidator } from "../validation-directives/makat-copy.directiv
 import { markValidator } from "../validation-directives/mark.directive";
 import { timeValidator } from "../validation-directives/time.directive";
 
+import { AuthService } from '../../../services/auth-service';
+
 @Component({
   selector: 'ngx-form-layouts',
   styleUrls: ['./lost-form.component.scss'],
@@ -36,16 +38,19 @@ export class LostFormComponent {
   readonly : boolean = true;
   popUpDialogContext: string = '';
   msgs: any[] = [];
-
   baseUrl: string = '';
-  
+  array_permission;
+  auth:AuthService=new AuthService();
+  disableEdit:boolean;
+  constans_array=[]
+
   // select fields options:
   results = ["טופל", "טרם טופל"]
-  units = ["מצוב", "מעוף", "מצפן"]
+  units = [,"מצוב", "מעוף", "מצפן", "פלגת החוד"]
   ranks = ["סמל", "רבט", "טוראי"]
   equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
   materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
-  equipments = [{"name": "ציוד", "list" : this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+  equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
   equipmentsTypeOptions = []  
   constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { this.baseUrl = this.RestApiService.baseUrl; }
 
@@ -76,6 +81,7 @@ export class LostFormComponent {
     this.investigationDate,
     this.findingDate,
     this.handlingDate
+    
   ] 
 
   handleFileUpload(event){
@@ -86,17 +92,40 @@ export class LostFormComponent {
   ngOnInit() {
     // Set eventType field according to the form event type
     this.lostForm.eventType = this.eventType
-    
+    this.get_constas_feilds()
     // Recieve form data from db according to its reference
     this.reference = this.activatedRoute.snapshot.params.reference;
     if (this.reference){
       this.exisitingFormLoadData(this.reference);
     } else {
-      this.readonly = false;
+      // this.readonly = false;
       this.newFormLoadData();
+      this.get_constas_feilds()
     }
   }
 
+  checkPermissions(){
+    this.array_permission=['מדווח אירועים','מנהלן מערכת']
+    return this.auth.check_pernissions(this.array_permission)
+  }
+  checkPermissions_manager()
+  {
+    this.array_permission=['מנהלן מערכת']
+    return this.auth.check_pernissions(this.array_permission)
+  }
+  get_constas_feilds() {
+   this.constans_array=["equipmentType","rank","materialType","eventStatus"]
+    this.RestApiService.Get_constans_fiald(this.constans_array).subscribe((data_from_server) => {
+       
+      this.equipmentsType=data_from_server.data.equipmentType
+      this.ranks = data_from_server.data.rank
+      this.materialsType=data_from_server.data.materialType
+      this.eventStatusForm=data_from_server.data.eventStatus
+      this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+      this.equipmentsTypeOptions = this.equipments.map(el => {console.log(el, "- ", this.lostForm.equipment);if(el['name']==this.lostForm.equipment) return el['list']; else return undefined; }).filter(el => el!=null)[0]
+      console.log("this:",this.equipmentsTypeOptions)
+    });
+  }
   newFormLoadData() {
     this.RestApiService.getNewEventForm().subscribe((data_from_server) => {
       this.lostForm.date = data_from_server.datetime
@@ -106,8 +135,17 @@ export class LostFormComponent {
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: LostFormTemplate) => {
       this.lostForm = data_from_server
-      this.msgs = this.lostForm.messages.map( msg => { return JSON.parse(msg); } )
-    });
+      console.log("load_server",this.lostForm)
+      if(this.lostForm.editStateBlocked || this.checkPermissions())
+        {
+          this.lostForm.editStateBlocked = false
+        }else{
+          this.lostForm.editStateBlocked = true
+        }    });
+    this.get_constas_feilds()  
+  }
+  print_stamm(){
+    console.log("bar agever",this.lostForm)
   }
 
   save() {
@@ -128,6 +166,7 @@ export class LostFormComponent {
       this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: LostFormTemplate) => {
+            
             this.uploadLoading = false;
             this.reference = data.reference;
             this.popUpDialogContext = `האירוע התעדכן בהצלחה, סימוכין: ${this.reference}`;
