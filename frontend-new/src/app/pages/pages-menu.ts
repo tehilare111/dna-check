@@ -7,8 +7,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'nb-e-commerce',
     link: '/pages/dashboard',
     home: true,
-  },
-  {
+  },{
+    title:"התחברות",
+    icon:'nb-gear',
+    link:'/pages/login'
+  },{
     title: 'ניהול יחידות',
     icon: 'nb-gear',
     link: '/pages/management',
@@ -36,7 +39,18 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title:'טפסים',
     icon:'nb-home',
-    link:'/pages/events-forms/equipment-review'
+    link:'/pages/events-forms/equipment-review',
+    children:[
+      {
+        title:'equipment-review',
+        link:'/pages/events-forms/equipment-review',
+      },{
+        title:'lost-form',
+        link:'/pages/events-forms/lost-form',
+      },{
+        title:'corruption-form',
+        link:'/pages/events-forms/corruption-form',
+      }],
   },{
 
     title: 'FEATURES',

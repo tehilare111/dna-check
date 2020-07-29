@@ -5,6 +5,7 @@ export class Form{
     reporterName: string;
     reporterUnit: string;
     editStateBlocked: boolean;
+    messages: any[];
 }
 
 export class EventForm extends Form{

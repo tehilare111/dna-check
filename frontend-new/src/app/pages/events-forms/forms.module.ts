@@ -33,6 +33,7 @@ import { EventStatusComponent } from './components/event-status/event-status.com
 import { ChatComponent } from './components/chat/chat.component';
 import { EquipmentReviewComponent } from './equipment-review/equipment-review.component';
 import { EventStatusShortedComponent } from './components/event-status-shorted/event-status-shorted.component';
+import { CorruptionFormComponent } from './corruption-form/corruption-form.component';
 
 
 
@@ -58,7 +59,7 @@ import { EventStatusShortedComponent } from './components/event-status-shorted/e
     FormsComponent,
     // FormInputsComponent,
     LostFormComponent,
-    // CorruptionFormComponent,
+    CorruptionFormComponent,
     EventDetailsComponent,
     DateDirective,
     IdDirective,

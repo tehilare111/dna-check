@@ -7,6 +7,7 @@ import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { ControlTableComponent } from './control-table/control-table.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 import { ManagementComponent } from './management/management.component';
+import { LoginComponent } from './details_users/login/login.component';
 
 const routes: Routes = [{
   path: '',
@@ -21,9 +22,16 @@ const routes: Routes = [{
     path: 'iot-dashboard',
     component: DashboardComponent,
   },{
+<<<<<<< HEAD
     path: 'control-table',
     component: ControlTableComponent,
   }, {
+=======
+    path:"login",
+    component:LoginComponent,
+  },
+  {
+>>>>>>> e406d91... update branch and update fronted
     path: 'ui-features',
     loadChildren: './ui-features/ui-features.module#UiFeaturesModule',
   }, {

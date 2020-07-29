@@ -81,4 +81,8 @@ export class RestApiService {
   postConstatnsFields(data): Observable<any>{
      return this.http.post(`${this.baseUrl}/constants-fields/`, data);
   }
+  Get_constans_fiald(faild:string[]):Observable<any> {
+    return this.http.get(`${this.baseUrl}/get_constats_fields/${faild}`,);
+  }
+
 }

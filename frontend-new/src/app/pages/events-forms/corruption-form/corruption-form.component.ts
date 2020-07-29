@@ -1,8 +1,9 @@
+import { Component, TemplateRef, ElementRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NbDialogService } from '@nebular/theme';
 import { FormGroup, FormControl } from "@angular/forms";
 
-import { EquipmentReviewTemplate } from '../events-forms.templates';
+import { CorruptionFormTemplate } from '../events-forms.templates';
 import { RestApiService } from '../../../services/rest-api.service';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
 import { textValidator } from "../validation-directives/text.directive";
@@ -12,20 +13,19 @@ import { idValidator } from "../validation-directives/id.directive";
 import { makatCopyValidator } from "../validation-directives/makat-copy.directive";
 import { markValidator } from "../validation-directives/mark.directive";
 import { timeValidator } from "../validation-directives/time.directive";
-
 import { AuthService } from '../../../services/auth-service';
-import { ElementRef, ViewChild, Component } from '@angular/core';
 
 @Component({
-  selector: 'ngx-equipment-review',
-  templateUrl: './equipment-review.component.html',
-  styleUrls: ['./equipment-review.component.scss']
+  selector: 'ngx-form-layouts',
+  styleUrls: ['./corruption-form.component.scss'],
+  templateUrl: './corruption-form.component.html',
 })
-export class EquipmentReviewComponent{
-  eventType: string = 'ביקורת ציוד';
-  eventFilesFields: string[] = ['reviewFile'];
 
-  equipmentReview: EquipmentReviewTemplate = new EquipmentReviewTemplate();
+export class CorruptionFormComponent {
+  eventType: string = 'השמדת ציוד';
+  eventFilesFields: string[] = ['handlingFile', 'investigationFile'];
+
+  corruptionForm: CorruptionFormTemplate = new CorruptionFormTemplate();
   uploadLoading = false;
   @ViewChild("dialog") dialog : ElementRef;
   @ViewChild("dialog2") dialog2 : ElementRef;
@@ -34,17 +34,18 @@ export class EquipmentReviewComponent{
   formFiles : {'id': string, 'file': File}[] = []; 
   readonly : boolean = true;
   popUpDialogContext: string = '';
-  constans_array=[]
+  msgs: any[] = [];
   baseUrl: string = '';
   array_permission;
   auth:AuthService=new AuthService();
   // select fields options:
   results = ["טופל", "טרם טופל"]
-  units = ["מצוב", "מעוף", "מצפן"]
+  units = ["מצוב", "מעוף", "מצפן", "פלגת חוד"]
   ranks = ["סמל", "רבט", "טוראי"]
   equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
   materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
   equipments = [{"name": "ציוד", "list" : this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+  constans_array=[]
   equipmentsTypeOptions = []  
   constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { this.baseUrl = this.RestApiService.baseUrl; }
 
@@ -59,7 +60,6 @@ export class EquipmentReviewComponent{
   @ViewChild("eventRelevantPlacesAndFactors") eventRelevantPlacesAndFactors : ElementRef;
   @ViewChild("eventInitialDetails") eventInitialDetails : ElementRef;
   @ViewChild("investigationDate") investigationDate : ElementRef;
-  @ViewChild("findingDate") findingDate : ElementRef;
   @ViewChild("handlingDate") handlingDate : ElementRef;
 
   formGroupEle: ElementRef[] = [
@@ -73,7 +73,6 @@ export class EquipmentReviewComponent{
     this.eventRelevantPlacesAndFactors,
     this.eventInitialDetails,
     this.investigationDate,
-    this.findingDate,
     this.handlingDate
   ] 
 
@@ -84,7 +83,8 @@ export class EquipmentReviewComponent{
 
   ngOnInit() {
     // Set eventType field according to the form event type
-    this.equipmentReview.eventType = this.eventType
+    this.corruptionForm.eventType = this.eventType
+    
     // Recieve form data from db according to its reference
     this.reference = this.activatedRoute.snapshot.params.reference;
     if (this.reference){
@@ -95,48 +95,38 @@ export class EquipmentReviewComponent{
       this.get_constas_feilds();
     }
   }
-
-  checkPermissions(){
-    this.array_permission=["מדווח אירועים","מנהלן מערכת",]
-    return this.auth.check_pernissions(this.array_permission)
-  }
-  checkPermissions_manager()
-  {
-    this.array_permission=["מנהלן מערכת"]
-    return this.auth.check_pernissions(this.array_permission)
-  }
   get_constas_feilds() {
     this.constans_array=["equipmentType","rank","materialType","eventStatus"]
-    this.RestApiService.getConstansFialdsNotPermissions(this.constans_array).subscribe((data_from_server) => {
+    this.RestApiService.Get_constans_fiald(this.constans_array).subscribe((data_from_server) => {
       this.equipmentsType=data_from_server.data.equipmentType
       this.ranks = data_from_server.data.rank
       this.materialsType=data_from_server.data.materialType
-      this.results=data_from_server.data.eventStatus
+      this.results=data_from_server.data.handlingStatus
+      this.eventStatusForm=data_from_server.data.eventStatus
       this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
     });
   }
 
-
   newFormLoadData() {
     this.RestApiService.getNewEventForm().subscribe((data_from_server) => {
-      this.equipmentReview.date = data_from_server.datetime
+      this.corruptionForm.date = data_from_server.datetime
     });
   }
 
   exisitingFormLoadData(reference: string){
-    this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: EquipmentReviewTemplate) => {
-      console.log(data_from_server)
-      this.equipmentReview = data_from_server
+    this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: CorruptionFormTemplate) => {
+
+      this.corruptionForm = data_from_server
+      this.msgs = this.corruptionForm.messages.map( msg => { return JSON.parse(msg); } )
     });
   }
 
   save() {
     const formData: FormData = new FormData();
-    console.log(this.eventStatusForm)
-    this.equipmentReview = this.eventStatusForm.pushFormFields<EquipmentReviewTemplate>(this.equipmentReview);
+    this.corruptionForm = this.eventStatusForm.pushFormFields<CorruptionFormTemplate>(this.corruptionForm);
   
-    // insert equipmentReview to FormData object
-    for(let [key, value] of Object.entries(this.equipmentReview)){
+    // insert corruptionForm to FormData object
+    for(let [key, value] of Object.entries(this.corruptionForm)){
       if (value && ! this.eventFilesFields.includes(key)) { formData.append(key, value); }
     }
 
@@ -148,7 +138,7 @@ export class EquipmentReviewComponent{
     if (this.reference){
       this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
-          (data: EquipmentReviewTemplate) => {
+          (data: CorruptionFormTemplate) => {
             this.uploadLoading = false;
             this.reference = data.reference;
             this.popUpDialogContext = `האירוע התעדכן בהצלחה, סימוכין: ${this.reference}`;
@@ -157,14 +147,14 @@ export class EquipmentReviewComponent{
     } else {
       this.RestApiService.createNewEventFormWithFiles(formData)
       .subscribe(
-        (data: EquipmentReviewTemplate) => {
+        (data: CorruptionFormTemplate) => {
           this.uploadLoading = false;
           this.reference = data.reference;
           this.popUpDialogContext = `האירוע נוצר בהצלחה, סימוכין: ${this.reference}`;
         },
         error => console.log(error));
     }
-    //this.equipmentReview = new EquipmentReviewTemplate(); // initialize form
+    //this.corruptionForm = new CorruptionFormTemplate(); // initialize form
   }
 
   openWithoutBackdropClick(dialog) {
@@ -178,10 +168,17 @@ export class EquipmentReviewComponent{
 
   checkFieldsValid(){
     let formGroup = new FormGroup({
-    'equipmentMark': new FormControl(this.equipmentReview.equipmentMark, [markValidator()]),
-    'equipmentMakat': new FormControl(this.equipmentReview.equipmentMakat, [makatCopyValidator()]),
-    'reviewReference': new FormControl(this.equipmentReview.reviewReference, [textValidator()]),
-    'reviewDate': new FormControl(this.equipmentReview.reviewDate, [dateValidator()]),
+    'signerName': new FormControl(this.corruptionForm.signerName, [stdFieldValidator()]),
+    'signerId': new FormControl(this.corruptionForm.signerId, [idValidator()]),
+    'position': new FormControl(this.corruptionForm.position, [stdFieldValidator()]),
+    'eventDate': new FormControl(this.corruptionForm.eventDate, [dateValidator()]),
+    'eventHour': new FormControl(this.corruptionForm.eventHour, [timeValidator()]),
+    'equipmentMark': new FormControl(this.corruptionForm.equipmentMark, [markValidator()]),
+    'equipmentMakat': new FormControl(this.corruptionForm.equipmentMakat, [makatCopyValidator()]),
+    'eventRelevantPlacesAndFactors': new FormControl(this.corruptionForm.eventRelevantPlacesAndFactors, [textValidator()]),
+    'eventInitialDetails': new FormControl(this.corruptionForm.eventInitialDetails, [textValidator()]),
+    'investigationDate': new FormControl(this.corruptionForm.investigationDate, [dateValidator()]),
+    'handlingDate': new FormControl(this.corruptionForm.handlingDate, [dateValidator()]), 
   })
     
     let fieldsValid = true
@@ -194,6 +191,15 @@ export class EquipmentReviewComponent{
     return fieldsValid
   }
 
+  checkPermissions(){
+    this.array_permission=["מדווח אירועים","מנהלן מערכת",]
+    return this.auth.check_pernissions(this.array_permission)
+  }
+  checkPermissions_manager()
+  {
+    this.array_permission=["מנהלן מערכת"]
+    return this.auth.check_pernissions(this.array_permission)
+  }
   onSubmit() {
     this.uploadLoading = true
     if (this.checkFieldsValid()){
@@ -215,7 +221,7 @@ export class EquipmentReviewComponent{
     this.openWithoutBackdropClick(this.dialog);
     this.RestApiService.deleteExistingEventForm(this.reference)
       .subscribe(
-        (data: EquipmentReviewTemplate) => {
+        (data: CorruptionFormTemplate) => {
           this.uploadLoading = false;
           this.popUpDialogContext = `אירוע עם סימוכין ${this.reference} נמחק`;
         },
@@ -227,17 +233,18 @@ export class EquipmentReviewComponent{
   }
 
   updateEditState(){
-    this.equipmentReview.editStateBlocked = !this.equipmentReview.editStateBlocked;
+    this.corruptionForm.editStateBlocked = !this.corruptionForm.editStateBlocked;
 
     this.uploadLoading = true;
     this.openWithoutBackdropClick(this.dialog2);
 
     const formData: FormData = new FormData();
-    formData.append('editStateBlocked', (this.equipmentReview.editStateBlocked).toString())
+    formData.append('editStateBlocked', (this.corruptionForm.editStateBlocked).toString())
     
+
     this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
-          (data: EquipmentReviewTemplate) => {
+          (data: CorruptionFormTemplate) => {
             this.uploadLoading = false;
             if (data.editStateBlocked){
               this.popUpDialogContext = `האירוע נסגר לעריכה`;
@@ -249,4 +256,3 @@ export class EquipmentReviewComponent{
           error => console.log(error));   
   }
 }
-

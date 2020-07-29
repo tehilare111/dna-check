@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 
 from forms.models import FormsTable
 from forms.serializers import FormsSerializer
-from users.utils import check_permissions, PERMISSIONS_PAGE_FROM_MANAGER, PERMISSIONS_PAGE_FROM_EDIT_EVENTS, PERMISSIONS_PAGE_FROM_WATCHING_EVENTS
+from users.utils import check_permissions, PERMISSIONS_PAGE_FROM_MANAGER, PERMISSIONS_PAGE_FROM_EDIT_EVENTS, PERMISSIONS_PAGE_FROM_WATCHING_EVENTS,check_token_not_login
 import time
 import os
 import csv
@@ -21,7 +21,7 @@ def check_permissions(request,permissions_array):
     token=request.headers['Authorization']
     token=token.split(" ")
     token=token[1]
-    permission=utils.check_token_not_login(token)
+    permission=check_token_not_login(token)
     if permission in permissions_array:
         return True
     else:
@@ -172,7 +172,7 @@ class NewEventFrom(APIView):
         return JsonResponse(form_serializer.data)
 
     def delete(self, request, reference, *args, **kwargs):
-        if not utils.check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER]):
+        if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER]):
             return HttpResponse(status=status.HTTP_401_FORBIDDEN)
         try: 
             event_form = FormsTable.objects.get(reference=reference)
