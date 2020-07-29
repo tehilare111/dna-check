@@ -13,7 +13,6 @@ import {
 } from '@nebular/theme';
 import { FormsModule } from '@angular/forms';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
-
 import { ThemeModule } from '../@theme/theme.module';
 import { PagesComponent } from './pages.component';
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -25,9 +24,10 @@ import { ControlTableComponent } from './control-table/control-table.component';
 import { TreeModule } from 'angular-tree-component';
 import { ConstantsFieldsComponent } from './constants-fields/constants-fields.component';
 import { FieldBoxComponent } from './constants-fields/components/field-box.component';
-import { RegisterComponent } from './management/register/register.component';
-import { LoginComponent } from './management/login/login.component';
 import { FsIconComponent } from './tables/tree-grid/tree-grid.component';
+import { HttpClientModule } from '@angular/common/http';
+import { LoginComponent } from './details_users/login/login.component';
+import { RegisterComponent } from './details_users/register/register.component';;
 
 
 @NgModule({
@@ -50,6 +50,7 @@ import { FsIconComponent } from './tables/tree-grid/tree-grid.component';
     NbTreeGridModule,
     Ng2SmartTableModule,
     NbSelectModule,
+    HttpClientModule,
     
     
   ],

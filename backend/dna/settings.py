@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
+AUTH_USER_MODEL = 'users.Destination'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -61,13 +62,13 @@ MIDDLEWARE = [
        'django.middleware.common.CommonMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = (
         'http://127.0.0.1:4200',
 )
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
-        'enctype',
+        'enctype','Authorization'
     ]
 
 ROOT_URLCONF = 'dna.urls'
@@ -96,12 +97,13 @@ WSGI_APPLICATION = 'dna.wsgi.application'
 DATABASES = {
    'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'testdb',
+        'NAME': 'users_army',
         'USER': 'postgres',
-        'PASSWORD': '123',
-        'HOST': '192.168.1.99',
+        'PASSWORD': 'Bar_18041998',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
-    }
+   }
+
 }
 
 # Password validation

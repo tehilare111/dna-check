@@ -1,35 +1,32 @@
 import { NbMenuItem } from '@nebular/theme';
 
-export const MENU_ITEMS: NbMenuItem[] = [
+export class pagesmenu{
+public MENU_ITEMS:NbMenuItem[] = [
   {
     	title: 'טבלת שליטה',
       icon: 'layout-outline',
 	    link: '/pages/control-table',
   },
-  {
-    title: 'ניהול ויחידות',
+ 
 
+  
+  {
+    title:'ניהול יחידות',
     icon: 'settings',
     link: '/pages/management',
-    children:[
-      {
-        title:'ניהול יחידות',
-        link: '/pages/management',
-      },
-      {
-        title:'התחברות',
-        link:'login',
-      },
-    ],
-    
-
   },
+  
   {
     title: 'שדות קבועים',
     icon: 'edit-2-outline',
     link: '/pages/constants-fields',
   },
   {
+    title:'התחברות',
+    icon: 'people-outline',
+    link:'login',
+  },
+  /*{
     title: 'E-commerce',
     icon: 'shopping-cart-outline',
     link: '/pages/dashboard',
@@ -284,5 +281,20 @@ export const MENU_ITEMS: NbMenuItem[] = [
         link: '/auth/reset-password',
       },
     ],
-  },
+  },*/
 ];
+
+public MENU_ITEMS_2:NbMenuItem[] = [
+  {
+    title: 'טבלת שליטה',
+    icon: 'layout-outline',
+    link: '/pages/control-table',
+},
+{
+  title:'התחברות',
+  icon: 'people-outline',
+  link:'login',
+},
+];
+
+}

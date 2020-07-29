@@ -13,6 +13,7 @@ import { idValidator } from "../validation-directives/id.directive";
 import { makatCopyValidator } from "../validation-directives/makat-copy.directive";
 import { markValidator } from "../validation-directives/mark.directive";
 import { timeValidator } from "../validation-directives/time.directive";
+import { AuthService } from '../../../services/auth-service';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -34,16 +35,17 @@ export class CorruptionFormComponent {
   readonly : boolean = true;
   popUpDialogContext: string = '';
   msgs: any[] = [];
-
   baseUrl: string = '';
-
+  array_permission;
+  auth:AuthService=new AuthService();
   // select fields options:
   results = ["טופל", "טרם טופל"]
-  units = ["מצוב", "מעוף", "מצפן"]
+  units = ["מצוב", "מעוף", "מצפן", "פלגת חוד"]
   ranks = ["סמל", "רבט", "טוראי"]
   equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
   materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
   equipments = [{"name": "ציוד", "list" : this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+  constans_array=[]
   equipmentsTypeOptions = []  
   constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { this.baseUrl = this.RestApiService.baseUrl; }
 
@@ -90,7 +92,19 @@ export class CorruptionFormComponent {
     } else {
       this.readonly = false;
       this.newFormLoadData();
+      this.get_constas_feilds();
     }
+  }
+  get_constas_feilds() {
+    this.constans_array=["equipmentType","rank","materialType","eventStatus"]
+    this.RestApiService.Get_constans_fiald(this.constans_array).subscribe((data_from_server) => {
+      this.equipmentsType=data_from_server.data.equipmentType
+      this.ranks = data_from_server.data.rank
+      this.materialsType=data_from_server.data.materialType
+      this.results=data_from_server.data.handlingStatus
+      this.eventStatusForm=data_from_server.data.eventStatus
+      this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+    });
   }
 
   newFormLoadData() {
@@ -101,6 +115,7 @@ export class CorruptionFormComponent {
 
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: CorruptionFormTemplate) => {
+
       this.corruptionForm = data_from_server
       this.msgs = this.corruptionForm.messages.map( msg => { return JSON.parse(msg); } )
     });
@@ -176,6 +191,15 @@ export class CorruptionFormComponent {
     return fieldsValid
   }
 
+  checkPermissions(){
+    this.array_permission=["מדווח אירועים","מנהלן מערכת",]
+    return this.auth.check_pernissions(this.array_permission)
+  }
+  checkPermissions_manager()
+  {
+    this.array_permission=["מנהלן מערכת"]
+    return this.auth.check_pernissions(this.array_permission)
+  }
   onSubmit() {
     this.uploadLoading = true
     if (this.checkFieldsValid()){
@@ -217,6 +241,7 @@ export class CorruptionFormComponent {
     const formData: FormData = new FormData();
     formData.append('editStateBlocked', (this.corruptionForm.editStateBlocked).toString())
     
+
     this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: CorruptionFormTemplate) => {
