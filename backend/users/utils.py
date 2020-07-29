@@ -3,10 +3,9 @@ from django.http import HttpResponse
 import datetime
 from django.contrib.auth import authenticate
 from _datetime import timedelta
-from users import views
 from rest_framework import status
 from django.http.response import JsonResponse
-from management import views
+
 from users.models import  Destination
 from users.serializers import DestinationSerilazers
 from django.contrib.auth import get_user_model
@@ -69,7 +68,4 @@ def check_permissions(request,permissions_array):
     token=token.split(" ")
     token=token[1]
     permission=check_token_not_login(token)
-    if permission in permissions_array:
-        return True
-    else:
-        return False
+    return permission in permissions_array

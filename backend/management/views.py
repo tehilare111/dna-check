@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser, FormParser
 from rest_framework import status
 from django.conf import settings
-from users import utils 
+from users.utils import check_permissions, PERMISSIONS_PAGE_FROM_MANAGER, PERMISSIONS_PAGE_FROM_EDIT_EVENTS, PERMISSIONS_PAGE_FROM_WATCHING_EVENTS
 
 from management.models import UnitsTree, ConstantsFields
 from management.serializers import UnitsTreeSerializer, ConstantsFieldsSerializer
@@ -19,7 +19,7 @@ CONSTATNS_FIELDS_OBJECT_STATIC_ID = '28032018'
 #############################################################        
 @csrf_exempt 
 def units_tree_management(request):
-    if not utils.check_permissions(request,utils.PERMISSIONS_PAGE_FROM_MANAGER):
+    if not check_permissions(request,PERMISSIONS_PAGE_FROM_MANAGER):
         return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == 'GET':
         try: 
@@ -63,7 +63,7 @@ def units_tree_register(request):
 ###############################################################
 @csrf_exempt 
 def constants_fields(request):
-    if not utils.check_permissions(request,utils.PERMISSIONS_PAGE_FROM_MANAGER):  
+    if not check_permissions(request,PERMISSIONS_PAGE_FROM_MANAGER):  
         return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)   
     if request.method == 'GET':
         try: 

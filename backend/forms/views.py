@@ -12,10 +12,11 @@ from rest_framework.views import APIView
 
 from forms.models import FormsTable
 from forms.serializers import FormsSerializer
-from users import utils
+from users.utils import check_permissions, PERMISSIONS_PAGE_FROM_MANAGER, PERMISSIONS_PAGE_FROM_EDIT_EVENTS, PERMISSIONS_PAGE_FROM_WATCHING_EVENTS
 import time
 import os
 import csv
+
 def check_permissions(request,permissions_array):
     token=request.headers['Authorization']
     token=token.split(" ")
@@ -35,7 +36,7 @@ def forms_list(request, event_type):
               Return all rows from table when no url specified.
         DELETE - Delete all table content. 
     '''
-    if not utils.check_permissions(request,[utils.PERMISSIONS_PAGE_FROM_MANAGER,utils.PERMISSIONS_PAGE_FROM_EDIT_EVENTS,utils.PERMISSIONS_PAGE_FROM_WATCHING_EVENTS]):
+    if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS,PERMISSIONS_PAGE_FROM_WATCHING_EVENTS]):
         return HttpResponse(status=status.HTTP_401_FORBIDDEN)
     if request.method == 'GET':
             if event_type == '':
@@ -60,7 +61,7 @@ def new_event_form(request):
         New Event Form load all its initial values from here.
         Relevant url: /api/event_forms/
     '''
-    if not utils.check_permissions(request,[utils.PERMISSIONS_PAGE_FROM_MANAGER,utils.PERMISSIONS_PAGE_FROM_EDIT_EVENTS,utils.PERMISSIONS_PAGE_FROM_WATCHING_EVENTS]):
+    if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER, PERMISSIONS_PAGE_FROM_EDIT_EVENTS, PERMISSIONS_PAGE_FROM_WATCHING_EVENTS]):
         return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == 'GET':
         dt = datetime.today()
@@ -97,7 +98,7 @@ def download_file(request, path):
     '''
         Download file from given path in the request url.
     '''
-    if not utils.check_permissions(request,utils.PERMISSIONS_PAGE_FROM_MANAGER):
+    if not check_permissions(request,PERMISSIONS_PAGE_FROM_MANAGER):
         return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     file_path = os.path.join(settings.MEDIA_ROOT, path)
     if os.path.exists(file_path):
@@ -137,14 +138,18 @@ class NewEventFrom(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request, *args, **kwargs):
+        if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS]):
+            return HttpResponse(status=status.HTTP_401_FORBIDDEN)
         form_serializer = FormsSerializer(data=request.data)
         if form_serializer.is_valid():
             form_serializer.save(reference = int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0) + 1)
             return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
-            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, reference,*args, **kwargs):
+        if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS]):
+            return HttpResponse(status=status.HTTP_401_FORBIDDEN)
         try: 
             event_form = FormsTable.objects.get(reference=reference) 
         except FormsTable.DoesNotExist: 
@@ -167,6 +172,8 @@ class NewEventFrom(APIView):
         return JsonResponse(form_serializer.data)
 
     def delete(self, request, reference, *args, **kwargs):
+        if not utils.check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER]):
+            return HttpResponse(status=status.HTTP_401_FORBIDDEN)
         try: 
             event_form = FormsTable.objects.get(reference=reference)
         except FormsTable.DoesNotExist: 
