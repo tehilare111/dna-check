@@ -1,11 +1,14 @@
 import { of as observableOf,  Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Contacts, RecentUsers, UserData } from '../data/users';
+import { Users } from '../../pages/management/users';
+import { AlertComponent } from '../../pages/extra-components/alert/alert.component';
 
 @Injectable()
 export class UserService extends UserData {
 
   private time: Date = new Date;
+  private user:Users=new Users()
 
   private users = {
     nick: { name: 'Nick Jones', picture: 'assets/images/nick.png' },
@@ -14,7 +17,7 @@ export class UserService extends UserData {
     lee: { name: 'Lee Wong', picture: 'assets/images/lee.png' },
     alan: { name: 'Alan Thompson', picture: 'assets/images/alan.png' },
     kate: { name: 'Kate Martinez', picture: 'assets/images/kate.png' },
-    login: {name:localStorage.getItem("user"),picture: 'assets/images/kate.png' },
+    login: {name:localStorage.getItem("username"),picture: 'assets/images/kate.png' },
   };
   private types = {
     mobile: 'mobile',
@@ -43,7 +46,7 @@ export class UserService extends UserData {
   ];
 
   getUsers(): Observable<any> {
-    return observableOf(this.users);
+    return observableOf(this.users.login.name=localStorage.getItem("username"));
   }
 
   getContacts(): Observable<Contacts[]> {
@@ -53,4 +56,9 @@ export class UserService extends UserData {
   getRecentUsers(): Observable<RecentUsers[]> {
     return observableOf(this.recentUsers);
   }
+  getAlerting():Observable<any>{
+    alert("אין הודעות חדשות")
+    return observableOf(alert("אין הודעות חדשות"))
+  }
+  
 }

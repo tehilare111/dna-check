@@ -1,15 +1,15 @@
 
 <div class="row col-md-12" id="outOfPrint">
-  <nb-card>
+  <nb-card *ngIf ="checkPermissions()">
     <button type="submit" nbButton status="primary" (click)="onSubmit()">שלח אירוע</button>
   </nb-card>
-  <nb-card>
+  <nb-card *ngIf ="checkPermissions_manager()">
     <button *ngIf="true" nbButton status="primary" (click)="updateEditState()">פתח/סגור אירוע לעריכה</button>
   </nb-card>
-  <nb-card>
+  <nb-card > 
     <button *ngIf="true" nbButton status="primary" (click)="printForm()">הדפס אירוע</button>
   </nb-card>
-  <nb-card>
+  <nb-card *ngIf ="checkPermissions_manager()">
     <button *ngIf="true" nbButton status="primary" (click)="deleteEventForm()">מחק אירוע</button>
   </nb-card>
 </div>
@@ -54,6 +54,8 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="rank" class="label">דרגה</label>
+                <div>
+                </div>
                 <nb-select [disabled]="this.corruptionForm.editStateBlocked" name="rank" id="rank" status="primary" placeholder="דרגה" [(ngModel)]="corruptionForm.rank">
                   <nb-option *ngFor="let rank of ranks" value="rank">{{rank}}</nb-option>  
                 </nb-select>
@@ -89,6 +91,8 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="equipment" class="label">ציוד/חומר</label>
+                <div>
+                </div>
                 <nb-select [disabled]="this.corruptionForm.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="corruptionForm.equipment">
                   <nb-option *ngFor="let equipment of equipments" value="equipment.name" (click)="equipmentsTypeOptions=equipment.list; corruptionForm.equipmentType=''">{{equipment.name}}</nb-option>  
                 </nb-select>
@@ -208,9 +212,7 @@
               </div>
             </div>
           </div>-->
-          <div *ngIf="corruptionForm.reference" #chatWrapper>
-            <chat #chat [messages]="msgs" [reference]="corruptionForm.reference"></chat>
-          </div>
+          <chat id="outOfPrint" messages="lostForm.messages"></chat>
         </form>
       </nb-card-body>
     </nb-card>
@@ -223,7 +225,7 @@
     <nb-card-header>מעלה את הבקשה</nb-card-header>
     <nb-card-body>{{this.popUpDialogContext}}</nb-card-body>
     <nb-card-footer style="display: flex; justify-content: center;">
-      <button nbButton (click)="ref.close()" status="primary" [disabled]="uploadLoading" routerLink="/pages/control-table/control-table" hero>סיום</button>
+      <button nbButton (click)="ref.close()" status="primary" [disabled]="uploadLoading" routerLink="/pages/control-table" hero>סיום</button>
     </nb-card-footer>
   </nb-card>
 </ng-template>

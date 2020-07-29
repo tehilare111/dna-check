@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import { RestApiService } from '../../services/rest-api.service';
 import { ToastService } from '../../services/toast.service';
 import { FieldBoxComponent } from './components/field-box.component';
+import { Router } from '@angular/router';
 
 class ConstantsFields{
   equipmentType: string[];
@@ -43,8 +44,8 @@ export class ConstantsFieldsComponent implements OnInit {
         console.log(data)
       },
       err => {
+
         this.ConstantsFields = {eventStatus: [''], materialType: [''], equipmentType:[''], equipmentMakat:[''], handlingStatus:[''], rank:['']};
-        this.ToastService.showToast('fail', 'שגיאה בקריאה מהשרת', '')
         this.uploadLoading = false
       } 
     )

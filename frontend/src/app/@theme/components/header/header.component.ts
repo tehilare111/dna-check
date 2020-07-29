@@ -6,6 +6,9 @@ import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject, Observable } from 'rxjs';
 import { UserService } from '../../../@core/mock/users.service';
+import { Users } from '../../../pages/management/users';
+import { HttpInterceptor } from '@angular/common/http';
+import { ToastService } from '../../../services/toast.service';
 @Component({
   selector: 'ngx-header',
   styleUrls: ['./header.component.scss'],
@@ -44,7 +47,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private themeService: NbThemeService,
               private userService: UserData,
               private layoutService: LayoutService,
-              private breakpointService: NbMediaBreakpointsService){
+              private breakpointService: NbMediaBreakpointsService,
+              private ToastService:ToastService){
   }
   ngOnInit() {
     this.currentTheme = this.themeService.currentTheme;
@@ -88,5 +92,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   navigateHome() {
     this.menuService.navigateHome();
     return false;
+  }
+  getAlerting(){
+    this.login()
+    this.ToastService.showToast("fail","אין הודעות חדשות","")
+    this.user=localStorage.getItem("username")
   }
 }

@@ -15,6 +15,8 @@ import { makatCopyValidator } from "../validation-directives/makat-copy.directiv
 import { markValidator } from "../validation-directives/mark.directive";
 import { timeValidator } from "../validation-directives/time.directive";
 
+import { AuthService } from '../../../services/auth-service';
+
 @Component({
   selector: 'ngx-form-layouts',
   styleUrls: ['./equipment-review.component.scss'],
@@ -36,9 +38,10 @@ export class EquipmentReviewComponent {
   readonly : boolean = true;
   popUpDialogContext: string = '';
   msgs: any[] = [];
-
   baseUrl: string = '';
-
+  array_permission;
+  constans_array=[]
+  auth:AuthService=new AuthService();
   // select fields options:
   results = ["טופל", "טרם טופל"]
   units = ["מצוב", "מעוף", "מצפן"]
@@ -94,8 +97,31 @@ export class EquipmentReviewComponent {
     } else {
       this.readonly = false;
       this.newFormLoadData();
+      this.get_constas_feilds();
     }
   }
+
+  checkPermissions(){
+    this.array_permission=["מדווח אירועים","מנהלן מערכת",]
+    return this.auth.check_pernissions(this.array_permission)
+  }
+  checkPermissions_manager()
+  {
+    this.array_permission=["מנהלן מערכת"]
+    return this.auth.check_pernissions(this.array_permission)
+  }
+  get_constas_feilds() {
+    this.constans_array=["equipmentType","rank","materialType","eventStatus"]
+    this.RestApiService.getConstansFialdsNotPermissions(this.constans_array).subscribe((data_from_server) => {
+      this.equipmentsType=data_from_server.data.equipmentType
+      this.ranks = data_from_server.data.rank
+      this.materialsType=data_from_server.data.materialType
+      this.results=data_from_server.data.handlingStatus
+      this.eventStatusForm=data_from_server.data.eventStatus
+      this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+    });
+  }
+
 
   newFormLoadData() {
     this.RestApiService.getNewEventForm().subscribe((data_from_server) => {
