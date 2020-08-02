@@ -9,7 +9,6 @@ import { SmartTableData } from '../../@core/data/smart-table';
   styleUrls: ['./control-table.component.scss']
 })
 export class ControlTableComponent implements OnInit {
-  pickedUpEvent = {'name':undefined, 'route': undefined};
   eventsToPickUp = {
     'defaultForms': {
       'name': 'כלל הטפסים',
@@ -32,9 +31,10 @@ export class ControlTableComponent implements OnInit {
       'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': { 'title': 'יחידת מדווח'}}
     },
   }
+  pickedUpEvent = this.eventsToPickUp.defaultForms;
   settings = {
     actions: false,
-    columns: {...this.eventsToPickUp.defaultForms.columns}
+    columns: {...this.pickedUpEvent.columns}
   }
 
   source: LocalDataSource = new LocalDataSource();
@@ -88,4 +88,19 @@ export class ControlTableComponent implements OnInit {
     anchor.click();
   }
 
+  onSearch(query: string = '') {
+    // Deny table filterring when there is no input
+    if(query == ''){ this.source.setFilter([]); return; }
+
+    // Orgenize fields in search structure 
+    var tableFieldsForSerach = Object.keys(this.pickedUpEvent.columns).map(el => { return {field: el, search: query}; });
+    
+    this.source.setFilter(
+      // fields we want to include in the search
+      tableFieldsForSerach
+    , false);
+    // second parameter specifying whether to perform 'AND' or 'OR' search 
+    // (meaning all columns should contain search query or at least one)
+    // 'AND' by default, so changing to 'OR' by setting false here
+  }
 }

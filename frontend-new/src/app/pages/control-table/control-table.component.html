@@ -12,7 +12,7 @@
       </div>
         <div class="col-md-4">
           <label class="search-label" for="search">חיפוש בטבלה:</label>
-          <input nbInput id="search" class="search-input">
+          <input #search nbInput id="search" class="search-input" (input)="onSearch(search.value)">
         </div>
         <div class="col-md-4">
           <button nbButton status="success" (click)="exportToXL(pickedUpEvent)" hero>
