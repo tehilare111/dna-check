@@ -22,16 +22,15 @@ const routes: Routes = [{
     path: 'iot-dashboard',
     component: DashboardComponent,
   },{
-<<<<<<< HEAD
     path: 'control-table',
     component: ControlTableComponent,
   }, {
-=======
-    path:"login",
+    path:'',
     component:LoginComponent,
-  },
-  {
->>>>>>> e406d91... update branch and update fronted
+  },{
+  path:'login',
+    component:LoginComponent,
+  },{
     path: 'ui-features',
     loadChildren: './ui-features/ui-features.module#UiFeaturesModule',
   }, {

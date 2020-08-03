@@ -36,6 +36,7 @@ interface FSEntry {
 export class ManagementComponent implements OnInit {
   unit_name=" ";
   action=''
+  jsonPermiss
   addUnitInput = '';
   editUnitInput = '';
   currentNode=undefined;
@@ -48,7 +49,6 @@ export class ManagementComponent implements OnInit {
   defaultColumns = {'personalnumber':'מזהה','permissions':'הרשאות'};
   allColumns = [ this.customColumn, ...Object.keys(this.defaultColumns)];
   permission = ["מנהלן מערכת","מדווח אירועים","צופה אירועים",]
-  dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
   constructor(private service:SmartTableData,private RestApiService:RestApiService,private ToastService: ToastService){
@@ -66,16 +66,31 @@ export class ManagementComponent implements OnInit {
     allowDrag: true,
     allowDrop: true
   };
-  private data: TreeNode<FSEntry>[] = [
-    /*{
-      data: { 'Firstname': 'שם', "Id":'מזהה','Permissions':'הרשאות'},
-      children: [
-      ],
+  settings = {
+    actions: false,
+    columns: {
+      firstname: {
+        title: 'Firstname',
+        type: 'string',
+      },
+      personalnumber: {
+        title: 'PersonalNumber',
+        type: 'string',
+      },
+      permissions: {
+        title: 'Permissions',
+        type: 'string',
+      },
     },
-    */
-    
+  };
+  source: LocalDataSource = new LocalDataSource();
+  data_table = [
+    // {'firstname': 'דוד', 'personalnumber': '12345', 'permissions': 'מנהלן מערכת'},
+    // {'firstname': 'דוד', 'personalnumber': '12345', 'permissions': 'מנהלן מערכת'},
+    // {'firstname': 'דוד', 'personalnumber': '12345', 'permissions': 'מנהלן מערכת'},
   ];
   ngOnInit(): void {
+    this.source.load(this.data_table);
     this.loadData();
   }
   loadData(){
@@ -110,6 +125,33 @@ export class ManagementComponent implements OnInit {
     this.sortDirection = sortRequest.direction;
   }
 
+  updatePermissionUser(personal){
+    if (personal!=null || this.users.permissions!=null)
+    {
+      this.jsonPermiss={"personal_number":personal,"permissions":this.users.permissions,"token":this.users.token}
+      this.RestApiService.UpdateUser(this.jsonPermiss,personal)
+      .subscribe(
+        data=>{
+        this.LoadUsersForUnit()}
+      )
+    }
+  }
+
+  onSearch(query: string = '') {
+    // Deny table filterring when there is no input
+    if(query == ''){ this.source.setFilter([]); return; }
+
+    // Orgenize fields in search structure 
+    var tableFieldsForSerach = Object.keys(this.settings.columns).map(el => { return {field: el, search: query}; });
+    
+    this.source.setFilter(
+      // fields we want to include in the search
+      tableFieldsForSerach
+    , false);
+    // second parameter specifying whether to perform 'AND' or 'OR' search 
+    // (meaning all columns should contain search query or at least one)
+    // 'AND' by default, so changing to 'OR' by setting false here
+  }
   getSortDirection(column: string): NbSortDirection {
     if (this.sortColumn === column) {
       return this.sortDirection;
@@ -121,28 +163,22 @@ export class ManagementComponent implements OnInit {
     const nextColumnStep = 100;
     return minWithForMultipleColumns + (nextColumnStep * index);
   }
-  LoadUsersForUnit(){
-    this.RestApiService.getUsersList(this.unit_name).subscribe(
-      (data_from_server) => {
-      let new_data: TreeNode<FSEntry>[] =
-       data_from_server.map((event) => {
-        return {'data': event}
-      })
-      new_data = new_data.concat(this.data);
-      // this.dataSource = this.dataSourceBuilder.create(new_data);
-    },
-    err=>{
-   })
+  LoadUsersForUnit() {
+    this.RestApiService.getUsersList(this.unit_name).subscribe((data_from_server) => {
+      this.data_table=data_from_server
+      console.log(this.data_table)
+      this.source.load(this.data_table);
+    });
   }
-  formClicked(event, row) {
-    for(let [value] of Object.entries(this.defaultColumns)){
-        this.users.personalnumber=row.data.personalnumber
-    }
+  formClicked(event) {
+    this.users.personalnumber=event.data.personalnumber
+    console.log(event)
+
   }
   onNodePickedUp(event) {
     this.currentNode = event.node;
     this.unit_name=this.currentNode.data.name;
-    // this.LoadUsersForUnit()
+    this.LoadUsersForUnit()
   }
   onNodeDeactivate(event){
     this.currentNode = undefined;

@@ -84,5 +84,8 @@ export class RestApiService {
   Get_constans_fiald(faild:string[]):Observable<any> {
     return this.http.get(`${this.baseUrl}/get_constats_fields/${faild}`,);
   }
+  getXlFile(eventType: string){
+    return this.http.get(`${this.baseUrl}/forms/xl/${eventType}`, { responseType: 'blob' });
+  }
 
 }

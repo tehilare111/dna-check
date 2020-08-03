@@ -60,11 +60,21 @@
                <h4 style="color: white;">ניהול הרשאות</h4>
            </nb-card-header>
            <nb-card-body>
-             <!-- <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" >
-     
-               <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
-               <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" ></tr> -->
-               <!-- </table> -->
+            <ng2-smart-table [settings]="settings" [source]="source" (userRowSelect)="formClicked($event)">
+            </ng2-smart-table>
+            <div class="row " style="width: 100%;">
+              <div class="col">
+            <input type="text" #search fullWidth #Personal="ngModel" name="personalnumber" nbInput  id="personal" fieldSize="medium" placeholder="מספר מזהה" [(ngModel)]=users.personalnumber required maxlength="7" min="7" (input)="onSearch(search.value)" > 
+        </div>
+          <div class="col">
+            <nb-select fullWidth name="permissions" status="privmary" placeholder="הרשאה" id="permissions" fieldSize="small" [(ngModel)]="users.permissions" > 
+                <nb-option *ngFor="let permiss of permission" [value]="permiss">{{[permiss]}}</nb-option>
+                </nb-select>
+          </div>
+          <div class="col">
+                <button fullWidth nbButton [disabled]="Personal.invalid  || Personal.undirty"   status="primary" (click)=updatePermissionUser(Personal.value)>שנה הרשאות</button>     
+          </div>
+        </div>
            </nb-card-body>
        </nb-card>
      </div>

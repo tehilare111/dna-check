@@ -67,7 +67,7 @@
                 <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
 
                     <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
-                    <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" (click)="formClicked($event, row)"></tr>
+                    <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" (userRowSelect)="formClicked($event)"></tr>
               
                     <ng-container [nbTreeGridColumnDef]="customColumn">
                       <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(customColumn)" *nbTreeGridHeaderCellDef>
