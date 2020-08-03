@@ -17,7 +17,7 @@ import {
 import { ThemeModule } from '../../@theme/theme.module';
 import { FormsRoutingModule } from './forms-routing.module';
 import { FormsComponent } from './forms.component';
-// import { FormInputsComponent } from './form-inputs/form-inputs.component';
+import { FormInputsComponent } from './form-inputs/form-inputs.component';
 import { LostFormComponent } from './lost-form/lost-form.component';
 // import { CorruptionFormComponent } from './corruption-form/corruption-form.component';
 import { FormsModule as ngFormsModule } from '@angular/forms';
@@ -57,7 +57,7 @@ import { CorruptionFormComponent } from './corruption-form/corruption-form.compo
   ],
   declarations: [
     FormsComponent,
-    // FormInputsComponent,
+    FormInputsComponent,
     LostFormComponent,
     CorruptionFormComponent,
     EventDetailsComponent,

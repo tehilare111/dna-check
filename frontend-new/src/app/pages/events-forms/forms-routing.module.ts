@@ -14,10 +14,6 @@ const routes: Routes = [
     path: '',
     component: FormsComponent,
     children: [
-      // {
-      //   path: 'inputs',
-      //   component: FormInputsComponent,
-      // },
       {
         path: 'lost-form',
         component: LostFormComponent,
