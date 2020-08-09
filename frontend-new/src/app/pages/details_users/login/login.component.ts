@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
     this.RestApiService.CheckLogin({username,password}).subscribe(
       data => {
         console.log(data["permissions"])
+        localStorage.setItem("access_token",data["access_token"])
         this.ToastService.showToast("success","ההתחברות הושלמה ברוך הבא: "+username,"")
         localStorage.setItem("permissions",data["permissions"])
         this.users.username=username
