@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <ng2-smart-table [settings]="settings" [source]="source">
+    <ng2-smart-table [settings]="settings" [source]="source" (userRowSelect)="formClicked($event)">
     </ng2-smart-table>
   </nb-card-body>
 </nb-card>

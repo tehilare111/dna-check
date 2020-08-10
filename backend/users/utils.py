@@ -46,7 +46,7 @@ def create_jwt(user_data):
 def check_token(token):
     try:
         auth=jwt.decode(token,'secret', algorithms=['HS256'])
-        return True
+        return get_permissions(auth["username"])
     except Exception as e:
         return False 
 
@@ -65,7 +65,9 @@ def check_token_not_login(tokens):
 
 def check_permissions(request,permissions_array):
     token=request.headers['Authorization']
+    print("request",request.headers)
     token=token.split(" ")
     token=token[1]
-    permission=check_token_not_login(token)
+    permission=check_token(token)
+    print(permission)
     return permission in permissions_array

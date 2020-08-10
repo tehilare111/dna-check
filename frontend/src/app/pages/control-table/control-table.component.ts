@@ -124,14 +124,14 @@ export class ControlTableComponent implements OnInit{
     return minWithForMultipleColumns + (nextColumnStep * index);
   }
 
-  formClicked(event, row) {
+  formClicked(event) {
     let path = ''
     for(let [key, value] of Object.entries(this.eventsToPickUp)){
-      if(value['name'] == row.data.eventType){
+      if(value['name'] == event.data.eventType){
         path = value['route']
       }
     }
-    this.router.navigate([path, {reference: row.data.reference}]);
+    this.router.navigate([path, {reference: event.data.reference}]);
   }
 
   exportToXL(value){

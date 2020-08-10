@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { LocalDataSource } from 'ng2-smart-table';
 
 import { SmartTableData } from '../../@core/data/smart-table';
-
+import { RestApiService } from '../../services/rest-api.service';
+import { ToastService } from '../../services/toast.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'ngx-control-table',
   templateUrl: './control-table.component.html',
@@ -45,38 +47,44 @@ export class ControlTableComponent implements OnInit {
     {'eventType': 'אובדן', 'reference': 'עוד מידע', 'date': 'עוד מידע', 'reporterName': 'עוד מידע', 'reporterUnit': 'עוד מידע'},
   ];
 
-  constructor(private service: SmartTableData) {
-  }
+  constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router) { 
+  } 
+  
 
   ngOnInit() {
     this.source.load(this.data);
-    // this.loadData('');
+    this.loadData('');
   }
 
   loadTable(value){
-    ///this.loadData(value.route?value.name:'');
+    this.loadData(value.route?value.name:'');
 
     this.settings.columns = value.columns;
-    // Refresh the table values:
     this.settings = Object.assign({}, this.settings);
   }
 
-  /*loadData(eventType: string) {
+  loadData(eventType: string) {
     this.RestApiService.getFormsList(eventType).subscribe((data_from_server) => {
-      let new_data: TreeNode<FSEntry>[] = data_from_server.map((event) => {
-        return {'data': event}
-      })
-      new_data = new_data.concat(this.data);
-      console.log(new_data)
-      this.dataSource = this.dataSourceBuilder.create(new_data);
+      this.data=data_from_server
+      this.source.load(this.data);
     });
-  }*/
+  }
+
+  formClicked(event) {
+    let path = ''
+    for(let [key, value] of Object.entries(this.eventsToPickUp)){
+      if(value['name'] == event.data.eventType){
+        path = value['route']
+      }
+    }
+    this.router.navigate([path, {reference: event.data.reference}]);
+  }
 
   exportToXL(value){
-    //this.RestApiService.getXlFile(value.route?value.name:'').subscribe(
-      // data => { this.downloadFile(data); },
-      // error => { this.ToastService.showToast('fail', 'בעיה בהורדת הקובץ', '') },
-    //);
+    this.RestApiService.getXlFile(value.route?value.name:'').subscribe(
+      data => { this.downloadFile(data); },
+      error => { this.ToastService.showToast('fail', 'בעיה בהורדת הקובץ', '') },
+    );
   }
 
   downloadFile(data) {

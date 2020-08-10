@@ -8,6 +8,10 @@ import { PagesRoutingModule } from './pages-routing.module';
 import { ThemeModule } from '../@theme/theme.module';
 import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 import { ControlTableComponent } from './control-table/control-table.component';
+import { ManagementComponent } from './management/management.component';
+import { TreeModule } from 'angular-tree-component';
+import { LoginComponent } from './details_users/login/login.component';
+
 
 const PAGES_COMPONENTS = [
   PagesComponent,
@@ -22,10 +26,14 @@ const PAGES_COMPONENTS = [
     DashboardModule,
     ECommerceModule,
     MiscellaneousModule,
+    TreeModule,
   ],
   declarations: [
     ...PAGES_COMPONENTS,
     ControlTableComponent,
+    ManagementComponent,
+    LoginComponent,
+
   ],
 })
 export class PagesModule {
