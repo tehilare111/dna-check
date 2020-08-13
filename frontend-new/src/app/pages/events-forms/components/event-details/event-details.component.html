@@ -1,0 +1,39 @@
+<nb-card>
+    <nb-card-body>
+      <div style="display: flex; justify-content: center;">
+        <h6><u>כותרת האירוע</u></h6>
+      </div>
+      <form class="form-horizontal">
+        <div class="form-group row">
+          <label for="reference" class="label col-sm-3 form-control-label">סימכוין:</label>
+          <div class="col-sm-9">
+            <input type="text" nbInput fullWidth name="reference" id="reference" placeholder="יינתן לאחר השליחה" readonly [(ngModel)]="form.reference">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="eventType" class="label col-sm-3 form-control-label">סוג האירוע:</label>
+          <div class="col-sm-9">
+            <input type="text" nbInput fullWidth name="eventType" id="eventType" placeholder="סוג האירוע" readonly [(ngModel)]="form.eventType">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="date" class="label col-sm-3 form-control-label">תאריך:</label>
+          <div class="col-sm-9">
+            <input type="text" nbInput fullWidth name="date" id="date" placeholder="תאריך:" readonly [(ngModel)]="form.date">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="reporterName" class="label col-sm-3 form-control-label">שם מדווח:</label>
+          <div class="col-sm-9">
+            <input type="text" nbInput fullWidth name="reporterName" id="reporterName" placeholder="שם מדווח" readonly [(ngModel)]="form.reporterName">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="reporterUnit" class="label col-sm-3 form-control-label">יחידת מדווח:</label>
+          <div class="col-sm-9">
+            <input type="text" nbInput fullWidth name="reporterUnit" id="reporterUnit" placeholder="יחידת מדווח" readonly [(ngModel)]="form.reporterUnit">
+          </div>
+        </div>
+      </form>
+    </nb-card-body>
+  </nb-card>

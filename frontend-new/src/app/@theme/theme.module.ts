@@ -36,6 +36,7 @@ import {
   NbChatModule,
   NbTooltipModule,
   NbCalendarKitModule,
+  NbLayoutDirection,
 } from '@nebular/theme';
 
 import { NbSecurityModule } from '@nebular/security';
@@ -106,6 +107,7 @@ const NB_MODULES = [
   NbChatModule,
   NbTooltipModule,
   NbCalendarKitModule,
+  
 ];
 
 const COMPONENTS = [
@@ -143,7 +145,8 @@ const NB_THEME_PROVIDERS = [
     {
       name: 'cosmic',
     },
-    [ DEFAULT_THEME, COSMIC_THEME, CORPORATE_THEME ],
+    [ DEFAULT_THEME, COSMIC_THEME, CORPORATE_THEME ],null,
+    NbLayoutDirection.RTL,
   ).providers,
   ...NbSidebarModule.forRoot().providers,
   ...NbMenuModule.forRoot().providers,

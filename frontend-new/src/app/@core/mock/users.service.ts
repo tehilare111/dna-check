@@ -14,6 +14,7 @@ export class UserService extends UserData {
     lee: { name: 'Lee Wong', picture: 'assets/images/lee.png' },
     alan: { name: 'Alan Thompson', picture: 'assets/images/alan.png' },
     kate: { name: 'Kate Martinez', picture: 'assets/images/kate.png' },
+    login_user:{name:localStorage.getItem("username"), picture: 'assets/images/kate.png' }
   };
   private types = {
     mobile: 'mobile',
@@ -27,6 +28,7 @@ export class UserService extends UserData {
     { user: this.users.lee, type: this.types.mobile },
     { user: this.users.alan, type: this.types.home },
     { user: this.users.kate, type: this.types.work },
+    {user:this.users.login_user,type: this.types.home},
   ];
   private recentUsers: RecentUsers[]  = [
     { user: this.users.alan, type: this.types.home, time: this.time.setHours(21, 12)},
@@ -37,9 +39,11 @@ export class UserService extends UserData {
     { user: this.users.kate, type: this.types.work, time: this.time.setHours(9, 42)},
     { user: this.users.kate, type: this.types.work, time: this.time.setHours(9, 31)},
     { user: this.users.jack, type: this.types.mobile, time: this.time.setHours(8, 0)},
+    {user:this.users.login_user,type: this.types.home,time: this.time.setHours(8,2)},
   ];
 
   getUsers(): Observable<any> {
+    this.users.login_user.name=localStorage.getItem("username")
     return observableOf(this.users);
   }
 

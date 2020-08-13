@@ -1,0 +1,81 @@
+:host {
+    display: block;
+    width: 100%;
+    max-width: 35rem;
+  
+      .form-control-group {
+        margin-bottom: 2rem;
+      }
+  
+      .form-control-group.accept-group {
+        display: flex;
+        justify-content: space-between;
+        margin: 2rem 0;
+      }
+  
+      .label-with-link {
+        display: flex;
+        justify-content: space-between;
+      }
+  
+      .links {
+        text-align: center;
+        margin-top: 1.75rem;
+  
+        .socials {
+          margin-top: 1.5rem;
+        }
+  
+        .socials a {
+          margin: 0 1rem;
+          text-decoration: none;
+          vertical-align: middle;
+  
+          &.with-icon {
+            font-size: 2rem;
+          }
+        }
+      }
+  
+      .another-action {
+        margin-top: 2rem;
+        text-align: center;
+      }
+  
+      .sign-in-or-up {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: space-between;
+      }
+      nb-card-body {
+        overflow: visible;
+        padding-top: 0;
+        font-size:10px;
+    
+        > * {
+          margin-top: 0rem;
+          margin-left: 0rem;
+        }
+      }
+      .center {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        left: 10%;
+        right: 75%;
+        align-items: center;
+        justify-content: center;
+        font-size:10px;
+      }
+      nb-alert {
+        .alert-title,
+        .alert-message {
+          margin: 0 0 0.5rem;
+        }
+        .alert-message-list {
+          list-style-type: none;
+          padding: 0;
+          margin: 0;
+        }
+      }
+    }

@@ -7,7 +7,7 @@ from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from management.utils import constants_fields_array
 from management.models import UnitsTree, ConstantsFields
-from users.utils import check_permissions, PERMISSIONS_PAGE_FROM_MANAGER, PERMISSIONS_PAGE_FROM_EDIT_EVENTS, PERMISSIONS_PAGE_FROM_WATCHING_EVENTS
+from users.utils import check_permissions, PERMISSIONS_PAGE_FROM_MANAGER, PERMISSIONS_PAGE_FROM_EDIT_EVENTS, PERMISSIONS_PAGE_FROM_WATCHING_EVENTS,check_token,create_jwt
 
 
 ###############################################################
@@ -31,19 +31,14 @@ def create_user(request):
 ###############################################################
 @csrf_exempt 
 def check_login(request):
-    token=request.headers['Authorization']
-    token=token.split(" ")
-    token=token[1]
     user_data = JSONParser().parse(request)
     users_serializer = DestinationSerilazers(data=user_data)
     if request.method == 'POST':
         try:
-            if utils.check_token(token) is not False:
-                users = Destination.objects.get(username=user_data["username"])
-               
-                if check_user_password(users.username,user_data["password"]):
-                    user_form=DestinationSerilazers(users)
-                    return JsonResponse({"access_token":utils.create_jwt(user_data),"permissions":user_form.data["permissions"]}, safe=False)
+            users = Destination.objects.get(username=user_data["username"])
+            if check_user_password(users.username,user_data["password"]):
+                user_form=DestinationSerilazers(users)
+                return JsonResponse({"access_token":create_jwt(user_data),"permissions":user_form.data["permissions"]}, safe=False)
             else:
                 return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
         except Destination.DoesNotExist: 
