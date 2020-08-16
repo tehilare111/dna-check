@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser, FormParser
 from rest_framework import status
 from django.conf import settings
-from users.utils import check_permissions, PERMISSIONS_PAGE_FROM_MANAGER, PERMISSIONS_PAGE_FROM_EDIT_EVENTS, PERMISSIONS_PAGE_FROM_WATCHING_EVENTS
+from users.utils import check_permissions, check_permissions_dec ,PERMISSIONS_PAGE_FROM_MANAGER, PERMISSIONS_PAGE_FROM_EDIT_EVENTS, PERMISSIONS_PAGE_FROM_WATCHING_EVENTS
 
 from management.models import UnitsTree, ConstantsFields
 from management.serializers import UnitsTreeSerializer, ConstantsFieldsSerializer
@@ -18,14 +18,13 @@ CONSTATNS_FIELDS_OBJECT_STATIC_ID = '28032018'
 #                        Units tree                         #
 #############################################################        
 @csrf_exempt 
+@check_permissions_dec([PERMISSIONS_PAGE_FROM_MANAGER])
 def units_tree_management(request):
-    if not check_permissions(request,PERMISSIONS_PAGE_FROM_MANAGER):
-        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == 'GET':
         try: 
             units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID)
         except UnitsTree.DoesNotExist: 
-            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED) 
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
         units_tree_serializer = UnitsTreeSerializer(units_tree)
         return JsonResponse(units_tree_serializer.data, safe=False)
     elif request.method == 'POST':
@@ -35,12 +34,14 @@ def units_tree_management(request):
             units_tree = None
         data = JSONParser().parse(request)
         if units_tree:
-                units_tree_serializer = UnitsTreeSerializer(units_tree, data=data["data"]) 
+                units_tree_serializer = UnitsTreeSerializer(units_tree, data=data) 
         else:
-            units_tree_serializer = UnitsTreeSerializer(data=data["data"]) 
-            if units_tree_serializer.is_valid():
-                units_tree_serializer.save(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
-                return JsonResponse(units_tree_serializer.data,safe=False)  
+            units_tree_serializer = UnitsTreeSerializer(data=data) 
+        if units_tree_serializer.is_valid():
+            units_tree_serializer.save(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
+            return JsonResponse(units_tree_serializer.data,safe=False)  
+        else:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST) 
     elif request.method == 'DELETE':
         UnitsTree.objects.all().delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
@@ -69,7 +70,7 @@ def constants_fields(request):
         try: 
             constants_fields = ConstantsFields.objects.get(constantFieldId=CONSTATNS_FIELDS_OBJECT_STATIC_ID) 
         except ConstantsFields.DoesNotExist: 
-            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED) 
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
         constants_fields_serializer = ConstantsFieldsSerializer(constants_fields)
         return JsonResponse(constants_fields_serializer.data, safe=False)
     elif request.method == 'POST':

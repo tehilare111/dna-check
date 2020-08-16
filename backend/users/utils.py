@@ -63,11 +63,25 @@ def check_token_not_login(tokens):
     except Exception as e:
         return False 
 
+def check_permissions_dec(permissions_array):
+    print(permissions_array)
+    def wrapper(view_function):
+        def functions_args(*args):
+            token=args[0].headers['Authorization']
+            token=token.split(" ")
+            token=token[1]
+            permission=check_token(token)
+            print('a', permission in permissions_array)
+            if permission in permissions_array:
+                return view_function(*args)
+            else:
+                return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+        return functions_args
+    return wrapper
+
 def check_permissions(request,permissions_array):
     token=request.headers['Authorization']
-    print("request",request.headers)
     token=token.split(" ")
     token=token[1]
     permission=check_token(token)
-    print(permission)
     return permission in permissions_array
