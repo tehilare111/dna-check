@@ -12,22 +12,13 @@ from rest_framework.views import APIView
 
 from forms.models import FormsTable
 from forms.serializers import FormsSerializer
-from users.utils import check_permissions, PERMISSIONS_PAGE_FROM_MANAGER, PERMISSIONS_PAGE_FROM_EDIT_EVENTS, PERMISSIONS_PAGE_FROM_WATCHING_EVENTS,check_token_not_login
+from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER, check_token_not_login
 import time
 import os
 import csv
 
-def check_permissions(request,permissions_array):
-    token=request.headers['Authorization']
-    token=token.split(" ")
-    token=token[1]
-    permission=check_token_not_login(token)
-    if permission in permissions_array:
-        return True
-    else:
-        return False
-
 @csrf_exempt
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER])
 def forms_list(request, event_type):
     '''
         Responsible to hendle requests froms main control table page.
@@ -36,8 +27,6 @@ def forms_list(request, event_type):
               Return all rows from table when no url specified.
         DELETE - Delete all table content. 
     '''
-    if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS,PERMISSIONS_PAGE_FROM_WATCHING_EVENTS]):
-        return HttpResponse(status=status.HTTP_401_FORBIDDEN)
     if request.method == 'GET':
             if event_type == '':
                 forms = FormsTable.objects.all()
@@ -56,44 +45,19 @@ def forms_list(request, event_type):
 
 
 @csrf_exempt
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER])
 def new_event_form(request):
     '''
         New Event Form load all its initial values from here.
         Relevant url: /api/event_forms/
     '''
-    if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER, PERMISSIONS_PAGE_FROM_EDIT_EVENTS, PERMISSIONS_PAGE_FROM_WATCHING_EVENTS]):
-        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == 'GET':
         dt = datetime.today()
         payload = {'datetime': '{}/{}/{}'.format(dt.day, dt.month, dt.year)}
         return JsonResponse(payload, safe=False)
             
-'''
 @csrf_exempt
-def existing_event_form(request, reference):
-    try: 
-        event_form = FormsTable.objects.get(reference=reference) 
-    except FormsTable.DoesNotExist: 
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
- 
-    if request.method == 'GET':
-        form_serializer = FormsSerializer(event_form)
-        return JsonResponse(form_serializer.data)
- 
-    elif request.method == 'PUT':
-        form_data = JSONParser().parse(request)
-        form_serializer = FormsSerializer(event_form, data=form_data)
-        if form_serializer.is_valid():
-            form_serializer.save()
-            return JsonResponse(form_serializer.data)
-        return JsonResponse(form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
- 
-    elif request.method == 'DELETE': 
-        event_form.delete() 
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-'''
-
-@csrf_exempt
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER])
 def download_file(request, path):
     '''
         Download file from given path in the request url.
@@ -107,9 +71,8 @@ def download_file(request, path):
             response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
             return response
     
-
-
 @csrf_exempt
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER])
 def download_xl_file(request, event_type):
     '''
         Export xl file following the given url
@@ -136,20 +99,18 @@ def download_xl_file(request, event_type):
 class NewEventFrom(APIView):
 
     parser_classes = (MultiPartParser, FormParser)
-
+    
+    @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)
     def post(self, request, *args, **kwargs):
-        if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS]):
-            return HttpResponse(status=status.HTTP_401_FORBIDDEN)
         form_serializer = FormsSerializer(data=request.data)
         if form_serializer.is_valid():
             form_serializer.save(reference = int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0) + 1)
             return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
-
+    
+    @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)
     def put(self, request, reference,*args, **kwargs):
-        if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS]):
-            return HttpResponse(status=status.HTTP_401_FORBIDDEN)
         try: 
             event_form = FormsTable.objects.get(reference=reference) 
         except FormsTable.DoesNotExist: 
@@ -161,7 +122,8 @@ class NewEventFrom(APIView):
             return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
             return HttpResponse(form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
+    @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], API_VIEW=True)
     def get(self, request, reference, *args, **kwargs):
         try: 
             event_form = FormsTable.objects.get(reference=reference) 
@@ -171,6 +133,7 @@ class NewEventFrom(APIView):
         form_serializer = FormsSerializer(event_form)
         return JsonResponse(form_serializer.data)
 
+    @check_permissions_dec([MANAGER], API_VIEW=True)
     def delete(self, request, reference, *args, **kwargs):
         if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER]):
             return HttpResponse(status=status.HTTP_401_FORBIDDEN)

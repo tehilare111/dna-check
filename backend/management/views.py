@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser, FormParser
 from rest_framework import status
 from django.conf import settings
-from users.utils import check_permissions, check_permissions_dec ,PERMISSIONS_PAGE_FROM_MANAGER, PERMISSIONS_PAGE_FROM_EDIT_EVENTS, PERMISSIONS_PAGE_FROM_WATCHING_EVENTS
+from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
 
 from management.models import UnitsTree, ConstantsFields
 from management.serializers import UnitsTreeSerializer, ConstantsFieldsSerializer
@@ -18,7 +18,7 @@ CONSTATNS_FIELDS_OBJECT_STATIC_ID = '28032018'
 #                        Units tree                         #
 #############################################################        
 @csrf_exempt 
-@check_permissions_dec([PERMISSIONS_PAGE_FROM_MANAGER])
+@check_permissions_dec([MANAGER])
 def units_tree_management(request):
     if request.method == 'GET':
         try: 
@@ -62,10 +62,9 @@ def units_tree_register(request):
 ###############################################################
 #                     Constants fields                        #
 ###############################################################
-@csrf_exempt 
+@csrf_exempt
+@check_permissions_dec([MANAGER])
 def constants_fields(request):
-    if not check_permissions(request,PERMISSIONS_PAGE_FROM_MANAGER):  
-        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)   
     if request.method == 'GET':
         try: 
             constants_fields = ConstantsFields.objects.get(constantFieldId=CONSTATNS_FIELDS_OBJECT_STATIC_ID) 

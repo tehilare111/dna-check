@@ -10,9 +10,9 @@ from users.models import  Destination
 from users.serializers import DestinationSerilazers
 from django.contrib.auth import get_user_model
 
-PERMISSIONS_PAGE_FROM_MANAGER="מנהלן מערכת"
-PERMISSIONS_PAGE_FROM_EDIT_EVENTS="מדווח אירועים"
-PERMISSIONS_PAGE_FROM_WATCHING_EVENTS="צופה אירועים"
+MANAGER="מנהלן מערכת"
+EVENTS_REPORTER="מדווח אירועים"
+EVENTS_VIEWER="צופה אירועים"
 
 
 secret='''PDvnOudatcLzb/i2cCVFQgIEUgTbehke5iN2QRF7Vqo2zYOzdXMuelzf5/DL+g7+
@@ -63,17 +63,18 @@ def check_token_not_login(tokens):
     except Exception as e:
         return False 
 
-def check_permissions_dec(permissions_array):
-    print(permissions_array)
+def check_permissions_dec(permissions_array, API_VIEW=False):
+    
     def wrapper(view_function):
-        def functions_args(*args):
-            token=args[0].headers['Authorization']
+        def functions_args(*args, **kwargs):
+            request_index = 0 if not API_VIEW else 1
+            token=args[request_index].headers['Authorization']
             token=token.split(" ")
             token=token[1]
             permission=check_token(token)
-            print('a', permission in permissions_array)
+            
             if permission in permissions_array:
-                return view_function(*args)
+                return view_function(*args, **kwargs)
             else:
                 return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
         return functions_args

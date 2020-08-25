@@ -7,7 +7,7 @@ from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from management.utils import constants_fields_array
 from management.models import UnitsTree, ConstantsFields
-from users.utils import check_permissions, PERMISSIONS_PAGE_FROM_MANAGER, PERMISSIONS_PAGE_FROM_EDIT_EVENTS, PERMISSIONS_PAGE_FROM_WATCHING_EVENTS,check_token,create_jwt
+from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER, check_token, create_jwt
 
 
 ###############################################################
@@ -56,9 +56,8 @@ def check_user_and_personalnumbner(user_data):
 #                    Get groups permissions                   #
 ###############################################################
 @csrf_exempt 
+@check_permissions_dec([MANAGER])
 def groups_permissions_list(request, unit,token):
-    if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER]):
-        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == 'GET':
             users = Destination.objects.filter(armyunit=unit)
             customer_u=DestinationSerilazers(users,many=True)
@@ -70,10 +69,8 @@ def groups_permissions_list(request, unit,token):
 #                         Update user                         #
 ###############################################################
 @csrf_exempt 
+@check_permissions_dec([MANAGER])
 def update_permissions_users(request,personalnumber):
-    
-    if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER]):
-        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED) 
     try: 
         event_form = Destination.objects.get(personalnumber=personalnumber)
     except Destination.DoesNotExist:
