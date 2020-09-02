@@ -20,6 +20,9 @@ import time
 import os
 import csv
 from datetime import datetime
+import json
+
+
 
 @csrf_exempt
 @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_UNIT=True)
@@ -107,8 +110,12 @@ class OfficialEventFrom(APIView):
     
     @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)
     def post(self, request, reference, *args, **kwargs):
-        form_serializer = FormsSerializer(data=request.data)
 
+
+
+        # if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS]):
+        #     return HttpResponse(status=status.HTTP_401_FORBIDDEN)
+        form_serializer = FormsSerializer(data=request.body)
         if form_serializer.is_valid():
             reference = generate_reference(reference)
             # Create instance for this event form in the messages database
@@ -116,6 +123,8 @@ class OfficialEventFrom(APIView):
             form_serializer.save(reference=reference, writtenInFormals=True)
             return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
+            # form_serializer.data["array"]=array_equipments 
+            print("this is data",form_serializer)
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
     
     @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)

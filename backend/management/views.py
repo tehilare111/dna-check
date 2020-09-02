@@ -23,14 +23,22 @@ def units_tree_management(request):
         units_tree = None
 
     if request.method == 'GET':
+<<<<<<< HEAD
         if not units_tree:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
 
+=======
+        try: 
+            units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID)
+        except UnitsTree.DoesNotExist: 
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
+>>>>>>> 3afdfef... bar
         units_tree_serializer = UnitsTreeSerializer(units_tree)
         return JsonResponse(units_tree_serializer.data, safe=False)
     
     elif request.method == 'POST':
         data = JSONParser().parse(request)
+<<<<<<< HEAD
         units_tree_serializer = UnitsTreeSerializer(data=data) if not units_tree else UnitsTreeSerializer(units_tree, data=data)
             
         if units_tree_serializer.is_valid():
@@ -39,6 +47,16 @@ def units_tree_management(request):
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST) 
             
+=======
+        print(data)
+        if units_tree:
+                units_tree_serializer = UnitsTreeSerializer(units_tree, data=data) 
+        else:
+            units_tree_serializer = UnitsTreeSerializer(data=data) 
+            if units_tree_serializer.is_valid():
+                units_tree_serializer.save(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
+                return JsonResponse(units_tree_serializer.data,safe=False)  
+>>>>>>> 3afdfef... bar
     elif request.method == 'DELETE':
         UnitsTree.objects.all().delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)

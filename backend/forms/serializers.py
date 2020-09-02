@@ -1,6 +1,6 @@
 
 from rest_framework import serializers 
-from forms.models import Form, EventForm, FormsTable
+from forms.models import Form, EventForm, FormsTable,EventsEquipments
 
 
 class FormSerializer(serializers.ModelSerializer):
@@ -29,10 +29,23 @@ class EventFormSerializer(FormSerializer):
             'handlingStatus',
         )
 
+class EquipmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        unique_together = ['reference', 'equipment','equipmentType', 'equipmentMark','equipmentMakat']
+        model=EventsEquipments
+        fields=(
+        'equipment',
+        'equipmentType',
+        'equipmentMark',
+        'equipmentMakat',
+        )
+
 class FormsSerializer(EventFormSerializer):
+    equipments = EquipmentSerializer(many=True)
     class Meta:
         model = FormsTable
-        fields = EventFormSerializer.Meta.fields + (
+        
+        fields =EventFormSerializer.Meta.fields + (
             'signerUnit',
             'signerName',
             'signerId',
@@ -40,10 +53,6 @@ class FormsSerializer(EventFormSerializer):
             'position',
             'eventDate',
             'eventHour',
-            'equipment',
-            'equipmentType',
-            'equipmentMark',
-            'equipmentMakat',
             'eventRelevantPlacesAndFactors',
             'eventInitialDetails',
             'investigationDate',
@@ -57,3 +66,9 @@ class FormsSerializer(EventFormSerializer):
             'reviewReference',
             'isMatchToReport'
         )
+
+            'isMatchToReport',
+            'equipments',
+        )
+
+
