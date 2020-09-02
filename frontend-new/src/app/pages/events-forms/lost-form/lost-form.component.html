@@ -78,6 +78,22 @@
           <div class="row">
             <div class="col-md-2">
               <div class="form-group">
+
+            <label for="equipmentType" class="label">כמות בחירה</label>
+            <input [readonly]="this.lostForm.editStateBlocked" type="text" nbInput fullWidth #eventHour name="amount_select" id="amount_select" status="primary" placeholder="כמות ציוד"(click)="create_jeson_equipments();create_array()"[(ngModel)]="lostForm.amount_select" timeValidation>
+            </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+            <label for="equipmentType" class="label">כמות בחירה</label>
+            <nb-select [disabled]="this.lostForm.editStateBlocked" name="equipmentType" id="equipmentType" status="primary" placeholder="כמות בחירה" [(ngModel)]="lostForm.equipmentType">
+              <nb-option *ngFor="let number of number_select" value="number" (click)="index=number-1" >{{number}}</nb-option>  
+            </nb-select>
+            </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+
                 <label for="equipment" class="label">ציוד/חומר</label>
                 <nb-select [disabled]="this.form.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="form.equipment">
                   <nb-option *ngFor="let equipment of equipments" [value]="equipment.name" (click)="equipmentsTypeOptions=equipment.list; form.equipmentType=''">{{equipment.name}}</nb-option>  

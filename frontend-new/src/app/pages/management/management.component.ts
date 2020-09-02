@@ -82,7 +82,6 @@ export class ManagementComponent implements OnInit {
         console.log(data)
         this.nodes = data.treeNode
         this.maxTreeNodeId = data.maxTreeNodeId
-        
         this.uploadLoading = false
       },
       err => {

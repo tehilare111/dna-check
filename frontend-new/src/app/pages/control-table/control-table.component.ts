@@ -5,6 +5,7 @@ import { SmartTableData } from '../../@core/data/smart-table';
 import { RestApiService } from '../../services/rest-api.service';
 import { ToastService } from '../../services/toast.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'ngx-control-table',
   templateUrl: './control-table.component.html',
@@ -44,12 +45,17 @@ export class ControlTableComponent implements OnInit {
     columns: {...this.pickedUpEvent.columns}
   }
 
+  auth:AuthService=new AuthService()
   source: LocalDataSource = new LocalDataSource();
   formalsUrl: string = '/forms/';
   draftsUrl: string = '/draft-forms/';
   data = [];
   isDraft:boolean = false;
 
+  
+
+
+  array_permission=[]
   constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router) { 
   } 
   
@@ -58,7 +64,10 @@ export class ControlTableComponent implements OnInit {
     this.source.load(this.data);
     this.loadData('');
   }
-
+  checkPermissions(){
+    this.array_permission=['מדווח אירועים','מנהלן מערכת']
+    return this.auth.checkPermissions(this.array_permission)
+  }
   loadTable(value){
     if (value.name == this.eventsToPickUp.Drafts.name) this.isDraft = true;
     else this.isDraft = false;
@@ -70,8 +79,15 @@ export class ControlTableComponent implements OnInit {
   }
 
   loadData(eventType: string) {
+<<<<<<< HEAD
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${eventType}`).subscribe((data_from_server) => {
       this.data=data_from_server
+=======
+    this.RestApiService.getFormsList(eventType).subscribe((data_from_server) => {
+      console.log(data_from_server)
+      if(data_from_server.length>0)
+          this.data=data_from_server
+>>>>>>> d2b2987... bar
       this.source.load(this.data);
     });
   }

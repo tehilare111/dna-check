@@ -10,7 +10,6 @@ import { ManagementComponent } from './management/management.component';
 import { LoginComponent } from './details_users/login/login.component';
 import { RegisterComponent } from './details_users/register/register.component';
 import { ConstantsFieldsComponent } from './constants-fields/constants-fields.component';
-
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -35,6 +34,8 @@ const routes: Routes = [{
   },{
   path:'login',
     component:LoginComponent,
+  },{path:'register',
+    component:RegisterComponent,
   },{
   path: 'register',
     component: RegisterComponent,
