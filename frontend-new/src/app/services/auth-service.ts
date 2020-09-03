@@ -3,10 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { User } from '../@core/data/users';
 import { userInfo } from 'os';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
+
 export class AuthService  {
-    check_pernissions(array_permission)
+    check_permissions(array_permission)
     {
-    return array_permission.includes(localStorage.getItem("permissions"))
-}
+        return array_permission.includes(localStorage.getItem("permissions"))
+    }
 }

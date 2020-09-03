@@ -1,0 +1,33 @@
+
+<nb-card class="main-nb-card" status="primary" [nbSpinner]="uploadLoading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+    <nb-card-header>
+        <h1>שדות קבועים</h1>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="row actionButton">
+            <button nbButton (click)="saveData()" class="saveButton" status="primary">שמירת שדות קבועים</button>
+        </div>
+        <div class="row">
+            <div class="col-md-4"> 
+                <ngx-field-box #eventStatus [fieldOptions]="ConstantsFields.eventStatus" fieldName="סטאטוס אירוע"></ngx-field-box>
+            </div>
+            <div class="col-md-4"> 
+                <ngx-field-box #materialType [fieldOptions]="ConstantsFields.materialType" fieldName="סוג חומר"></ngx-field-box>
+            </div>
+            <div class="col-md-4"> 
+                <ngx-field-box #equipmentType [fieldOptions]="ConstantsFields.equipmentType" fieldName="סוג ציוד"></ngx-field-box>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4"> 
+                <ngx-field-box #rank [fieldOptions]="ConstantsFields.rank" fieldName="דרגה"></ngx-field-box>
+            </div>
+            <div class="col-md-4"> 
+                <ngx-field-box #handlingStatus [fieldOptions]="ConstantsFields.handlingStatus" fieldName="סטאטוס טיפול"></ngx-field-box>
+            </div>
+            <div class="col-md-4"> 
+                <ngx-field-box #equipmentMakat [fieldOptions]="ConstantsFields.equipmentMakat" fieldName="מקט ציוד"></ngx-field-box>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

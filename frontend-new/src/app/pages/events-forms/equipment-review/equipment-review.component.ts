@@ -36,8 +36,6 @@ export class EquipmentReviewComponent{
   popUpDialogContext: string = '';
   constans_array=[]
   baseUrl: string = '';
-  array_permission;
-  auth:AuthService=new AuthService();
   // select fields options:
   results = ["טופל", "טרם טופל"]
   units = ["מצוב", "מעוף", "מצפן"]
@@ -46,7 +44,7 @@ export class EquipmentReviewComponent{
   materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
   equipments = [{"name": "ציוד", "list" : this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
   equipmentsTypeOptions = []  
-  constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { this.baseUrl = this.RestApiService.baseUrl; }
+  constructor(private auth: AuthService, private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { this.baseUrl = this.RestApiService.baseUrl; }
 
   // id of all validation fields
   @ViewChild("signerName") signerName : ElementRef;
@@ -96,15 +94,6 @@ export class EquipmentReviewComponent{
     }
   }
 
-  checkPermissions(){
-    this.array_permission=["מדווח אירועים","מנהלן מערכת",]
-    return this.auth.check_pernissions(this.array_permission)
-  }
-  checkPermissions_manager()
-  {
-    this.array_permission=["מנהלן מערכת"]
-    return this.auth.check_pernissions(this.array_permission)
-  }
   get_constas_feilds() {
     this.constans_array=["equipmentType","rank","materialType","eventStatus"]
     this.RestApiService.getConstansFialdsNotPermissions(this.constans_array).subscribe((data_from_server) => {
@@ -164,7 +153,6 @@ export class EquipmentReviewComponent{
         },
         error => console.log(error));
     }
-    //this.equipmentReview = new EquipmentReviewTemplate(); // initialize form
   }
 
   openWithoutBackdropClick(dialog) {

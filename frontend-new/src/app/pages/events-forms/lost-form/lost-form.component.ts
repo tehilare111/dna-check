@@ -14,8 +14,7 @@ import { markValidator } from "../validation-directives/mark.directive";
 import { timeValidator } from "../validation-directives/time.directive";
 import { textValidator } from '../validation-directives/text.directive';
 import { AuthService } from '../../../services/auth-service';
-// import { JwtService } from '../../../services/jwt.service';
-// import { AuthService } from '../../../services/auth-service';
+
 @Component({
   selector: 'ngx-form-layouts',
   templateUrl: './lost-form.component.html',
@@ -30,7 +29,6 @@ export class LostFormComponent implements OnInit {
   readonly : boolean = true;
   popUpDialogContext: string = '';
   constans_array=[]
-  auth:AuthService=new AuthService()
   baseUrl: string = '';
   @ViewChild("dialog") dialog : ElementRef;
   @ViewChild("dialog2") dialog2 : ElementRef;
@@ -46,9 +44,8 @@ export class LostFormComponent implements OnInit {
   materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
   equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
   equipmentsTypeOptions = []  
-  array_permission=[]
   
-  constructor(private RestApiService: RestApiService,public activatedRoute: ActivatedRoute,private dialogService: NbDialogService,private router: Router) {this.baseUrl = this.RestApiService.baseUrl;}
+  constructor(private auth: AuthService, private RestApiService: RestApiService,public activatedRoute: ActivatedRoute,private dialogService: NbDialogService,private router: Router) {this.baseUrl = this.RestApiService.baseUrl;}
 
   // id of all validation fields
   @ViewChild("signerName") signerName : ElementRef;
@@ -84,8 +81,6 @@ export class LostFormComponent implements OnInit {
     this.formFiles.push({'id': target.attributes.id.value, 'file': target.files.item(0)});
   }
 
-  
-
   ngOnInit() {
     // Set eventType field according to the form event type
     this.lostForm.eventType = this.eventType
@@ -100,6 +95,7 @@ export class LostFormComponent implements OnInit {
       // this.get_constas_feilds()
     } 
   }
+
   openWithoutBackdropClick(dialog) {
     this.dialogService.open(
       dialog,
@@ -108,6 +104,7 @@ export class LostFormComponent implements OnInit {
         closeOnBackdropClick: true,
       });
   }
+
   checkFieldsValid(){
     let formGroup = new FormGroup({
     'signerName': new FormControl(this.lostForm.signerName, [stdFieldValidator()]),
@@ -133,6 +130,7 @@ export class LostFormComponent implements OnInit {
     }
     return fieldsValid
   }
+
   onSubmit() {
     this.uploadLoading = true
     if (this.checkFieldsValid()){
@@ -153,8 +151,8 @@ export class LostFormComponent implements OnInit {
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: LostFormTemplate) => {
       this.lostForm = data_from_server
-      console.log("load_server",this.lostForm)
-      if(this.lostForm.editStateBlocked || this.checkPermissions())
+      
+      if(this.lostForm.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
           this.lostForm.editStateBlocked = false
         }else{
@@ -165,16 +163,7 @@ export class LostFormComponent implements OnInit {
   print_stamm(){
     console.log("bar agever",this.lostForm)
   }
-  checkPermissions(){
-    this.array_permission=['מדווח אירועים','מנהלן מערכת']
-    return this.auth.check_pernissions(this.array_permission)
-  }
-  checkPermissions_manager()
-  {
-    this.array_permission=['מנהלן מערכת']
-    return this.auth.check_pernissions(this.array_permission)
-  }
-
+  
   get_constas_feilds() {
     this.constans_array=["equipmentType","rank","materialType","eventStatus"]
      this.RestApiService.Get_constans_fiald(this.constans_array).subscribe((data_from_server) => {

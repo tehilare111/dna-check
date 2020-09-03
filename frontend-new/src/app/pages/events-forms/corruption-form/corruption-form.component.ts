@@ -36,8 +36,6 @@ export class CorruptionFormComponent {
   popUpDialogContext: string = '';
   msgs: any[] = [];
   baseUrl: string = '';
-  array_permission;
-  auth:AuthService=new AuthService();
   // select fields options:
   results = ["טופל", "טרם טופל"]
   units = ["מצוב", "מעוף", "מצפן", "פלגת חוד"]
@@ -47,7 +45,7 @@ export class CorruptionFormComponent {
   equipments = [{"name": "ציוד", "list" : this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
   constans_array=[]
   equipmentsTypeOptions = []  
-  constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { this.baseUrl = this.RestApiService.baseUrl; }
+  constructor(private auth: AuthService, private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) { this.baseUrl = this.RestApiService.baseUrl; }
 
   // id of all validation fields
   @ViewChild("signerName") signerName : ElementRef;
@@ -192,14 +190,14 @@ export class CorruptionFormComponent {
   }
 
   checkPermissions(){
-    this.array_permission=["מדווח אירועים","מנהלן מערכת",]
-    return this.auth.check_pernissions(this.array_permission)
+    return this.auth.check_permissions(["מדווח אירועים","מנהלן מערכת"])
   }
-  checkPermissions_manager()
+
+  checkPermissionsManager()
   {
-    this.array_permission=["מנהלן מערכת"]
-    return this.auth.check_pernissions(this.array_permission)
+    return this.auth.check_permissions(["מנהלן מערכת"])
   }
+
   onSubmit() {
     this.uploadLoading = true
     if (this.checkFieldsValid()){
