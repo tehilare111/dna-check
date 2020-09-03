@@ -48,9 +48,9 @@ export class RegisterComponent implements OnInit {
   }
   get_constatns_filds_rank() {
     this.rank_array=["rank"]
-    this.RestApiService.Get_constans_fiald(this.rank_array).subscribe((data_from_server) => {
-      console.log("data_from_server:",data_from_server.data)
-      this.ranks = data_from_server.data.rank
+    this.RestApiService.getConstansFieldsAndUnitsArray().subscribe((data) => {
+      this.ranks = data.rank
+      this.units_array = data.units
     });
   }
   get_tree_node(){

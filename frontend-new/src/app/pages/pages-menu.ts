@@ -4,11 +4,6 @@ import { icon } from 'leaflet';
 export class MENUS{
 public ADMIN_MENU: NbMenuItem[] = [
   {
-    title: 'E-commerce',
-    icon: 'nb-e-commerce',
-    link: '/pages/dashboard',
-    
-  },{
     title:"התחברות",
     icon:'nb-gear',
     link:'/pages/login',

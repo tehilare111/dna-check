@@ -28,7 +28,6 @@ export class LostFormComponent implements OnInit {
   formFiles : {'id': string, 'file': File}[] = []; 
   readonly : boolean = true;
   popUpDialogContext: string = '';
-  constans_array=[]
   baseUrl: string = '';
   @ViewChild("dialog") dialog : ElementRef;
   @ViewChild("dialog2") dialog2 : ElementRef;
@@ -84,7 +83,7 @@ export class LostFormComponent implements OnInit {
   ngOnInit() {
     // Set eventType field according to the form event type
     this.lostForm.eventType = this.eventType
-    // this.get_constas_feilds()
+    this.get_constas_feilds()
     // Recieve form data from db according to its reference
     this.reference = this.activatedRoute.snapshot.params.reference;
     if (this.reference){
@@ -92,7 +91,6 @@ export class LostFormComponent implements OnInit {
     } else {
        this.readonly = false;
        this.newFormLoadData();
-      // this.get_constas_feilds()
     } 
   }
 
@@ -148,6 +146,7 @@ export class LostFormComponent implements OnInit {
       this.lostForm.date = data_from_server.datetime
     });
   }
+
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: LostFormTemplate) => {
       this.lostForm = data_from_server
@@ -158,25 +157,21 @@ export class LostFormComponent implements OnInit {
         }else{
           this.lostForm.editStateBlocked = true
         }    });
-    this.get_constas_feilds()  
-}
-  print_stamm(){
-    console.log("bar agever",this.lostForm)
+    // this.get_constas_feilds()
   }
-  
+
   get_constas_feilds() {
-    this.constans_array=["equipmentType","rank","materialType","eventStatus"]
-     this.RestApiService.Get_constans_fiald(this.constans_array).subscribe((data_from_server) => {
-        
-       this.equipmentsType=data_from_server.data.equipmentType
-       this.ranks = data_from_server.data.rank
-       this.materialsType=data_from_server.data.materialType
-       this.results=data_from_server.data.eventStatus
-       this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
-       this.equipmentsTypeOptions = this.equipments.map(el => {console.log(el, "- ", this.lostForm.equipment);if(el['name']==this.lostForm.equipment) return el['list']; else return undefined; }).filter(el => el!=null)[0]
-       console.log("this:",this.equipmentsTypeOptions)
-     });
-   }
+    this.RestApiService.getConstansFieldsAndUnitsArray().subscribe((data) => {  
+      console.log(data)
+      this.equipmentsType = data.equipmentType
+      this.ranks = data.rank
+      this.materialsType = data.materialType
+      this.results = data.handlingStatus
+      this.units = data.units
+      this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+      this.equipmentsTypeOptions = this.equipments.map(el => {console.log(el, "- ", this.lostForm.equipment);if(el['name']==this.lostForm.equipment) return el['list']; else return undefined; }).filter(el => el!=null)[0]
+    });
+  }
 
   save() {
     const formData: FormData = new FormData();

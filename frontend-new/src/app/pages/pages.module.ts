@@ -10,6 +10,7 @@ import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 import { FieldBoxComponent } from "./constants-fields/components/field-box.component";
 import { ConstantsFieldsComponent } from './constants-fields/constants-fields.component';
 import { ControlTableComponent } from './control-table/control-table.component';
+import { RegisterComponent } from './details_users/register/register.component';
 import { ManagementComponent } from './management/management.component';
 import { TreeModule } from 'angular-tree-component';
 import { LoginComponent } from './details_users/login/login.component';
@@ -36,7 +37,8 @@ const PAGES_COMPONENTS = [
     ManagementComponent,
     LoginComponent,
     ConstantsFieldsComponent,
-    FieldBoxComponent
+    FieldBoxComponent,
+    RegisterComponent
 
   ],
 })

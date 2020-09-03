@@ -45,7 +45,7 @@ def create_jwt(user_data):
 
 def check_token(token):
     try:
-        auth=jwt.decode(token,'secret', algorithms=['HS256'])
+        auth = jwt.decode(token,'secret', algorithms=['HS256'])
         return get_permissions(auth["username"])
     except Exception as e:
         return False 
@@ -55,23 +55,14 @@ def get_permissions(username):
     customer_serializer = DestinationSerilazers(event_form)
     return customer_serializer.data["permissions"]
 
-def check_token_not_login(tokens):
-    try:
-        auth=jwt.decode(tokens,'secret', algorithms=['HS256'])
-        return get_permissions(auth["username"])
-        
-    except Exception as e:
-        return False 
-
 def check_permissions_dec(permissions_array, API_VIEW=False):
     
     def wrapper(view_function):
         def functions_args(*args, **kwargs):
             request_index = 0 if not API_VIEW else 1
-            token=args[request_index].headers['Authorization']
-            token=token.split(" ")
-            token=token[1]
-            permission=check_token(token)
+            token=args[request_index].headers['Authorization'].split(" ")[1]
+            
+            permission = check_token(token)
             
             if permission in permissions_array:
                 return view_function(*args, **kwargs)

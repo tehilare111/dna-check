@@ -95,12 +95,12 @@ export class CorruptionFormComponent {
   }
   get_constas_feilds() {
     this.constans_array=["equipmentType","rank","materialType","eventStatus"]
-    this.RestApiService.Get_constans_fiald(this.constans_array).subscribe((data_from_server) => {
-      this.equipmentsType=data_from_server.data.equipmentType
-      this.ranks = data_from_server.data.rank
-      this.materialsType=data_from_server.data.materialType
-      this.results=data_from_server.data.handlingStatus
-      this.eventStatusForm=data_from_server.data.eventStatus
+    this.RestApiService.getConstansFieldsAndUnitsArray().subscribe((data) => {
+      this.equipmentsType = data.equipmentType
+      this.ranks = data.rank
+      this.materialsType = data.materialType
+      this.results = data.handlingStatus
+      this.eventStatusForm = data.eventStatus
       this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
     });
   }
@@ -187,15 +187,6 @@ export class CorruptionFormComponent {
       }
     }
     return fieldsValid
-  }
-
-  checkPermissions(){
-    return this.auth.check_permissions(["מדווח אירועים","מנהלן מערכת"])
-  }
-
-  checkPermissionsManager()
-  {
-    return this.auth.check_permissions(["מנהלן מערכת"])
   }
 
   onSubmit() {
