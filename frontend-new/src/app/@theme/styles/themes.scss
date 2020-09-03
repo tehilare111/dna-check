@@ -45,20 +45,20 @@ $nb-themes: nb-register-theme((
   font-main: Roboto,
   font-secondary: Exo,
 
-  switcher-background: #4e41a5,
+  switcher-background: #ffffff,
   switcher-background-percentage: 14%,
-  drops-icon-line-gadient: -webkit-linear-gradient(#a258fe, #7958fa),
+  drops-icon-line-gadient: -webkit-linear-gradient(#fff, #ffffff),
 
   list-item-border-width: 1px,
 
   slide-out-container-width: 30%,
-  slide-out-background: radial-gradient(circle, #302c6e 0%, #423f8c 100%),
+  slide-out-background: radial-gradient(circle, #fff 0%, #fff 100%),
   slide-out-shadow-color: 2px 0 3px rgba(19, 19, 94, 0.9),
   slide-out-shadow-color-rtl: -2px 0 3px rgba(19, 19, 94, 0.9),
 
   chart-panel-summary-box-shadow: none,
-  chart-panel-summary-background-color: rgba(0, 0, 0, 0.1),
-  chart-panel-summary-border-color: #332e73,
+  chart-panel-summary-background-color: rgba(0, 0, 0, 0.0),
+  chart-panel-summary-border-color: #fff,
   chart-panel-summary-border-width: 1px,
 
   ecommerce-card-border-width: 1px,

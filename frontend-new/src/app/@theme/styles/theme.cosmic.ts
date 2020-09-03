@@ -183,7 +183,7 @@ export const COSMIC_THEME = {
 
     profit: {
       bg: '#3d3780',
-      textColor: '#ffffff',
+      textColor: '#000000',
       axisLineColor: '#a1a1e5',
       splitLineColor: '#342e73',
       areaOpacity: '1',
