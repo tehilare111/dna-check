@@ -12,7 +12,8 @@ from rest_framework.views import APIView
 
 from forms.models import FormsTable
 from forms.serializers import FormsSerializer
-from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER, check_token_not_login
+from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
+
 import time
 import os
 import csv
@@ -41,9 +42,6 @@ def forms_list(request, event_type):
         FormsTable.objects.all().delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-
-
-
 @csrf_exempt
 @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER])
 def new_event_form(request):
@@ -62,8 +60,6 @@ def download_file(request, path):
     '''
         Download file from given path in the request url.
     '''
-    if not check_permissions(request,PERMISSIONS_PAGE_FROM_MANAGER):
-        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     file_path = os.path.join(settings.MEDIA_ROOT, path)
     if os.path.exists(file_path):
         with open(file_path, 'rb') as fh:
@@ -135,8 +131,6 @@ class NewEventFrom(APIView):
 
     @check_permissions_dec([MANAGER], API_VIEW=True)
     def delete(self, request, reference, *args, **kwargs):
-        if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER]):
-            return HttpResponse(status=status.HTTP_401_FORBIDDEN)
         try: 
             event_form = FormsTable.objects.get(reference=reference)
         except FormsTable.DoesNotExist: 
@@ -144,4 +138,3 @@ class NewEventFrom(APIView):
 
         event_form.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-

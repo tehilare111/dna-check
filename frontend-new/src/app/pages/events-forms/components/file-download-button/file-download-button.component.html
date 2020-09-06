@@ -1,0 +1,12 @@
+<div class="form-group">
+  <div class="row">
+    <label class="label">
+      {{this.getFileName(this.fileFullName)}}
+    </label>
+  </div>
+  <div class="row">
+    <a [href]="fileFullName" class="download">
+      <nb-card status="primary"><i class="ion-arrow-down-c"></i></nb-card>
+    </a>
+  </div>
+</div>

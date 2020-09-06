@@ -13,9 +13,9 @@ class UnitsTree(models.Model):
 class ConstantsFields(models.Model):
     constantFieldId = models.CharField(max_length=20, blank=True)
 
-    equipmentType = ArrayField(models.CharField(max_length=20, blank=True))
-    materialType = ArrayField(models.CharField(max_length=20, blank=True))
-    equipmentMakat = ArrayField(models.CharField(max_length=20, blank=True))
-    eventStatus = ArrayField(models.CharField(max_length=20, blank=True))
-    rank = ArrayField(models.CharField(max_length=20, blank=True))
-    handlingStatus = ArrayField(models.CharField(max_length=20, blank=True))
+    equipmentType = ArrayField(models.CharField(max_length=20,), null=True, blank=True)
+    materialType = ArrayField(models.CharField(max_length=20, blank=True), null=True, blank=True)
+    equipmentMakat = ArrayField(models.CharField(max_length=20, blank=True), null=True, blank=True)
+    eventStatus = ArrayField(models.CharField(max_length=20, blank=True), null=True, blank=True)
+    rank = ArrayField(models.CharField(max_length=20, blank=True), null=True, blank=True)
+    handlingStatus = ArrayField(models.CharField(max_length=20, blank=True), null=True, blank=True)

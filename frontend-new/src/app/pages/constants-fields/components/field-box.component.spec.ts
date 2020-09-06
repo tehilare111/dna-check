@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LostFormComponent } from './lost-form.component';
+import { FieldBoxComponent } from './field-box.component';
 
-describe('LostFormComponent', () => {
-  let component: LostFormComponent;
-  let fixture: ComponentFixture<LostFormComponent>;
+describe('FieldBoxComponent', () => {
+  let component: FieldBoxComponent;
+  let fixture: ComponentFixture<FieldBoxComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LostFormComponent ]
+      declarations: [ FieldBoxComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LostFormComponent);
+    fixture = TestBed.createComponent(FieldBoxComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

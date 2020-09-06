@@ -12,9 +12,9 @@ export class EventStatusComponent implements OnInit {
 
   @Input() eventForm: EventForm = new EventForm();
   @Input() readonly: boolean = true;
-  constatns_array=[]
-  @Input() results = [];
-  eventStatusOptions = ["פתוח", "סגור"]
+  constatns_array = []
+  @Input() eventStatusOptions = [];
+  results = ["פתוח", "סגור"]
   handlingStatusOptions = ["אבד", "נמצא"]
 
   constructor(private RestApiService:RestApiService) { }

@@ -8,6 +8,8 @@ import { ControlTableComponent } from './control-table/control-table.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 import { ManagementComponent } from './management/management.component';
 import { LoginComponent } from './details_users/login/login.component';
+import { RegisterComponent } from './details_users/register/register.component';
+import { ConstantsFieldsComponent } from './constants-fields/constants-fields.component';
 
 const routes: Routes = [{
   path: '',
@@ -18,6 +20,9 @@ const routes: Routes = [{
   },{
     path: 'management',
     component: ManagementComponent,
+  },{
+    path: 'constants-fields',
+    component: ConstantsFieldsComponent,
   },{
     path: 'iot-dashboard',
     component: DashboardComponent,
@@ -30,6 +35,9 @@ const routes: Routes = [{
   },{
   path:'login',
     component:LoginComponent,
+  },{
+  path: 'register',
+    component: RegisterComponent,
   },{
     path: 'ui-features',
     loadChildren: './ui-features/ui-features.module#UiFeaturesModule',

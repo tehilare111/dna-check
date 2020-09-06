@@ -45,6 +45,19 @@ $nb-themes: nb-register-theme((
   font-main: Roboto,
   font-secondary: Exo,
 
+  layout-bg: #fff,
+
+  smart-table-header-font-weight: font-weight-normal,
+  smart-table-header-bg: #fff,
+  smart-table-bg-even: #fff,
+  smart-table-bg-active: #fff,
+
+  smart-table-paging-border-color: color-primary,
+  smart-table-paging-border-width: 2px,
+  smart-table-paging-fg-active: color-fg-heading,
+  smart-table-paging-bg-active: #fff,
+  smart-table-paging-hover: rgba(0, 0, 0, 0.2),
+
   switcher-background: #4e41a5,
   switcher-background-percentage: 14%,
   drops-icon-line-gadient: -webkit-linear-gradient(#a258fe, #7958fa),

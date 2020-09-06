@@ -14,27 +14,16 @@ nb-checkbox {
     padding-bottom: 0;
   }
   
-  .download{
-    width: 100%;
-  }
-  
-  .download nb-card{
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    background-color: #3366ff;
-    border-color: #3366ff;
-    color: #ffffff;
-  }
-  
-  .download nb-card nb-icon{
-    width: auto;
-  }
   
   .red{
     color: red;
   }
   
+  /deep/ .cdk-global-scrollblock {
+    position: static;
+    overflow: hidden !important;
+  }
+
   @media only print {
     /* Intended for paged material and for documents
        viewed on screen in print preview mode .*/

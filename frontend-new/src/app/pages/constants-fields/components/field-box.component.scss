@@ -1,0 +1,34 @@
+nb-icon{
+    //margin: 0.5rem;
+    cursor: pointer;
+    margin: 0 0 0 0.2rem;
+}
+
+input {
+    margin: 0.5rem 0 0.5rem 0;
+}
+
+nb-card-body{
+    min-height: 11rem;
+}
+
+.iconsId{
+    float: left;
+    display:      block;
+    margin-left:  auto;
+    margin-right: 0;
+}
+
+h6{
+    color: white;
+    float: right;
+}
+
+nb-select{
+    width: 100%
+}
+
+/deep/ .cdk-global-scrollblock {
+    position: static;
+    overflow: hidden !important;
+  }

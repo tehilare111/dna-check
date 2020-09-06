@@ -14,8 +14,7 @@ import { markValidator } from "../validation-directives/mark.directive";
 import { timeValidator } from "../validation-directives/time.directive";
 import { textValidator } from '../validation-directives/text.directive';
 import { AuthService } from '../../../services/auth-service';
-// import { JwtService } from '../../../services/jwt.service';
-// import { AuthService } from '../../../services/auth-service';
+
 @Component({
   selector: 'ngx-form-layouts',
   templateUrl: './lost-form.component.html',
@@ -29,9 +28,6 @@ export class LostFormComponent implements OnInit {
   formFiles : {'id': string, 'file': File}[] = []; 
   readonly : boolean = true;
   popUpDialogContext: string = '';
-  constans_array=[]
-  auth:AuthService=new AuthService()
-  baseUrl: string = '';
   @ViewChild("dialog") dialog : ElementRef;
   @ViewChild("dialog2") dialog2 : ElementRef;
   @ViewChild("status") eventStatusForm : EventStatusComponent;
@@ -39,16 +35,15 @@ export class LostFormComponent implements OnInit {
   // @ViewChild("status") eventStatusForm : EventStatusComponent;
   disableEdit:boolean;
   uploadLoading = false
-  results = ["טופל", "טרם טופל"]
-  units = [,"מצוב", "מעוף", "מצפן", "פלגת החוד"]
-  ranks = ["סמל", "רבט", "טוראי"]
+  eventStatusOptions = ["טופל", "טרם טופל"]
+  units = []
+  ranks = []
   equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
   materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
   equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
   equipmentsTypeOptions = []  
-  array_permission=[]
   
-  constructor(private RestApiService: RestApiService,public activatedRoute: ActivatedRoute,private dialogService: NbDialogService,private router: Router) {this.baseUrl = this.RestApiService.baseUrl;}
+  constructor(private auth: AuthService, private RestApiService: RestApiService,public activatedRoute: ActivatedRoute,private dialogService: NbDialogService,private router: Router) {}
 
   // id of all validation fields
   @ViewChild("signerName") signerName : ElementRef;
@@ -84,22 +79,23 @@ export class LostFormComponent implements OnInit {
     this.formFiles.push({'id': target.attributes.id.value, 'file': target.files.item(0)});
   }
 
-  
-
   ngOnInit() {
     // Set eventType field according to the form event type
     this.lostForm.eventType = this.eventType
-    // this.get_constas_feilds()
+    
     // Recieve form data from db according to its reference
     this.reference = this.activatedRoute.snapshot.params.reference;
+    // Load all pages constants
+    this.getConstasFeilds()
+
     if (this.reference){
       this.exisitingFormLoadData(this.reference);
     } else {
        this.readonly = false;
        this.newFormLoadData();
-      // this.get_constas_feilds()
-    } 
+    }
   }
+
   openWithoutBackdropClick(dialog) {
     this.dialogService.open(
       dialog,
@@ -108,6 +104,7 @@ export class LostFormComponent implements OnInit {
         closeOnBackdropClick: true,
       });
   }
+
   checkFieldsValid(){
     let formGroup = new FormGroup({
     'signerName': new FormControl(this.lostForm.signerName, [stdFieldValidator()]),
@@ -133,6 +130,7 @@ export class LostFormComponent implements OnInit {
     }
     return fieldsValid
   }
+
   onSubmit() {
     this.uploadLoading = true
     if (this.checkFieldsValid()){
@@ -144,56 +142,47 @@ export class LostFormComponent implements OnInit {
       this.openWithoutBackdropClick(this.dialog2)
     }
   }
+
+  getFileName(fileNameWithPath){
+    if (fileNameWithPath) return fileNameWithPath.substring(fileNameWithPath.lastIndexOf('/') + 1)
+  }
   
   newFormLoadData() {
     this.RestApiService.getNewEventForm().subscribe((data_from_server) => {
       this.lostForm.date = data_from_server.datetime
     });
   }
+
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: LostFormTemplate) => {
       this.lostForm = data_from_server
-      console.log("load_server",this.lostForm)
-      if(this.lostForm.editStateBlocked || this.checkPermissions())
+      console.log(data_from_server);
+      if(this.lostForm.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
           this.lostForm.editStateBlocked = false
         }else{
           this.lostForm.editStateBlocked = true
-        }    });
-    this.get_constas_feilds()  
-}
-  print_stamm(){
-    console.log("bar agever",this.lostForm)
-  }
-  checkPermissions(){
-    this.array_permission=['מדווח אירועים','מנהלן מערכת']
-    return this.auth.check_pernissions(this.array_permission)
-  }
-  checkPermissions_manager()
-  {
-    this.array_permission=['מנהלן מערכת']
-    return this.auth.check_pernissions(this.array_permission)
+        }
+      });
+    // this.get_constas_feilds()
   }
 
-  get_constas_feilds() {
-    this.constans_array=["equipmentType","rank","materialType","eventStatus"]
-     this.RestApiService.Get_constans_fiald(this.constans_array).subscribe((data_from_server) => {
-        
-       this.equipmentsType=data_from_server.data.equipmentType
-       this.ranks = data_from_server.data.rank
-       this.materialsType=data_from_server.data.materialType
-       this.results=data_from_server.data.eventStatus
-       this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
-       this.equipmentsTypeOptions = this.equipments.map(el => {console.log(el, "- ", this.lostForm.equipment);if(el['name']==this.lostForm.equipment) return el['list']; else return undefined; }).filter(el => el!=null)[0]
-       console.log("this:",this.equipmentsTypeOptions)
-     });
-   }
+  getConstasFeilds() {
+    this.RestApiService.getConstansFieldsAndUnitsArray().subscribe((data) => {  
+      this.equipmentsType = data.equipmentType
+      this.ranks = data.rank
+      this.materialsType = data.materialType
+      this.eventStatusOptions = data.eventStatus
+      this.units = data.units
+      console.log(data);
+      //this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+      //this.equipmentsTypeOptions = this.equipments.map(el => {if(el['name']==this.lostForm.equipment) return el['list']; else return undefined; }).filter(el => el!=null)[0]
+    });
+  }
 
   save() {
     const formData: FormData = new FormData();
     this.lostForm = this.eventStatusForm.pushFormFields<LostFormTemplate>(this.lostForm);
-
-    console.log('form: ', this.lostForm)
     
     // insert lostForm to FormData object
     for(let [key, value] of Object.entries(this.lostForm)){

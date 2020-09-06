@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-AUTH_USER_MODEL = 'users.Destination'
+AUTH_USER_MODEL = 'users.Users'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -99,8 +99,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'testdb',
         'USER': 'postgres',
-        'PASSWORD': '123',
-        'HOST': '192.168.43.196',
+        'PASSWORD': '1',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
    }
 

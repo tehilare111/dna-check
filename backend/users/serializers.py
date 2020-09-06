@@ -1,9 +1,9 @@
-from users.models import Destination
+from users.models import Users
 from rest_framework import serializers 
 
-class DestinationSerilazers(serializers.ModelSerializer):
+class UsersSerilazers(serializers.ModelSerializer):
     class Meta:
-        model = Destination
+        model = Users
         fields=('username',
             'firstname',
             'lastname',
