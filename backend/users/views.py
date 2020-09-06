@@ -40,8 +40,9 @@ def check_login(request):
             return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
             
         if check_user_password(user.username, user_data["password"]):
-            user_serialized = UsersSerilazers(user)
-            return JsonResponse({"access_token":create_jwt(user_data),"permissions":user_serialized.data["permissions"]}, safe=False)
+            user_serialized_data = UsersSerilazers(user).data
+            user_serialized_data.update(access_token=create_jwt(user_data))
+            return JsonResponse(user_serialized_data , safe=False)
         else:
             return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
 

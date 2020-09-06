@@ -14,8 +14,8 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  is_login=false
-  users:Users=new Users()
+  is_login = false
+  users :Users = new Users()
   private destroy$: Subject<void> = new Subject<void>();
   userPictureOnly: boolean = false;
   user: any;
@@ -27,13 +27,16 @@ export class LoginComponent implements OnInit {
   
   Login(username,password){
 
-    this.RestApiService.CheckLogin({username,password}).subscribe(
+    this.RestApiService.CheckLogin({username, password}).subscribe(
       data => {
-        console.log(data["permissions"])
-        this.ToastService.showToast("success","ההתחברות הושלמה ברוך הבא: "+username,"")
-        localStorage.setItem("permissions",data["permissions"])
-        this.users.username=username
-        localStorage.setItem("username",username)
+        ssdasdasdasdsad'{
+        console.log(data)
+        this.users.username = username
+        localStorage.setItem("permissions", data["permissions"])
+        localStorage.setItem("username", username)
+        localStorage.setItem("unit", )
+
+        this.ToastService.showToast("success","ההתחברות הושלמה ברוך הבא: " + username,"")
         this.router.navigate(["/pages/control-table"])
       },
       error => {

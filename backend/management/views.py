@@ -9,16 +9,16 @@ from django.conf import settings
 from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
 from management.models import UnitsTree, ConstantsFields
 from management.serializers import UnitsTreeSerializer, ConstantsFieldsSerializer
-from management.utils import constants_fields_array, units_array, UNITS_TREE_OBJECT_STATIC_ID, CONSTATNS_FIELDS_OBJECT_STATIC_ID
+from management.utils import get_inferior_units, constants_fields_array, units_array, UNITS_TREE_OBJECT_STATIC_ID, CONSTATNS_FIELDS_OBJECT_STATIC_ID
 
 #############################################################
 #                        Units tree                         #
 #############################################################        
 @csrf_exempt 
 @check_permissions_dec([MANAGER])
-def units_tree_management(request):
+def units_tree_management(request):    
     try: 
-            units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
+        units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
     except UnitsTree.DoesNotExist: 
         units_tree = None
 

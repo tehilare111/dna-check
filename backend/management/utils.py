@@ -25,3 +25,37 @@ def units_array():
     # If no Units Tree Object Initiated in the database, this function will raise an exeption
     units_tree = UnitsTreeSerializer(UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID)).data
     return re.findall(r"'name': '([\w\"\' ]+)'", str(units_tree))
+
+def get_inferior_units(unit):
+    # Return an array of all units inferior to the given units
+
+    # Get units tree from DB
+    units_tree = UnitsTreeSerializer(UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID)).data
+
+    # Get the sub tree inferior to the given unit
+    # Extract all units by using regex
+    return re.findall(r"'name': '([\w\"\' ]+)'", find_unit_node(units_tree['treeNode'][0], unit))
+
+
+def find_unit_node(node, name):
+    # Recursive function that returns all the units below specific units
+    if node['name'] == name:
+        return str(node)
+    
+    if len(node['children']) < 1:
+        return ''
+
+    stringed_result = ''
+
+    for child in node['children']:
+        stringed_result += find_unit_node(child, name)
+    
+    return stringed_result
+
+
+
+
+
+
+
+

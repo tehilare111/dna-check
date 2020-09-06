@@ -11,7 +11,8 @@ export class EventDetailsComponent implements OnInit {
   
   @Input() form: Form = new Form();
   
-  constructor() { }
+  constructor() { 
+  }
 
   ngOnInit(): void {
   }

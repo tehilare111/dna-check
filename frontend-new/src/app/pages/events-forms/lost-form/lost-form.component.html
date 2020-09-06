@@ -1,6 +1,6 @@
 <div class="row col-md-12" id="outOfPrint">
   
-  <nb-card *ngIf ="auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים'])" >
+  <nb-card *ngIf ="checkPermissions()" >
     <button type="submit" nbButton status="primary" (click)="onSubmit()">שלח אירוע</button>
   </nb-card>
   <nb-card *ngIf ="auth.check_permissions(['מנהלן מערכת'])"> 
