@@ -5,14 +5,11 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser, FormParser
 from rest_framework import status
 from django.conf import settings
-from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
 
+from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
 from management.models import UnitsTree, ConstantsFields
 from management.serializers import UnitsTreeSerializer, ConstantsFieldsSerializer
-
-# static value only for represting it and pull it from db
-UNITS_TREE_OBJECT_STATIC_ID = '111999'
-CONSTATNS_FIELDS_OBJECT_STATIC_ID = '28032018'
+from management.utils import constants_fields_array, units_array, UNITS_TREE_OBJECT_STATIC_ID, CONSTATNS_FIELDS_OBJECT_STATIC_ID
 
 #############################################################
 #                        Units tree                         #
@@ -92,4 +89,16 @@ def constants_fields(request):
     elif request.method == 'DELETE':
         ConstantsFields.objects.all().delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-   
+
+#################################################################
+#                Constanas fields and Units                     #
+#################################################################
+
+
+@csrf_exempt
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER])
+def constans_fields_and_units(request):
+    if request.method == 'GET':
+        data = constants_fields_array()
+        data["units"] = units_array()
+        return JsonResponse(data)

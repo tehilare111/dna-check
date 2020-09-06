@@ -13,7 +13,6 @@ from rest_framework.views import APIView
 from forms.models import FormsTable
 from forms.serializers import FormsSerializer
 from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
-import management.utils
 
 import time
 import os
@@ -42,18 +41,6 @@ def forms_list(request, event_type):
     elif request.method == 'DELETE':
         FormsTable.objects.all().delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-
-#################################################################
-#                Constanas fields and Units                     #
-#################################################################
-@csrf_exempt
-@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER])
-def constans_fields_and_units(request):
-    if request.method == 'GET':
-        data = management.utils.constants_fields_array()
-        data["units"] = management.utils.units_array()
-        return JsonResponse(data)
-
 
 @csrf_exempt
 @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER])

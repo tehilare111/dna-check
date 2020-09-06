@@ -16,7 +16,7 @@
 <div class="row" id="print-section">
   <div class="col-md-3">
     <ngx-event-details [form]="equipmentReview"></ngx-event-details>
-    <ngx-event-status-shorted #status [eventForm]="equipmentReview" [readonly]="this.equipmentReview.editStateBlocked" [results]="results"></ngx-event-status-shorted>
+    <ngx-event-status-shorted #status [eventForm]="equipmentReview" [readonly]="this.equipmentReview.editStateBlocked" [eventStatusOptions]="eventStatusOptions"></ngx-event-status-shorted>
   </div>
 
   <div class="col-md-9">
@@ -36,18 +36,7 @@
               </div>
             </div>
             <div *ngIf="equipmentReview.reviewFile" class="col-md-3">
-              <div class="form-group">
-                <div class="row">
-                  <label class="label">   
-                    {{this.getFileName(this.equipmentReview.reviewFile)}}
-                  </label>
-                </div>
-                <div class="row">
-                  <a [href]="baseUrl+equipmentReview.reviewFile" class="download">
-                    <nb-card status="primary"><i class="arrow-circle-down-outline"></i></nb-card>
-                  </a>
-                </div>
-              </div>
+              <ngx-file-download-button [fileFullName]="corruptionForm.reviewFile"></ngx-file-download-button>
             </div>
             <div class="col-md-2">
               <div class="form-group">

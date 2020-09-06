@@ -16,7 +16,7 @@
 <div class="row" id="print-section">
 <div class="col-md-3">
   <ngx-event-details [form]="lostForm"></ngx-event-details>
-  <ngx-event-status #status [eventForm]="lostForm" [readonly]="this.lostForm.editStateBlocked" [results]="results"></ngx-event-status>
+  <ngx-event-status #status [eventForm]="lostForm" [readonly]="this.lostForm.editStateBlocked" [eventStatusOptions]="eventStatusOptions"></ngx-event-status>
 </div>
 <div class="col-md-9">
   <nb-card>
@@ -30,7 +30,7 @@
           <div class="col-md-2">
             <div class="form-group">
               <label for="signerUnit" class="label">יחידת החתום</label>
-              <nb-select name="signerUnit" id="signerUnit" status="primary" placeholder="יחידת החתום">
+              <nb-select name="signerUnit" id="signerUnit" status="primary" placeholder="יחידת החתום" [(ngModel)]="lostForm.signerUnit">
                 <nb-option *ngFor="let unit of units" [value]="unit">{{unit}}</nb-option>  
               </nb-select>
             </div>
@@ -53,7 +53,7 @@
             <div class="form-group">
               <label for="rank" class="label">דרגה</label>
               <nb-select [disabled]="this.lostForm.editStateBlocked" name="rank" id="rank" status="primary" placeholder="דרגה" [(ngModel)]="lostForm.rank">
-                <nb-option *ngFor="let rank of ranks" value="rank">{{rank}}</nb-option>  
+                <nb-option *ngFor="let rank of ranks" [value]="rank">{{rank}}</nb-option>  
               </nb-select>
             </div>
           </div>
@@ -90,7 +90,7 @@
               <div class="form-group">
                 <label for="equipment" class="label">ציוד/חומר</label>
                 <nb-select [disabled]="this.lostForm.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="lostForm.equipment">
-                  <nb-option *ngFor="let equipment of equipments" value="equipment.name" (click)="equipmentsTypeOptions=equipment.list; lostForm.equipmentType=''">{{equipment.name}}</nb-option>  
+                  <nb-option *ngFor="let equipment of equipments" [value]="equipment.name" (click)="equipmentsTypeOptions=equipment.list; lostForm.equipmentType=''">{{equipment.name}}</nb-option>  
                 </nb-select>
               </div>
             </div>
@@ -98,7 +98,7 @@
               <div class="form-group">
                 <label for="equipmentType" class="label">סוג ציוד/חומר</label>
                 <nb-select [disabled]="this.lostForm.editStateBlocked" name="equipmentType" id="equipmentType" status="primary" placeholder="סוג ציוד/חומר" [(ngModel)]="lostForm.equipmentType">
-                  <nb-option *ngFor="let equipment of equipmentsTypeOptions" value="equipment">{{equipment}}</nb-option>  
+                  <nb-option *ngFor="let equipment of equipmentsTypeOptions" [value]="equipment">{{equipment}}</nb-option>  
                 </nb-select>
               </div>
             </div>
@@ -151,18 +151,7 @@
           </div>
         
         <div *ngIf="lostForm.investigationFile" class="col-md-3">
-          <div class="form-group">
-            <div class="row">
-              <label class="label">
-                {{this.getFileName(this.lostForm.investigationFile)}}
-              </label>
-            </div>
-            <div class="row">
-              <a [href]="baseUrl+lostForm.investigationFile" class="download">
-                <nb-card status="primary"><i class="arrow-circle-down-outline"></i></nb-card>
-              </a>
-            </div>
-          </div>
+          <ngx-file-download-button [fileFullName]="lostForm.investigationFile"></ngx-file-download-button>
         </div>
         <div class="col-md-2">
           <div class="form-group">
@@ -181,18 +170,7 @@
           </div>
         </div>
         <div *ngIf="lostForm.findingFile" class="col-md-3">
-          <div class="form-group">
-            <div class="row">
-              <label class="label">
-                {{this.getFileName(this.lostForm.findingFile)}}
-              </label>
-            </div>
-            <div class="row">
-              <a [href]="baseUrl+lostForm.findingFile" class="download">
-                <nb-card status="primary"><i class="arrow-circle-down-outline"></i></nb-card>
-              </a>
-            </div>
-          </div>
+          <ngx-file-download-button [fileFullName]="lostForm.findingFile"></ngx-file-download-button>
         </div>
         <div class="col-md-2">
           <div class="form-group">
@@ -211,18 +189,7 @@
           </div>
         </div>
         <div *ngIf="lostForm.handlingFile" class="col-md-3">
-          <div class="form-group">
-            <div class="row">
-              <label class="label">
-                {{this.getFileName(this.lostForm.handlingFile)}}
-              </label>
-            </div>
-            <div class="row">
-              <a [href]="baseUrl+lostForm.handlingFile" class="download">
-                <nb-card status="primary"><i class="arrow-circle-down-outline" ></i></nb-card>
-              </a>
-            </div>
-          </div>
+          <ngx-file-download-button [fileFullName]="lostForm.handlingFile"></ngx-file-download-button>
         </div>
         <div class="col-md-2">
           <div class="form-group">
@@ -246,7 +213,7 @@
     <nb-card-header>מעלה את הבקשה</nb-card-header>
     <nb-card-body>{{this.popUpDialogContext}}</nb-card-body>
     <nb-card-footer style="display: flex; justify-content: center;">
-      <button nbButton (click)="ref.close()" status="primary" [disabled]="uploadLoading" routerLink="/pages/control-table/control-table" hero>סיום</button>
+      <button nbButton (click)="ref.close()" status="primary" [disabled]="uploadLoading" routerLink="/pages/control-table" hero>סיום</button>
     </nb-card-footer>
   </nb-card>
 </ng-template>

@@ -37,7 +37,7 @@ export class CorruptionFormComponent {
   msgs: any[] = [];
   baseUrl: string = '';
   // select fields options:
-  results = ["טופל", "טרם טופל"]
+  eventStatusOptions = ["טופל", "טרם טופל"]
   units = ["מצוב", "מעוף", "מצפן", "פלגת חוד"]
   ranks = ["סמל", "רבט", "טוראי"]
   equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
@@ -99,7 +99,7 @@ export class CorruptionFormComponent {
       this.equipmentsType = data.equipmentType
       this.ranks = data.rank
       this.materialsType = data.materialType
-      this.results = data.handlingStatus
+      this.eventStatusOptions = data.eventStatus
       this.eventStatusForm = data.eventStatus
       this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
     });

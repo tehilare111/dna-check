@@ -37,7 +37,7 @@ export class EquipmentReviewComponent{
   constans_array=[]
   baseUrl: string = '';
   // select fields options:
-  results = ["טופל", "טרם טופל"]
+  eventStatusOptions = ["טופל", "טרם טופל"]
   units = ["מצוב", "מעוף", "מצפן"]
   ranks = ["סמל", "רבט", "טוראי"]
   equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
@@ -95,12 +95,12 @@ export class EquipmentReviewComponent{
   }
 
   get_constas_feilds() {
-    this.constans_array=["equipmentType","rank","materialType","eventStatus"]
-    this.RestApiService.getConstansFialdsNotPermissions(this.constans_array).subscribe((data_from_server) => {
-      this.equipmentsType=data_from_server.data.equipmentType
-      this.ranks = data_from_server.data.rank
-      this.materialsType=data_from_server.data.materialType
-      this.results=data_from_server.data.eventStatus
+    // this.constans_array=["equipmentType","rank","materialType","eventStatus"]
+    this.RestApiService.getConstansFieldsAndUnitsArray().subscribe((data) => {
+      this.equipmentsType = data.equipmentType
+      this.ranks = data.rank
+      this.materialsType = data.materialType
+      this.eventStatusOptions = data.eventStatus
       this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
     });
   }
@@ -114,7 +114,6 @@ export class EquipmentReviewComponent{
 
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: EquipmentReviewTemplate) => {
-      console.log(data_from_server)
       this.equipmentReview = data_from_server
     });
   }

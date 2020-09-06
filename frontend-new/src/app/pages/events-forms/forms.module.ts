@@ -34,6 +34,7 @@ import { ChatComponent } from './components/chat/chat.component';
 import { EquipmentReviewComponent } from './equipment-review/equipment-review.component';
 import { EventStatusShortedComponent } from './components/event-status-shorted/event-status-shorted.component';
 import { CorruptionFormComponent } from './corruption-form/corruption-form.component';
+import { FileDownloadButtonComponent } from './components/file-download-button/file-download-button.component';
 
 
 
@@ -72,6 +73,7 @@ import { CorruptionFormComponent } from './corruption-form/corruption-form.compo
     ChatComponent,
     EquipmentReviewComponent,
     EventStatusShortedComponent,
+    FileDownloadButtonComponent,
   ],
 })
 export class FormsModule { }

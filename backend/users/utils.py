@@ -6,8 +6,8 @@ from _datetime import timedelta
 from rest_framework import status
 from django.http.response import JsonResponse
 
-from users.models import  Destination
-from users.serializers import DestinationSerilazers
+from users.models import  Users
+from users.serializers import UsersSerilazers
 from django.contrib.auth import get_user_model
 
 MANAGER="מנהלן מערכת"
@@ -51,8 +51,8 @@ def check_token(token):
         return False 
 
 def get_permissions(username):
-    event_form = Destination.objects.get(username=username)
-    customer_serializer = DestinationSerilazers(event_form)
+    event_form = Users.objects.get(username=username)
+    customer_serializer = UsersSerilazers(event_form)
     return customer_serializer.data["permissions"]
 
 def check_permissions_dec(permissions_array, API_VIEW=False):

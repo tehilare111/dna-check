@@ -30,7 +30,6 @@ export class RegisterComponent implements OnInit {
   submitted=false;
   public errors:string;
   ranks = []
-  rank_array=[]
   units_array=['מצו"ב']
   maxTreeNodeId = '1'
   nodes = [
@@ -44,10 +43,9 @@ export class RegisterComponent implements OnInit {
   
   ngOnInit(): void {
     this.get_constatns_filds_rank()
-    this.get_tree_node()
+    //this.get_tree_node()
   }
   get_constatns_filds_rank() {
-    this.rank_array=["rank"]
     this.RestApiService.getConstansFieldsAndUnitsArray().subscribe((data) => {
       this.ranks = data.rank
       this.units_array = data.units
@@ -63,7 +61,6 @@ export class RegisterComponent implements OnInit {
         for(j=0;j<=data_from_server.treeNode[i].children.length-1;j+=1){
           console.log(data_from_server.treeNode[i].children[j].name)
           this.units_array.push(data_from_server.treeNode[i].children[j].name)
-          
         } 
       }
         

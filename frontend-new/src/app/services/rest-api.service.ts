@@ -38,6 +38,9 @@ export class RestApiService {
     return this.http.get(`${this.baseUrl}/event-forms/values`);
   }
 
+  getFile(url: string){
+    return this.http.get(`${this.baseUrl}${url}`, { responseType: 'blob' });
+  }
 
   getExistingEventForm(reference: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/event-forms/${reference}`);
@@ -76,7 +79,6 @@ export class RestApiService {
   getConstansFialdsNotPermissions(faild:string[]):Observable<any> {
     return this.http.get(`${this.baseUrl}/get_constats_fields/${faild}`,);
   }
-
 
   postConstatnsFields(data): Observable<any>{
      return this.http.post(`${this.baseUrl}/constants-fields/`, data);

@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from users.models import  Destination
-from users.serializers import DestinationSerilazers
+from users.models import  Users
+from users.serializers import UsersSerilazers
 from rest_framework.parsers import JSONParser
 from django.http import HttpResponse, JsonResponse
 from rest_framework import status
@@ -16,7 +16,7 @@ from users.utils import check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS
 @csrf_exempt 
 def create_user(request):
     user_data = JSONParser().parse(request)
-    user_serializer = DestinationSerilazers(data=user_data)
+    user_serializer = UsersSerilazers(data=user_data)
     
     if request.method == 'POST':
         
@@ -33,13 +33,13 @@ def check_login(request):
     user_data = JSONParser().parse(request)
     if request.method == 'POST':
         try:
-            user = Destination.objects.get(username=user_data["username"])
+            user = Users.objects.get(username=user_data["username"])
         except:
             return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
             
         if check_user_password(user.username, user_data["password"]):
-            user_serialized = DestinationSerilazers(user)
-            return JsonResponse({"access_token":create_jwt(user_data),"permissions":user_form.data["permissions"]}, safe=False)
+            user_serialized = UsersSerilazers(user)
+            return JsonResponse({"access_token":create_jwt(user_data),"permissions":user_serialized.data["permissions"]}, safe=False)
         else:
             return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
 
@@ -49,11 +49,11 @@ def check_login(request):
 
 ################## Check password ##############################
 def check_user_password(username,password):
-    return Destination.objects.filter(username=username,password=password).exists()
+    return Users.objects.filter(username=username,password=password).exists()
 
 ################### Check personal number ######################
 def check_user_and_personal_number(user_data):
-    return (Destination.objects.filter(username=user_data["username"]).exists() or Destination.objects.filter(personalnumber=user_data["personalnumber"]).exists())
+    return (Users.objects.filter(username=user_data["username"]).exists() or Users.objects.filter(personalnumber=user_data["personalnumber"]).exists())
 
 ###############################################################
 #                    Get groups permissions                   #
@@ -62,11 +62,11 @@ def check_user_and_personal_number(user_data):
 @check_permissions_dec([MANAGER])
 def groups_permissions_list(request, unit,token):
     if request.method == 'GET':
-            users = Destination.objects.filter(armyunit=unit)
-            customer_u=DestinationSerilazers(users,many=True)
+            users = Users.objects.filter(armyunit=unit)
+            customer_u=UsersSerilazers(users,many=True)
             return JsonResponse(customer_u.data, safe=False)     
     elif request.method == 'DELETE':
-        Destination.objects.all().delete()
+        Users.objects.all().delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 ###############################################################
 #                         Update user                         #
@@ -75,15 +75,15 @@ def groups_permissions_list(request, unit,token):
 @check_permissions_dec([MANAGER])
 def update_permissions_users(request,personalnumber):
     try: 
-        event_form = Destination.objects.get(personalnumber=personalnumber)
-    except Destination.DoesNotExist:
+        event_form = Users.objects.get(personalnumber=personalnumber)
+    except Users.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
     if request.method=='GET':
-            customer_serializer = DestinationSerilazers(event_form)
+            customer_serializer = UsersSerilazers(event_form)
             return JsonResponse(customer_serializer.data)
     elif request.method == 'PUT':
         form_data = JSONParser().parse(request)
-        form_serializer = DestinationSerilazers(event_form, data=form_data["permissions"])
+        form_serializer = UsersSerilazers(event_form, data=form_data["permissions"])
         if form_serializer.is_valid():
             form_serializer.save()
             return JsonResponse({"data":form_serializer.data},status=status.HTTP_204_NO_CONTENT)

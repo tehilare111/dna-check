@@ -17,7 +17,7 @@
 <div class="row" id="print-section">
   <div class="col-md-3">
     <ngx-event-details [form]="corruptionForm"></ngx-event-details>
-    <ngx-event-status #status [eventForm]="corruptionForm" [readonly]="this.corruptionForm.editStateBlocked" [results]="results"></ngx-event-status>
+    <ngx-event-status #status [eventForm]="corruptionForm" [readonly]="this.corruptionForm.editStateBlocked" [eventStatusOptions]="eventStatusOptions"></ngx-event-status>
   </div>
 
   <div class="col-md-9">
@@ -33,7 +33,7 @@
               <div class="form-group">
                 <label for="signerUnit" class="label">יחידת החתום</label>
                 <nb-select [disabled]="this.corruptionForm.editStateBlocked" name="signerUnit" id="signerUnit" status="primary" placeholder="יחידת החתום" [(ngModel)]="corruptionForm.signerUnit">
-                  <nb-option *ngFor="let unit of units" value="unit">{{unit}}</nb-option>  
+                  <nb-option *ngFor="let unit of units" [value]="unit">{{unit}}</nb-option>  
                 </nb-select>
               </div>
             </div>
@@ -57,7 +57,7 @@
                 <div>
                 </div>
                 <nb-select [disabled]="this.corruptionForm.editStateBlocked" name="rank" id="rank" status="primary" placeholder="דרגה" [(ngModel)]="corruptionForm.rank">
-                  <nb-option *ngFor="let rank of ranks" value="rank">{{rank}}</nb-option>  
+                  <nb-option *ngFor="let rank of ranks" [value]="rank">{{rank}}</nb-option>  
                 </nb-select>
               </div>
             </div>
@@ -154,18 +154,7 @@
               </div>
             </div>
             <div *ngIf="corruptionForm.investigationFile" class="col-md-3">
-              <div class="form-group">
-                <div class="row">
-                  <label class="label">
-                    {{this.getFileName(this.corruptionForm.investigationFile)}}
-                  </label>
-                </div>
-                <div class="row">
-                  <a [href]="baseUrl+corruptionForm.investigationFile" class="download">
-                    <nb-card status="primary"><i icon="arrow-circle-down-outline" pack="eva"></i></nb-card>
-                  </a>
-                </div>
-              </div>
+              <ngx-file-download-button [fileFullName]="corruptionForm.investigationFile"></ngx-file-download-button>
             </div>
             <div class="col-md-2">
               <div class="form-group">
@@ -184,18 +173,7 @@
               </div>
             </div>
             <div *ngIf="corruptionForm.handlingFile" class="col-md-3">
-              <div class="form-group">
-                <div class="row">
-                  <label class="label">
-                    {{this.getFileName(this.corruptionForm.handlingFile)}}
-                  </label>
-                </div>
-                <div class="row">
-                  <a [href]="baseUrl+corruptionForm.handlingFile" class="download">
-                    <nb-card status="primary"><i icon="arrow-circle-down-outline" pack="eva"></i></nb-card>
-                  </a>
-                </div>
-              </div>
+              <ngx-file-download-button [fileFullName]="corruptionForm.handlingFile"></ngx-file-download-button>
             </div>
             <div class="col-md-2">
               <div class="form-group">

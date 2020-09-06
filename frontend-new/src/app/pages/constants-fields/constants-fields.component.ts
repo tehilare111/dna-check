@@ -41,11 +41,10 @@ export class ConstantsFieldsComponent implements OnInit {
       (data: ConstantsFields) => {
         this.ConstantsFields = data;
         this.uploadLoading = false
-        console.log(data)
       },
       err => {
 
-        this.ConstantsFields = {eventStatus: [''], materialType: [''], equipmentType:[''], equipmentMakat:[''], handlingStatus:[''], rank:['']};
+        this.ConstantsFields = {eventStatus: [], materialType: [], equipmentType:[], equipmentMakat:[], handlingStatus:[], rank:[]};
         this.uploadLoading = false
       } 
     )
