@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Users } from './users';
+import { User } from './users';
 import { TreeComponent} from 'angular-tree-component';
 import { icons } from 'eva-icons';
 import { LocalDataSource } from 'ng2-smart-table';
@@ -15,18 +15,6 @@ class TreeNodeCustom{
   children: any[];
 }
 
-interface TreeNode<T> {
-  data: T;
-  children?: TreeNode<T>[];
-  expanded?: boolean;
-}
-
-interface FSEntry {
-  firstname: string;
-  lastname: string;
-  personalnumber: number;
-  permissions: string;
-}
 
 @Component({
   selector: 'ngx-management',
@@ -34,30 +22,22 @@ interface FSEntry {
   styleUrls: ['./management.component.scss']
 })
 export class ManagementComponent implements OnInit {
-  unit_name=" ";
-  action=''
+  pickedUpUnit = '';
+  action = ''
   jsonPermiss
   addUnitInput = '';
   editUnitInput = '';
-  currentNode=undefined;
-  evaIcons = [];
-  @ViewChild("tree") private tree: TreeComponent;
+  currentNode = undefined;
   uploadLoading = false
-  users:Users=new Users();
-  customColumn = 'firstname';
-  customColumn2 = 'שם';
-  defaultColumns = {'personalnumber':'מזהה','permissions':'הרשאות'};
-  allColumns = [ this.customColumn, ...Object.keys(this.defaultColumns)];
+  user :User = new User();
+  newUserForm: User = new User();
   permission = ["מנהלן מערכת","מדווח אירועים","צופה אירועים",]
-  sortColumn: string;
-  sortDirection: NbSortDirection = NbSortDirection.NONE;
-  constructor(private service:SmartTableData,private RestApiService:RestApiService,private ToastService: ToastService){
-    this.evaIcons = Object.keys(icons).filter(icon => icon.indexOf('outline') === -1);
-  }
+
+  @ViewChild("tree") private tree: TreeComponent;
+
   maxTreeNodeId = '1'
-  // bar agever
   nodes = [{
-    'id': 0,
+      'id': 0,
       'name': 'מצו"ב',
       'children': []
   }]
@@ -69,11 +49,11 @@ export class ManagementComponent implements OnInit {
   settings = {
     actions: false,
     columns: {
-      firstname: {
+      firstName: {
         title: 'Firstname',
         type: 'string',
       },
-      personalnumber: {
+      personalNumber: {
         title: 'PersonalNumber',
         type: 'string',
       },
@@ -84,21 +64,22 @@ export class ManagementComponent implements OnInit {
     },
   };
   source: LocalDataSource = new LocalDataSource();
-  data_table = [
-    // {'firstname': 'דוד', 'personalnumber': '12345', 'permissions': 'מנהלן מערכת'},
-    // {'firstname': 'דוד', 'personalnumber': '12345', 'permissions': 'מנהלן מערכת'},
-    // {'firstname': 'דוד', 'personalnumber': '12345', 'permissions': 'מנהלן מערכת'},
-  ];
+  data_table = [];
+
+  
+  constructor(private service:SmartTableData,private RestApiService:RestApiService,private ToastService: ToastService){ }
+
   ngOnInit(): void {
     this.source.load(this.data_table);
     this.loadData();
   }
+  
   loadData(){
     this.uploadLoading = true
     this.RestApiService.getTreeUnits().subscribe(
-      (data_from_server: {'maxTreeNodeId': string, 'treeNode': TreeNodeCustom[]}) => {
-        this.nodes = data_from_server.treeNode
-        this.maxTreeNodeId = data_from_server.maxTreeNodeId
+      (data: {'maxTreeNodeId': string, 'treeNode': TreeNodeCustom[]}) => {
+        this.nodes = data.treeNode
+        this.maxTreeNodeId = data.maxTreeNodeId
         
         this.uploadLoading = false
       },
@@ -108,31 +89,28 @@ export class ManagementComponent implements OnInit {
       }
       );
   }
+  
   saveData(){
     this.uploadLoading = true
     let dataToServer = {'maxTreeNodeId': this.maxTreeNodeId, 'treeNode': this.nodes};
     this.RestApiService.postTreeUnits(dataToServer).subscribe(
-      data_from_server=> {
+      data=> {
         this.ToastService.showToast('success', 'נשמר בהצלחה!', '') 
         this.uploadLoading = true
       },
       err => {
+        this.ToastService.showToast('fail', 'בעיה בשמירה לשרת!', '') 
       }
     )
   }
-  updateSort(sortRequest: NbSortRequest): void {
-    this.sortColumn = sortRequest.column;
-    this.sortDirection = sortRequest.direction;
-  }
 
   updatePermissionUser(personal){
-    if (personal!=null || this.users.permissions!=null)
+    if (personal != null || this.user.permissions!=null)
     {
-      this.jsonPermiss={"personal_number":personal,"permissions":this.users.permissions,"token":this.users.token}
+      this.jsonPermiss={"personal_number":personal,"permissions":this.user.permissions,"token":this.user.token}
       this.RestApiService.UpdateUser(this.jsonPermiss,personal)
       .subscribe(
-        data=>{
-        this.LoadUsersForUnit()}
+        data=>{ this.LoadUserForUnit(); }
       )
     }
   }
@@ -152,40 +130,46 @@ export class ManagementComponent implements OnInit {
     // (meaning all columns should contain search query or at least one)
     // 'AND' by default, so changing to 'OR' by setting false here
   }
-  getSortDirection(column: string): NbSortDirection {
-    if (this.sortColumn === column) {
-      return this.sortDirection;
-    }
-    return NbSortDirection.NONE;
+
+  createNewUser() {
+    this.newUserForm.unit = this.pickedUpUnit
+    this.newUserForm.rank = "סמל"
+    
+    this.RestApiService.CreateUser(this.newUserForm)
+    .subscribe(
+      data => {
+          this.ToastService.showToast("success","ההרשמה הושלמה","")
+          this.newUserForm = new User();        
+          },
+      error => { this.ToastService.showToast("fail","שגיאה בעת בהרשמה","") }
+    );
   }
-  getShowOn(index: number) {
-    const minWithForMultipleColumns = 400;
-    const nextColumnStep = 100;
-    return minWithForMultipleColumns + (nextColumnStep * index);
-  }
-  LoadUsersForUnit() {
-    this.RestApiService.getUsersList(this.unit_name).subscribe((data_from_server) => {
-      this.data_table=data_from_server
+
+  LoadUserForUnit() {
+    this.RestApiService.getUsersList(this.pickedUpUnit).subscribe((data) => {
+      this.data_table=data
       console.log(this.data_table)
       this.source.load(this.data_table);
     });
   }
-  formClicked(event) {
-    this.users.personalnumber=event.data.personalnumber
-    console.log(event)
 
+  tableRowClicked(event) {
+    this.user.personalNumber = event.data.personalNumber
   }
+
   onNodePickedUp(event) {
     this.currentNode = event.node;
-    this.unit_name=this.currentNode.data.name;
-    this.LoadUsersForUnit()
+    this.pickedUpUnit=this.currentNode.data.name;
+    this.LoadUserForUnit()
   }
+
   onNodeDeactivate(event){
     this.currentNode = undefined;
     this.action = '';
     this.addUnitInput = '';
     this.editUnitInput = '';
   }
+
   deleteUnit(){
     let currentNodeParent = this.currentNode.parent;
     currentNodeParent.data.children = currentNodeParent.data.children
@@ -196,6 +180,7 @@ export class ManagementComponent implements OnInit {
     this.tree.treeModel.update();
     this.onNodeDeactivate(undefined);
   }
+
   addUnit(){
     // change id
     if (!this.currentNode.data['children']) { this.currentNode.data['children'] = []; }
@@ -204,6 +189,7 @@ export class ManagementComponent implements OnInit {
     this.tree.treeModel.update();
     this.onNodeDeactivate(undefined);
   }
+
   editUnit(){
     this.currentNode.data.name = this.editUnitInput;
     this.tree.treeModel.update();

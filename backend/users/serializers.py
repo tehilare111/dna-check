@@ -5,11 +5,11 @@ class UsersSerilazers(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields=('username',
-            'firstname',
-            'lastname',
+            'firstName',
+            'lastName',
             'password',
-            'personalnumber',
+            'personalNumber',
             'rank',
-            'armyposistion',
+            'position',
             'permissions',
-            'armyunit',)
+            'unit',)

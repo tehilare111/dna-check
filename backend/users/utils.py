@@ -71,7 +71,7 @@ def check_permissions_dec(permissions_array, API_VIEW=False):
         return functions_args
     return wrapper
 
-def check_permissions(request,permissions_array):
+def check_permissions(request, permissions_array):
     token=request.headers['Authorization']
     token=token.split(" ")
     token=token[1]

@@ -8,7 +8,7 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { Users } from '../pages/management/users';
+import { User } from '../pages/management/users';
 import { catchError } from 'rxjs/operators';
 import 'rxjs/add/operator/do';
 import { Router } from '@angular/router';
