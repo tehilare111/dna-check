@@ -48,17 +48,18 @@ export class ManagementComponent implements OnInit {
   };
   settings = {
     actions: false,
+    hideSubHeader: true,
     columns: {
       firstName: {
-        title: 'Firstname',
+        title: 'שם',
         type: 'string',
       },
       personalNumber: {
-        title: 'PersonalNumber',
+        title: 'מספר אישי',
         type: 'string',
       },
       permissions: {
-        title: 'Permissions',
+        title: 'הרשאות',
         type: 'string',
       },
     },

@@ -27,7 +27,7 @@ public ADMIN_MENU: NbMenuItem[] = [
 public DEF_MENU:NbMenuItem[] = [
 {
   title: 'טבלת שליטה',
-  icon: 'nb-home'
+  icon: 'nb-home',
   link: '/pages/control-table',
   home: true,
 },
