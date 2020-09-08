@@ -53,7 +53,10 @@
         margin-left: auto;
     }
     
-    
+    #createNewUserButton{
+      position: absolute;
+      left: 80px;
+    }
     
     .node-content-wrapper, .tree-children {
         position: relative;

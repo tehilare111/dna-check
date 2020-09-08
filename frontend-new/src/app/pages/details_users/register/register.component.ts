@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { RestApiService } from '../../../services/rest-api.service';
 import { ToastService } from '../../../services/toast.service';
 import { HttpHeaderResponse, HttpRequest, HttpResponseBase } from '@angular/common/http';
-import { Users } from '../../management/users';
+import { User } from '../../management/users';
 
 class TreeNodeCustom{
   id: number;
@@ -24,7 +24,7 @@ interface TreeNode<T> {
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  users:Users=new Users();
+  users:User=new User();
   public jesonreg;
   public count=0;
   submitted=false;
@@ -71,7 +71,7 @@ export class RegisterComponent implements OnInit {
     );
 }
   loadData() {
-    this.jesonreg={"username":this.users.username , "lastname":this.users.lastname,"firstname":this.users.Firstname,"password":this.users.password,"personalnumber":this.users.personalnumber,"rank":this.users.rank,"armyposistion":this.users.position,"armyunit":this.users.armyunit}
+    this.jesonreg={"username":this.users.username , "lastname":this.users.lastName,"firstname":this.users.firstName,"password":this.users.password,"personalnumber":this.users.personalNumber,"rank":this.users.rank,"armyposistion":this.users.position,"armyunit":this.users.unit}
     if(this.jesonreg)
     this.save() 
   }
@@ -87,7 +87,7 @@ export class RegisterComponent implements OnInit {
         error =>{ this.ToastService.showToast("fail","שגיאה בעת בהרשמה","")
         }
       );
-      this.users = new Users();  
+      this.users = new User();  
   }
 
   onSubmit() {

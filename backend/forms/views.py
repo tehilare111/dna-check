@@ -13,14 +13,15 @@ from rest_framework.views import APIView
 from forms.models import FormsTable
 from forms.serializers import FormsSerializer
 from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
+from management.utils import get_inferior_units
 
 import time
 import os
 import csv
 
 @csrf_exempt
-@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER])
-def forms_list(request, event_type):
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_UNIT=True)
+def forms_list(request, event_type, unit):
     '''
         Responsible to hendle requests froms main control table page.
         Relevant urls: /api/forms/*
@@ -29,14 +30,14 @@ def forms_list(request, event_type):
         DELETE - Delete all table content. 
     '''
     if request.method == 'GET':
-            if event_type == '':
-                forms = FormsTable.objects.all()
-            else:
-                forms = FormsTable.objects.filter(eventType=event_type)
-            
-            form_serializer = FormsSerializer(forms, many=True)
+        if event_type == '':
+            forms = FormsTable.objects.filter(reporterUnit__in=get_inferior_units(unit))
+        else:
+            forms = FormsTable.objects.filter(eventType=event_type, reporterUnit__in=get_inferior_units(unit))
+        
+        form_serializer = FormsSerializer(forms, many=True)
 
-            return JsonResponse(form_serializer.data, safe=False) 
+        return JsonResponse(form_serializer.data, safe=False) 
     
     elif request.method == 'DELETE':
         FormsTable.objects.all().delete()

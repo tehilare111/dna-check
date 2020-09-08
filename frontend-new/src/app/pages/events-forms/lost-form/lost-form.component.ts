@@ -60,7 +60,7 @@ export class LostFormComponent implements OnInit {
   @ViewChild("handlingDate") handlingDate : ElementRef;
 
   formGroupEle: ElementRef[] = [
-    this.signerName, 
+    this.signerName,
     this.signerId,
     this.position,
     this.eventDate,
@@ -150,6 +150,8 @@ export class LostFormComponent implements OnInit {
   newFormLoadData() {
     this.RestApiService.getNewEventForm().subscribe((data_from_server) => {
       this.lostForm.date = data_from_server.datetime
+      this.lostForm.reporterName = localStorage.getItem("firstName")
+      this.lostForm.reporterUnit = localStorage.getItem("unit")      
     });
   }
 
@@ -216,6 +218,11 @@ export class LostFormComponent implements OnInit {
     }
     //this.lostForm = new LostFormTemplate(); // initialize form
   }
+
+  checkPermissions(){
+    return ((this.auth.check_permissions(['מדווח אירועים']) && localStorage.getItem('unit') == this.lostForm.reporterUnit) || this.auth.check_permissions(['מנהלן מערכת']))
+  }
+
   updateEditState(){
     this.lostForm.editStateBlocked = !this.lostForm.editStateBlocked;
 

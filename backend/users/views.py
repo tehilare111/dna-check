@@ -14,7 +14,9 @@ from users.utils import check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS
 #                      Create new user                        #
 ###############################################################
 @csrf_exempt 
+@check_permissions_dec([MANAGER])
 def create_user(request):
+    print(request)
     user_data = JSONParser().parse(request)
     user_serializer = UsersSerilazers(data=user_data)
     
@@ -38,8 +40,9 @@ def check_login(request):
             return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
             
         if check_user_password(user.username, user_data["password"]):
-            user_serialized = UsersSerilazers(user)
-            return JsonResponse({"access_token":create_jwt(user_data),"permissions":user_serialized.data["permissions"]}, safe=False)
+            user_serialized_data = UsersSerilazers(user).data
+            user_serialized_data.update(access_token=create_jwt(user_data))
+            return JsonResponse(user_serialized_data , safe=False)
         else:
             return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
 
@@ -53,16 +56,16 @@ def check_user_password(username,password):
 
 ################### Check personal number ######################
 def check_user_and_personal_number(user_data):
-    return (Users.objects.filter(username=user_data["username"]).exists() or Users.objects.filter(personalnumber=user_data["personalnumber"]).exists())
+    return (Users.objects.filter(username=user_data["username"]).exists() or Users.objects.filter(personalNumber=user_data["personalNumber"]).exists())
 
 ###############################################################
 #                    Get groups permissions                   #
 ###############################################################
 @csrf_exempt 
 @check_permissions_dec([MANAGER])
-def groups_permissions_list(request, unit,token):
+def groups_permissions_list(request, unit, token):
     if request.method == 'GET':
-            users = Users.objects.filter(armyunit=unit)
+            users = Users.objects.filter(unit=unit)
             customer_u=UsersSerilazers(users,many=True)
             return JsonResponse(customer_u.data, safe=False)     
     elif request.method == 'DELETE':
@@ -73,9 +76,9 @@ def groups_permissions_list(request, unit,token):
 ###############################################################
 @csrf_exempt 
 @check_permissions_dec([MANAGER])
-def update_permissions_users(request,personalnumber):
+def update_permissions_users(request, personalnumber):
     try: 
-        event_form = Users.objects.get(personalnumber=personalnumber)
+        event_form = Users.objects.get(personalNumber=personalnumber)
     except Users.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
     if request.method=='GET':
