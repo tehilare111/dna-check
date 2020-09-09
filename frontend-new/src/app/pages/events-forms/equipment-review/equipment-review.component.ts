@@ -1,6 +1,7 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { NbDialogService } from '@nebular/theme';
 import { FormGroup, FormControl } from "@angular/forms";
+import { ElementRef, ViewChild, Component } from '@angular/core';
 
 import { EquipmentReviewTemplate } from '../events-forms.templates';
 import { RestApiService } from '../../../services/rest-api.service';
@@ -12,9 +13,8 @@ import { idValidator } from "../validation-directives/id.directive";
 import { makatCopyValidator } from "../validation-directives/makat-copy.directive";
 import { markValidator } from "../validation-directives/mark.directive";
 import { timeValidator } from "../validation-directives/time.directive";
+import { AuthService } from '../../../services/auth.service';
 
-import { AuthService } from '../../../services/auth-service';
-import { ElementRef, ViewChild, Component } from '@angular/core';
 
 @Component({
   selector: 'ngx-equipment-review',

@@ -1,10 +1,9 @@
 import { Component, OnInit,TemplateRef, ElementRef, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
 import { NbDialogService } from '@nebular/theme';
 import { FormGroup, FormControl } from "@angular/forms";
 
+import { FormBaseComponent } from '../form-base.component'
 import { LostFormTemplate } from '../events-forms.templates';
-import { RestApiService } from '../../../services/rest-api.service';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
 import { stdFieldValidator } from "../validation-directives/std-field.directive";
 import { dateValidator } from "../validation-directives/date.directive";
@@ -13,14 +12,13 @@ import { makatCopyValidator } from "../validation-directives/makat-copy.directiv
 import { markValidator } from "../validation-directives/mark.directive";
 import { timeValidator } from "../validation-directives/time.directive";
 import { textValidator } from '../validation-directives/text.directive';
-import { AuthService } from '../../../services/auth-service';
 
 @Component({
   selector: 'ngx-form-layouts',
   templateUrl: './lost-form.component.html',
   styleUrls: ['./lost-form.component.scss']
 })
-export class LostFormComponent implements OnInit {
+export class LostFormComponent extends FormBaseComponent implements OnInit {
   eventType: string = 'אובדן ציוד';
   eventFilesFields: string[] = ['handlingFile', 'findingFile', 'investigationFile'];
   lostForm: LostFormTemplate = new LostFormTemplate();
@@ -43,7 +41,10 @@ export class LostFormComponent implements OnInit {
   equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
   equipmentsTypeOptions = []  
   
-  constructor(private auth: AuthService, private RestApiService: RestApiService,public activatedRoute: ActivatedRoute,private dialogService: NbDialogService,private router: Router) {}
+  constructor(
+    ) {
+      super();
+    }
 
   // id of all validation fields
   @ViewChild("signerName") signerName : ElementRef;

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { MENUS } from './pages-menu';
-import { AuthService } from '../services/auth-service';
+import { AuthService } from '../services/auth.service';
 import { auth2StrategyOptions } from '@nebular/auth';
 
 @Component({
