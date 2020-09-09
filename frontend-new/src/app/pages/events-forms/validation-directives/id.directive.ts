@@ -21,7 +21,6 @@ export function idValidator(): ValidatorFn {
   let nameRe = /^[0-9]{7,9}$/i;
   return (control: AbstractControl): {[key: string]: any} | null => {
     const forbidden = nameRe.test(control.value);
-    console.log('fo', forbidden)
     return !forbidden ? {'signerId': {value: control.value}} : null;
   };
 }

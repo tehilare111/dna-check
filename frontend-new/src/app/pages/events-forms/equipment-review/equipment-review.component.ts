@@ -120,7 +120,6 @@ export class EquipmentReviewComponent{
 
   save() {
     const formData: FormData = new FormData();
-    console.log(this.eventStatusForm)
     this.equipmentReview = this.eventStatusForm.pushFormFields<EquipmentReviewTemplate>(this.equipmentReview);
   
     // insert equipmentReview to FormData object
@@ -191,10 +190,6 @@ export class EquipmentReviewComponent{
       this.popUpDialogContext = `שדה אחד לפחות לא תקין או חסר`;
       this.openWithoutBackdropClick(this.dialog2)
     }
-  }
-
-  printForm() {
-    window.print()
   }
 
   deleteEventForm(){
