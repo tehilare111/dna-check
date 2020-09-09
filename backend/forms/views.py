@@ -128,7 +128,6 @@ class NewEventFrom(APIView):
             return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
     
         form_serializer = FormsSerializer(event_form)
-        print(form_serializer.data)
         return JsonResponse(form_serializer.data)
 
     @check_permissions_dec([MANAGER], API_VIEW=True)

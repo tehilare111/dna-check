@@ -136,7 +136,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
 
     const formData: FormData = new FormData();
     formData.append('editStateBlocked', (this.form.editStateBlocked).toString())
-    console.log(this.form.editStateBlocked);
+    
     this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: FormType) => {
