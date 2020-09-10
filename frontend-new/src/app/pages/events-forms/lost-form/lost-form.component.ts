@@ -1,4 +1,4 @@
-import { Component, OnInit,TemplateRef, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { NbDialogService } from '@nebular/theme';
 import { FormGroup, FormControl } from "@angular/forms";
 
@@ -10,18 +10,16 @@ import { EventStatusComponent } from '../components/event-status/event-status.co
   selector: 'ngx-form-layouts',
   templateUrl: './lost-form.component.html',
   styleUrls: ['./lost-form.component.scss'],
-  providers: []
 })
 export class LostFormComponent extends FormBaseComponent<LostFormTemplate, EventStatusComponent> implements OnInit {
   eventType: string = 'אובדן ציוד';
   form: LostFormTemplate = new LostFormTemplate();
   eventFilesFields: string[] = ['handlingFile', 'findingFile', 'investigationFile'];
 
-  @ViewChild("status") eventStatusForm : EventStatusComponent;
+  @ViewChild("status1") eventStatusForm : EventStatusComponent;
   // @ViewChild("chat") chatMessages : ChatComponent;
   @ViewChild("directingDialog") directingDialog : ElementRef;
   @ViewChild("simpleDialog") simpleDialog : ElementRef;
-  disableEdit:boolean;
   
   eventStatusOptions = ["טופל", "טרם טופל"]
   units = []

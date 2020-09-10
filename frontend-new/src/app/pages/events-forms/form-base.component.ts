@@ -80,13 +80,12 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data: FormType) => {
       this.form = data
-      console.log(data);
-      if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
+      /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
           this.form.editStateBlocked = false
         }else{
           this.form.editStateBlocked = true
-        }
+        }*/
       });
     // this.get_constas_feilds()
   }
@@ -140,6 +139,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: FormType) => {
+            console.log(data);
             this.uploadLoading = false;
             if (data.editStateBlocked){
               this.popUpDialogContext = `האירוע נסגר לעריכה`;
@@ -169,7 +169,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   }
 
   save() {
-    
+    console.log(this.eventStatusForm);
     this.form = this.eventStatusForm.pushFormFields<FormType>(this.form);
 
     const formData: FormData = new FormData();
