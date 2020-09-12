@@ -16,7 +16,7 @@ export class LostFormComponent extends FormBaseComponent<LostFormTemplate, Event
   form: LostFormTemplate = new LostFormTemplate();
   eventFilesFields: string[] = ['handlingFile', 'findingFile', 'investigationFile'];
 
-  @ViewChild("status1") eventStatusForm : EventStatusComponent;
+  @ViewChild("status") eventStatusForm : EventStatusComponent;
   // @ViewChild("chat") chatMessages : ChatComponent;
   @ViewChild("directingDialog") directingDialog : ElementRef;
   @ViewChild("simpleDialog") simpleDialog : ElementRef;

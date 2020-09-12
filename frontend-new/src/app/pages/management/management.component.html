@@ -93,7 +93,7 @@
         <form>
           
           <label class="label">מספר אישי: </label>
-          <input type="text" #pN="ngModel" nbInput name="personalNumber" status="primary" placeholder="מספר אישי" required pattern="[0-9]{8}" [(ngModel)]="newUserForm.personalNumber">
+          <input type="text" #pN="ngModel" nbInput name="personalNumber" status="primary" placeholder="מספר אישי" required pattern="[0-9]{7}" [(ngModel)]="newUserForm.personalNumber">
                     
           <label class="label">שם משתמש: </label>
           <input type="text" #uN="ngModel" nbInput name="שם משתמש" status="primary" placeholder="שם משתמש" required pattern="[\w]{1,15}" [(ngModel)]="newUserForm.username">

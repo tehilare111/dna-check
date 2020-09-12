@@ -56,6 +56,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   protected formGroup: FormGroup;
   protected uploadLoading = false;
   protected reference = undefined;
+  protected msgs: any[] = [];
 
   constructor(){
       this.RestApiService = AppInjector.injector.get(RestApiService);
@@ -80,6 +81,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data: FormType) => {
       this.form = data
+      //this.msgs = this.form.messages.map( msg => { return JSON.parse(msg); } )
       /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
           this.form.editStateBlocked = false

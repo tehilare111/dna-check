@@ -97,4 +97,19 @@ export class RestApiService {
   getXlFile(eventType: string){
     return this.http.get(`${this.baseUrl}/forms/xl/${eventType}`, { responseType: 'blob' });
   }
+
+  /*
+    Generic requests
+  */
+  get(url: string):Observable<any> {
+    return this.http.get(`${this.baseUrl}${url}`);
+  }
+
+  post(url: string, data):Observable<any>{
+    return this.http.post(`${this.baseUrl}${url}`, data);
+  }
+
+  put(url: string, data):Observable<any>{
+    return this.http.put(`${this.baseUrl}${url}`, data);
+  }
 }

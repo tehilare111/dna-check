@@ -198,10 +198,9 @@
           </div>
         </div>
       </div>
-      <!-- <div *ngIf="form.reference" #chatWrapper>
+      <div *ngIf="form.reference" #chatWrapper id="outOfPrint">
         <chat #chat [messages]="msgs" [reference]="form.reference"></chat>
-      </div> -->
-      <chat id="outOfPrint" messages="form.messages"></chat>
+      </div>
     </form>
     </nb-card-body>
   </nb-card>

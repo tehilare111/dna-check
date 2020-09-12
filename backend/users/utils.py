@@ -60,11 +60,16 @@ def check_permissions_dec(permissions_array, API_VIEW=False, RETURN_UNIT=False):
     
     def wrapper(view_function):
         def functions_args(*args, **kwargs):
+            # return view_function(unit='',*args, **kwargs)
             request_index = 0 if not API_VIEW else 1
-            token = args[request_index].headers['Authorization'].split(" ")[1]
+            request = args[request_index]
             
+            if not 'Authorization' in request.headers:
+                return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+            
+            token = request.headers['Authorization'].split(" ")[1]        
             permission, unit = check_token(token)
-            
+    
             if permission in permissions_array:
                 return view_function(*args, **kwargs) if not RETURN_UNIT else view_function(unit=unit, *args, **kwargs)
             else:
