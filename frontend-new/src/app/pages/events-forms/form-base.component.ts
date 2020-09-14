@@ -57,6 +57,11 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   protected uploadLoading = false;
   protected reference = undefined;
   protected msgs: any[] = [];
+  protected formalsUrl: string = '/event-forms/';
+  protected draftsUrl: string = '/drafts-event-forms/';
+  protected isDraft: boolean; // For a given form, determine if it is a draft or not
+  protected drafting: boolean; // Determine whether to save the form or send it
+
 
   constructor(){
       this.RestApiService = AppInjector.injector.get(RestApiService);
@@ -69,6 +74,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   ngOnInit(){
     // Recieve form data from db according to its reference
     this.reference = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference;
+    this.isDraft = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.isDraft == 'true';
 
     if (this.reference){
       this.exisitingFormLoadData(this.reference);
@@ -79,9 +85,9 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   }
 
   exisitingFormLoadData(reference: string){
-    this.RestApiService.getExistingEventForm(reference).subscribe((data: FormType) => {
+    this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
       this.form = data
-      //this.msgs = this.form.messages.map( msg => { return JSON.parse(msg); } )
+      console.log(this.form);      
       /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
           this.form.editStateBlocked = false
@@ -105,7 +111,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       dialog,
       {
         //context: this.formUploadResult.reference,
-        closeOnBackdropClick: true,
+        closeOnBackdropClick: false,
       });
   }
 
@@ -124,12 +130,8 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   printForm() {
     window.print()
   }
-
-  checkPermissions(){
-    return ((this.auth.check_permissions(['מדווח אירועים']) && localStorage.getItem('unit') == this.form.reporterUnit) || this.auth.check_permissions(['מנהלן מערכת']))
-  }
-
-    updateEditState(){
+  
+  updateEditState(){
     this.form.editStateBlocked = !this.form.editStateBlocked;
 
     this.uploadLoading = true;
@@ -157,21 +159,31 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     this.formFiles.push({'id': target.attributes.id.value, 'file': target.files.item(0)});
   }
 
+  sendEvent(){
+    this.drafting = false;
+    this.onSubmit();
+  }
+
+  saveEvent(){
+    this.drafting = true;
+    this.onSubmit();
+  }
+
   onSubmit() {
     this.uploadLoading = true
     
-    if (this.checkFieldsValid()){
-      this.openWithoutBackdropClick(this.directingDialog);
-      this.save();
-    } else {
+    if (!this.drafting && !this.checkFieldsValid()){
       this.uploadLoading = false
       this.popUpDialogContext = `שדה אחד לפחות לא תקין או חסר`;
       this.openWithoutBackdropClick(this.simpleDialog)
+    } else {
+      this.openWithoutBackdropClick(this.directingDialog);
+      this.save();
     }
   }
 
   save() {
-    console.log(this.eventStatusForm);
+    
     this.form = this.eventStatusForm.pushFormFields<FormType>(this.form);
 
     const formData: FormData = new FormData();
@@ -185,26 +197,27 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     for( let formFile of this.formFiles ){
       formData.append(formFile['id'], formFile['file'], formFile['file'].name);
     }
-
-    if (this.reference){
-      this.RestApiService.updateExistingEventForm(this.reference, formData)
+    
+    // If form has a reference we need to check if it's already written in the relevenat DB: Formals or Drafts
+    if (this.reference && ((this.drafting&&this.form.writtenInDrafts)||(!this.drafting&&this.form.writtenInFormals))){
+      this.RestApiService.put(`${(this.drafting)?this.draftsUrl:this.formalsUrl}${(this.reference)?this.reference:''}`, formData, {headers: {'enctype': 'multipart/form-data'}})
         .subscribe(
           (data: FormType) => {
             this.uploadLoading = false;
             this.reference = data.reference;
             this.popUpDialogContext = `האירוע התעדכן בהצלחה, סימוכין: ${this.reference}`;
           },
-          error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${this.reference}`; })
+          error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
           
     } else {
-      this.RestApiService.createNewEventFormWithFiles(formData)
+      this.RestApiService.post(`${(this.drafting)?this.draftsUrl:this.formalsUrl}${(this.reference)?this.reference:''}`, formData, {headers: {'enctype': 'multipart/form-data'}})
       .subscribe(
         (data: FormType) => {
           this.uploadLoading = false;
           this.reference = data.reference;
-          this.popUpDialogContext = `האירוע נוצר בהצלחה, סימוכין: ${this.reference}`;
+          this.popUpDialogContext = `האירוע ${!this.drafting?'נוצר':'נשמר'} בהצלחה, סימוכין: ${this.reference}`;
         },
-        error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${this.reference}`; })
+        error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
     }
   }
 
@@ -215,7 +228,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   deleteEventForm(){
     this.uploadLoading = true;
     this.openWithoutBackdropClick(this.directingDialog);
-    this.RestApiService.deleteExistingEventForm(this.reference)
+    this.RestApiService.delete(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${this.reference}`)
       .subscribe(
         (data: FormType) => {
           this.uploadLoading = false;

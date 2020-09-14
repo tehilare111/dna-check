@@ -6,6 +6,8 @@ export class Form{
     reporterUnit: string;
     editStateBlocked: boolean;
     messages: any[];
+    writtenInFormals: boolean = false;
+    writtenInDrafts: boolean = false;
 }
 
 export class EventForm extends Form{

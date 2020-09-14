@@ -1,6 +1,4 @@
 from django.db import models
-from django.db.models import Max
-from django.contrib.postgres.fields import ArrayField
 
 class UploadTo:
   def __init__(self, field):
@@ -10,9 +8,10 @@ class UploadTo:
     return '{}/{}/{}'.format(instance.reference, self.field, filename)
 
   def deconstruct(self):
-    return ('forms.models.UploadTo', [self.field], {})
+    return ('draft_forms.models.UploadTo', [self.field], {})
 
-class Form(models.Model):
+# Create your models here.
+class DraftForm(models.Model):
     reference = models.IntegerField(blank=False, default=0)
     eventType = models.CharField(max_length=70, blank=False, default='')
     date = models.CharField(max_length=70, blank=False, default='')
@@ -25,9 +24,7 @@ class Form(models.Model):
     class Meta:
       abstract = True
 
-
-
-class EventForm(Form):
+class DraftEventForm(DraftForm):
     caseIdOnMetzah = models.CharField(max_length=70, blank=False, default='')
     handlingResults = models.CharField(max_length=70, blank=False, default='')
     eventStatus = models.CharField(max_length=70, blank=False, default='')
@@ -36,7 +33,7 @@ class EventForm(Form):
     class Meta:
       abstract = True
 
-class FormsTable(EventForm):
+class DraftFormsTable(DraftEventForm):
     equipment = models.CharField(max_length=70, blank=False, default='')
     equipmentType = models.CharField(max_length=70, blank=False, default='')
     equipmentMark = models.CharField(max_length=70, blank=False, default='')

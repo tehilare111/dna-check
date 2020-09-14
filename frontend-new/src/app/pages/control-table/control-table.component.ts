@@ -32,6 +32,11 @@ export class ControlTableComponent implements OnInit {
       'route': '/pages/events-forms/equipment-review',
       'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': { 'title': 'יחידת מדווח'}}
     },
+    'Drafts': {
+      'name': 'טיוטות',
+      'route': undefined,
+      'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}} 
+    },
   }
   pickedUpEvent = this.eventsToPickUp.defaultForms;
   settings = {
@@ -40,7 +45,10 @@ export class ControlTableComponent implements OnInit {
   }
 
   source: LocalDataSource = new LocalDataSource();
+  formalsUrl: string = '/forms/';
+  draftsUrl: string = '/draft-forms/';
   data = [];
+  isDraft:boolean = false;
 
   constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router) { 
   } 
@@ -52,6 +60,9 @@ export class ControlTableComponent implements OnInit {
   }
 
   loadTable(value){
+    if (value.name == this.eventsToPickUp.Drafts.name) this.isDraft = true;
+    else this.isDraft = false;
+    
     this.loadData(value.route?value.name:'');
 
     this.settings.columns = value.columns;
@@ -59,7 +70,7 @@ export class ControlTableComponent implements OnInit {
   }
 
   loadData(eventType: string) {
-    this.RestApiService.getFormsList(eventType).subscribe((data_from_server) => {
+    this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${eventType}`).subscribe((data_from_server) => {
       this.data=data_from_server
       this.source.load(this.data);
     });
@@ -72,7 +83,7 @@ export class ControlTableComponent implements OnInit {
         path = value['route']
       }
     }
-    this.router.navigate([path, {reference: event.data.reference}]);
+    this.router.navigate([path, {reference: event.data.reference, isDraft: this.isDraft}]);
   }
 
   exportToXL(value){
