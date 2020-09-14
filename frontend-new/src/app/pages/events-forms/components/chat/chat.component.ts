@@ -67,7 +67,6 @@ export class ChatComponent implements OnInit {
 		    x.classList.remove("open");
 		  } else {
 		    x.classList.add("open");
-		    document.getElementById("test").focus();
 		  }
   }
 }

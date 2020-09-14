@@ -9,6 +9,7 @@ from django.conf import settings
 
 from rest_framework.views import APIView
 
+from draft_forms.models import DraftFormsTable
 from forms.models import FormsTable
 from forms.serializers import FormsSerializer
 from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
@@ -24,7 +25,7 @@ from datetime import datetime
 @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_UNIT=True)
 def forms_list(request, event_type, unit):
     '''
-        Responsible to hendle requests froms main control table page.
+        Responsible to hendle requests from main control table page.
         Relevant urls: /api/forms/*
         GET - Return all forms matching the given event type on the url.
               Return all rows from table when no url specified.
@@ -92,21 +93,27 @@ def download_xl_file(request, event_type):
 
     return response
 
+def generate_reference(reference):
+    if len(reference) > 0:
+        return reference
+    return max(
+            int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0),
+            int(DraftFormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0)
+        ) + 1
 
-
-class NewEventFrom(APIView):
+class OfficialEventFrom(APIView):
 
     parser_classes = (MultiPartParser, FormParser)
     
     @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)
-    def post(self, request, *args, **kwargs):
+    def post(self, request, reference, *args, **kwargs):
         form_serializer = FormsSerializer(data=request.data)
 
         if form_serializer.is_valid():
-            reference = int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0) + 1
+            reference = generate_reference(reference)
             # Create instance for this event form in the messages database
             new_event_msgs(reference)
-            form_serializer.save(reference=reference)
+            form_serializer.save(reference=reference, writtenInFormals=True)
             return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
@@ -128,7 +135,7 @@ class NewEventFrom(APIView):
     @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], API_VIEW=True)
     def get(self, request, reference, *args, **kwargs):
         try: 
-            event_form = FormsTable.objects.get(reference=reference) 
+            event_form = FormsTable.objects.get(reference=reference)
         except FormsTable.DoesNotExist: 
             return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
     

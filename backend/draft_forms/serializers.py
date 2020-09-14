@@ -1,11 +1,11 @@
 
 from rest_framework import serializers 
-from forms.models import Form, EventForm, FormsTable
+from draft_forms.models import DraftForm, DraftEventForm, DraftFormsTable
 
 
-class FormSerializer(serializers.ModelSerializer):
+class DraftFormSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Form
+        model = DraftForm
         abstract = True
         fields = (
             'reference',
@@ -18,21 +18,21 @@ class FormSerializer(serializers.ModelSerializer):
             'writtenInDrafts')
 
         
-class EventFormSerializer(FormSerializer):
-    class Meta(FormSerializer.Meta):
-        model = EventForm
+class DraftEventFormSerializer(DraftFormSerializer):
+    class Meta(DraftFormSerializer.Meta):
+        model = DraftEventForm
         abstract = True
-        fields = FormSerializer.Meta.fields + (
+        fields = DraftFormSerializer.Meta.fields + (
             'caseIdOnMetzah',
             'handlingResults',
             'eventStatus',
             'handlingStatus',
         )
 
-class FormsSerializer(EventFormSerializer):
+class DraftFormsSerializer(DraftEventFormSerializer):
     class Meta:
-        model = FormsTable
-        fields = EventFormSerializer.Meta.fields + (
+        model = DraftFormsTable
+        fields = DraftEventFormSerializer.Meta.fields + (
             'signerUnit',
             'signerName',
             'signerId',

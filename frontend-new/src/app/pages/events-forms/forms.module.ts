@@ -35,6 +35,7 @@ import { EquipmentReviewComponent } from './equipment-review/equipment-review.co
 import { EventStatusShortedComponent } from './components/event-status-shorted/event-status-shorted.component';
 import { CorruptionFormComponent } from './corruption-form/corruption-form.component';
 import { FileDownloadButtonComponent } from './components/file-download-button/file-download-button.component';
+import { FormTopButtonsComponent } from './components/form-top-buttons/form-top-buttons.component';
 
 
 
@@ -74,6 +75,7 @@ import { FileDownloadButtonComponent } from './components/file-download-button/f
     EquipmentReviewComponent,
     EventStatusShortedComponent,
     FileDownloadButtonComponent,
+    FormTopButtonsComponent,
   ],
 })
 export class FormsModule { }

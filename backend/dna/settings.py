@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     # Messages application
     'msgs.apps.MsgsConfig',
+    # Messages application
+    'draft_forms.apps.DraftFormsConfig',
     # CORS
     'corsheaders',
 ]

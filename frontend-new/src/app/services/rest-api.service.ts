@@ -105,11 +105,15 @@ export class RestApiService {
     return this.http.get(`${this.baseUrl}${url}`);
   }
 
-  post(url: string, data):Observable<any>{
-    return this.http.post(`${this.baseUrl}${url}`, data);
+  post(url: string, data, params={}):Observable<any>{
+    return this.http.post(`${this.baseUrl}${url}`, data, params);
   }
 
-  put(url: string, data):Observable<any>{
-    return this.http.put(`${this.baseUrl}${url}`, data);
+  put(url: string, data, params={}):Observable<any>{
+    return this.http.put(`${this.baseUrl}${url}`, data, params);
+  }
+
+  delete(url: string):Observable<any>{
+    return this.http.delete(`${this.baseUrl}${url}`);
   }
 }

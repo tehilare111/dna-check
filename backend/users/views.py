@@ -16,7 +16,6 @@ from users.utils import check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS
 @csrf_exempt 
 @check_permissions_dec([MANAGER])
 def create_user(request):
-    print(request)
     user_data = JSONParser().parse(request)
     user_serializer = UsersSerilazers(data=user_data)
     

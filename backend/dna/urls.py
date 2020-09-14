@@ -5,4 +5,5 @@ urlpatterns = [
     url(r'^api/', include('management.urls')),
     url(r'^api/',include("users.urls")),
     url(r'^api/',include("msgs.urls")),
+    url(r'^api/',include("draft_forms.urls")),
 ]

@@ -48,8 +48,7 @@ def check_token(token):
         auth = jwt.decode(token, 'secret', algorithms=['HS256'])
         return get_permissions(auth["username"])
     except Exception as e:
-
-        return False
+        return (False,False)
 
 def get_permissions(username):
     user = Users.objects.get(username=username)
@@ -60,7 +59,7 @@ def check_permissions_dec(permissions_array, API_VIEW=False, RETURN_UNIT=False):
     
     def wrapper(view_function):
         def functions_args(*args, **kwargs):
-            # return view_function(unit='',*args, **kwargs)
+            
             request_index = 0 if not API_VIEW else 1
             request = args[request_index]
             
