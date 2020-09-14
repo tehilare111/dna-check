@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'management.apps.ManagementConfig',
     # User application
     'users.apps.UsersConfig',
+    # Messages application
+    'msgs.apps.MsgsConfig',
     # CORS
     'corsheaders',
 ]

@@ -50,7 +50,6 @@ class FormsSerializer(EventFormSerializer):
             'findingDate',
             'findingFile',
             'handlingFile',
-            'messages',
             'reviewDate',
             'reviewFile',
             'reviewReference',

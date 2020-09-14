@@ -9,7 +9,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CoreModule } from './@core/core.module';
+import { Injector } from '@angular/core';
 
+import { AppInjector } from './services/app-injector.service';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ThemeModule } from './@theme/theme.module';
@@ -43,4 +45,7 @@ import { NbToastrModule } from '@nebular/theme';
 })
 
 export class AppModule {
+  constructor(injector: Injector) {
+    AppInjector.injector = injector;
+  }
 }

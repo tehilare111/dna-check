@@ -5,7 +5,6 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser, FormParser
 from rest_framework import status
 from django.db.models import Max
-from datetime import datetime
 from django.conf import settings
 
 from rest_framework.views import APIView
@@ -14,10 +13,12 @@ from forms.models import FormsTable
 from forms.serializers import FormsSerializer
 from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
 from management.utils import get_inferior_units
+from msgs.utils import new_event_msgs, delete_event_messages
 
 import time
 import os
 import csv
+from datetime import datetime
 
 @csrf_exempt
 @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_UNIT=True)
@@ -100,8 +101,12 @@ class NewEventFrom(APIView):
     @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)
     def post(self, request, *args, **kwargs):
         form_serializer = FormsSerializer(data=request.data)
+
         if form_serializer.is_valid():
-            form_serializer.save(reference = int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0) + 1)
+            reference = int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0) + 1
+            # Create instance for this event form in the messages database
+            new_event_msgs(reference)
+            form_serializer.save(reference=reference)
             return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
@@ -137,5 +142,7 @@ class NewEventFrom(APIView):
         except FormsTable.DoesNotExist: 
             return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
 
+        # Delete this event form instance from the messages database
+        delete_event_messages(reference)
         event_form.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
