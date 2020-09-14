@@ -1,0 +1,2 @@
+<input class="form-control" type="text" nbInput fullWidth #equipmentMakat="ngModel" name="equipmentMakat" id="equipmentMakat" status="primary" placeholder="מק''ט ציוד/עותק חומר" [(ngModel)]="this.data" makatCopyValidation>
+<div *ngIf="equipmentMakat.invalid&&equipmentMakat.dirty"><label class="lable_valid">3 ספרות או 12 תווים</label></div>

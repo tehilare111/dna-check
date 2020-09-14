@@ -26,6 +26,7 @@ export class EventStatusComponent extends EventStatusBase implements OnInit {
   get_constas_feilds() {
     this.constatns_array=["eventStatus","hamdlingStatus"]
     this.RestApiService.getConstansFialdsNotPermissions(this.constatns_array).subscribe((data_from_server) => {
+      console.log(data_from_server.data)
       this.eventStatusOptions=data_from_server.data.eventStatus
       this.handlingStatusOptions=data_from_server.data.handlingStatus
     });

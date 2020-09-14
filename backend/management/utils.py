@@ -9,6 +9,7 @@ from django.conf import settings
 
 from management.models import UnitsTree, ConstantsFields
 from management.serializers import UnitsTreeSerializer, ConstantsFieldsSerializer
+from management.views import CONSTATNS_FIELDS_OBJECT_STATIC_ID
 
 import re
 
@@ -52,10 +53,20 @@ def find_unit_node(node, name):
     
     return stringed_result
 
-
-
-
-
-
-
+@csrf_exempt 
+def constants_fields_array(array):
+    print("array",len(array))
+    required=[]
+    try: 
+        constants_fields = ConstantsFields.objects.get(constantFieldId=CONSTATNS_FIELDS_OBJECT_STATIC_ID)
+        
+        constants_fields_serilazers = ConstantsFieldsSerializer( constants_fields)
+       
+    except ConstantsFields.DoesNotExist: 
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND
+        )
+    if len(array)>1:
+        return constants_fields_serilazers.data
+    else:
+        return constants_fields_serilazers.data[array]
 

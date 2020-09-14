@@ -89,3 +89,12 @@ def update_permissions_users(request, personalnumber):
         if form_serializer.is_valid():
             form_serializer.save()
             return JsonResponse({"data":form_serializer.data},status=status.HTTP_204_NO_CONTENT)
+
+#################################################################
+#                Constanas fiald not permissions                #
+#################################################################
+@csrf_exempt
+def get_constans_fiald(requerst,fields_array):
+    data=constants_fields_array(fields_array)
+    print(data)
+    return HttpResponse({"data":data})

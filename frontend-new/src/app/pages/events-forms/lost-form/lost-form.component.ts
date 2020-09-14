@@ -12,6 +12,12 @@ import { timeValidator } from '../validation-directives/time.directive';
 import { markValidator } from '../validation-directives/mark.directive';
 import { makatCopyValidator } from '../validation-directives/makat-copy.directive';
 import { textValidator } from '../validation-directives/text.directive';
+import { Router, ActivatedRoute } from '@angular/router';
+import { RestApiService } from '../../../services/rest-api.service';
+import { EquipmnetsTableComponent } from '../components/equipmnets-table/equipmnets-table.component';
+
+// import { JwtService } from '../../../services/jwt.service';
+// import { AuthService } from '../../../services/auth-service';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -24,6 +30,7 @@ export class LostFormComponent extends FormBaseComponent<LostFormTemplate, Event
   eventFilesFields: string[] = ['handlingFile', 'findingFile', 'investigationFile'];
 
   @ViewChild("status") eventStatusForm : EventStatusComponent;
+  @ViewChild("equipmentsTable") equipmentsTable:EquipmnetsTableComponent;
   // @ViewChild("chat") chatMessages : ChatComponent;
   @ViewChild("directingDialog") directingDialog : ElementRef;
   @ViewChild("simpleDialog") simpleDialog : ElementRef;
@@ -38,16 +45,52 @@ export class LostFormComponent extends FormBaseComponent<LostFormTemplate, Event
   results = ["טופל", "טרם טופל"]
   // units = [,"מצוב", "מעוף", "מצפן", "פלגת החוד"]
   // ranks = ["סמל", "רבט", "טוראי"]
-
   equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
   materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
-  //equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
-  //equipmentsTypeOptions = []
+  options_equipments=[]
+  equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+  equipmentsTypeOptions = []  
+  array_permission=[]
   
-  constructor(
-    ) {
-      super();
-    }
+  constructor(private RestApiService: RestApiService,public activatedRoute: ActivatedRoute,private dialogService: NbDialogService,private router: Router) {
+    super();
+  }
+
+  // id of all validation fields
+  @ViewChild("signerName") signerName : ElementRef;
+  @ViewChild("signerId") signerId : ElementRef;
+  @ViewChild("position") position : ElementRef;
+  @ViewChild("eventDate") eventDate : ElementRef;
+  @ViewChild("eventHour") eventHour : ElementRef;
+  @ViewChild("equipmentMark") equipmentMark : ElementRef;
+  @ViewChild("equipmentMakat") equipmentMakat : ElementRef;
+  @ViewChild("eventRelevantPlacesAndFactors") eventRelevantPlacesAndFactors : ElementRef;
+  @ViewChild("eventInitialDetails") eventInitialDetails : ElementRef;
+  @ViewChild("investigationDate") investigationDate : ElementRef;
+  @ViewChild("findingDate") findingDate : ElementRef;
+  @ViewChild("handlingDate") handlingDate : ElementRef;
+
+
+  formGroupEle: ElementRef[] = [
+    this.signerName, 
+    this.signerId,
+    this.position,
+    this.eventDate,
+    this.eventHour,
+    this.equipmentMark,
+    this.equipmentMakat,
+    this.eventRelevantPlacesAndFactors,
+    this.eventInitialDetails,
+    this.investigationDate,
+    this.findingDate,
+    this.handlingDate
+  ] 
+
+  handleFileUpload(event){
+    var target = event.target || event.srcElement || event.currentTarget;
+    this.formFiles.push({'id': target.attributes.id.value, 'file': target.files.item(0)});
+  }
+
 
 
   ngOnInit() {
@@ -127,12 +170,24 @@ export class LostFormComponent extends FormBaseComponent<LostFormTemplate, Event
       //this.equipmentsTypeOptions = this.equipments.map(el => {if(el['name']==this.form.equipment) return el['list']; else return undefined; }).filter(el => el!=null)[0]
     });
   }
-
-  onSubmit() {
-    this.uploadLoading = true
-    
-    this.updateValidationFormGroup();
-
-    super.onSubmit();
-  }  
+  exisitingFormLoadData(reference: string){
+    this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: LostFormTemplate) => {
+      this.form = data_from_server
+      console.log("load_server",this.form)
+      if(this.form.editStateBlocked || this.checkPermissions())
+        {
+          this.form.editStateBlocked = false
+        }else{
+          this.form.editStateBlocked = true
+        }    });
+}
+  checkPermissions(){
+    this.array_permission=['מדווח אירועים','מנהלן מערכת']
+    return this.auth.checkPermissions(this.array_permission)
+  }
+  checkPermissions_manager()
+  {
+    this.array_permission=['מנהלן מערכת']
+    return this.auth.checkPermissions(this.array_permission)
+  }
 }

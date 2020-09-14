@@ -76,7 +76,7 @@
             </div>
           </div>
           <h6>פרטי האובדן:</h6>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-md-2">
               <div class="form-group">
                 <label for="equipment" class="label">ציוד/חומר</label>
@@ -109,7 +109,8 @@
                 <div *ngIf="equipmentMakat.invalid&&equipmentMakat.dirty"><label class="label red">3 ספרות או 12 תווים</label></div>
               </div>
             </div>
-          </div>
+          </div> -->
+          <ngx-equipmnets-table #equipmentsTable [equipmentsType]="equipmentsType" [materialsType]="materialsType"[units]="units" [equipments]="equipments"></ngx-equipmnets-table>
           <h6>גורמים ומקומות רלוונטים לאירוע:</h6>
           <div class="row">
             <div class="col-md-12">

@@ -6,15 +6,17 @@ from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser
 from rest_framework import status
 from django.db.models import Max
 from django.conf import settings
-
+from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 
 from draft_forms.models import DraftFormsTable
 from forms.models import FormsTable
-from forms.serializers import FormsSerializer
-from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
 from management.utils import get_inferior_units
 from msgs.utils import new_event_msgs, delete_event_messages
+
+
+from forms.serializers import FormsSerializer,EquipmentSerializer
+from users.utils import check_permissions,check_token_not_login,check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
 
 import time
 import os
@@ -43,6 +45,7 @@ def forms_list(request, event_type, unit):
         form_serializer = FormsSerializer(forms, many=True)
 
         return JsonResponse(form_serializer.data, safe=False) 
+
     
     elif request.method == 'DELETE':
         FormsTable.objects.all().delete()
@@ -84,14 +87,14 @@ def download_xl_file(request, event_type):
 
     response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response)
-    writer.writerow(['reference', 'eventType', 'date', 'reporterName', 'reporterUnit', 'caseIdOnMetzah', 'handlingResults', 'eventStatus', 'handlingStatus', 'equipment', 'equipmentType' ,'equipmentMark', 'equipmentMakat', 'signerUnit', 'signerName', 'signerId', 'rank', 'position', 'eventDate', 'eventHour', 'reviewReference','isMatchToReport'])
+    writer.writerow(['reference', 'eventType', 'date', 'reporterName', 'reporterUnit', 'caseIdOnMetzah', 'handlingResults', 'eventStatus', 'handlingStatus', 'signerUnit', 'signerName', 'signerId', 'rank', 'position', 'eventDate', 'eventHour', 'reviewReference','isMatchToReport'])
 
     if event_type == '':
         forms = FormsTable.objects.all()
     else:
         forms = FormsTable.objects.filter(eventType=event_type)
 
-    for form in forms.values_list('reference', 'eventType', 'date', 'reporterName', 'reporterUnit', 'caseIdOnMetzah', 'handlingResults', 'eventStatus', 'handlingStatus', 'equipment', 'equipmentType' ,'equipmentMark', 'equipmentMakat', 'signerUnit', 'signerName', 'signerId', 'rank', 'position', 'eventDate', 'eventHour', 'reviewReference','isMatchToReport'):
+    for form in forms.values_list('reference', 'eventType', 'date', 'reporterName', 'reporterUnit', 'caseIdOnMetzah', 'handlingResults', 'eventStatus', 'handlingStatus',  'signerUnit', 'signerName', 'signerId', 'rank', 'position', 'eventDate', 'eventHour', 'reviewReference','isMatchToReport'):
         writer.writerow(form)
 
     return response
@@ -109,25 +112,29 @@ class OfficialEventFrom(APIView):
     parser_classes = (MultiPartParser, FormParser)
     
     @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)
+<<<<<<< HEAD
     def post(self, request, reference, *args, **kwargs):
 
 
 
         # if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS]):
         #     return HttpResponse(status=status.HTTP_401_FORBIDDEN)
+        # form_serializer = FormsSerializer(data=request.body)
+        # if form_serializer.is_valid():
+        #     reference = generate_reference(reference)
+        #     # Create instance for this event form in the messages database
+        #     new_event_msgs(reference)
+        #     form_serializer.save(reference=reference, writtenInFormals=True)
+        #     return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
         form_serializer = FormsSerializer(data=request.body)
-        if form_serializer.is_valid():
-            reference = generate_reference(reference)
-            # Create instance for this event form in the messages database
-            new_event_msgs(reference)
-            form_serializer.save(reference=reference, writtenInFormals=True)
-            return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
+        data=request.data
+        form=FormsSerializer(data=data)
+        if (form.is_valid()):
+            f=form.saveAll(request)
+            return JsonResponse(form.data, status=status.HTTP_201_CREATED)
         else:
-            # form_serializer.data["array"]=array_equipments 
-            print("this is data",form_serializer)
-            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
-    
-    @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)
+            print(form.errors)
+            return HttpResponse(form.errors,status=status.HTTP_400_BAD_REQUEST)
     def put(self, request, reference,*args, **kwargs):
         try: 
             event_form = FormsTable.objects.get(reference=reference) 

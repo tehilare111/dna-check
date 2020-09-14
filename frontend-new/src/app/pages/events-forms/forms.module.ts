@@ -36,6 +36,15 @@ import { EventStatusShortedComponent } from './components/event-status-shorted/e
 import { CorruptionFormComponent } from './corruption-form/corruption-form.component';
 import { FileDownloadButtonComponent } from './components/file-download-button/file-download-button.component';
 import { FormTopButtonsComponent } from './components/form-top-buttons/form-top-buttons.component';
+import { EquipmnetMakatRenderInputComponent } from './components/equipmnet-makat-render-input/equipmnet-makat-render-input.component';
+import { EquipmnetMakatCustomInputComponent } from './components/equipmnet-makat-custom-input/equipmnet-makat-custom-input.component';
+import { EquipmnetMarkCustomInputComponent } from './components/equipmnet-mark-custom-input/equipmnet-mark-custom-input.component';
+import { EquipmnetTypeCustomComponent } from './components/equipmnet-type-custom/equipmnet-type-custom.component';
+import { EquipmantsCustomComponentComponent } from './components/equipmants-custom-component/equipmants-custom-component.component';
+import { EquipmnetsTableComponent } from './components/equipmnets-table/equipmnets-table.component';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
+
+
 
 
 
@@ -55,7 +64,8 @@ import { FormTopButtonsComponent } from './components/form-top-buttons/form-top-
     NbSelectModule,
     ngFormsModule,
     NbSpinnerModule,
-    NbChatModule
+    NbChatModule,
+    Ng2SmartTableModule,
   ],
   declarations: [
     FormsComponent,
@@ -74,8 +84,19 @@ import { FormTopButtonsComponent } from './components/form-top-buttons/form-top-
     ChatComponent,
     EquipmentReviewComponent,
     EventStatusShortedComponent,
+<<<<<<< HEAD
     FileDownloadButtonComponent,
     FormTopButtonsComponent,
+=======
+    EquipmnetsTableComponent,
+    EquipmantsCustomComponentComponent,
+    EquipmnetTypeCustomComponent,
+    EquipmnetMarkCustomInputComponent,
+    EquipmnetMakatCustomInputComponent,
+    EquipmnetMakatRenderInputComponent,
+
+>>>>>>> a1b6c11... add A new feature of the amount of equipment in one form
   ],
+  entryComponents:[EquipmantsCustomComponentComponent, EquipmnetTypeCustomComponent,EquipmnetMarkCustomInputComponent,EquipmnetMakatCustomInputComponent]
 })
 export class FormsModule { }

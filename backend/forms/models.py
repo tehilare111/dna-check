@@ -40,8 +40,6 @@ class EventForm(Form):
  
 
 class FormsTable(EventForm):
-    # reference=models.IntegerField()
-    messages = ArrayField(models.CharField(max_length=150, blank=True, null=True), size=100, null=True, blank=True)
     # Events Form
     signerUnit = models.CharField(max_length=70, blank=False, default='')
     signerName = models.CharField(max_length=70, blank=False, default='')
@@ -65,7 +63,7 @@ class FormsTable(EventForm):
     reviewReference = models.CharField(max_length=70, blank=False, default='')
     isMatchToReport = models.BooleanField(default=False)
 class EventsEquipments(models.Model):
-    reference=models.ForeignKey(FormsTable, primary_key=True, related_name='equipments',on_delete=models.CASCADE)
+    reference=models.ForeignKey(FormsTable, primary_key=False, related_name='equipments',on_delete=models.CASCADE)
     equipment = models.CharField(max_length=70, blank=False, default='')
     equipmentType = models.CharField(max_length=70, blank=False, default='')
     equipmentMark = models.CharField(max_length=70, blank=False, default='')

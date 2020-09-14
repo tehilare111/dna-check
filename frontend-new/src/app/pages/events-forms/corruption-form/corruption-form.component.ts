@@ -5,6 +5,18 @@ import { FormGroup, FormControl } from "@angular/forms";
 import { FormBaseComponent } from '../form-base.component'
 import { CorruptionFormTemplate } from '../events-forms.templates';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
+<<<<<<< HEAD
+=======
+import { textValidator } from "../validation-directives/text.directive";
+import { stdFieldValidator } from "../validation-directives/std-field.directive";
+import { dateValidator } from "../validation-directives/date.directive";
+import { idValidator } from "../validation-directives/id.directive";
+import { makatCopyValidator } from "../validation-directives/makat-copy.directive";
+import { markValidator } from "../validation-directives/mark.directive";
+import { timeValidator } from "../validation-directives/time.directive";
+import { AuthService } from '../../../services/auth-service';
+import { EquipmnetsTableComponent } from '../components/equipmnets-table/equipmnets-table.component';
+>>>>>>> a1fc61e... add A new feature of the amount of equipment in one form
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -17,10 +29,23 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
   eventFilesFields: string[] = ['handlingFile', 'investigationFile'];
   
   @ViewChild("status") eventStatusForm : EventStatusComponent;
+<<<<<<< HEAD
   // @ViewChild("chat") chatMessages : ChatComponent;
   @ViewChild("directingDialog") directingDialog : ElementRef;
   @ViewChild("simpleDialog") simpleDialog : ElementRef;
   
+=======
+  @ViewChild("equipmentsTable") equipmentsTable:EquipmnetsTableComponent;
+  
+  reference = undefined;
+  formFiles : {'id': string, 'file': File}[] = []; 
+  readonly : boolean = true;
+  popUpDialogContext: string = '';
+  msgs: any[] = [];
+  baseUrl: string = '';
+  array_permission;
+  auth:AuthService=new AuthService();
+>>>>>>> a1fc61e... add A new feature of the amount of equipment in one form
   // select fields options:
   eventStatusOptions = ["טופל", "טרם טופל"]
   units = ["מצוב", "מעוף", "מצפן", "פלגת חוד"]

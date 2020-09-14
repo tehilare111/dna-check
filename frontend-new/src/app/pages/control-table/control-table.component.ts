@@ -79,15 +79,23 @@ export class ControlTableComponent implements OnInit {
   }
 
   loadData(eventType: string) {
-<<<<<<< HEAD
+
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${eventType}`).subscribe((data_from_server) => {
       this.data=data_from_server
-=======
-    this.RestApiService.getFormsList(eventType).subscribe((data_from_server) => {
-      console.log(data_from_server)
-      if(data_from_server.length>0)
-          this.data=data_from_server
->>>>>>> d2b2987... bar
+
+    console.log(eventType)
+
+    // this.RestApiService.getFormsList(eventType).subscribe((data_from_server) => {
+    //   console.log(data_from_server.length)
+    //   if(data_from_server.length>0)
+    //   {
+    //       this.data=data_from_server
+
+    //       this.source.load(this.data);
+    //   }
+    //   else{
+    //   this.data=[]
+
       this.source.load(this.data);
     });
   }
