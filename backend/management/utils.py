@@ -9,8 +9,6 @@ from django.conf import settings
 
 from management.models import UnitsTree, ConstantsFields
 from management.serializers import UnitsTreeSerializer, ConstantsFieldsSerializer
-from management.views import CONSTATNS_FIELDS_OBJECT_STATIC_ID
-
 import re
 
 # static value only for represting it and pull it from db
@@ -20,6 +18,8 @@ CONSTATNS_FIELDS_OBJECT_STATIC_ID = '28032018'
 
 def constants_fields_array():
     # If no Constatnts fields Object Initiated in the database, this function will raise an exeption
+    print("*****************************")
+    print("*****************************")
     return ConstantsFieldsSerializer(ConstantsFields.objects.get(constantFieldId=CONSTATNS_FIELDS_OBJECT_STATIC_ID)).data
 
 def units_array():
@@ -54,7 +54,7 @@ def find_unit_node(node, name):
     return stringed_result
 
 @csrf_exempt 
-def constants_fields_array(array):
+def constants_fields_array1(array):
     print("array",len(array))
     required=[]
     try: 

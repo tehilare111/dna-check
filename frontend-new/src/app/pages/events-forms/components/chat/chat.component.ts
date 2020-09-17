@@ -22,6 +22,7 @@ export class ChatComponent implements OnInit {
   loadData(){
     this.RestApiService.get(`${this.url}${this.reference}`).subscribe(
       (data) => {
+        console.log(data)
         this.messages = data.messages.map( msg => { return JSON.parse(msg); } )
       },
       (error) => { this.ToastService.showToast('fail', 'בעיה בטעינת ההודעות מהשרת', ''); }

@@ -35,7 +35,6 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
   ranks = []
   eventEquipments:EventEquipments=new EventEquipments()
 
-  equipmentReview: EquipmentReviewTemplate = new EquipmentReviewTemplate();
   // equipmentsTable:EquipmnetsTableComponent=new EquipmnetsTableComponent();
 
   uploadLoading = false;
@@ -55,8 +54,10 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
 
   equipments = [{"name": "ציוד", "list" : this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
   equipmentsTypeOptions = []  
-  constructor(private RestApiService: RestApiService, public activatedRoute: ActivatedRoute, private dialogService: NbDialogService, private router: Router) {super()
-     this.baseUrl = this.RestApiService.baseUrl} 
+  constructor(
+    ) {
+      super();
+    }
 
   // id of all validation fields
   @ViewChild("signerName") signerName : ElementRef;
@@ -94,10 +95,11 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
 
   ngOnInit() {
     // Set eventType field according to the form event type
-    this.equipmentReview.eventType = this.eventType
+    this.form.eventType = this.eventType
     
     // Recieve form data from db according to its reference
-    this.reference = this.activatedRoute.snapshot.params.reference;
+    this.reference = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference;
+    console.log("bar",this.reference)
     if (this.reference){
       this.exisitingFormLoadData(this.reference);
     } else {
@@ -129,8 +131,6 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
   }
   updateValidationFormGroup(){
     this.formGroup = new FormGroup({
-    'equipmentMark': new FormControl(this.form.equipmentMark, [this.markValidator()]),
-    'equipmentMakat': new FormControl(this.form.equipmentMakat, [this.makatCopyValidator()]),
     'reviewReference': new FormControl(this.form.reviewReference, [this.textValidator()]),
     'reviewDate': new FormControl(this.form.reviewDate, [this.dateValidator()]),
     })
@@ -138,7 +138,9 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
 
   exisitingFormLoadData(reference: string){
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: EquipmentReviewTemplate) => {
-      this.equipmentReview = data_from_server
+      console.log("gornish")
+      console.log(data_from_server)
+      this.form = data_from_server
     });
 
   }
@@ -151,7 +153,7 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
       eq.push("$$",JSON.stringify(datas[i]))
     }
     eq.push("$$")
-    this.form = this.eventStatusForm.pushFormFields<EquipmentReviewTemplate>(this.form);
+    
 
   
     // insert equipmentReview to FormData object

@@ -71,6 +71,7 @@ export class ManagementComponent implements OnInit {
   constructor(private service:SmartTableData,private RestApiService:RestApiService,private ToastService: ToastService){ }
 
   ngOnInit(): void {
+    
     this.source.load(this.data_table);
     this.loadData();
   }
@@ -145,6 +146,14 @@ export class ManagementComponent implements OnInit {
       error => { this.ToastService.showToast("fail","שגיאה בעת בהרשמה","") }
     );
   }
+//   deleteUser(personalNumber){
+//     this.RestApiService.deleteUser(personalNumber).subscribe(
+//       data => {
+//           this.ToastService.showToast("success","המחיקה הושלמה","")
+//   },
+//   error => { this.ToastService.showToast("fail","שגיאה בעת בהרשמה","") }
+//     );
+// }
 
   LoadUserForUnit() {
     this.RestApiService.getUsersList(this.pickedUpUnit).subscribe((data) => {

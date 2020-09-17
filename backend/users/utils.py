@@ -38,6 +38,7 @@ def create_jwt(user_data):
         if user is not None:
             expiry = datetime.date.today() + timedelta(days=50)
         token = jwt.encode({'username': username,'password':password}, 'secret', algorithm='HS256')
+        print(check_token(token))
         if check_token(token):
             return token
         else:
@@ -46,6 +47,7 @@ def create_jwt(user_data):
 def check_token(token):
     try:
         auth = jwt.decode(token, 'secret', algorithms=['HS256'])
+        # print(auth["username"])
         return get_permissions(auth["username"])
     except Exception as e:
         return (False,False)
@@ -65,10 +67,10 @@ def check_permissions_dec(permissions_array, API_VIEW=False, RETURN_UNIT=False):
             
             if not 'Authorization' in request.headers:
                 return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
-            
-            token = request.headers['Authorization'].split(" ")[1]        
+           
+            token = request.headers['Authorization'].split(" ")[1]
+            print(token)        
             permission, unit = check_token(token)
-    
             if permission in permissions_array:
                 return view_function(*args, **kwargs) if not RETURN_UNIT else view_function(unit=unit, *args, **kwargs)
             else:

@@ -58,15 +58,10 @@ export class CorruptionFormTemplate extends EventForm {
     handlingDate: string
     handlingFile: string;
 }
-
 export class EquipmentReviewTemplate extends EventForm {
     reviewDate: string;
     reviewFile: string;
     isMatchToReport: boolean;
-    equipment: string;
-    equipmentType: string;
-    equipmentMark: string;
-    equipmentMakat: string;
     reviewReference: string;
 }
 export class EventEquipments extends EventForm{

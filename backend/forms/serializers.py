@@ -75,7 +75,7 @@ class FormsSerializer(serializers.ModelSerializer):
             
 
     def saveAll(self,request):
-        self.save(reference=int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0) + 1)
+        self.save(reference=reference, writtenInFormals=True)
         print("SELF",request)
         data=request.data["equipments"]
         data = data.split("$$")[1:-1]

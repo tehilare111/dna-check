@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DefaultEditor } from 'ng2-smart-table';
 import { EventEquipments}from '../../events-forms.templates';
 import { RestApiService } from '../../../../services/rest-api.service';
+import { clear } from 'console';
 @Component({
   selector: 'ngx-equipmants-custom-component',
   templateUrl: './equipmants-custom-component.component.html',
@@ -13,10 +14,16 @@ export class EquipmantsCustomComponentComponent extends DefaultEditor implements
   ranks = ["סמל", "רבט", "טוראי"]
   equipmentsType = ["סוג1", "סוג2","סוג3"]
   materialsType = ["חומר1" , "חומר2", "חומר3"]
-  data:any = {};
-  equipments = [{"name": "ציוד", "list" : this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
-  equipmentsTypeOptions = [] 
+  // results = []
+  // units = []
+  // ranks = []
+  // equipmentsType = []
+  // materialsType = []
+  data="";
+  equipments = [{"name":"select"},{"name": "ציוד", "list" : this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+  equipmentsTypeOptions=[]; 
   constans_array=[]
+  myFunc;
   eventEquipments: EventEquipments = new EventEquipments();
   constructor(private RestApiService:RestApiService) {
     super();  
@@ -26,33 +33,37 @@ export class EquipmantsCustomComponentComponent extends DefaultEditor implements
     this.cell.setValue("");
     this.cell.getRow().cells[1].setValue("");
     console.log(this.cell.newValue)
+    // this.myFunc=setInterval(() => {this.getConstasFeilds()}, 500);
     this.getConstasFeilds()
-    if(this.cell.getValue() !== ""){
-      this.data = Object.assign({}, this.cell.getValue());
+    if(this.cell.getValue() != ""){
+      this.data = this.eventEquipments.equipment;
     }
 
   }
   setValueType(){
     for(let i in this.equipments){
       if(this.data ===this.equipments[i]["name"]){
-        this.equipmentsTypeOptions=this.equipments[i].list
-        this.cell.getRow().cells[1].setValue(this.equipmentsTypeOptions)
+        this.cell.getRow().cells[1].setValue(this.equipments[i].list)
+        console.log("cell[1]:",this.cell.getRow().cells[1])
+        this.updateEquipment()
       }  
     }
   }
   updateEquipment(){
+    console.log("status updateEqupment: ok")
     this.cell.setValue(this.data);
-    this.setValueType();
+    // this.setValueType();
   }
   getConstasFeilds() {
-    this.constans_array=["equipmentType","rank","materialType","eventStatus"]
-    this.RestApiService.getConstansFialdsNotPermissions(this.constans_array).subscribe((data_from_server) => {
-      console.log(data_from_server.data)
-      this.equipmentsType=data_from_server.data.equipmentType
-      this.materialsType=data_from_server.data.materialType
-      this.results=data_from_server.data.eventStatus
+    this.RestApiService.getConstansFieldsAndUnitsArray().subscribe((data) => {
+      this.equipmentsType = data.equipmentType
+      // this.ranks = data.rank
+      this.materialsType = data.materialType
+      // this.results = data.eventStatus
       this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+      
     });
+    clearInterval(this.myFunc)
   }
 
 }

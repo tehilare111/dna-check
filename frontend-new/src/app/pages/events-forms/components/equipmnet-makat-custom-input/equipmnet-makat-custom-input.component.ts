@@ -15,6 +15,8 @@ export class EquipmnetMakatCustomInputComponent extends DefaultEditor implements
   constructor() {super() }
   data=""
   fieldsValid = false
+  flag_to_string=0
+  myFunc;
   ngOnInit() {
     if(this.cell.getValue() !== ""){
       this.data = this.eventEquipments.equipmentMakat;
@@ -28,14 +30,21 @@ export class EquipmnetMakatCustomInputComponent extends DefaultEditor implements
   })
   for (const field in formGroup.controls){
     if (formGroup.controls[field].valid){
+      if(this.flag_to_string==0){
+        this.data=this.eventEquipments.equipmentMakat
+        clearInterval(this.myFunc)
+        this.flag_to_string=1
+      }
   //  if(field.valid && field.dirty) {
       this.fieldsValid =true
+      
     }
+    
   }
   return this.fieldsValid
   }
   setValueTable(){
-    if(this.checkFieldsValid(this.data)){
+    if(this.checkFieldsValid(this.eventEquipments.equipmentMakat)){
     this.cell.setValue(this.data)
   }
 }

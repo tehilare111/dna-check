@@ -102,9 +102,14 @@ export class ControlTableComponent implements OnInit {
 
   formClicked(event) {
     let path = ''
+    
     for(let [key, value] of Object.entries(this.eventsToPickUp)){
+      console.log("***************")
+      
+      console.log("***************")
       if(value['name'] == event.data.eventType){
         path = value['route']
+        
       }
     }
     this.router.navigate([path, {reference: event.data.reference, isDraft: this.isDraft}]);

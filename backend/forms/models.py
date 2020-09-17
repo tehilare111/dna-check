@@ -63,7 +63,7 @@ class FormsTable(EventForm):
     reviewReference = models.CharField(max_length=70, blank=False, default='')
     isMatchToReport = models.BooleanField(default=False)
 class EventsEquipments(models.Model):
-    reference=models.ForeignKey(FormsTable, primary_key=False, related_name='equipments',on_delete=models.CASCADE)
+    reference1=models.ForeignKey(FormsTable, primary_key=False, related_name='equipments',on_delete=models.CASCADE)
     equipment = models.CharField(max_length=70, blank=False, default='')
     equipmentType = models.CharField(max_length=70, blank=False, default='')
     equipmentMark = models.CharField(max_length=70, blank=False, default='')

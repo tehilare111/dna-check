@@ -2,6 +2,23 @@
 <ngx-form-top-buttons (sendEvent)="sendEvent()" (printForm)="printForm()" (updateEditState)="updateEditState()" (saveEvent)="saveEvent()" (deleteEventForm)="deleteEventForm()" [reference]="reference" [reporterUnit]="form.reporterUnit" id="outOfPrint"></ngx-form-top-buttons>
 
 <div *ngIf="isDraft"><p class="red">טיוטה</p></div>
+<!-- =======
+<div class="row col-md-12" id="outOfPrint">
+  
+  <nb-card *ngIf ="auth.checkPermissions(['מנהלן מערכת', 'מדווח אירועים'])"  >
+    <button type="submit" nbButton status="primary" (click)="onSubmit()">שלח אירוע</button>
+  </nb-card>
+  <nb-card *ngIf ="auth.checkPermissions(['מנהלן מערכת'])&&reference!=undefined"> 
+    <button *ngIf="true" nbButton status="primary" (click)="updateEditState()">פתח/סגור אירוע לעריכה</button>
+  </nb-card>
+  <nb-card>
+    <button *ngIf="true" nbButton status="primary" (click)="printForm()">הדפס אירוע</button>
+  </nb-card>
+  <nb-card *ngIf ="auth.checkPermissions(['מנהלן מערכת'])" >
+    <button *ngIf="true" nbButton status="primary" (click)="deleteEventForm()">מחק אירוע</button>
+  </nb-card>
+</div>
+>>>>>>> 880fcee... not working dont tached -->
 
 <div class="row" id="print-section">
   <div class="col-md-3">
@@ -110,7 +127,7 @@
               </div>
             </div>
           </div> -->
-          <ngx-equipmnets-table #equipmentsTable [equipmentsType]="equipmentsType" [materialsType]="materialsType"[units]="units" [equipments]="equipments"></ngx-equipmnets-table>
+          <ngx-equipmnets-table #equipmentsTable [disable]="this.form.editStateBlocked" [equipmentsType]="equipmentsType" [materialsType]="materialsType"[units]="units" [equipments]="equipments"></ngx-equipmnets-table>
           <h6>גורמים ומקומות רלוונטים לאירוע:</h6>
           <div class="row">
             <div class="col-md-12">
@@ -180,7 +197,10 @@
               </div>
             </div>
           </div>-->
-          <chat id="outOfPrint" messages="lostForm.messages"></chat>
+          <div *ngIf="form.reference" #chatWrapper id="outOfPrint">
+            <chat #chat [messages]="msgs" [reference]="form.reference"></chat>
+          </div>
+
         </form>
       </nb-card-body>
     </nb-card>

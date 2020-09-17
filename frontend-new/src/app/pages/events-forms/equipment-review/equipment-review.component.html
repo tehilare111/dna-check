@@ -1,7 +1,23 @@
 
+
 <ngx-form-top-buttons (sendEvent)="sendEvent()" (printForm)="printForm()" (updateEditState)="updateEditState()" (saveEvent)="saveEvent()" (deleteEventForm)="deleteEventForm()" [reference]="reference" [reporterUnit]="form.reporterUnit" id="outOfPrint"></ngx-form-top-buttons>
 
 <div *ngIf="isDraft"><p class="red">טיוטה</p></div>
+<!-- =======
+<div class="row col-md-12" id="outOfPrint">
+  <nb-card *ngIf ="auth.checkPermissions(['מנהלן מערכת', 'מדווח אירועים'])" >
+    <button type="submit" nbButton status="primary"  (click)="onSubmit()">שלח אירוע</button>
+  </nb-card>
+  <nb-card *ngIf ="auth.checkPermissions(['מנהלן מערכת'])&&reference!=undefined" >
+    <button *ngIf="true" nbButton status="primary" (click)="updateEditState()">פתח/סגור אירוע לעריכה</button>
+  </nb-card>
+  <nb-card>
+    <button *ngIf="true" nbButton status="primary"  (click)="printForm()">הדפס אירוע</button>
+  </nb-card>
+  <nb-card *ngIf ="auth.checkPermissions(['מנהלן מערכת'])"> 
+    <button *ngIf="true" nbButton status="primary"(click)="deleteEventForm()">מחק אירוע</button>
+  </nb-card>
+</div>
 
 <div class="row" id="print-section">
   <div class="col-md-3">
@@ -55,23 +71,23 @@
               </div>
           </div>
           <h6>פרטי החוסרים:</h6>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-md-12">
               <div class="form-group">
                  <label for="equipment" class="label">ציוד/חומר</label>
                 <div>
                 </div>
-<<<<<<< HEAD
+
                 <nb-select [disabled]="this.form.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="form.equipment">
                   <nb-option *ngFor="let equipment of equipments" value="equipment.name" (click)="equipmentsTypeOptions=equipment.list; form.equipmentType=''">{{equipment.name}}</nb-option>  
                 </nb-select>
-              </div>
-=======
+              </div> -->
+
                 <!-- <nb-select [disabled]="this.equipmentReview.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="equipmentReview.equipment">
                   <nb-option *ngFor="let equipment of equipments" value="equipment.name" (click)="equipmentsTypeOptions=equipment.list; equipmentReview.equipmentType=''">{{equipment.name}}</nb-option>  
                 </nb-select> -->
               <!--</div>
->>>>>>> a1fc61e... add A new feature of the amount of equipment in one form
+
             </div>
             <div class="col-md-2">
               <div class="form-group">
@@ -94,11 +110,12 @@
                 <label for="equipmentMakat" class="label">מק"ט ציוד/עותק חומר</label>
                 <input [readonly]="this.equipmentReview.editStateBlocked" type="text" nbInput fullWidth #equipmentMakat="ngModel" name="equipmentMakat" id="equipmentMakat" status="primary" placeholder="מק''ט ציוד/עותק חומר" [(ngModel)]="equipmentReview.equipmentMakat" makatCopyValidation>
                 <div *ngIf="equipmentMakat.invalid&&equipmentMakat.dirty"><label class="label red">3 ספרות או 12 תווים</label></div> -->
-                <ngx-equipmnets-table #equipmentsTable [equipmentsType]="equipmentsType" [materialsType]="materialsType"[units]="units" [equipments]="equipments"></ngx-equipmnets-table>
+                
 
-              </div>
+              <!-- </div>
             </div>
-          </div>
+          </div> -->
+          <ngx-equipmnets-table #equipmentsTable [disable]="this.form.editStateBlocked" [equipmentsType]="equipmentsType" [materialsType]="materialsType" [units]="units" [equipments]="equipments"></ngx-equipmnets-table>
           <h6>התייחסות לביקורת:</h6>
           <div class="row">
             <div class="col-md-12">

@@ -5,7 +5,7 @@ from rest_framework.parsers import JSONParser
 from django.http import HttpResponse, JsonResponse
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
-from management.utils import constants_fields_array
+from management.utils import constants_fields_array,constants_fields_array1
 from management.models import UnitsTree, ConstantsFields
 from users.utils import check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER, check_token, create_jwt
 
@@ -14,7 +14,7 @@ from users.utils import check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS
 #                      Create new user                        #
 ###############################################################
 @csrf_exempt 
-@check_permissions_dec([MANAGER])
+
 def create_user(request):
     user_data = JSONParser().parse(request)
     user_serializer = UsersSerilazers(data=user_data)
@@ -33,10 +33,10 @@ def create_user(request):
 def check_login(request):
     user_data = JSONParser().parse(request)
     if request.method == 'POST':
-        try:
-            user = Users.objects.get(username=user_data["username"])
-        except:
-            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+        # try:
+        user = Users.objects.get(username=user_data["username"])
+        # except:
+            # return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
             
         if check_user_password(user.username, user_data["password"]):
             user_serialized_data = UsersSerilazers(user).data
@@ -55,6 +55,7 @@ def check_user_password(username,password):
 
 ################### Check personal number ######################
 def check_user_and_personal_number(user_data):
+    print(user_data)
     return (Users.objects.filter(username=user_data["username"]).exists() or Users.objects.filter(personalNumber=user_data["personalNumber"]).exists())
 
 ###############################################################
@@ -95,6 +96,6 @@ def update_permissions_users(request, personalnumber):
 #################################################################
 @csrf_exempt
 def get_constans_fiald(requerst,fields_array):
-    data=constants_fields_array(fields_array)
+    data=constants_fields_array1(fields_array)
     print(data)
     return HttpResponse({"data":data})

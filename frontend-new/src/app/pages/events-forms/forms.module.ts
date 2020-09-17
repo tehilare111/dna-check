@@ -84,18 +84,16 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
     ChatComponent,
     EquipmentReviewComponent,
     EventStatusShortedComponent,
-<<<<<<< HEAD
+
     FileDownloadButtonComponent,
     FormTopButtonsComponent,
-=======
+
     EquipmnetsTableComponent,
     EquipmantsCustomComponentComponent,
     EquipmnetTypeCustomComponent,
     EquipmnetMarkCustomInputComponent,
     EquipmnetMakatCustomInputComponent,
     EquipmnetMakatRenderInputComponent,
-
->>>>>>> a1b6c11... add A new feature of the amount of equipment in one form
   ],
   entryComponents:[EquipmantsCustomComponentComponent, EquipmnetTypeCustomComponent,EquipmnetMarkCustomInputComponent,EquipmnetMakatCustomInputComponent]
 })

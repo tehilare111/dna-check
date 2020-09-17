@@ -20,7 +20,7 @@ export class PagesComponent {
   array_permissions = ["מנהלן מערכת"]
   
   get_permissions(){
-    return (this.authService.check_permissions(this.array_permissions)) ? 
+    return (this.authService.checkPermissions(this.array_permissions))?
         this.MENUS.ADMIN_MENU : this.MENUS.DEF_MENU;
   }
 }

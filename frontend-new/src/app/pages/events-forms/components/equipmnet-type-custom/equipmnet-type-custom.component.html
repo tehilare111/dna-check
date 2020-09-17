@@ -1,7 +1,8 @@
 <!-- <div class="col-md-12">
   <div class="form-group"> -->
-    <select class="form-control" name="equipmentType" id="equipmentType" status="primary" [(ngModel)]="data" (change)="setValueOnTable()" >
-      <option *ngFor="let equipment of equipmentsTypeOptions"  >{{equipment}} </option>  
+    <select class="form-control" name="equipmentType" id="equipmentType" status="primary" (click)="this.getValueOnTable()" [(ngModel)]="data" >
+      <option value="" disabled selected hidden>סוג ציוד/חומר</option>
+      <option *ngFor="let equipment of equipmentsTypeOptions" value={{equipment}}>{{equipment}} </option>  
     </select>
   <!-- </div>
 </div> -->

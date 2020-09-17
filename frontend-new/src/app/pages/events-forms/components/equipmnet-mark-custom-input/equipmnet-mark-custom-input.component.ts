@@ -3,6 +3,7 @@ import { DefaultEditor } from 'ng2-smart-table';
 import { EventEquipments } from '../../events-forms.templates';
 import { markValidator } from "../../validation-directives/mark.directive";
 import { FormGroup, FormControl } from '@angular/forms';
+import { clear } from 'console';
 
 @Component({
   selector: 'ngx-equipmnet-mark-custom-input',
@@ -14,16 +15,17 @@ export class EquipmnetMarkCustomInputComponent extends DefaultEditor  implements
   eventEquipments: EventEquipments = new EventEquipments();
   data="";
   flag_to_string=0
+  myVar;
   fieldsValid = false
   constructor() {super() }
 
   ngOnInit() {
     this.cell.setValue(this.data)
     if(this.cell.getValue() !== ""){
-      this.data =this.eventEquipments.equipmentMark;
+      this.data =Object.assign(this.cell.newValue);
     }
     // setInterval(() => {this.checkFieldsValid()}, 500);
-    setInterval(() => {this.setValueTable()}, 500);
+    this.myVar =setInterval(() => {this.setValueTable()}, 500);
   }
   checkFieldsValid(data){
     let formGroup=new FormGroup({
@@ -35,6 +37,7 @@ export class EquipmnetMarkCustomInputComponent extends DefaultEditor  implements
         this.data=this.eventEquipments.equipmentMark
         this.flag_to_string=1
       }
+      
   //  if(field.valid && field.dirty) {
       this.fieldsValid =true
     }
@@ -42,11 +45,10 @@ export class EquipmnetMarkCustomInputComponent extends DefaultEditor  implements
   return this.fieldsValid
   }
   setValueTable(){
-    console.log(this.flag_to_string)
     // console.log(this.eventEquipments.equipmentMark)
-    console.log(this.checkFieldsValid(this.data))
     if(this.checkFieldsValid(this.eventEquipments.equipmentMark)){
     this.cell.setValue(this.data)
+    clearInterval( this.myVar )
   }
   }
   

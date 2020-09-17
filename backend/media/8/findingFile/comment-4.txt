@@ -1,0 +1,61 @@
+I'm not the original reporter, but I hit (and analyzed) what seems to be the same failure in https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1820755
+
+I just switched our packer template over to -proposed to test this:
+
+i.e. changed it to use http://archive.ubuntu.com/ubuntu/dists/xenial-proposed/main/installer-amd64/20101020ubuntu451.28/images/netboot/mini.iso, added apt-setup/proposed=true to the kernel command-line) and I can confirm that this runs to completion (whereas xenial-updates/current/images/netboot/mini.iso errors out.
+
+debootstrap still initially installs the original xenial version of linux-base (but that's expected, since debootstrap is unable to look at multiple repositories), but it eventually gets upgraded
+
+debootstrap: Preparing to unpack .../linux-base_4.0ubuntu1_all.deb ...
+debootstrap: Unpacking linux-base (4.0ubuntu1) ...
+...
+debootstrap: Setting up linux-base (4.0ubuntu1) ...
+
+... but later on (once base-installer is doing the kernel using the real in-target apt-get) it picks up the new kernel from xednial-proposed, and that prods it to pick up the new linux-base from xenial-updates ...
+
+in-target: The following additional packages will be installed:
+in-target:   linux-base linux-headers-4.4.0-145 linux-headers-4.4.0-145-generic
+in-target:   linux-headers-generic linux-headers-virtual linux-image-4.4.0-145-generic
+in-target:   linux-image-virtual linux-modules-4.4.0-145-generic
+in-target: Suggested packages:
+in-target:   fdutils linux-doc-4.4.0 | linux-source-4.4.0 linux-tools
+in-target: Recommended packages:
+in-target:   grub-pc | grub-efi-amd64 | grub-efi-ia32 | grub | lilo
+in-target: The following NEW packages will be installed:
+in-target:   linux-headers-4.4.0-145 linux-headers-4.4.0-145-generic
+in-target:   linux-headers-generic linux-headers-virtual linux-image-4.4.0-145-generic
+in-target:   linux-image-virtual linux-modules-4.4.0-145-generic linux-virtual
+in-target: The following packages will be upgraded:
+in-target:   linux-base
+in-target: 1 upgraded, 8 newly installed, 0 to remove and 98 not upgraded.
+in-target: Need to get 29.8 MB of archives.
+in-target: After this operation, 146 MB of additional disk space will be used.
+in-target: Get:1 http://archive.ubuntu.com/ubuntu xenial-updates/main amd64 linux-base all 4.5ubuntu1~16.04.1 [18.1 kB]
+in-target: Get:2 http://archive.ubuntu.com/ubuntu xenial-proposed/main amd64 linux-headers-4.4.0-145 all 4.4.0-145.171 [10.0 MB]
+in-target: Get:3 http://archive.ubuntu.com/ubuntu xenial-proposed/main amd64 linux-headers-4.4.0-145-generic amd64 4.4.0-145.171 [820 kB]
+in-target: Get:4 http://archive.ubuntu.com/ubuntu xenial-proposed/main amd64 linux-headers-generic amd64 4.4.0.145.153 [2,568 B]
+in-target: Get:5 http://archive.ubuntu.com/ubuntu xenial-proposed/main amd64 linux-headers-virtual amd64 4.4.0.145.153 [1,760 B]
+in-target: Get:6 http://archive.ubuntu.com/ubuntu xenial-proposed/main amd64 linux-modules-4.4.0-145-generic amd64 4.4.0-145.171 [12.0 MB]
+in-target: Get:7 http://archive.ubuntu.com/ubuntu xenial-proposed/main amd64 linux-image-4.4.0-145-generic amd64 4.4.0-145.171 [6,919 kB]
+in-target: Get:8 http://archive.ubuntu.com/ubuntu xenial-proposed/main amd64 linux-image-virtual amd64 4.4.0.145.153 [2,694 B]
+in-target: Get:9 http://archive.ubuntu.com/ubuntu xenial-proposed/main amd64 linux-virtual amd64 4.4.0.145.153 [1,778 B]
+
+... and it unpacks that first ...
+
+in-target: Preparing to unpack .../linux-base_4.5ubuntu1~16.04.1_all.deb ...
+in-target:
+in-target: Unpacking linux-base (4.5ubuntu1~16.04.1) over (4.0ubuntu1) ...
+...
+in-target: Setting up linux-base (4.5ubuntu1~16.04.1) ...
+
+...and the symlinks in postinst work ...
+
+in-target: Setting up linux-image-4.4.0-145-generic (4.4.0-145.171) ...^M
+in-target: I: /vmlinuz.old is now a symlink to boot/vmlinuz-4.4.0-145-generic^M
+in-target: I: /initrd.img.old is now a symlink to boot/initrd.img-4.4.0-145-generic^M
+in-target: I: /vmlinuz is now a symlink to boot/vmlinuz-4.4.0-145-generic^M
+in-target: I: /initrd.img is now a symlink to boot/initrd.img-4.4.0-145-generic^M
+in-target: Setting up linux-image-virtual (4.4.0.145.153) ...^M
+in-target: Setting up linux-virtual (4.4.0.145.153) ...^M
+
+So... I don't know if you need verification from the original reporter too, but it looks good to me.

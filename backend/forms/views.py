@@ -16,7 +16,7 @@ from msgs.utils import new_event_msgs, delete_event_messages
 
 
 from forms.serializers import FormsSerializer,EquipmentSerializer
-from users.utils import check_permissions,check_token_not_login,check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
+from users.utils import check_permissions,check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
 
 import time
 import os
@@ -103,15 +103,24 @@ def generate_reference(reference):
     if len(reference) > 0:
         return reference
     return max(
+<<<<<<< HEAD
             int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0),
             int(DraftFormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0)
         ) + 1
 
 class OfficialEventFrom(APIView):
+=======
+            int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0)
+        ) + 1
+
+class NewEventFrom(APIView):
+>>>>>>> 880fcee... not working dont tached
 
     parser_classes = (MultiPartParser, FormParser)
     
+    
     @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)
+<<<<<<< HEAD
 <<<<<<< HEAD
     def post(self, request, reference, *args, **kwargs):
 
@@ -126,11 +135,17 @@ class OfficialEventFrom(APIView):
         #     new_event_msgs(reference)
         #     form_serializer.save(reference=reference, writtenInFormals=True)
         #     return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
+=======
+    def post(self,reference, request, *args, **kwargs):
+>>>>>>> 880fcee... not working dont tached
         form_serializer = FormsSerializer(data=request.body)
         data=request.data
         form=FormsSerializer(data=data)
         if (form.is_valid()):
-            f=form.saveAll(request)
+            reference = generate_reference(reference)
+            # Create instance for this event form in the messages database
+            new_event_msgs(reference)
+            f=form.saveAll(request,reference)
             return JsonResponse(form.data, status=status.HTTP_201_CREATED)
         else:
             print(form.errors)

@@ -26,7 +26,6 @@ export class RestApiService {
   UpdateUser(customer: Object,personalnumber:string): Observable<Object> {
     return this.http.put(`${this.baseUrl}/update_permissions_user/${personalnumber}`, {"permissions":customer});
   }
-
   CheckLogin(customer:object): Observable<Object> {
     return this.http.post(`${this.baseUrl}/check_login/`, customer);
   }
@@ -66,6 +65,7 @@ export class RestApiService {
   deleteExistingEventForm(reference: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/event-forms/${reference}`);
   }
+
 
   getTreeUnits(): Observable<any>  {
     return this.http.get(`${this.baseUrl}/units-management/`);

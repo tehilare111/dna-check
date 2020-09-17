@@ -13,7 +13,7 @@ import { LayoutService } from '../../../@core/utils';
 export class HeaderComponent implements OnInit {
 
   @Input() position = 'normal';
-
+  id:any;
   user: any;
 
   userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
@@ -28,8 +28,17 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.userService.getUsers()
       .subscribe((users: any) => this.user = users.nick);
+      this.id =setInterval(() => {
+        this.userService.getUsers()
+        .subscribe((users: any) => this.user = users.login_user); 
+        }, 1000);
+}
+  ngOnDestroy() {
+  if (this.id) {
+    clearInterval(this.id);
+    localStorage.clear()
   }
-
+}
   toggleSidebar(): boolean {
     this.sidebarService.toggle(true, 'menu-sidebar');
     this.layoutService.changeLayoutSize();

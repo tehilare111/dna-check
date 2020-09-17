@@ -5,18 +5,8 @@ import { FormGroup, FormControl } from "@angular/forms";
 import { FormBaseComponent } from '../form-base.component'
 import { CorruptionFormTemplate } from '../events-forms.templates';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
-<<<<<<< HEAD
-=======
-import { textValidator } from "../validation-directives/text.directive";
-import { stdFieldValidator } from "../validation-directives/std-field.directive";
-import { dateValidator } from "../validation-directives/date.directive";
-import { idValidator } from "../validation-directives/id.directive";
-import { makatCopyValidator } from "../validation-directives/makat-copy.directive";
-import { markValidator } from "../validation-directives/mark.directive";
-import { timeValidator } from "../validation-directives/time.directive";
-import { AuthService } from '../../../services/auth-service';
 import { EquipmnetsTableComponent } from '../components/equipmnets-table/equipmnets-table.component';
->>>>>>> a1fc61e... add A new feature of the amount of equipment in one form
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -29,12 +19,10 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
   eventFilesFields: string[] = ['handlingFile', 'investigationFile'];
   
   @ViewChild("status") eventStatusForm : EventStatusComponent;
-<<<<<<< HEAD
   // @ViewChild("chat") chatMessages : ChatComponent;
   @ViewChild("directingDialog") directingDialog : ElementRef;
   @ViewChild("simpleDialog") simpleDialog : ElementRef;
-  
-=======
+
   @ViewChild("equipmentsTable") equipmentsTable:EquipmnetsTableComponent;
   
   reference = undefined;
@@ -45,7 +33,7 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
   baseUrl: string = '';
   array_permission;
   auth:AuthService=new AuthService();
->>>>>>> a1fc61e... add A new feature of the amount of equipment in one form
+
   // select fields options:
   eventStatusOptions = ["טופל", "טרם טופל"]
   units = ["מצוב", "מעוף", "מצפן", "פלגת חוד"]
@@ -86,8 +74,8 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
     'position': new FormControl(this.form.position, [this.stdFieldValidator()]),
     'eventDate': new FormControl(this.form.eventDate, [this.dateValidator()]),
     'eventHour': new FormControl(this.form.eventHour, [this.timeValidator()]),
-    'equipmentMark': new FormControl(this.form.equipmentMark, [this.markValidator()]),
-    'equipmentMakat': new FormControl(this.form.equipmentMakat, [this.makatCopyValidator()]),
+    // 'equipmentMark': new FormControl(this.form.equipmentMark, [this.markValidator()]),
+    // 'equipmentMakat': new FormControl(this.form.equipmentMakat, [this.makatCopyValidator()]),
     'eventRelevantPlacesAndFactors': new FormControl(this.form.eventRelevantPlacesAndFactors, [this.textValidator()]),
     'eventInitialDetails': new FormControl(this.form.eventInitialDetails, [this.textValidator()]),
     'investigationDate': new FormControl(this.form.investigationDate, [this.dateValidator()]),

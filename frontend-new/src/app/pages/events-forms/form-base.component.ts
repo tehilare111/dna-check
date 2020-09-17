@@ -20,7 +20,8 @@ import { timeValidator } from "./validation-directives/time.directive";
 import { textValidator } from './validation-directives/text.directive';
 
 import { EventStatusBase } from './components/event-status-base.component';
-import { EventForm } from './events-forms.templates';
+import { EventForm} from './events-forms.templates';
+import { EquipmnetsTableComponent } from './components/equipmnets-table/equipmnets-table.component';
 
 export abstract class FormBaseComponent<FormType extends EventForm, EventStatusType extends EventStatusBase> implements OnInit {
   
@@ -37,8 +38,8 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   protected dateValidator = dateValidator;
   protected stdFieldValidator = stdFieldValidator;
   protected idValidator = idValidator;
-  protected makatCopyValidator = makatCopyValidator;
-  protected markValidator = markValidator;
+  // protected makatCopyValidator = makatCopyValidator;
+  // protected markValidator = markValidator;
   protected timeValidator = timeValidator;
   protected textValidator = textValidator;
 
@@ -49,7 +50,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   protected directingDialog: ElementRef;
   protected simpleDialog: ElementRef;
   protected eventStatusForm: EventStatusType;
-
+  equipmentsTable:EquipmnetsTableComponent=new EquipmnetsTableComponent(this.RestApiService,this.router);
   protected popUpDialogContext: string = '';
   protected formFiles : {'id': string, 'file': File}[] = [];
   protected readonly : boolean = true;
@@ -138,6 +139,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     this.openWithoutBackdropClick(this.simpleDialog);
 
     const formData: FormData = new FormData();
+    
     formData.append('editStateBlocked', (this.form.editStateBlocked).toString())
     
     this.RestApiService.updateExistingEventForm(this.reference, formData)
@@ -183,10 +185,22 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   }
 
   save() {
+<<<<<<< HEAD
     
+=======
+    let eq=[]
+    let datas=this.equipmentsTable.data_table.map(a=>a)
+    for(var i in datas){
+      console.log(datas[i])
+      eq.push("$$",JSON.stringify(datas[i]))
+    }
+    eq.push("$$")
+   
+>>>>>>> 880fcee... not working dont tached
     this.form = this.eventStatusForm.pushFormFields<FormType>(this.form);
 
     const formData: FormData = new FormData();
+    formData.append("equipments",eq.toString())
 
     // insert lostForm to FormData object
     for(let [key, value] of Object.entries(this.form)){
@@ -200,7 +214,11 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     
     // If form has a reference we need to check if it's already written in the relevenat DB: Formals or Drafts
     if (this.reference && ((this.drafting&&this.form.writtenInDrafts)||(!this.drafting&&this.form.writtenInFormals))){
+<<<<<<< HEAD
       this.RestApiService.put(`${(this.drafting)?this.draftsUrl:this.formalsUrl}${(this.reference)?this.reference:''}`, formData, {headers: {'enctype': 'multipart/form-data'}})
+=======
+      this.RestApiService.put(`${(this.drafting)?this.draftsUrl:this.formalsUrl}${(this.reference)?this.reference:''}`, formData, )
+>>>>>>> 880fcee... not working dont tached
         .subscribe(
           (data: FormType) => {
             this.uploadLoading = false;
@@ -210,7 +228,11 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
           error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
           
     } else {
+<<<<<<< HEAD
       this.RestApiService.post(`${(this.drafting)?this.draftsUrl:this.formalsUrl}${(this.reference)?this.reference:''}`, formData, {headers: {'enctype': 'multipart/form-data'}})
+=======
+      this.RestApiService.post(`${(this.drafting)?this.draftsUrl:this.formalsUrl}${(this.reference)?this.reference:''}`, formData, )
+>>>>>>> 880fcee... not working dont tached
       .subscribe(
         (data: FormType) => {
           this.uploadLoading = false;
@@ -225,6 +247,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     if (fileNameWithPath) return fileNameWithPath.substring(fileNameWithPath.lastIndexOf('/') + 1)
   }
 
+<<<<<<< HEAD
   deleteEventForm(){
     this.uploadLoading = true;
     this.openWithoutBackdropClick(this.directingDialog);
@@ -236,4 +259,17 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         },
         error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${this.reference}`; })
   }
+=======
+  // deleteEventForm(){
+  //   this.uploadLoading = true;
+  //   this.openWithoutBackdropClick(this.directingDialog);
+  //   this.RestApiService.delete(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${this.reference}`)
+  //     .subscribe(
+  //       (data: FormType) => {
+  //         this.uploadLoading = false;
+  //         this.popUpDialogContext = `אירוע עם סימוכין ${this.reference} נמחק`;
+  //       },
+  //       error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${this.reference}`; })
+  // }
+>>>>>>> 880fcee... not working dont tached
 }

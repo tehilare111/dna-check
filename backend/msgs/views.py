@@ -13,6 +13,7 @@ from msgs.models import Msgs
 def msgs(request, reference):
     try: 
         event_form_msgs = Msgs.objects.get(reference=reference) 
+        print('data', event_form_msgs)
     except Msgs.DoesNotExist: 
         return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
 
