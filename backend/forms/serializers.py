@@ -73,8 +73,8 @@ class FormsSerializer(serializers.ModelSerializer):
             'equipments',
             )
             
-    def saveAll(self,request,reference):
-        self.save(reference=reference)
+    def saveAll(self,request,reference,writtenInFormals=True):
+        self.save(reference=reference,writtenInFormals=writtenInFormals)
 
         print("SELF",request)
         data=request.data["equipments"]

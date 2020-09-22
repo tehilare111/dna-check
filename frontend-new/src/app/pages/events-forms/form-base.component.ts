@@ -185,9 +185,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   }
 
   save() {
-<<<<<<< HEAD
-    
-=======
+
     let eq=[]
     let datas=this.equipmentsTable.data_table.map(a=>a)
     for(var i in datas){
@@ -195,8 +193,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       eq.push("$$",JSON.stringify(datas[i]))
     }
     eq.push("$$")
-   
->>>>>>> 880fcee... not working dont tached
+  
     this.form = this.eventStatusForm.pushFormFields<FormType>(this.form);
 
     const formData: FormData = new FormData();
@@ -214,11 +211,8 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     
     // If form has a reference we need to check if it's already written in the relevenat DB: Formals or Drafts
     if (this.reference && ((this.drafting&&this.form.writtenInDrafts)||(!this.drafting&&this.form.writtenInFormals))){
-<<<<<<< HEAD
+
       this.RestApiService.put(`${(this.drafting)?this.draftsUrl:this.formalsUrl}${(this.reference)?this.reference:''}`, formData, {headers: {'enctype': 'multipart/form-data'}})
-=======
-      this.RestApiService.put(`${(this.drafting)?this.draftsUrl:this.formalsUrl}${(this.reference)?this.reference:''}`, formData, )
->>>>>>> 880fcee... not working dont tached
         .subscribe(
           (data: FormType) => {
             this.uploadLoading = false;
@@ -228,11 +222,8 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
           error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
           
     } else {
-<<<<<<< HEAD
       this.RestApiService.post(`${(this.drafting)?this.draftsUrl:this.formalsUrl}${(this.reference)?this.reference:''}`, formData, {headers: {'enctype': 'multipart/form-data'}})
-=======
-      this.RestApiService.post(`${(this.drafting)?this.draftsUrl:this.formalsUrl}${(this.reference)?this.reference:''}`, formData, )
->>>>>>> 880fcee... not working dont tached
+
       .subscribe(
         (data: FormType) => {
           this.uploadLoading = false;
@@ -247,7 +238,6 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     if (fileNameWithPath) return fileNameWithPath.substring(fileNameWithPath.lastIndexOf('/') + 1)
   }
 
-<<<<<<< HEAD
   deleteEventForm(){
     this.uploadLoading = true;
     this.openWithoutBackdropClick(this.directingDialog);
@@ -259,7 +249,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         },
         error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${this.reference}`; })
   }
-=======
+
   // deleteEventForm(){
   //   this.uploadLoading = true;
   //   this.openWithoutBackdropClick(this.directingDialog);
@@ -271,5 +261,5 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   //       },
   //       error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${this.reference}`; })
   // }
->>>>>>> 880fcee... not working dont tached
+
 }

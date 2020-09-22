@@ -107,15 +107,8 @@ def generate_reference(reference):
             int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0),
             int(DraftFormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0)
         ) + 1
-        int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0)
-        ) + 1
-
 class OfficialEventFrom(APIView):
-
-
     parser_classes = (MultiPartParser, FormParser)
-    
-    
     @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)
         # if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS]):
         #     return HttpResponse(status=status.HTTP_401_FORBIDDEN)
@@ -133,7 +126,7 @@ class OfficialEventFrom(APIView):
         data=request.data
         form=FormsSerializer(data=data)
         if (form.is_valid()):
-            reference =int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0)+1
+            reference =generate_reference(reference)
             # Create instance for this event form in the messages database
             new_event_msgs(reference)
             f=form.saveAll(request,reference)

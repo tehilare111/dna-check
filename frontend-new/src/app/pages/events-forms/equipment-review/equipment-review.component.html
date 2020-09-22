@@ -1,9 +1,8 @@
 
 
-<ngx-form-top-buttons (sendEvent)="sendEvent()" (printForm)="printForm()" (updateEditState)="updateEditState()" (saveEvent)="saveEvent()" (deleteEventForm)="deleteEventForm()" [reference]="reference" [reporterUnit]="form.reporterUnit" id="outOfPrint"></ngx-form-top-buttons>
+<!-- <ngx-form-top-buttons (sendEvent)="sendEvent()" (printForm)="printForm()" (updateEditState)="updateEditState()" (saveEvent)="saveEvent()" (deleteEventForm)="deleteEventForm()" [reference]="reference" [reporterUnit]="form.reporterUnit" id="outOfPrint"></ngx-form-top-buttons> -->
 
 <div *ngIf="isDraft"><p class="red">טיוטה</p></div>
-<!-- =======
 <div class="row col-md-12" id="outOfPrint">
   <nb-card *ngIf ="auth.checkPermissions(['מנהלן מערכת', 'מדווח אירועים'])" >
     <button type="submit" nbButton status="primary"  (click)="onSubmit()">שלח אירוע</button>
@@ -31,7 +30,7 @@
         <div style="display: flex; justify-content: center;">
           <h6><u>פרטי האירוע</u></h6>
         </div>
-        <form> <!--[ngFormOptions]="{updateOn: 'blur'}">-->
+        <form [ngFormOptions]="{updateOn: 'blur'}">
           <h6>פרטי הביקורת:</h6>
           <div class="row">
             <div class="col-md-2">

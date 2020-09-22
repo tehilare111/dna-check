@@ -84,16 +84,13 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
     ChatComponent,
     EquipmentReviewComponent,
     EventStatusShortedComponent,
-
     FileDownloadButtonComponent,
     FormTopButtonsComponent,
-
     EquipmnetsTableComponent,
     EquipmantsCustomComponentComponent,
     EquipmnetTypeCustomComponent,
     EquipmnetMarkCustomInputComponent,
     EquipmnetMakatCustomInputComponent,
-    EquipmnetMakatRenderInputComponent,
   ],
   entryComponents:[EquipmantsCustomComponentComponent, EquipmnetTypeCustomComponent,EquipmnetMarkCustomInputComponent,EquipmnetMakatCustomInputComponent]
 })
