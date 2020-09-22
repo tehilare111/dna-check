@@ -73,9 +73,9 @@ class FormsSerializer(serializers.ModelSerializer):
             'equipments',
             )
             
+    def saveAll(self,request,reference):
+        self.save(reference=reference)
 
-    def saveAll(self,request):
-        self.save(reference=reference, writtenInFormals=True)
         print("SELF",request)
         data=request.data["equipments"]
         data = data.split("$$")[1:-1]
@@ -90,6 +90,4 @@ class FormsSerializer(serializers.ModelSerializer):
                 return HttpResponse(equip.errors,status=status.HTTP_400_BAD_REQUEST)
         return JsonResponse(equip.data, status=status.HTTP_201_CREATED )
 
-      
->>>>>>> a1b6c11... add A new feature of the amount of equipment in one form
 

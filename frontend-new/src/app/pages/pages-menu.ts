@@ -37,4 +37,12 @@ public DEF_MENU:NbMenuItem[] = [
   link:'login',
 },
 ];
-}
+
+public NO_LOGIN:NbMenuItem[] = [
+  {
+    title:'התחברות',
+    icon: 'nb-gear',
+    link:'login',
+  },
+  ];
+  }

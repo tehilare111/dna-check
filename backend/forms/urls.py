@@ -13,5 +13,6 @@ urlpatterns = [
     # requests to a specific form in the db table
     url(r'^event-forms/(?P<reference>[0-9]*)$', views.OfficialEventFrom.as_view()),
     
+
     url(r'^media/(?P<path>.+)$', views.download_file),
 ]

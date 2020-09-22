@@ -85,7 +85,7 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
     this.eventInitialDetails,
     this.investigationDate,
     this.findingDate,
-    this.handlingDate
+    this.handlingDate,
   ] 
 
   handleFileUpload(event){
@@ -141,7 +141,13 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
       console.log("gornish")
       console.log(data_from_server)
       this.form = data_from_server
-    });
+      if(this.form.editStateBlocked || this.auth.checkPermissions(['מנהלן מערכת', 'מדווח אירועים']))
+        {
+          this.form.editStateBlocked = false
+        }else{
+          this.form.editStateBlocked = true
+        }
+      });
 
   }
   save() {

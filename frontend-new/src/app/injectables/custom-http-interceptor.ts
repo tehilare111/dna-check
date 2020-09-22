@@ -31,7 +31,7 @@ export class CustomHttpInterceptor implements HttpInterceptor {
       }, (err: any) => {
         if (err instanceof HttpErrorResponse) {
           if (err.status === 401) {
-            this.router.navigate(["pages/login"])
+            // this.router.navigate(["pages/login"])
             // console.log("haha")
           }
         }

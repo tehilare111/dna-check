@@ -103,29 +103,20 @@ def generate_reference(reference):
     if len(reference) > 0:
         return reference
     return max(
-<<<<<<< HEAD
+
             int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0),
             int(DraftFormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0)
         ) + 1
-
-class OfficialEventFrom(APIView):
-=======
-            int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0)
+        int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0)
         ) + 1
 
-class NewEventFrom(APIView):
->>>>>>> 880fcee... not working dont tached
+class OfficialEventFrom(APIView):
+
 
     parser_classes = (MultiPartParser, FormParser)
     
     
     @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)
-<<<<<<< HEAD
-<<<<<<< HEAD
-    def post(self, request, reference, *args, **kwargs):
-
-
-
         # if not check_permissions(request,[PERMISSIONS_PAGE_FROM_MANAGER,PERMISSIONS_PAGE_FROM_EDIT_EVENTS]):
         #     return HttpResponse(status=status.HTTP_401_FORBIDDEN)
         # form_serializer = FormsSerializer(data=request.body)
@@ -135,14 +126,14 @@ class NewEventFrom(APIView):
         #     new_event_msgs(reference)
         #     form_serializer.save(reference=reference, writtenInFormals=True)
         #     return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
-=======
-    def post(self,reference, request, *args, **kwargs):
->>>>>>> 880fcee... not working dont tached
+
+    def post(self,request,reference, *args, **kwargs):
+
         form_serializer = FormsSerializer(data=request.body)
         data=request.data
         form=FormsSerializer(data=data)
         if (form.is_valid()):
-            reference = generate_reference(reference)
+            reference =int(FormsTable.objects.aggregate(Max('reference'))['reference__max'] or 0)+1
             # Create instance for this event form in the messages database
             new_event_msgs(reference)
             f=form.saveAll(request,reference)

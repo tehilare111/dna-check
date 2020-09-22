@@ -89,12 +89,12 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
       this.form = data
       console.log(this.form);      
-      /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
+      if(this.form.editStateBlocked || this.auth.checkPermissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
           this.form.editStateBlocked = false
         }else{
           this.form.editStateBlocked = true
-        }*/
+        }
       });
     // this.get_constas_feilds()
   }

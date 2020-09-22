@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { LocalDataSource, Cell } from 'ng2-smart-table';
-import { EventEquipments, EquipmentReviewTemplate } from '../../events-forms.templates';
+import { EventEquipments, EquipmentReviewTemplate, Form } from '../../events-forms.templates';
 import { RestApiService } from '../../../../services/rest-api.service';
 import { ObjectUnsubscribedError } from 'rxjs';
 import { EquipmantsCustomComponentComponent } from '../equipmants-custom-component/equipmants-custom-component.component';
@@ -9,6 +9,7 @@ import { EquipmnetMarkCustomInputComponent } from '../equipmnet-mark-custom-inpu
 import { EquipmnetMakatCustomInputComponent } from '../equipmnet-makat-custom-input/equipmnet-makat-custom-input.component';
 import { EquipmnetMakatRenderInputComponent } from '../equipmnet-makat-render-input/equipmnet-makat-render-input.component';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../../services/auth.service';
 @Component({
   selector: 'ngx-equipmnets-table',
   templateUrl: './equipmnets-table.component.html',
@@ -20,13 +21,15 @@ export class EquipmnetsTableComponent implements OnInit {
   @Input () equipmentsType:any[]
   @Input () materialsType:any[]
   @Input () units:any[]
-  @Input() equipments:any[]
-  @Input() disable:any
+  @Input () equipments:any[]
+  @Input() form: Form = new Form();
+  flag_true_or_false=true
   selected=""
   reference=""
   count_flag=0
   counts_flag_change=0
-
+  auth:AuthService=new AuthService()
+ 
   equipmentsTypeOptions = []  
   
   eventEquipments:EventEquipments=new EventEquipments();
@@ -35,30 +38,35 @@ export class EquipmnetsTableComponent implements OnInit {
   constructor(private RestApiService:RestApiService,private router:Router) { 
     const data= this.source= new LocalDataSource(this.data_table);}
     settings = {
-    actions:{
-      add:this.disable,
-      edit:this.disable,
-      delete:this.disable,
-    },
-    add:{
-      addButtonContent: '<i class="nb-plus"></i>',
-      createButtonContent: '<i class="nb-checkmark"></i>',
-      cancelButtonContent: '<i class="nb-close"></i>',
-    },
+      actions:{
+        add:true,
+        edit:true,
+        delete:true,     
+       
+      },
+      add: {
+        addButtonContent: '<i class="nb-plus"></i>',
+        createButtonContent: '<i class="nb-checkmark"></i>',
+        cancelButtonContent: '<i class="nb-close"></i>',
+        
+      },
+   
     edit: {
       editButtonContent: '<i class="nb-edit"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
       cancelButtonContent: '<i class="nb-close"></i>',
+      edit:true
     },
     delete: {
       deleteButtonContent: '<i class="nb-trash"></i>',
       confirmDelete: true,
+      delete:true
     },
     
+    
+    
     columns: {
-     
       equipment: {
-        selectMode:"multi",
         title:'ציוד/חומר',
         type: 'html', 
         filter:'False', 
@@ -103,7 +111,6 @@ export class EquipmnetsTableComponent implements OnInit {
     this.reference = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference;
     this.exisitingFormLoadData(this.reference)
     this.source.load(this.data_table)
-    console.log(this.disable)
   }
   loadTable(){
     console.log("bar")
@@ -112,7 +119,24 @@ export class EquipmnetsTableComponent implements OnInit {
     this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: EquipmentReviewTemplate) => {
       this.data_table =data_from_server["equipments"]
       this.source.load(this.data_table)
+      console.log("edit block",this.form.editStateBlocked)
+      if(this.form.editStateBlocked||this.auth.checkPermissions(['מנהלן מערכת', 'מדווח אירועים']))
+        {
+          console.log(this.settings)
+          this.settings.actions.add=false
+          this.settings.actions.edit=false
+          this.settings.actions.delete=false
+          this.settings=Object.assign({},this.settings)
+         
+        }else{
+          this.settings.actions.edit=true
+          this.settings.actions.delete=true
+          this.settings=Object.assign({},this.settings)
+        }
+       
     });
+    
+
 
   }
 
@@ -124,6 +148,9 @@ export class EquipmnetsTableComponent implements OnInit {
     } else {
       event.confirm.reject();
     }
+  }
+  onCreateConfirm(event): void {
+    event.confirm.resolve();
   }
   
 
