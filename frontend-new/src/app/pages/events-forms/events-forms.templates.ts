@@ -6,6 +6,8 @@ export class Form{
     reporterUnit: string;
     editStateBlocked: boolean;
     messages: any[];
+    writtenInFormals: boolean = false;
+    writtenInDrafts: boolean = false;
 }
 
 export class EventForm extends Form{
@@ -35,7 +37,6 @@ export class LostFormTemplate extends EventForm {
     findingDate: string;
     findingFile:string;
     handlingFile: string;
-    messages: any[];
 }
 
 export class CorruptionFormTemplate extends EventForm {
@@ -56,7 +57,6 @@ export class CorruptionFormTemplate extends EventForm {
     investigationFile: string;
     handlingDate: string
     handlingFile: string;
-    messages: any[];
 }
 
 export class EquipmentReviewTemplate extends EventForm {
@@ -68,5 +68,4 @@ export class EquipmentReviewTemplate extends EventForm {
     equipmentMark: string;
     equipmentMakat: string;
     reviewReference: string;
-    messages: any[];
 }

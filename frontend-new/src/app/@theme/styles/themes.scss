@@ -12,8 +12,8 @@ $nb-themes: nb-register-theme((
   sidebar-header-height: initial,
   layout-content-width: 1400px,
 
-  font-main: Roboto,
-  font-secondary: Exo,
+  font-main: sans-serif,
+  font-secondary: sans-serif,
 
   switcher-background: #ebeff5,
   switcher-background-percentage: 50%,
@@ -44,6 +44,19 @@ $nb-themes: nb-register-theme((
 
   font-main: Roboto,
   font-secondary: Exo,
+
+  layout-bg: #fff,
+
+  smart-table-header-font-weight: font-weight-normal,
+  smart-table-header-bg: #fff,
+  smart-table-bg-even: #fff,
+  smart-table-bg-active: #fff,
+
+  smart-table-paging-border-color: color-primary,
+  smart-table-paging-border-width: 2px,
+  smart-table-paging-fg-active: color-fg-heading,
+  smart-table-paging-bg-active: #fff,
+  smart-table-paging-hover: rgba(0, 0, 0, 0.2),
 
   switcher-background: #4e41a5,
   switcher-background-percentage: 14%,

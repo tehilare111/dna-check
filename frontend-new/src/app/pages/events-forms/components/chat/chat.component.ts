@@ -1,54 +1,72 @@
 import { Component, OnInit, Input } from '@angular/core';
+
 import { RestApiService } from '../../../../services/rest-api.service';
 import { ToastService } from '../../../../services/toast.service';
-import { ChatService } from './chat.service';
-import { messages } from './messages';
 
 @Component({
   selector: 'chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
-  providers: [ ChatService ],
-
 })
 export class ChatComponent implements OnInit {
-  
-  //@Input() messages: any[] = [];
-  messages: any[];
 
-  constructor(protected chatService: ChatService) {
-    this.messages = this.chatService.loadMessages();
-    //if (!this.messages) { this.messages = []; }
-  }
+  @Input() messages: any[];
+  @Input() reference: string;
 
-  ngOnInit(){
-    //if (!this.messages) { this.messages = []; }
+  url = '/msgs/'
+
+  constructor(private RestApiService: RestApiService, private ToastService:ToastService) {}
+
+  ngOnInit(): void { this.loadData() }
+
+  loadData(){
+    this.RestApiService.get(`${this.url}${this.reference}`).subscribe(
+      (data) => {
+        this.messages = data.messages.map( msg => { return JSON.parse(msg); } )
+      },
+      (error) => { this.ToastService.showToast('fail', 'בעיה בטעינת ההודעות מהשרת', ''); }
+    )
   }
 
   sendMessage(event: any) {
-    const files = !event.files ? [] : event.files.map((file) => {
-      return {
-        url: file.src,
-        type: file.type,
-        icon: 'nb-compose',
-      };
-    });
-    this.messages.push({
+    let msg = {
       text: event.message,
-      date: new Date(),
-      reply: false,
-      type: files.length ? 'file' : 'text',
-      files: files,
-
+      date: new Date("12/9/2020"),
+      type: 'text',
+      //files: files,
       user: {
-        name: 'ישראל ישראלי',
+        name: localStorage.getItem("firstName"),
         //avatar: 'https://i.gifer.com/no.gif',
       },
+    }
 
-    //const botReply = this.chatService.reply(event.message);
-    //if (botReply) {
-    //  setTimeout(() => { this.messages.push(botReply); }, 500);
-    //}
-  })
-}
+    let messagesArray = this.messages.map(massage => {return JSON.stringify(massage);})
+    messagesArray.push(JSON.stringify(msg));
+
+    if (this.reference) {
+      this.RestApiService.put(`${this.url}${this.reference}`, {'messages': messagesArray})
+        .subscribe(
+          data => { this.messages.push(msg); },
+          error => { this.ToastService.showToast('fail', 'ההודעה לא נשלחה בהצלחה', ''); }
+        )
+    }
+  }
+
+  isReply(msgSenderName){
+    return msgSenderName!=localStorage.getItem('firstName')
+  }
+
+
+  /*$(function() {
+    $("#test").focus();
+  });*/
+  
+  open() {
+    var x = document.getElementById("myDIV");
+      if (x.classList.contains('open')) {
+		    x.classList.remove("open");
+		  } else {
+		    x.classList.add("open");
+		  }
+  }
 }

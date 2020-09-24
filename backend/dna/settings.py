@@ -44,11 +44,15 @@ INSTALLED_APPS = [
     'management.apps.ManagementConfig',
     # User application
     'users.apps.UsersConfig',
+    # Messages application
+    'msgs.apps.MsgsConfig',
+    # Messages application
+    'draft_forms.apps.DraftFormsConfig',
     # CORS
     'corsheaders',
 ]
 
-AUTH_USER_MODEL = 'users.Destination'
+AUTH_USER_MODEL = 'users.Users'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -97,9 +101,9 @@ WSGI_APPLICATION = 'dna.wsgi.application'
 DATABASES = {
    'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'users_army',
+        'NAME': 'testdb',
         'USER': 'postgres',
-        'PASSWORD': 'Bar_18041998',
+        'PASSWORD': '1',
         'HOST': '127.0.0.1',
         'PORT': '5432',
    }

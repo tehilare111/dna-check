@@ -1,9 +1,11 @@
-<div class="chat-container">
+
+<div class="form-box " id="myDIV">
+  <div class="chat-container">
     <nb-chat title="שיח רציף" size="large" status="primary">
     <nb-chat-message *ngFor="let msg of messages"
                         [type]="msg.type"
                         [message]="msg.text"
-                        [reply]="msg.reply"
+                        [reply]="isReply(msg.user.name)"
                         [sender]="msg.user.name"
                         [date]="msg.date"
                         [files]="msg.files"
@@ -16,3 +18,9 @@
     </nb-chat-form>
     </nb-chat>
 </div>
+
+</div>
+
+<button class="floating-btn" (click)="open()">
+    <i class="ion-email"></i>
+  </button>

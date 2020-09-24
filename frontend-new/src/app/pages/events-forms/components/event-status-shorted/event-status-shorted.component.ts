@@ -12,9 +12,7 @@ export class EventStatusShortedComponent implements OnInit {
   @Input() eventForm: EventForm = new EventForm();
   @Input() readonly: boolean = true;
 
-  @Input() results = [];
-
-  eventStatusOptions = ["פתוח", "סגור"]
+  @Input() eventStatusOptions = [];
 
   constructor() { }
 

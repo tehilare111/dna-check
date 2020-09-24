@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { RestApiService } from '../../../services/rest-api.service';
 import { ToastService } from '../../../services/toast.service';
 import { HttpHeaderResponse, HttpRequest, HttpResponseBase } from '@angular/common/http';
-import { Users } from '../../management/users';
+import { User } from '../../management/users';
 
 class TreeNodeCustom{
   id: number;
@@ -24,13 +24,12 @@ interface TreeNode<T> {
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  users:Users=new Users();
+  users:User=new User();
   public jesonreg;
   public count=0;
   submitted=false;
   public errors:string;
   ranks = []
-  rank_array=[]
   units_array=['מצו"ב']
   maxTreeNodeId = '1'
   nodes = [
@@ -44,13 +43,12 @@ export class RegisterComponent implements OnInit {
   
   ngOnInit(): void {
     this.get_constatns_filds_rank()
-    this.get_tree_node()
+    //this.get_tree_node()
   }
   get_constatns_filds_rank() {
-    this.rank_array=["rank"]
-    this.RestApiService.Get_constans_fiald(this.rank_array).subscribe((data_from_server) => {
-      console.log("data_from_server:",data_from_server.data)
-      this.ranks = data_from_server.data.rank
+    this.RestApiService.getConstansFieldsAndUnitsArray().subscribe((data) => {
+      this.ranks = data.rank
+      this.units_array = data.units
     });
   }
   get_tree_node(){
@@ -63,7 +61,6 @@ export class RegisterComponent implements OnInit {
         for(j=0;j<=data_from_server.treeNode[i].children.length-1;j+=1){
           console.log(data_from_server.treeNode[i].children[j].name)
           this.units_array.push(data_from_server.treeNode[i].children[j].name)
-          
         } 
       }
         
@@ -74,7 +71,7 @@ export class RegisterComponent implements OnInit {
     );
 }
   loadData() {
-    this.jesonreg={"username":this.users.username , "lastname":this.users.lastname,"firstname":this.users.Firstname,"password":this.users.password,"personalnumber":this.users.personalnumber,"rank":this.users.rank,"armyposistion":this.users.position,"armyunit":this.users.armyunit}
+    this.jesonreg={"username":this.users.username , "lastname":this.users.lastName,"firstname":this.users.firstName,"password":this.users.password,"personalnumber":this.users.personalNumber,"rank":this.users.rank,"armyposistion":this.users.position,"armyunit":this.users.unit}
     if(this.jesonreg)
     this.save() 
   }
@@ -90,7 +87,7 @@ export class RegisterComponent implements OnInit {
         error =>{ this.ToastService.showToast("fail","שגיאה בעת בהרשמה","")
         }
       );
-      this.users = new Users();  
+      this.users = new User();  
   }
 
   onSubmit() {

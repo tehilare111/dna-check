@@ -64,7 +64,6 @@ import { RegisterComponent } from './details_users/register/register.component';
 
     RegisterComponent,
     LoginComponent,
-    //  ControlTableComponent,
     ],
 })
 export class PagesModule {

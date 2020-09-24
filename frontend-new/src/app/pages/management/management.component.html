@@ -54,28 +54,64 @@
        </nb-card-body>    
        </nb-card>
      </div>
-     <div class="col-md-6">
-       <nb-card nb-card class="main-nb-card" status="primary" nbSpinnerStatus="primary" nbSpinnerSize="giant">
-           <nb-card-header>
-               <h4 style="color: white;">ניהול הרשאות</h4>
-           </nb-card-header>
-           <nb-card-body>
-            <ng2-smart-table [settings]="settings" [source]="source" (userRowSelect)="formClicked($event)">
-            </ng2-smart-table>
-            <div class="row " style="width: 100%;">
-              <div class="col">
-            <input type="text" #search fullWidth #Personal="ngModel" name="personalnumber" nbInput  id="personal" fieldSize="medium" placeholder="מספר מזהה" [(ngModel)]=users.personalnumber required maxlength="7" min="7" (input)="onSearch(search.value)" > 
+
+  <div class="col-md-6">
+    <nb-card nb-card class="main-nb-card" status="primary" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>
+          <h4 style="color: white;">ניהול הרשאות</h4>
+      </nb-card-header>
+
+      <nb-card-body>
+      <ng2-smart-table [settings]="settings" [source]="source" (userRowSelect)="tableRowClicked($event)"></ng2-smart-table>
+      
+      <div class="row " style="width: 100%;">
+        <div class="col">
+          <input type="text" #search fullWidth #Personal="ngModel" name="personalnumber" nbInput placeholder="מספר מזהה" [(ngModel)]=user.personalNumber required pattern="[0-9]{8}" (input)="onSearch(search.value)" > 
         </div>
-          <div class="col">
-            <nb-select fullWidth name="permissions" status="privmary" placeholder="הרשאה" id="permissions" fieldSize="small" [(ngModel)]="users.permissions" > 
-                <nb-option *ngFor="let permiss of permission" [value]="permiss">{{[permiss]}}</nb-option>
-                </nb-select>
-          </div>
-          <div class="col">
-                <button fullWidth nbButton [disabled]="Personal.invalid  || Personal.undirty"   status="primary" (click)=updatePermissionUser(Personal.value)>שנה הרשאות</button>     
-          </div>
+        <div class="col">
+          <nb-select fullWidth name="permissions" status="privmary" placeholder="הרשאה" id="permissions" fieldSize="small" [(ngModel)]="user.permissions">
+            <nb-option *ngFor="let permiss of permission" [value]="permiss">{{[permiss]}}</nb-option>
+          </nb-select>
         </div>
-           </nb-card-body>
-       </nb-card>
-     </div>
+        <div class="col">
+          <button fullWidth nbButton [disabled]="Personal.invalid  || Personal.undirty"   status="primary" (click)=updatePermissionUser(Personal.value)>שנה הרשאות</button>     
+        </div>
+      </div>
+      
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+<div class="row" *ngIf="currentNode">
+  <nb-card status="primary">
+    <nb-card-header>
+      <h3 style="color: white;">הוסף משתמש</h3>
+    </nb-card-header>
+
+    <nb-card-body>
+      <div class="row">
+        <form>
+          
+          <label class="label">מספר אישי: </label>
+          <input type="text" #pN="ngModel" nbInput name="personalNumber" status="primary" placeholder="מספר אישי" required pattern="[0-9]{7}" [(ngModel)]="newUserForm.personalNumber">
+                    
+          <label class="label">שם משתמש: </label>
+          <input type="text" #uN="ngModel" nbInput name="שם משתמש" status="primary" placeholder="שם משתמש" required pattern="[\w]{1,15}" [(ngModel)]="newUserForm.username">
+          
+          <label class="label">שם פרטי: </label>
+          <input type="text" #fN="ngModel" nbInput name="שם פרטי" status="primary" placeholder="שם פרטי" required pattern=".{1,15}" [(ngModel)]="newUserForm.firstName">
+
+          <label class="label">סיסמה: </label>
+          <input type="password" #pF="ngModel" nbInput name="סיסמה" status="primary" placeholder="סיסמה" required [(ngModel)]="newUserForm.password">
+
+        </form>
+      </div>
+
+      <div class="row">
+        <p>יחידת השמשתמש: <span style="font-weight:bold">{{this.pickedUpUnit}}</span>, הרשאות המשתמש: <span style="font-weight:bold">צופה אירועים</span><p>
+        <button [disabled]="pF.invalid || fN.invalid || pN.invalid || uN.invalid" #createNewUserButton nbButton (click)="createNewUser()">צור משתמש</button>
+      </div>
+    </nb-card-body>
+    
+  </nb-card>
 </div>

@@ -13,7 +13,9 @@ class FormSerializer(serializers.ModelSerializer):
             'date',
             'reporterName',
             'reporterUnit',            
-            'editStateBlocked',)
+            'editStateBlocked',
+            'writtenInFormals',
+            'writtenInDrafts')
 
         
 class EventFormSerializer(FormSerializer):
@@ -50,15 +52,8 @@ class FormsSerializer(EventFormSerializer):
             'findingDate',
             'findingFile',
             'handlingFile',
-            'messages',
             'reviewDate',
             'reviewFile',
             'reviewReference',
             'isMatchToReport'
         )
-
-
-
-
-      
-

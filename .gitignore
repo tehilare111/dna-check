@@ -1,2 +1,7 @@
 frontend/node_modules
 frontend-new/node_modules
+*.pyc
+*.swp*
+backend/management/migrations
+backend/users/migrations
+backend/forms/migrations

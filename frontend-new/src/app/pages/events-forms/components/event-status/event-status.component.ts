@@ -1,23 +1,24 @@
 import { Component, OnInit, Input } from '@angular/core';
+
 import { RestApiService } from '../../../../services/rest-api.service';
 import { EventForm } from '../../events-forms.templates';
-// import { JwtService } from '../../../../services/jwt.service';
+import { EventStatusBase } from '../event-status-base.component'; 
 
 @Component({
   selector: 'ngx-event-status',
   templateUrl: './event-status.component.html',
   styleUrls: ['./event-status.component.scss']
 })
-export class EventStatusComponent implements OnInit {
+export class EventStatusComponent extends EventStatusBase implements OnInit {
 
   @Input() eventForm: EventForm = new EventForm();
   @Input() readonly: boolean = true;
-  constatns_array=[]
-  @Input() results = [];
-  eventStatusOptions = ["פתוח", "סגור"]
+  constatns_array = []
+  @Input() eventStatusOptions = [];
+  results = ["פתוח", "סגור"]
   handlingStatusOptions = ["אבד", "נמצא"]
 
-  constructor(private RestApiService:RestApiService) { }
+  constructor(private RestApiService:RestApiService) { super(); }
 
   ngOnInit(): void {
     // this.get_constas_feilds()

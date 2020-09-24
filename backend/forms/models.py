@@ -19,6 +19,8 @@ class Form(models.Model):
     reporterName = models.CharField(max_length=70, blank=False, default='')
     reporterUnit = models.CharField(max_length=70, blank=False, default='')
     editStateBlocked = models.BooleanField(default=False)
+    writtenInFormals = models.BooleanField(default=False)
+    writtenInDrafts = models.BooleanField(default=False)
 
     class Meta:
       abstract = True
@@ -35,7 +37,6 @@ class EventForm(Form):
       abstract = True
 
 class FormsTable(EventForm):
-    messages = ArrayField(models.CharField(max_length=150, blank=True, null=True), size=100, null=True, blank=True)
     equipment = models.CharField(max_length=70, blank=False, default='')
     equipmentType = models.CharField(max_length=70, blank=False, default='')
     equipmentMark = models.CharField(max_length=70, blank=False, default='')

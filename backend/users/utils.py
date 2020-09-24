@@ -6,13 +6,13 @@ from _datetime import timedelta
 from rest_framework import status
 from django.http.response import JsonResponse
 
-from users.models import  Destination
-from users.serializers import DestinationSerilazers
+from users.models import  Users
+from users.serializers import UsersSerilazers
 from django.contrib.auth import get_user_model
 
-PERMISSIONS_PAGE_FROM_MANAGER="מנהלן מערכת"
-PERMISSIONS_PAGE_FROM_EDIT_EVENTS="מדווח אירועים"
-PERMISSIONS_PAGE_FROM_WATCHING_EVENTS="צופה אירועים"
+MANAGER="מנהלן מערכת"
+EVENTS_REPORTER="מדווח אירועים"
+EVENTS_VIEWER="צופה אירועים"
 
 
 secret='''PDvnOudatcLzb/i2cCVFQgIEUgTbehke5iN2QRF7Vqo2zYOzdXMuelzf5/DL+g7+
@@ -45,29 +45,41 @@ def create_jwt(user_data):
 
 def check_token(token):
     try:
-        auth=jwt.decode(token,'secret', algorithms=['HS256'])
+        auth = jwt.decode(token, 'secret', algorithms=['HS256'])
         return get_permissions(auth["username"])
     except Exception as e:
-        return False 
+        return (False,False)
 
 def get_permissions(username):
-    event_form = Destination.objects.get(username=username)
-    customer_serializer = DestinationSerilazers(event_form)
-    return customer_serializer.data["permissions"]
+    user = Users.objects.get(username=username)
+    user_serializer = UsersSerilazers(user)
+    return (user_serializer.data["permissions"], user_serializer.data["unit"])
 
-def check_token_not_login(tokens):
-    try:
-        auth=jwt.decode(tokens,'secret', algorithms=['HS256'])
-        return get_permissions(auth["username"])
-        
-    except Exception as e:
-        return False 
+def check_permissions_dec(permissions_array, API_VIEW=False, RETURN_UNIT=False):
+    
+    def wrapper(view_function):
+        def functions_args(*args, **kwargs):
+            
+            request_index = 0 if not API_VIEW else 1
+            request = args[request_index]
+            
+            if not 'Authorization' in request.headers:
+                return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+            
+            token = request.headers['Authorization'].split(" ")[1]        
+            permission, unit = check_token(token)
+    
+            if permission in permissions_array:
+                return view_function(*args, **kwargs) if not RETURN_UNIT else view_function(unit=unit, *args, **kwargs)
+            else:
+                return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+        return functions_args
+    return wrapper
 
-def check_permissions(request,permissions_array):
+def check_permissions(request, permissions_array):
     token=request.headers['Authorization']
-    print("request",request.headers)
     token=token.split(" ")
     token=token[1]
     permission=check_token(token)
-    print(permission)
     return permission in permissions_array
+
