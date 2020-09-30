@@ -1,28 +1,37 @@
 <nb-card>
   <nb-card-body>
     <div class="row">
-      <div class="col-md-4">
-          <button nbButton status="primary" [disabled]="(pickedUpEvent.route?false:true)" [routerLink]="[pickedUpEvent.route]" hero>
+      <div class="col-sm-11" >
+          <button nbButton status="primary" [disabled]="(pickedUpEvent.route?false:true)" [routerLink]="[pickedUpEvent.route]" hero style="margin: 3px;">
             דווח אירוע
           </button>
-      </div>
-        <div class="col-md-4">
-          <label class="search-label" for="search">חיפוש בטבלה:</label>
-          <input #search nbInput id="search" class="search-input" (input)="onSearch(search.value)">
-        </div>
-        <div class="col-md-4">
-          <button nbButton status="success" (click)="exportToXL(pickedUpEvent)" hero>
-            <img src="assets/images/xl.png">
-            ייצא ל XL
+          
+          <button nbButton status="primary" title='טיוטות' id='טיוטות' (click)="draftsColumns()" style="margin:3px; " hero>
+            טיוטות
           </button>
-        </div>
+        
     </div>
-
-    <div class="row">
-      <div class="button-row">
-        <button *ngFor="let button of eventsToPickUp | keyvalue" nbButton status="info" (click)="loadTable(pickedUpEvent=button.value)" hero>{{button.value.name}}</button>
+    <div class="col-sm-1">
+      <button nbButton status="success" class="images" (click)="exportToXL(pickedUpEvent)" style="height: 42px; text-align: center; right: 80%;" hero>
+        <img class='img' src="assets/images/xl.png">
+      </button>
       </div>
+       
     </div>
+    
+
+    <!-- <div class="row"> -->
+      <div class="row">
+        <div class="col-md-12" style="margin-bottom:3px;">
+        <button nbButton title="אירועים" #nameButton status="primary" name="אירועים" id="אירועים" (click)="defualtForms()" style="margin: 2px;" hero>
+          אירועים
+        </button>
+        <button *ngFor="let button of eventsToPickUp2 | keyvalue" nbButton status="info" (click)="loadTable(pickedUpEvent=button.value)" style="margin: 2px;" hero>{{button.value.name}}</button>
+        <input #search nbInput id="search" class="search-input" placeholder="חיפוש בטבלה:" (input)="onSearch(search.value)" style="margin: 2px;">
+      </div>
+      </div>
+     
+    <!-- </div> -->
 
     <ng2-smart-table [settings]="settings" [source]="source" (userRowSelect)="formClicked($event)">
     </ng2-smart-table>

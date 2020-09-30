@@ -66,7 +66,7 @@
       
       <div class="row " style="width: 100%;">
         <div class="col">
-          <input type="text" #search fullWidth #Personal="ngModel" name="personalnumber" nbInput placeholder="מספר מזהה" [(ngModel)]=user.personalNumber required pattern="[0-9]{8}" (input)="onSearch(search.value)" > 
+          <input type="text" #search fullWidth #Personal name="personalnumber" nbInput placeholder="מספר מזהה" [(ngModel)]=user.personalNumber required pattern="[0-9]{8}" (input)="onSearch(search.value)" > 
         </div>
         <div class="col">
           <nb-select fullWidth name="permissions" status="privmary" placeholder="הרשאה" id="permissions" fieldSize="small" [(ngModel)]="user.permissions">

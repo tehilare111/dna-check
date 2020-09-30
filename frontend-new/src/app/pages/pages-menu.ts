@@ -7,6 +7,12 @@ public ADMIN_MENU: NbMenuItem[] = [
     title:"התחברות",
     icon:'nb-gear',
     link:'/pages/login',
+  },
+  {
+    title: 'טבלת שליטה',
+    icon: 'nb-home',
+    link: '/pages/control-table',
+    home: true,
   },{
     title: 'ניהול יחידות',
     icon: 'nb-gear',
@@ -17,12 +23,7 @@ public ADMIN_MENU: NbMenuItem[] = [
     icon: 'nb-gear',
     link: '/pages/constants-fields',
   },
-  {
-    title: 'טבלת שליטה',
-    icon: 'nb-home',
-    link: '/pages/control-table',
-    home: true,
-  },
+  
 ];
 public DEF_MENU:NbMenuItem[] = [
 {

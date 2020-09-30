@@ -39,11 +39,11 @@ $nb-themes: nb-register-theme((
 $nb-themes: nb-register-theme((
   // app wise variables for each theme
   sidebar-header-gap: 2rem,
-  sidebar-header-height: initial,
+  sidebar-header-height: 50%,
   layout-content-width: 1400px,
 
-  font-main: Roboto,
-  font-secondary: Exo,
+  font-main: sans-serif,
+  font-secondary: sans-serif,
 
   layout-bg: #fff,
 
@@ -85,8 +85,8 @@ $nb-themes: nb-register-theme((
   sidebar-header-height: initial,
   layout-content-width: 1400px,
 
-  font-main: Roboto,
-  font-secondary: Exo,
+  font-main: sans-serif,
+  font-secondary: sans-serif,
 
   switcher-background: #2b2d34,
   switcher-background-percentage: 14%,

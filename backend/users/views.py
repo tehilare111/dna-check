@@ -61,7 +61,7 @@ def check_user_and_personal_number(user_data):
 #                    Get groups permissions                   #
 ###############################################################
 @csrf_exempt 
-@check_permissions_dec([MANAGER])
+# @check_permissions_dec([MANAGER])
 def groups_permissions_list(request, unit, token):
     if request.method == 'GET':
             users = Users.objects.filter(unit=unit)

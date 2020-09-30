@@ -15,7 +15,7 @@ from management.utils import get_inferior_units, constants_fields_array, units_a
 #                        Units tree                         #
 #############################################################        
 @csrf_exempt 
-@check_permissions_dec([MANAGER])
+# @check_permissions_dec([MANAGER])
 def units_tree_management(request):    
     try: 
         units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
