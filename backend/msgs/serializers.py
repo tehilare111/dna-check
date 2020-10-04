@@ -8,5 +8,6 @@ class MsgsSerializer(serializers.ModelSerializer):
         model = Msgs
         fields = (
             'reference',
+            'reporterUnit',
             'messages'
         )

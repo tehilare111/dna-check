@@ -112,7 +112,7 @@ class OfficialEventFrom(APIView):
         if form_serializer.is_valid():
             reference = generate_reference(reference)
             # Create instance for this event form in the messages database
-            new_event_msgs(reference)
+            new_event_msgs(reference, form_serializer.validated_data['reporterUnit'])
             form_serializer.save(reference=reference, writtenInFormals=True)
             return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:

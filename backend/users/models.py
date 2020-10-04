@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,AbstractUser
-
+from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import Group
 
 
@@ -16,6 +16,7 @@ class Users(AbstractUser):
     position = models.CharField(max_length=150, blank=False, default='')
     permissions = models.CharField(max_length=150, blank=False, default='')
     unit = models.CharField(max_length=150,blank=False,default=' ')
+    unreadedMessages = ArrayField(models.CharField(max_length=150, blank=True, null=True), size=100, null=True, blank=True, default=list)
     
     
     USERNAME_FILED='last_login'

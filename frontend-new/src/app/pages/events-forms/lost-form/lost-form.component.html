@@ -21,6 +21,7 @@
             <div class="form-group">
               <label for="signerUnit" class="label">יחידת החתום</label>
               <nb-select [disabled]="this.form.editStateBlocked" name="signerUnit" id="signerUnit" status="primary" placeholder="יחידת החתום" [(ngModel)]="form.signerUnit">
+                <nb-option disabled><input type="text"></nb-option>
                 <nb-option *ngFor="let unit of units" [value]="unit">{{unit}}</nb-option>  
               </nb-select>
             </div>

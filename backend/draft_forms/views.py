@@ -52,7 +52,7 @@ class DraftEventFrom(APIView):
         if draft_form_serializer.is_valid():
             reference = generate_reference(reference)
             # Create instance for this event form in the messages database
-            new_event_msgs(reference)
+            new_event_msgs(reference, draft_form_serializer.validated_data['reporterUnit'])
             draft_form_serializer.save(reference=reference, writtenInDrafts=True)
             return JsonResponse(draft_form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
