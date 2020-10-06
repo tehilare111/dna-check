@@ -13,7 +13,7 @@ class UploadTo:
     return ('forms.models.UploadTo', [self.field], {})
 
 class Form(models.Model):
-    reference = models.IntegerField(blank=False, default=0)
+    reference = models.IntegerField(primary_key=True,blank=False, default=0)
     eventType = models.CharField(max_length=70, blank=False, default='')
     date = models.CharField(max_length=70, blank=False, default='')
     reporterName = models.CharField(max_length=70, blank=False, default='')
@@ -37,11 +37,6 @@ class EventForm(Form):
       abstract = True
 
 class FormsTable(EventForm):
-    equipment = models.CharField(max_length=70, blank=False, default='')
-    equipmentType = models.CharField(max_length=70, blank=False, default='')
-    equipmentMark = models.CharField(max_length=70, blank=False, default='')
-    equipmentMakat = models.CharField(max_length=70, blank=False, default='')
-    
     # Events Form
     signerUnit = models.CharField(max_length=70, blank=False, default='')
     signerName = models.CharField(max_length=70, blank=False, default='')
@@ -64,3 +59,10 @@ class FormsTable(EventForm):
     reviewDate = models.CharField(max_length=70, blank=False, default='')
     reviewReference = models.CharField(max_length=70, blank=False, default='')
     isMatchToReport = models.BooleanField(default=False)
+
+class EventsEquipments(models.Model):
+    reference1=models.ForeignKey(FormsTable, primary_key=False, related_name='equipments',on_delete=models.CASCADE)
+    equipment = models.CharField(max_length=70, blank=False, default='')
+    equipmentType = models.CharField(max_length=70, blank=False, default='')
+    equipmentMark = models.CharField(max_length=70, blank=False, default='')
+    equipmentMakat = models.CharField(max_length=70, blank=False, default='')

@@ -1,6 +1,13 @@
 
 from rest_framework import serializers 
-from forms.models import Form, EventForm, FormsTable
+from forms.models import Form, EventForm, FormsTable,EventsEquipments
+from django import forms
+from django.http import QueryDict
+import json
+from django.db.models import Max
+from django.http.response import JsonResponse
+from django.http import HttpResponse
+from rest_framework import status
 
 
 class FormSerializer(serializers.ModelSerializer):
@@ -29,7 +36,16 @@ class EventFormSerializer(FormSerializer):
             'handlingStatus',
         )
 
-class FormsSerializer(EventFormSerializer):
+class EquipmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=EventsEquipments
+        fields=[
+        'equipment',
+        'equipmentType',
+        'equipmentMark',
+        'equipmentMakat',
+        ]
+class FormsSerializer(serializers.ModelSerializer):
     class Meta:
         model = FormsTable
         fields = EventFormSerializer.Meta.fields + (
@@ -40,10 +56,6 @@ class FormsSerializer(EventFormSerializer):
             'position',
             'eventDate',
             'eventHour',
-            'equipment',
-            'equipmentType',
-            'equipmentMark',
-            'equipmentMakat',
             'eventRelevantPlacesAndFactors',
             'eventInitialDetails',
             'investigationDate',
@@ -57,3 +69,19 @@ class FormsSerializer(EventFormSerializer):
             'reviewReference',
             'isMatchToReport'
         )
+    def saveAll(self,request,reference):
+        self.save(reference=reference,writtenInFormals=True)
+
+        print("SELF",request)
+        data=request.data["equipments"]
+        data = data.split("$$")[1:-1]
+        data2=[json.loads(eq[1:-1]) for eq in data]
+        for i in data2:
+            equip=EquipmentSerializer(data=i)
+            if equip.is_valid():
+                print("shalom tehila")
+                equip.save(reference1=self.instance)
+            else:
+                print(equip.errors)
+                return HttpResponse(equip.errors,status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse(equip.data, status=status.HTTP_201_CREATED )
