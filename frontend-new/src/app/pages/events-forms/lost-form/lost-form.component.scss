@@ -18,11 +18,6 @@ nb-checkbox {
   .red{
     color: red;
   }
-  
-  /deep/ .cdk-global-scrollblock {
-    position: static;
-    overflow: hidden !important;
-  }
 
   @media only print {
     /* Intended for paged material and for documents

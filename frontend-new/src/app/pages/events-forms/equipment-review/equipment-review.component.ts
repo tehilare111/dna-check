@@ -5,6 +5,7 @@ import { FormGroup, FormControl } from "@angular/forms";
 import { FormBaseComponent } from '../form-base.component'
 import { EquipmentReviewTemplate } from '../events-forms.templates';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
+import { EquipmentsTableComponent } from '../components/equipments-table/equipments-table.component';
 
 @Component({
   selector: 'ngx-equipment-review',
@@ -15,7 +16,7 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
   eventType: string = 'ביקורת ציוד';
   form: EquipmentReviewTemplate = new EquipmentReviewTemplate();
   eventFilesFields: string[] = ['reviewFile'];
-
+  @ViewChild("equipmentsTable") equipmentsTable:EquipmentsTableComponent;
   @ViewChild("status") eventStatusForm : EventStatusComponent;
   // @ViewChild("chat") chatMessages : ChatComponent;
   @ViewChild("directingDialog") directingDialog : ElementRef;

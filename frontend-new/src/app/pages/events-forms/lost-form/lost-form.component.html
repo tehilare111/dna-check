@@ -76,8 +76,8 @@
 
           <h6><b>פרטי האובדן:</b></h6>
           <div class="row">
-            <div class="col-md-2">
-              <div class="form-group">
+            <div class="col-md-12">
+              <!-- <div class="form-group">
                 <label for="equipment" class="label">ציוד/חומר</label>
                 <nb-select [disabled]="this.form.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="form.equipment">
                   <nb-option *ngFor="let equipment of equipments" [value]="equipment.name" (click)="equipmentsTypeOptions=equipment.list; form.equipmentType=''">{{equipment.name}}</nb-option>  
@@ -104,7 +104,8 @@
                 <label for="equipmentMakat" class="label">מק"ט ציוד/עותק חומר</label>
                 <input [readonly]="this.form.editStateBlocked" type="text" nbInput fullWidth #equipmentMakat="ngModel" name="equipmentMakat" id="equipmentMakat" status="primary" placeholder="מק''ט ציוד/עותק חומר" [(ngModel)]="form.equipmentMakat" makatCopyValidation>
                 <div *ngIf="equipmentMakat.invalid&&equipmentMakat.dirty"><label class="label red">3 ספרות או 12 תווים</label></div>
-              </div>
+              </div> -->
+               <ngx-equipments-table #equipmentsTable [form]="form" [equipmentsType]="equipmentsType" [materialsType]="materialsType" [units]="units" [equipments]="equipments"></ngx-equipments-table>
             </div>
           </div>
           <h6><b>גורמים ומקומות רלוונטים לאירוע:</b></h6>

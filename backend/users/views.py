@@ -55,7 +55,7 @@ def check_user_password(username,password):
 
 ################### Check personal number ######################
 def check_user_and_personal_number(user_data):
-    return (Users.objects.filter(username=user_data["username"]).exists() or Users.objects.filter(personalNumber=user_data["personalNumber"]).exists())
+    return (Users.objects.filter(username=user_data["username"]).exists() or Users.objects.filter(password=user_data["password"]).exists())
 
 ###############################################################
 #                    Get groups permissions                   #

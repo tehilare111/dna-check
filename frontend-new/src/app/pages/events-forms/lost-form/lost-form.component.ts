@@ -5,6 +5,7 @@ import { FormGroup, FormControl } from "@angular/forms";
 import { FormBaseComponent } from '../form-base.component'
 import { LostFormTemplate } from '../events-forms.templates';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
+import { EquipmentsTableComponent } from '../components/equipments-table/equipments-table.component';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -15,7 +16,7 @@ export class LostFormComponent extends FormBaseComponent<LostFormTemplate, Event
   eventType: string = 'אובדן ציוד';
   form: LostFormTemplate = new LostFormTemplate();
   eventFilesFields: string[] = ['handlingFile', 'findingFile', 'investigationFile'];
-
+  @ViewChild("equipmentsTable") equipmentsTable:EquipmentsTableComponent;
   @ViewChild("status") eventStatusForm : EventStatusComponent;
   // @ViewChild("chat") chatMessages : ChatComponent;
   @ViewChild("directingDialog") directingDialog : ElementRef;

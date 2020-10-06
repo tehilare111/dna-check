@@ -69,3 +69,9 @@ export class EquipmentReviewTemplate extends EventForm {
     equipmentMakat: string;
     reviewReference: string;
 }
+export class EventEquipments extends EventForm{
+    equipment:string;
+    equipmentType:string;
+    equipmentMark: string;
+    equipmentMakat: string;
+}

@@ -55,9 +55,9 @@
               </div>
           </div>
           <h6>פרטי החוסרים:</h6>
-          <div class="row">
-            <div class="col-md-2">
-              <div class="form-group">
+          <!-- <div class="row">
+            <div class="col-md-2"> -->
+              <!-- <div class="form-group">
                 <label for="equipment" class="label">ציוד/חומר</label>
                 <div>
                 </div>
@@ -89,7 +89,8 @@
                 <div *ngIf="equipmentMakat.invalid&&equipmentMakat.dirty"><label class="label red">3 ספרות או 12 תווים</label></div>
               </div>
             </div>
-          </div>
+          </div> -->
+          <ngx-equipments-table #equipmentsTable [form]="form" [equipmentsType]="equipmentsType" [materialsType]="materialsType" [units]="units" [equipments]="equipments"></ngx-equipments-table>
           <h6>התייחסות לביקורת:</h6>
           <div class="row">
             <div class="col-md-12">

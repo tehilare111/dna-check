@@ -5,6 +5,7 @@ import { FormGroup, FormControl } from "@angular/forms";
 import { FormBaseComponent } from '../form-base.component'
 import { CorruptionFormTemplate } from '../events-forms.templates';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
+import { EquipmentsTableComponent } from '../components/equipments-table/equipments-table.component';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -15,7 +16,7 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
   eventType: string = 'השמדת ציוד';
   form: CorruptionFormTemplate = new CorruptionFormTemplate();
   eventFilesFields: string[] = ['handlingFile', 'investigationFile'];
-  
+  @ViewChild("equipmentsTable") equipmentsTable:EquipmentsTableComponent;
   @ViewChild("status") eventStatusForm : EventStatusComponent;
   // @ViewChild("chat") chatMessages : ChatComponent;
   @ViewChild("directingDialog") directingDialog : ElementRef;
