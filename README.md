@@ -86,9 +86,9 @@ Tip: make sure postgresql server is listening:
  ```
  npm install
  ```
- Download angular-tree-component
+ Download node-sass
  ```
- npm install --save angular-tree-component
+ 
  ```
  Run server:
  ```
