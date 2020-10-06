@@ -1,0 +1,4 @@
+<select class="form-control" name="equipment" id="equipment" status="primary" (change)="setValueType()" [(ngModel)]="data">
+  <option value="" disabled selected hidden>ציוד/חומר</option>
+  <option *ngFor="let equipment of equipments">{{equipment.name}}</option>  
+</select>

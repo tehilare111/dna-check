@@ -1,0 +1,2 @@
+<input class="form-control" type="text" nbInput fullWidth #equipmentMark="ngModel" name="equipmentMark" id="equipmentMark" status="primary" placeholder="סימון ציוד/חומר" [(ngModel)]="eventEquipments.equipmentMark" markValidation>
+    <div *ngIf="equipmentMark.invalid&&equipmentMark.dirty"><label class="lable_valid">XXXXXXXXX או YYYYYY-XXX</label></div>

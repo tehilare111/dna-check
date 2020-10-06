@@ -1,0 +1,3 @@
+<select class="form-control" name="equipmentType" id="equipmentType" status="primary" (click)="this.getValueOnTable()" [(ngModel)]="data" >
+      <option value="" disabled selected hidden>סוג ציוד/חומר</option>
+      <option *ngFor="let equipment of equipmentsTypeOptions" value={{equipment}}>{{equipment}} </option>  
