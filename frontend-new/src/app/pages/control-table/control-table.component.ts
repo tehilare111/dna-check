@@ -15,7 +15,7 @@ export class ControlTableComponent implements OnInit {
     'defaultForms': {
       'name': 'כלל הטפסים',
       'route': undefined,
-      'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}} 
+      'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}, 'unreadedMessages': {'title': 'הודעות שלא נקראו', 'type': 'html', }} 
     },
     'CorruptionForm': {
       'name': 'השמדת ציוד',
@@ -49,6 +49,7 @@ export class ControlTableComponent implements OnInit {
   draftsUrl: string = '/draft-forms/';
   data = [];
   isDraft:boolean = false;
+  userUnreadedMessages = {};
 
   constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router) { 
   } 
@@ -57,6 +58,7 @@ export class ControlTableComponent implements OnInit {
   ngOnInit() {
     this.source.load(this.data);
     this.loadData('');
+    this.userUnreadedMessages = JSON.parse(localStorage.getItem('unreadedMessages'))
   }
 
   loadTable(value){
@@ -72,6 +74,9 @@ export class ControlTableComponent implements OnInit {
   loadData(eventType: string) {
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${eventType}`).subscribe((data_from_server) => {
       this.data=data_from_server
+      // Update unread messages amount of the user in the table, parallel to the event's reference
+      if(eventType == ''){ this.data.forEach((element) => { element['unreadedMessages'] = this.userUnreadedMessages[element['reference']] }); }
+      
       this.source.load(this.data);
     });
   }

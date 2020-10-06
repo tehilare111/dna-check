@@ -13,6 +13,7 @@ import { LayoutService } from '../../../@core/utils';
 export class HeaderComponent implements OnInit {
 
   @Input() position = 'normal';
+  localStorage = localStorage;
 
   user: any;
 
@@ -43,5 +44,13 @@ export class HeaderComponent implements OnInit {
 
   startSearch() {
     this.analyticsService.trackEvent('startSearch');
+  }
+
+  setted(){
+    let unreadedMessagesAmount = 0;
+    for(let [key, value: number] of Object.entries(JSON.parse(localStorage.getItem('unreadedMessages')))){
+      unreadedMessagesAmount += value;
+    }
+    return unreadedMessagesAmount;
   }
 }

@@ -22,13 +22,22 @@ def delete_event_messages(reference):
         event_form_msgs.delete()
 
 
-def update_messages_for_relevant_users(sender_unit, reporterUnit):
+def update_message_for_relevant_users(sender_unit, reporterUnit, reference):
     '''
         Update all messages in the relevant users 
     '''
     units_to_update_msg = get_superior_units(reporterUnit)
     units_to_update_msg.remove(sender_unit)
-    print(units_to_update_msg)
 
-    mb = Users.objects.get(username="mb")
-    print(mb.unreadedMessages)
+    users_to_update_msg = Users.objects.filter(unit__in=units_to_update_msg)
+    for user in users_to_update_msg:
+        user.unreadedMessages[str(reference)] = user.unreadedMessages.get(str(reference), 0) + 1
+        user.save()
+
+def update_user_read_msg(personal_number, reference):
+    try:
+        user = Users.objects.get(personalNumber=personal_number)
+        del user.unreadedMessages[str(reference)]
+        return True
+    except:
+        return False

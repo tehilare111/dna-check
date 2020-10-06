@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,AbstractUser
-from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import JSONField
 from django.contrib.auth.models import Group
 
 
@@ -16,7 +16,10 @@ class Users(AbstractUser):
     position = models.CharField(max_length=150, blank=False, default='')
     permissions = models.CharField(max_length=150, blank=False, default='')
     unit = models.CharField(max_length=150,blank=False,default=' ')
-    unreadedMessages = ArrayField(models.CharField(max_length=150, blank=True, null=True), size=100, null=True, blank=True, default=list)
+    
+    # Json with all form's refereneces and its number of unreaded message. 
+    # Format: {"form reference (int)": unreaded messages amount (int)}. e.g.: { "1" : 3 }
+    unreadedMessages = JSONField(default=dict)
     
     
     USERNAME_FILED='last_login'
