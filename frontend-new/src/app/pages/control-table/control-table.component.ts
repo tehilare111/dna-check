@@ -72,7 +72,7 @@ export class ControlTableComponent implements OnInit {
   }
   defualtForms(){
     var value=document.getElementById("אירועים").title
-    console.log(value)
+    console.log(value) 
     this.loadData(value)
     this.settings.columns={'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}}
     this.settings = Object.assign({}, this.settings);
