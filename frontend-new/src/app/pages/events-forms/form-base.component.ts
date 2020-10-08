@@ -227,13 +227,20 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
 
   deleteEventForm(){
     this.uploadLoading = true;
-    this.openWithoutBackdropClick(this.directingDialog);
-    this.RestApiService.delete(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${this.reference}`)
-      .subscribe(
-        (data: FormType) => {
-          this.uploadLoading = false;
-          this.popUpDialogContext = `אירוע עם סימוכין ${this.reference} נמחק`;
-        },
-        error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${this.reference}`; })
+    
+    if (JSON.parse(localStorage.getItem('unreadedMessages'))[this.reference] > 0){
+      this.openWithoutBackdropClick(this.simpleDialog);    
+      this.popUpDialogContext = `טרם המחיקה, ישנן הודעות שאינן נקראו באירוע`;
+      this.uploadLoading = false;
+    } else{
+      this.openWithoutBackdropClick(this.directingDialog);  
+      this.RestApiService.delete(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${this.reference}`)
+        .subscribe(
+          (data: FormType) => {
+            this.uploadLoading = false;
+            this.popUpDialogContext = `אירוע עם סימוכין ${this.reference} נמחק`;
+          },
+          error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${this.reference}`; })
+    }  
   }
 }

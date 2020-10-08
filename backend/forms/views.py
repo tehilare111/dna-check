@@ -14,7 +14,7 @@ from forms.models import FormsTable
 from forms.serializers import FormsSerializer
 from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
 from management.utils import get_inferior_units
-from msgs.utils import new_event_msgs, delete_event_messages
+from msgs.utils import new_event_msgs, delete_event_messages, update_user_event_deleted
 
 import time
 import os
@@ -142,8 +142,8 @@ class OfficialEventFrom(APIView):
         form_serializer = FormsSerializer(event_form)
         return JsonResponse(form_serializer.data)
 
-    @check_permissions_dec([MANAGER], API_VIEW=True)
-    def delete(self, request, reference, *args, **kwargs):
+    @check_permissions_dec([MANAGER], API_VIEW=True, RETURN_UNIT=True)
+    def delete(self, request, reference, unit, *args, **kwargs):
         try: 
             event_form = FormsTable.objects.get(reference=reference)
         except FormsTable.DoesNotExist: 
@@ -151,5 +151,7 @@ class OfficialEventFrom(APIView):
 
         # Delete this event form instance from the messages database
         delete_event_messages(reference)
+        # Delete this event messages from all relevant users
+        update_user_event_deleted(reference, unit)
         event_form.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)

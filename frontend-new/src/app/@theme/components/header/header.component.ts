@@ -48,6 +48,10 @@ export class HeaderComponent implements OnInit {
 
   setted(){
     let unreadedMessagesAmount = 0;
+    if (localStorage.getItem('unreadedMessages') === null) {
+      return unreadedMessagesAmount
+    }    
+
     for(let [key, value: number] of Object.entries(JSON.parse(localStorage.getItem('unreadedMessages')))){
       unreadedMessagesAmount += value;
     }

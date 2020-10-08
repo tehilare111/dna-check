@@ -14,7 +14,7 @@ from draft_forms.models import DraftFormsTable
 from draft_forms.serializers import DraftFormsSerializer
 from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
 from management.utils import get_inferior_units
-from msgs.utils import new_event_msgs, delete_event_messages
+from msgs.utils import new_event_msgs, delete_event_messages, update_user_event_deleted
 
 import time
 import os
@@ -82,12 +82,16 @@ class DraftEventFrom(APIView):
         draft_form_serializer = DraftFormsSerializer(draft_event_form)
         return JsonResponse(draft_form_serializer.data)
 
-    @check_permissions_dec([MANAGER], API_VIEW=True)
-    def delete(self, request, reference, *args, **kwargs):
+    @check_permissions_dec([MANAGER], API_VIEW=True, RETURN_UNIT=True)
+    def delete(self, request, reference, unit, *args, **kwargs):
         try: 
             draft_event_form = DraftFormsTable.objects.get(reference=reference)
         except DraftFormsTable.DoesNotExist: 
             return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
-
+        
+        # Delete this event form instance from the messages database
+        delete_event_messages(reference)
+        # Delete this event messages from all relevant users
+        update_user_event_deleted(reference, unit)
         draft_event_form.delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)  

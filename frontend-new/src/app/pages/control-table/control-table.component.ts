@@ -1,21 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { LocalDataSource } from 'ng2-smart-table';
-
 import { SmartTableData } from '../../@core/data/smart-table';
 import { RestApiService } from '../../services/rest-api.service';
 import { ToastService } from '../../services/toast.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { NbDialogService } from '@nebular/theme';
+
+
+import { NotReadMsgsColComponent } from './components/not-read-msgs-col/not-read-msgs-col.component';
+
 @Component({
   selector: 'ngx-control-table',
   templateUrl: './control-table.component.html',
   styleUrls: ['./control-table.component.scss']
 })
-export class ControlTableComponent implements OnInit {
+export class ControlTableComponent implements OnInit,  AfterViewInit {
   eventsToPickUp = {
     'defaultForms': {
       'name': 'כלל הטפסים',
       'route': undefined,
-      'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}, 'unreadedMessages': {'title': 'הודעות שלא נקראו', 'type': 'html', }} 
+      'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}, 'unreadedMessages': {'title': 'הודעות לא נקראו', 'filter': false,'type': 'custom', 'renderComponent': NotReadMsgsColComponent}} 
     },
     'CorruptionForm': {
       'name': 'השמדת ציוד',
@@ -37,6 +41,11 @@ export class ControlTableComponent implements OnInit {
       'route': undefined,
       'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}} 
     },
+    'defaultForms': {
+      'name': 'הודעות לא נקראו',
+      'route': undefined,
+      'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}, 'unreadedMessages': {'title': 'הודעות לא נקראו', 'filter': false,'type': 'custom', 'renderComponent': NotReadMsgsColComponent}} 
+    },
   }
   pickedUpEvent = this.eventsToPickUp.defaultForms;
   settings = {
@@ -50,8 +59,9 @@ export class ControlTableComponent implements OnInit {
   data = [];
   isDraft:boolean = false;
   userUnreadedMessages = {};
+  @ViewChild("dialog") dialog : ElementRef;
 
-  constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router) { 
+  constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router, private activatedRoute: ActivatedRoute, private dialogService: NbDialogService) { 
   } 
   
 
@@ -59,6 +69,23 @@ export class ControlTableComponent implements OnInit {
     this.source.load(this.data);
     this.loadData('');
     this.userUnreadedMessages = JSON.parse(localStorage.getItem('unreadedMessages'))
+  }
+
+  ngAfterViewInit(){
+    if(this.activatedRoute.snapshot.params.isLogin) this.openJustLoginDialog();
+  }
+
+  openJustLoginDialog(){
+    let unreadedMessagesAmount = 0;
+    for(let [key, value] of Object.entries(JSON.parse(localStorage.getItem('unreadedMessages')))){
+      unreadedMessagesAmount += value;
+    }
+    this.dialogService.open(
+      this.dialog,
+      {
+        context: unreadedMessagesAmount,
+        // closeOnBackdropClick: false,
+      });
   }
 
   loadTable(value){

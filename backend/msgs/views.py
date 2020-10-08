@@ -33,8 +33,6 @@ def msgs(request, reference, unit):
         else:
             return HttpResponse(event_form_msgs_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    print('here')
-
 
 @csrf_exempt
 @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_PERSONAL_NUMBER=True)

@@ -75,12 +75,12 @@ export class ChatComponent implements OnInit {
   }
   
   open() {
+    if(this.unreadedMessageAmount > 0) { this.updateMessagesRead() }
     var el = document.getElementById("myDIV");
       if (el.classList.contains('open')) {
 		    el.classList.remove("open");
 		  } else {
 		    el.classList.add("open");
 		  }
-      if(this.unreadedMessageAmount > 0) { this.updateMessagesRead() }
   }
 }
