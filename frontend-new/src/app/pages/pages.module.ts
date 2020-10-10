@@ -14,6 +14,12 @@ import { RegisterComponent } from './details_users/register/register.component';
 import { ManagementComponent } from './management/management.component';
 import { TreeModule } from 'angular-tree-component';
 import { LoginComponent } from './details_users/login/login.component';
+import {AngularMaterialModule} from '../material-module';
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { ConfirmationDialogComponent } from './management/components/confirmation-dialog/confirmation-dialog.component';
+import { UserPermissionsComponent } from './management/components/table-columns/user-permissions/user-permissions.component';
+import { UserPermissionsRenderComponent } from './management/components/table-columns/user-permissions-render/user-permissions-render.component';
 
 
 const PAGES_COMPONENTS = [
@@ -30,6 +36,9 @@ const PAGES_COMPONENTS = [
     ECommerceModule,
     MiscellaneousModule,
     TreeModule,
+    AngularMaterialModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   declarations: [
     ...PAGES_COMPONENTS,
@@ -38,9 +47,20 @@ const PAGES_COMPONENTS = [
     LoginComponent,
     ConstantsFieldsComponent,
     FieldBoxComponent,
-    RegisterComponent
+    RegisterComponent,
+    ConfirmationDialogComponent,
+    UserPermissionsComponent,
+    UserPermissionsRenderComponent
 
   ],
+  entryComponents:[
+    ConfirmationDialogComponent,
+    UserPermissionsComponent,
+    UserPermissionsRenderComponent
+  ],
+  /*providers:[
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } }
+  ],*/
 })
 export class PagesModule {
 }

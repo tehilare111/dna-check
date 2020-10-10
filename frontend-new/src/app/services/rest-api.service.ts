@@ -20,11 +20,15 @@ export class RestApiService {
   }
 
   CreateUser(customer: Object): Observable<Object> {
-    return this.http.post(`${this.baseUrl}/create-User/`, customer);
+    return this.http.post(`${this.baseUrl}/create_user/`, customer);
   }
 
   UpdateUser(customer: Object,personalnumber:string): Observable<Object> {
     return this.http.put(`${this.baseUrl}/update_permissions_user/${personalnumber}`, {"permissions":customer});
+  }
+  // delete user mathod. personal number required.
+  DeleteUser(user:Object): Observable<Object>{
+    return this.http.post(`${this.baseUrl}/delete_user/`, user);
   }
 
   CheckLogin(customer:object): Observable<Object> {
@@ -67,15 +71,15 @@ export class RestApiService {
     return this.http.delete(`${this.baseUrl}/event-forms/${reference}`);
   }
 
-  getTreeUnits(): Observable<any>  {
-    return this.http.get(`${this.baseUrl}/units-management/`);
+  getTreeUnits(unit:string): Observable<any>  {
+    return this.http.get(`${this.baseUrl}/get-units/${unit}`);
   }
   getTreeUnits_register(): Observable<any>  {
     return this.http.get(`${this.baseUrl}/get_array_units/`);
   }
 
-  postTreeUnits(data): Observable<any>{
-    return this.http.post(`${this.baseUrl}/units-management/`, data);
+  postTreeUnits(data, unit:string): Observable<any>{
+    return this.http.post(`${this.baseUrl}/units-management/${unit}`, data);
   }
 
   getConstatnsFields(): Observable<any>{

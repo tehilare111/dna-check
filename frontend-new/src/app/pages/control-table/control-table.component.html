@@ -1,7 +1,7 @@
 <nb-card>
   <nb-card-body>
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-4" [hidden]="isEventAuthorizer">
           <button nbButton status="primary" [disabled]="(pickedUpEvent.route?false:true)" [routerLink]="[pickedUpEvent.route]" hero>
             דווח אירוע
           </button>

@@ -1,5 +1,5 @@
 
-<ngx-form-top-buttons (sendEvent)="sendEvent()" (printForm)="printForm()" (updateEditState)="updateEditState()" (saveEvent)="saveEvent()" (deleteEventForm)="deleteEventForm()" [reference]="reference" [reporterUnit]="form.reporterUnit" id="outOfPrint"></ngx-form-top-buttons>
+<ngx-form-top-buttons (sendEvent)="onEventSubmit(true)" (printForm)="printForm()" (updateEditState)="updateEditState()" (saveEvent)="onEventSubmit(false)" (deleteEventForm)="deleteEventForm()" [reference]="reference" [reporterUnit]="form.reporterUnit" id="outOfPrint"></ngx-form-top-buttons>
 
 <div *ngIf="isDraft"><p class="red">טיוטה</p></div>
 
@@ -102,6 +102,12 @@
         </form>
         <div style="display: flex; justify-content: center;">
           <h6><u>טיפול באירוע</u></h6>
+        </div>
+        <div class="row">
+          <div class="col-md-8"></div> <!--More event handling shit here-->
+          <div class="col-md-4">
+            <event-share [eventAuthorizers]="form.eventAuthorizers" [editStateBlocked]="this.form.editStateBlocked" [events]='eventsSubject.asObservable()' (onEventSubmit)="updateEventAuthorizers($event)"></event-share>
+          </div>
         </div>
         <form>
           <div *ngIf="form.reference" #chatWrapper id="outOfPrint">

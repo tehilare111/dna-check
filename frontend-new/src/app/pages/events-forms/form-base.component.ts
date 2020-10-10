@@ -22,6 +22,7 @@ import { textValidator } from './validation-directives/text.directive';
 import { EventStatusBase } from './components/event-status-base.component';
 import { EventForm } from './events-forms.templates';
 
+import { User } from '../management/users';
 export abstract class FormBaseComponent<FormType extends EventForm, EventStatusType extends EventStatusBase> implements OnInit {
   
   /* Angular and ngx-admin imports */
@@ -62,6 +63,8 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   protected isDraft: boolean; // For a given form, determine if it is a draft or not
   protected drafting: boolean; // Determine whether to save the form or send it
 
+  ADMINISTRATIVE_UNIT = "יחידה מנהלת"; // const that define the administrative unit, assigned to eventAuthorizer unit. Because he should get access to all the forms he assigned to. 
+
 
   constructor(){
       this.RestApiService = AppInjector.injector.get(RestApiService);
@@ -86,8 +89,8 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
 
   exisitingFormLoadData(reference: string){
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
-      this.form = data
-      console.log(this.form);      
+      data.eventAuthorizers = data.eventAuthorizers.split(","); // The fucking django works awful with string[] so its converting it to "personal,personal"
+      this.form = data     
       /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
           this.form.editStateBlocked = false
@@ -178,6 +181,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       this.openWithoutBackdropClick(this.simpleDialog)
     } else {
       this.openWithoutBackdropClick(this.directingDialog);
+
       this.save();
     }
   }
@@ -206,6 +210,8 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
             this.uploadLoading = false;
             this.reference = data.reference;
             this.popUpDialogContext = `האירוע התעדכן בהצלחה, סימוכין: ${this.reference}`;
+            // creating event Authorizers if the event submitted.
+            if (!this.drafting) this.createTempEventAuthorizers(this.reference, this.form.eventAuthorizers);
           },
           error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
           
@@ -216,9 +222,35 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
           this.uploadLoading = false;
           this.reference = data.reference;
           this.popUpDialogContext = `האירוע ${!this.drafting?'נוצר':'נשמר'} בהצלחה, סימוכין: ${this.reference}`;
+          // creating event Authorizers if the event submitted.
+          if (!this.drafting) this.createTempEventAuthorizers(this.reference, this.form.eventAuthorizers);
         },
         error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
     }
+  }
+
+  //Creates the temp event authorizers
+  createTempEventAuthorizers(reference:string, eventAuthorizers:string[]){
+    var newUserForm: User = new User();
+    eventAuthorizers.forEach(eventAutorizer => {
+      // add data to user
+      newUserForm.permissions = "מאשר אירועים";
+      newUserForm.personalNumber = eventAutorizer;
+      newUserForm.username = eventAutorizer;
+      newUserForm.unit = this.ADMINISTRATIVE_UNIT;
+      this.RestApiService.CreateUser(newUserForm)
+      .subscribe(
+        data =>{
+          newUserForm = new User();
+        },
+        error => {
+          // IDK, probebly toast dervice.
+          console.log(error);
+          this.uploadLoading = false;
+          this.popUpDialogContext = `אירעה שגיאה בהוספת מאשר  ${eventAutorizer}`;
+        }
+      )
+    });
   }
 
   getFileName(fileNameWithPath){

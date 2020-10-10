@@ -1,117 +1,126 @@
-<div class="row">
-     <div class="col-md-6">
-       <nb-card class="main-nb-card" status="primary" nbSpinnerStatus="primary" >
-         <nb-card-header >
-           <h4 style="color: white;">ניהול יחידות</h4>
-         </nb-card-header>
-         <nb-card-body>
-           <div class="row">
-               <div class="col-md-6">
-                 <button nbButton status="primary" #saveButton (click)="saveData()">שמור עץ יחידות</button>
-                 <tree-root #tree (activate)="onNodePickedUp($event)" (deactivate)="onNodeDeactivate($event)" [nodes]="nodes" [options]="options"></tree-root>
-               </div> 
-               <div class="col-md-6">
-                 <div *ngIf="currentNode">
-                   <nb-card status="primary" nbSpinnerStatus="primary">
-                     <nb-card-header>
-                       <div class="icon_1">
-                         <i class="ion-plus-round" [nbPopover]="icon" (click)="action='add'"></i>
-                       </div>
-                       <div class="icon">
-                         <i class='ion-edit' [nbPopover]="icon" (click)="action='edit'"></i>
-                       </div>
-                       <div class="icon">
-                         <i class='ion-close-round' [nbPopover]="icon" (click)="action='delete'"></i>
-                       </div>
-                     </nb-card-header>
-                     <nb-card-body>
-                       <div *ngIf="action=='add'">
-                         <input nbInput fullwidth placeholder="הוסף יחידה" [(ngModel)]="addUnitInput">
-                         <div class="buttonWrapper">
-                             <button nbButton (click)="onNodeDeactivate()">ביטול</button>
-                             <button nbButton status="primary" (click)="addUnit()">אישור</button>
-                         </div>
-                         </div>
-                         <div *ngIf="action=='edit'">
-                           <input nbInput fullwidth placeholder="ערוך שם יחידה" [(ngModel)]="editUnitInput">
-                           <div class="buttonWrapper">
-                               <button nbButton (click)="onNodeDeactivate()">ביטול</button>
-                               <button nbButton status="primary" (click)="editUnit()">אישור</button>
-                           </div>
-                       </div>
-                       <div *ngIf="action=='delete'">
-                         <p>האם למחוק את היחידה?</p>
-                         <div class="buttonWrapper">
-                             <button nbButton (click)="onNodeDeactivate()">ביטול</button>
-                             <button nbButton status="primary" (click)="deleteUnit()">אישור</button>
-                         </div>
-                     </div>
-                     </nb-card-body>
-                   </nb-card>
+<div class="unit-managment-container">
+ 
+    <div class="tab-container">
+      <nb-card class="main-nb-card" status="primary" nbSpinnerStatus="primary" >
+        <nb-card-header >
+          <h4 style="color: white;">ניהול יחידות</h4>
+        </nb-card-header>
+        <nb-card-body>
+          <div class="row">
+            <div class="col">
+              <p class="infor-text">לחץ על היחידה המבוקשת לביצוע פעולה</p>
+              <div style="margin-bottom: 1rem;">
+                <button class="button-margin-left" nbButton status="primary" (click)="tree.treeControl.collapseAll()">כווץ עץ יחידות</button>
+                <button class="button-margin-left" nbButton status="primary" (click)="tree.treeControl.expandAll()">פרוס עץ יחידות</button>
+                <input type="text" nbInput placeholder="חיפוש יחידה" (input)="filterChanged($event.target.value)" >
+              </div>
+              <mat-tree #tree [dataSource]="dataSource" [treeControl]="treeControl" dir="rtl">
+                <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding matTreeNodePaddingIndent="-40">
+                  <!--<button [disableRipple]="true" mat-icon-button disabled></button>-->
+                  <input type="text" nbInput placeholder="שם יחידה" #unitValue/>
+                  <button nbButton status="primary" (click)="saveNode(node, unitValue.value)">Save</button>
+                </mat-tree-node>
+                <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="20">
+                  <button [disableRipple]="true" mat-icon-button matTreeNodeToggle 
+                    [attr.aria-label]="'Toggle ' + node.name" [disabled]="!node.expandable">
+                    <mat-icon class="mat-icon-rtl-mirror">
+                      {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                    </mat-icon>
+                  </button>
+                  <mat-icon>security</mat-icon>
+                  <button [disableRipple]="true" mat-button class="no-back-btn" (click)="nodeSelected(node)">
+                    <mat-form-field class="no-padding">
+                      <input class="unit-name-input" matInput [(ngModel)]="node.name" [disabled]="!node.isRenameMode">
+                    </mat-form-field>
+                  </button>
+                  <div [hidden]='!node.isEditingMode && !isReporterManager'>
+                    <button [disableRipple]="true" mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>
+                    <button [disableRipple]="true" mat-icon-button (click)="deleteItem(node)"><mat-icon>delete</mat-icon></button>
+                    <span [hidden]=node.isRenameMode>
+                      <button [disableRipple]="true" mat-icon-button (click)="editItem(node)"><mat-icon>edit</mat-icon></button>
+                    </span>
+                    <span [hidden]=!node.isRenameMode >
+                      <button [disableRipple]="true" mat-icon-button (click)="notifyEditItem(node)"><mat-icon>done</mat-icon></button>
+                    </span> 
+                  </div>
+                </mat-tree-node>
+              </mat-tree>
             </div>
-           </div>
-           </div>
-       </nb-card-body>    
-       </nb-card>
-     </div>
+          </div>
+        </nb-card-body>    
+      </nb-card>
+    </div>
 
-  <div class="col-md-6">
-    <nb-card nb-card class="main-nb-card" status="primary" nbSpinnerStatus="primary" nbSpinnerSize="giant">
-      <nb-card-header>
+    <div class="tab-container">
+      <nb-card nb-card class="main-nb-card" status="primary" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+        <nb-card-header>
           <h4 style="color: white;">ניהול הרשאות</h4>
-      </nb-card-header>
+        </nb-card-header>
 
-      <nb-card-body>
-      <ng2-smart-table [settings]="settings" [source]="source" (userRowSelect)="tableRowClicked($event)"></ng2-smart-table>
-      
-      <div class="row " style="width: 100%;">
-        <div class="col">
-          <input type="text" #search fullWidth #Personal="ngModel" name="personalnumber" nbInput placeholder="מספר מזהה" [(ngModel)]=user.personalNumber required pattern="[0-9]{8}" (input)="onSearch(search.value)" > 
-        </div>
-        <div class="col">
-          <nb-select fullWidth name="permissions" status="privmary" placeholder="הרשאה" id="permissions" fieldSize="small" [(ngModel)]="user.permissions">
-            <nb-option *ngFor="let permiss of permission" [value]="permiss">{{[permiss]}}</nb-option>
-          </nb-select>
-        </div>
-        <div class="col">
-          <button fullWidth nbButton [disabled]="Personal.invalid  || Personal.undirty"   status="primary" (click)=updatePermissionUser(Personal.value)>שנה הרשאות</button>     
-        </div>
-      </div>
-      
-      </nb-card-body>
-    </nb-card>
-  </div>
-</div>
-<div class="row" *ngIf="currentNode">
-  <nb-card status="primary">
-    <nb-card-header>
-      <h3 style="color: white;">הוסף משתמש</h3>
-    </nb-card-header>
-
-    <nb-card-body>
-      <div class="row">
-        <form>
-          
-          <label class="label">מספר אישי: </label>
-          <input type="text" #pN="ngModel" nbInput name="personalNumber" status="primary" placeholder="מספר אישי" required pattern="[0-9]{7}" [(ngModel)]="newUserForm.personalNumber">
+        <nb-card-body>
+          <div class="row " style="width: 100%; padding-bottom: 10px;">
+            <div class="col" style="padding-left:30px;">
+              <input type="text" #search fullWidth #Personal="ngModel" name="personalnumber" nbInput placeholder="חפש לפי מספר אישי" [(ngModel)]=user.personalNumber required pattern="[0-9]{7}" (input)="onSearch(search.value)" > 
+            </div>
+            <!--<div class="row align-items-center">
+              <div class="col">
+                <nb-select fullWidth name="permissions" status="privmary" placeholder="הרשאה" id="permissions" fieldSize="small" [(ngModel)]="user.permissions">
+                  <nb-option *ngFor="let permiss of permission" [value]="permiss">{{[permiss]}}</nb-option>
+                </nb-select>
+              </div>
+              <div class="col">
+                <button fullWidth nbButton  status="primary" (click)=updatePermissionUser(Personal.value)>שנה הרשאות</button>     
+              </div>
+            </div>-->
+          </div>
+          <!--<div [hidden]="Personal.invalid || Personal.undirty">
+            <div class="add-user-container" *ngIf="currentNode">
+              <nb-card status="primary">
+                <nb-card-header>
+                  <h3 style="color: white;">הוסף משתמש</h3>
+                </nb-card-header>
+                <nb-card-body>
+                  <form>
+                    <div class="row align-items-center" style="padding-bottom: 15px;">
+                      <label class="label">מספר מזהה: </label>
+                      <input type="text" #pN="ngModel" nbInput name="personalNumber" status="primary" placeholder="מספר אישי" required pattern="[somr][0-9]{7}" [(ngModel)]="newUserForm.personalNumber">
+                    </div>
                     
-          <label class="label">שם משתמש: </label>
-          <input type="text" #uN="ngModel" nbInput name="שם משתמש" status="primary" placeholder="שם משתמש" required pattern="[\w]{1,15}" [(ngModel)]="newUserForm.username">
+                    <div class="row align-items-center" style="padding-bottom: 15px;">
+                      <label class="label">שם משתמש: </label>
+                      <input type="text" #uN="ngModel" nbInput name="שם משתמש" status="primary" placeholder="שם משתמש" required pattern="[\w]{1,15}" [(ngModel)]="newUserForm.username">
+                    </div>
+                    <div class="row align-items-center" style="padding-bottom: 15px;">
+                      <label class="label">שם פרטי: </label>
+                      <input type="text" #fN="ngModel" nbInput name="שם פרטי" status="primary" placeholder="שם פרטי" required pattern=".{1,15}" [(ngModel)]="newUserForm.firstName">
+                    </div>
+  
+                    <div class="row align-items-center" style="padding-bottom: 15px;">
+                      <label class="label">סיסמה: </label>
+                      <input type="password" #pF="ngModel" nbInput name="סיסמה" status="primary" placeholder="סיסמה" required [(ngModel)]="newUserForm.password">
+                    </div>
+  
+                    <div class="row align-items-center">
+                      <label class="label">הרשאה: </label>
+                      <nb-select fullWidth name="permissions" status="privmary" placeholder="הרשאה" fieldSize="small" [(ngModel)]="newUserForm.permissions">
+                        <nb-option *ngFor="let permiss of permission" [value]="permiss">{{[permiss]}}</nb-option>
+                      </nb-select>
+                      <input type="text" #pF="ngModel" nbInput name="הרשאה" status="primary" placeholder="הרשאה" required [(ngModel)]="newUserForm.permissions">
+                    </div>
+                  </form>
+                  <p>יחידת המשתמש: <span style="font-weight:bold">{{this.pickedUpUnit}}</span></p>
+                  <button class="new-user-btn" nbButton [disabled]="pF.invalid || fN.invalid || pN.invalid || uN.invalid" #createNewUserButton (click)="createNewUser()">צור משתמש</button>
+                </nb-card-body>
+              
+              </nb-card>
+            </div>
+          </div>-->
+          <ng2-smart-table [settings]="settings" [source]="source" (userRowSelect)="tableRowClicked($event)" (deleteConfirm)="onUserDeleted($event)" (editConfirm)="onUserEdited($event)" (createConfirm)="onUserCreated($event)" ></ng2-smart-table>
+          <br>
           
-          <label class="label">שם פרטי: </label>
-          <input type="text" #fN="ngModel" nbInput name="שם פרטי" status="primary" placeholder="שם פרטי" required pattern=".{1,15}" [(ngModel)]="newUserForm.firstName">
-
-          <label class="label">סיסמה: </label>
-          <input type="password" #pF="ngModel" nbInput name="סיסמה" status="primary" placeholder="סיסמה" required [(ngModel)]="newUserForm.password">
-
-        </form>
-      </div>
-
-      <div class="row">
-        <p>יחידת השמשתמש: <span style="font-weight:bold">{{this.pickedUpUnit}}</span>, הרשאות המשתמש: <span style="font-weight:bold">צופה אירועים</span><p>
-        <button [disabled]="pF.invalid || fN.invalid || pN.invalid || uN.invalid" #createNewUserButton nbButton (click)="createNewUser()">צור משתמש</button>
-      </div>
-    </nb-card-body>
-    
-  </nb-card>
+          
+        </nb-card-body>
+      </nb-card>
+    </div>
+  
 </div>

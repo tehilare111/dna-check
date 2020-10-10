@@ -5,6 +5,7 @@ import { FormGroup, FormControl } from "@angular/forms";
 import { FormBaseComponent } from '../form-base.component'
 import { LostFormTemplate } from '../events-forms.templates';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -29,8 +30,21 @@ export class LostFormComponent extends FormBaseComponent<LostFormTemplate, Event
   //equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
   //equipmentsTypeOptions = []
   
-  constructor(
-    ) {
+  //event to eventApproval component.
+  eventsSubject: Subject<void> = new Subject<void>();
+  eventAuthorizers: string[] = [];
+
+  // Used for emmiting the submit to the eventApproval component.
+  emitEventToChild() {
+    this.eventsSubject.next();
+  }
+
+  updateEventAuthorizers(event){
+    this.eventAuthorizers = event;
+    console.log(event);
+  }
+
+  constructor() {
       super();
     }
 
@@ -75,11 +89,16 @@ export class LostFormComponent extends FormBaseComponent<LostFormTemplate, Event
     });
   }
 
-  onSubmit() {
+  onEventSubmit(isFinished) {
     this.uploadLoading = true
+
+    this.emitEventToChild(); // updates the eventAuthorizers.
     
     this.updateValidationFormGroup();
 
-    super.onSubmit();
-  }  
+    this.form.eventAuthorizers = this.eventAuthorizers;
+
+    (isFinished) ?  this.sendEvent() : this.saveEvent();
+    //super.onSubmit(this.eventAuthorizers, isFinished);
+  } 
 }

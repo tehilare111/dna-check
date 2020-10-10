@@ -21,9 +21,13 @@ class Users(AbstractUser):
     USERNAME_FILED='last_login'
     manager_system = 1
     edit_events = 2
-    watching_events =3
+    check_events = 3
+    reporter_manager = 4
+    event_authorizer = 5
     ROLE_CHOICES = (
         (manager_system, 'מנהלן'),
         (edit_events, 'מדווח אירועים'),
-        (watching_events, 'צופה אירועים'),
+        (check_events, 'בודק אירועים'),
+        (reporter_manager, 'מנהלן הרשאות'), # maybe we should call him מדווח מנהלן
+        (event_authorizer, 'מאשר אירועים') # temporary user.
     )

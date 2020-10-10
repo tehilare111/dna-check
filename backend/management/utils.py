@@ -52,6 +52,23 @@ def find_unit_node(node, name):
     
     return stringed_result
 
+def get_inferior_units_tree(units_tree, unit):
+    if(units_tree["name"] == unit):
+        return units_tree
+    for unit_tree in units_tree['children']:
+        found = get_inferior_units_tree(unit_tree, unit)
+        if found:
+            return found
+    return ""
+
+def replace_unit_on_tree(tree, unit, new_unit_tree):
+    if(tree["name"] == unit):
+        return new_unit_tree
+    index = 0
+    for sub_unit in tree["children"]:
+        tree["children"][index] = replace_unit_on_tree(sub_unit, unit, new_unit_tree)
+        index += 1
+    return tree
 
 
 

@@ -5,6 +5,7 @@ import { FormGroup, FormControl } from "@angular/forms";
 import { FormBaseComponent } from '../form-base.component'
 import { CorruptionFormTemplate } from '../events-forms.templates';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -28,9 +29,17 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
   equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
   materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
   equipments = [{"name": "ציוד", "list" : this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+
+  //event to eventApproval component.
+  eventsSubject: Subject<void> = new Subject<void>();
+  eventAuthorizers:string[] = [];
+
+  // Used for emmiting the submit to the eventApproval component.
+  emitEventToChild() {
+    this.eventsSubject.next();
+  }
   
-  constructor(
-    ) {
+  constructor() {
       super();
     }
 
@@ -42,6 +51,10 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
     this.form.eventType = this.eventType
     
     super.ngOnInit()
+  }
+
+  updateEventAuthorizers(event){
+    this.eventAuthorizers = event;
   }
 
   getConstasFeilds() {
@@ -71,11 +84,16 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
   }
 
     
-  onSubmit() {
+  onEventSubmit(isFinished) {
     this.uploadLoading = true
+
+    this.emitEventToChild(); // updates the eventAuthorizers.
     
     this.updateValidationFormGroup();
 
-    super.onSubmit();
-  }
+    this.form.eventAuthorizers = this.eventAuthorizers;
+
+    (isFinished) ?  this.sendEvent() : this.saveEvent();
+    //super.onSubmit(this.eventAuthorizers, isFinished);
+  } 
 }
