@@ -258,6 +258,7 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
     });
   }
 
+
   formClicked(event) {
     let path = ''
     for(let [key, value] of Object.entries(this.eventsToPickUp)){

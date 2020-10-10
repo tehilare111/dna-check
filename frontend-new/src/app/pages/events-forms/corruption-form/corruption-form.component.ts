@@ -8,6 +8,9 @@ import { EventStatusComponent } from '../components/event-status/event-status.co
 import { DataRowOutlet } from '@angular/cdk/table';
 import { ConstantsFieldsComponent } from '../../constants-fields/constants-fields.component';
 
+import { Subject } from 'rxjs';
+
+
 @Component({
   selector: 'ngx-form-layouts',
   templateUrl: './corruption-form.component.html',
@@ -32,9 +35,15 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
   materialsType = []
   equipments = [{"name": "ציוד", "list" : this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
   equipmentsTypeOptions: any [];
+  //event to eventApproval component.
+  eventsSubject: Subject<void> = new Subject<void>();
+
+  // Used for emmiting the submit to the eventApproval component.
+  emitEventToChild() {
+    this.eventsSubject.next();
+  }
   
-  constructor(
-    ) {
+  constructor() {
       super();
     }
 
@@ -46,6 +55,10 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
     this.form.eventType = this.eventType
     
     super.ngOnInit()
+  }
+
+  updateEventAuthorizers(event){
+    this.form.eventAuthorizers = event;
   }
 
   getConstasFeilds() {
@@ -89,11 +102,14 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
   }
 
     
-  onSubmit() {
+  onEventSubmit(isFinished) {
     this.uploadLoading = true
+
+    this.emitEventToChild(); // updates the eventAuthorizers.
     
     this.updateValidationFormGroup();
 
-    super.onSubmit();
-  }
+    (isFinished) ?  this.sendEvent() : this.saveEvent();
+    //super.onSubmit(this.eventAuthorizers, isFinished);
+  } 
 }

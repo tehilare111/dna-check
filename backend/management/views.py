@@ -6,35 +6,43 @@ from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser
 from rest_framework import status
 from django.conf import settings
 
-from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
 from management.models import UnitsTree, ConstantsFields, ConstantFieldsWithId
 from management.serializers import UnitsTreeSerializer, ConstantsFieldsSerializer, ConstantFieldsWithIdSerializer
-from management.utils import get_inferior_units, constants_fields_array, units_array, UNITS_TREE_OBJECT_STATIC_ID, CONSTATNS_FIELDS_OBJECT_STATIC_ID
+from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER
+from management.utils import get_inferior_units, constants_fields_array, units_array, UNITS_TREE_OBJECT_STATIC_ID, CONSTATNS_FIELDS_OBJECT_STATIC_ID, get_sub_tree, replace_unit_on_tree
 
 #############################################################
 #                        Units tree                         #
-#############################################################        
+#############################################################    
+
 @csrf_exempt 
-@check_permissions_dec([MANAGER])
-def units_tree_management(request):    
+@check_permissions_dec([MANAGER, REPORTER_MANAGER])
+def get_units_tree(request, unit):   
+    try: 
+        units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
+    except UnitsTree.DoesNotExist: 
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        units_tree.treeNode = [get_sub_tree(units_tree.treeNode[0], unit)] # Returns only the units tree of the requested unit. 
+        units_tree_serializer = UnitsTreeSerializer(units_tree)
+        return JsonResponse(units_tree_serializer.data, safe=False)
+
+@csrf_exempt 
+@check_permissions_dec([MANAGER, REPORTER_MANAGER])
+def units_tree_modify(request, unit):    
     try: 
         units_tree = UnitsTree.objects.get(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
     except UnitsTree.DoesNotExist: 
         units_tree = None
-
-    if request.method == 'GET':
-        if not units_tree:
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
-
-        units_tree_serializer = UnitsTreeSerializer(units_tree)
-        return JsonResponse(units_tree_serializer.data, safe=False)
     
-    elif request.method == 'POST':
+    if request.method == 'POST':
         data = JSONParser().parse(request)
+        if units_tree: data["treeNode"][0] = replace_unit_on_tree(units_tree.treeNode[0], unit, data["treeNode"][0])
         units_tree_serializer = UnitsTreeSerializer(data=data) if not units_tree else UnitsTreeSerializer(units_tree, data=data)
             
         if units_tree_serializer.is_valid():
-            units_tree_serializer.save(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID) 
+            units_tree_serializer.save(unitTreeId=UNITS_TREE_OBJECT_STATIC_ID)
             return JsonResponse(units_tree_serializer.data,safe=False)  
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST) 
@@ -145,7 +153,7 @@ def constants_fields(request):
 
 
 @csrf_exempt
-@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER])
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER])
 def constans_fields_and_units(request):
     if request.method == 'GET':
         data = {}

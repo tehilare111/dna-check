@@ -17,10 +17,12 @@ import { auth2StrategyOptions } from '@nebular/auth';
 export class PagesComponent {
   authService : AuthService = new AuthService()
   MENUS : MENUS = new MENUS();
-  array_permissions = ["מנהלן מערכת"]
+  adminPermissions = ["מנהלן מערכת"];
+  managerReporterPermissions = ["מנהלן הרשאות"];
   
   get_permissions(){
-    return (this.authService.check_permissions(this.array_permissions)) ? 
-        this.MENUS.ADMIN_MENU : this.MENUS.DEF_MENU;
+    return (this.authService.check_permissions(this.adminPermissions)) ? this.MENUS.ADMIN_MENU : 
+        (this.authService.check_permissions(this.managerReporterPermissions)) ? this.MENUS.MANAGER_REPORTER_MENU : 
+        this.MENUS.DEF_MENU;
   }
 }

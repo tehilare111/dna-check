@@ -26,3 +26,13 @@
   // loading progress bar
   @include ngx-pace-theme();
 };
+
+//custom-dialog styling for actions confirmation 
+.custom-dialog{
+  mat-dialog-container {
+    box-shadow: 0 11px 15px -7px rgba(0,0,0,.2), 0 24px 38px 3px rgba(0,0,0,.14), 0 9px 46px 8px rgba(0,0,0,.12);
+    background: #fff;
+    color: rgba(0,0,0,.87);
+    text-align: center;
+  }
+}

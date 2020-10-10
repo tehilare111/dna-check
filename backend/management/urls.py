@@ -5,7 +5,8 @@ from django.conf.urls.static import static
  
 urlpatterns = [
     # management request
-    url(r'^units-management/$', views.units_tree_management),
+    url(r'get-units/(?P<unit>.*)$', views.get_units_tree),
+    url(r'^units-management/(?P<unit>.*)$', views.units_tree_modify),
     url(r'^constants-fields/$', views.constants_fields),
     url(r'^add-constant-fields/$', views.add_constant_fields),
     # url(r'^delete-constant-field/$', views.delete_constant_field),

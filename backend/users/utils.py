@@ -12,9 +12,9 @@ from django.contrib.auth import get_user_model
 
 MANAGER="מנהלן מערכת"
 EVENTS_REPORTER="מדווח אירועים"
-EVENTS_VIEWER="צופה אירועים"
-
-
+EVENTS_CHECKER="בודק אירועים"
+REPORTER_MANAGER="מנהלן הרשאות" # maybe we should call him מדווח מנהלן
+EVENT_AUTHORIZER="מאשר אירועים" # Temporary permission, exists just until he doing the action he authorized to
 secret='''PDvnOudatcLzb/i2cCVFQgIEUgTbehke5iN2QRF7Vqo2zYOzdXMuelzf5/DL+g7+
         sdXic+dLR+obFfHNwMjmaQLFRM8IAtjT2iLlIBc1amcUMx2Vy5dIlVWTA0p79bkL
         syRrY+HK8IGok4tmPAOgDIesVnWeT1i1R/7gc6jX2J84UeKM0f4wIqE/zx0oR8XI
@@ -36,7 +36,7 @@ def create_jwt(user_data):
         password = user_data['password']
         user = authenticate(username=username, password=password)
         if user is not None:
-            expiry = datetime.date.today() + timedelta(days=50)
+            expiry = datetime.date.today() + timedelta(days=50) # never used, why?
         token = jwt.encode({'username': username,'password':password}, 'secret', algorithm='HS256')
         if check_token(token):
             return token

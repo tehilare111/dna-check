@@ -1,5 +1,5 @@
 
-<ngx-form-top-buttons (sendEvent)="sendEvent()" (printForm)="printForm()" (updateEditState)="updateEditState()" (saveEvent)="saveEvent()" (deleteEventForm)="deleteEventForm()" [reference]="reference" [reporterUnit]="form.reporterUnit" id="outOfPrint"></ngx-form-top-buttons>
+<ngx-form-top-buttons (sendEvent)="onEventSubmit(true)" (printForm)="printForm()" (updateEditState)="updateEditState()" (saveEvent)="onEventSubmit(false)" (deleteEventForm)="deleteEventForm()" [reference]="reference" [reporterUnit]="form.reporterUnit" id="outOfPrint"></ngx-form-top-buttons>
 
 <div *ngIf="isDraft"><p class="red">טיוטה</p></div>
 
@@ -62,15 +62,15 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="eventDate" class="label">תאריך גילוי האירוע</label>
-                <input  (click)="checkChangeData()"[disabled]="this.form.editStateBlocked"  [nbDatepicker]="eventdatepicker" nbInput fullWidth name="eventDate" id="eventDate" #eventDate="ngModel" status="primary" placeholder="תאריך גילוי האירוע" [(ngModel)]="this.form.eventDate"  dateValidation >
-                <nb-datepicker  status="primary" #eventdatepicker format="dd/MM/yyyy"></nb-datepicker>
+                <input [disabled]="this.form.editStateBlocked" [nbDatepicker]="datepicker" (input)="checkChangeData()"   nbInput fullWidth name="eventDate" id="eventDate" #eventDate="ngModel" status="primary" placeholder="תאריך גילוי האירוע" [(ngModel)]="this.form.eventDate"  dateValidation >
+                <nb-datepicker  status="primary" #datepicker format="dd/MM/yyyy"></nb-datepicker>
                 <!-- <div *ngIf="eventDate.invalid&&eventDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div> -->
               </div>
             </div>
             <div class="col-md-1.5 ">
               <div class="form-group">
                 <label for="eventHour" class="label">שעת גילוי האירוע</label>
-                  <ngx-timepicker-field  class="ngx-timepicker" [format]="24"  #eventHour name="eventHour" id="eventHour"  [(ngModel)]="form.eventHour" [controlOnly]="true"[disabled]= "this.form.editStateBlocked" timeValidation></ngx-timepicker-field>
+                  <ngx-timepicker-field  class="ngx-timepicker" [format]="24" [defaultTime]="'12:34'" (input)="checkChangeData()"   #eventHour name="eventHour" id="eventHour"  [(ngModel)]="form.eventHour" [controlOnly]="true"[disabled]= "this.form.editStateBlocked" timeValidation></ngx-timepicker-field>
                 <div *ngIf="eventHour.invalid&&eventHour.dirty"><label class="label red">פורמט השעה: 00:00</label></div>
               </div>
             </div>
@@ -131,84 +131,88 @@
       <div style="display: flex; justify-content: center;">
         <h6><b><u>טיפול באירוע</u></b></h6>
       </div>
-      <form>
-        <h6><b>פרטי הבירור:</b></h6>
-        <div class="row">
-          <div class="col-md-2">
-            <div class="form-group">
-              <label for="investigationDate" class="label">תאריך הבירור</label>
-              <input (click)="checkChangeData()" [disabled]="this.form.editStateBlocked" [nbDatepicker]="investigationDate" (input)="checkChangeData()" nbInput fullWidth name="investigationDate" #investigationDate="ngModel" id="investigationDate" status="primary" placeholder="תאריך הבירור" [(ngModel)]="form.investigationDate"  dateValidation>
-              <nb-datepicker  status="primary" #investigationDate format="dd/MM/yyyy"></nb-datepicker>
-              <!-- <div *ngIf="investigationDate.invalid&&investigationDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div> -->
+      <div class="row">
+        <div class="col-md-8">
+          <form>
+            <h6><b>פרטי הבירור:</b></h6>
+            <div class="row">
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="investigationDate" class="label">תאריך הבירור</label>
+                  <input [disabled]="this.form.editStateBlocked" [nbDatepicker]="investigationDate" (input)="checkChangeData()" nbInput fullWidth name="investigationDate" #investigationDate="ngModel" id="investigationDate" status="primary" placeholder="תאריך הבירור" [(ngModel)]="form.investigationDate"  dateValidation>
+                  <nb-datepicker  status="primary" #investigationDate format="dd/MM/yyyy"></nb-datepicker>
+                  <!-- <div *ngIf="investigationDate.invalid&&investigationDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div> -->
+                </div>
+              </div>
+              <div *ngIf="form.investigationFile" class="col-md-4">
+                <label  class="label">קבצי הבירור</label>
+                <div *ngFor="let investfile of form.investigationFile">
+                  <ngx-file-download-button [fileFullName]="investfile"></ngx-file-download-button>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="investigationFile" class="label">צרף קובץ</label>
+                  <input [readonly]="this.form.editStateBlocked" type="file" (change)="handleFileUpload($event);checkChangeData()" name="investigationFile" id="investigationFile" multiple>
+                </div>
+              </div>
             </div>
-          </div>
-        
-        <div *ngIf="form.investigationFile" class="col-md-4">
-          <label  class="label">קבצי הבירור</label>
-          <div *ngFor="let investfile of form.investigationFile">
-            <ngx-file-download-button [fileFullName]="investfile"></ngx-file-download-button>
-          </div>
+            <h6><b>פרטי המציאה:</b></h6>
+            <div class="row">
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="findingDate" class="label">תאריך המציאה</label>
+                  <input [disabled]="this.form.editStateBlocked" [nbDatepicker]="findingDate" (input)="checkChangeData()" nbInput fullWidth #findingDate="ngModel" name="findingDate" id="findingDate" status="primary" placeholder="תאריך המציאה" [(ngModel)]="form.findingDate"  dateValidation>
+                  <nb-datepicker status="primary" #findingDate format="dd/MM/yyyy"></nb-datepicker>
+                  <!-- <div *ngIf="findingDate.invalid&&findingDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div> -->
+                </div>
+              </div>
+              <div *ngIf="form.findingFile" class="col-md-4">
+              <label  class="label">קבצי המציאה</label>
+                <div *ngFor="let findFile of form.findingFile">
+                <ngx-file-download-button [fileFullName]="findFile"></ngx-file-download-button>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="findingFile" class="label">צרף קובץ</label>
+                  <input [readonly]="this.form.editStateBlocked" type="file" (change)="handleFileUpload($event);checkChangeData()" name="findingFile" id="findingFile" multiple>
+                </div>
+              </div>
+            </div>
+            <h6><b>פרטי הטיפול:</b></h6>
+            <div class="row">
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="handlingDate" class="label">תאריך הטיפול</label>
+                  <input [disabled]="this.form.editStateBlocked" [nbDatepicker]="handlingDatepicker" (input)="checkChangeData()" nbInput fullWidth #handlingDate="ngModel" name="handlingDate" id="handlingDate" status="primary" placeholder="תאריך הטיפול" [(ngModel)]="form.handlingDate"  dateValidation>
+                  <nb-datepicker  status="primary" #handlingDatepicker format="dd/MM/yyyy"></nb-datepicker>
+                  <!-- <div *ngIf="handlingDate.invalid&&handlingDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div> -->
+                </div>
+              </div>
+              <div *ngIf="form.handlingFile" class="col-md-4">
+                <label  class="label">קבצי הטיפול</label>
+                <div *ngFor="let handlFile of form.handlingFile">
+                  <ngx-file-download-button [fileFullName]="handlFile"></ngx-file-download-button>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="handlingFile" class="label">צרף קובץ</label>
+                  <input  [readonly]="this.form.editStateBlocked" type="file" (change)="handleFileUpload($event);checkChangeData()" name="handlingFile" id="handlingFile" multiple>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="form.reference" #chatWrapper id="outOfPrint">
+              <chat #chat [messages]="msgs" [reference]="form.reference"></chat>
+            </div>
+          </form>
         </div>
-        <div class="col-md-2">
-          <div class="form-group">
-            <label for="investigationFile" class="label">צרף קובץ</label>
-            <input [readonly]="this.form.editStateBlocked" type="file" (change)="handleFileUpload($event);checkChangeData()" name="investigationFile" id="investigationFile" multiple>
-          </div>
-        </div>
-      </div>
-      <h6><b>פרטי המציאה:</b></h6>
-      <div class="row">
-        <div class="col-md-2">
-          <div class="form-group">
-            <label for="findingDate" class="label">תאריך המציאה</label>
-            <input (click)="checkChangeData()" [disabled]="this.form.editStateBlocked" [nbDatepicker]="findingDate" (input)="checkChangeData()" nbInput fullWidth #findingDate="ngModel" name="findingDate" id="findingDate" status="primary" placeholder="תאריך המציאה" [(ngModel)]="form.findingDate"  dateValidation>
-            <nb-datepicker status="primary" #findingDate format="dd/MM/yyyy"></nb-datepicker>
-            <!-- <div *ngIf="findingDate.invalid&&findingDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div> -->
-          </div>
-        </div>
-
-
-        <div *ngIf="form.findingFile" class="col-md-4">
-        <label  class="label">קבצי המציאה</label>
-          <div *ngFor="let findFile of form.findingFile">
-          <ngx-file-download-button [fileFullName]="findFile"></ngx-file-download-button>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="form-group">
-            <label for="findingFile" class="label">צרף קובץ</label>
-            <input [readonly]="this.form.editStateBlocked" type="file" (change)="handleFileUpload($event);checkChangeData()" name="findingFile" id="findingFile" multiple>
-
-          </div>
-        </div>
-      </div>
-      <h6><b>פרטי הטיפול:</b></h6>
-      <div class="row">
-        <div class="col-md-2">
-          <div class="form-group">
-            <label for="handlingDate" class="label">תאריך הטיפול</label>
-            <input (click)="checkChangeData()" [disabled]="this.form.editStateBlocked" [nbDatepicker]="handlingDatepicker" (input)="checkChangeData()" nbInput fullWidth #handlingDate="ngModel" name="handlingDate" id="handlingDate" status="primary" placeholder="תאריך הטיפול" [(ngModel)]="form.handlingDate"  dateValidation>
-            <nb-datepicker  status="primary" #handlingDatepicker format="dd/MM/yyyy"></nb-datepicker>
-            <!-- <div *ngIf="handlingDate.invalid&&handlingDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div> -->
-          </div>
-        </div>
-        <div *ngIf="form.handlingFile" class="col-md-4">
-          <label  class="label">קבצי הטיפול</label>
-          <div *ngFor="let handlFile of form.handlingFile">
-          <ngx-file-download-button [fileFullName]="handlFile"></ngx-file-download-button>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="form-group">
-            <label for="handlingFile" class="label">צרף קובץ</label>
-            <input  [readonly]="this.form.editStateBlocked" type="file" (change)="handleFileUpload($event);checkChangeData()" name="handlingFile" id="handlingFile" multiple>
-          </div>
+        <div class="col-md-4">
+          <event-share [eventAuthorizers]="form.eventAuthorizers" [editStateBlocked]="this.form.editStateBlocked" [events]='eventsSubject.asObservable()' (onEventSubmit)="updateEventAuthorizers($event)"></event-share> 
         </div>
       </div>
-      <div *ngIf="form.reference" #chatWrapper id="outOfPrint">
-        <chat #chat [messages]="msgs" [reference]="form.reference"></chat>
-      </div>
-    </form>
+      
     </nb-card-body>
   </nb-card>
 </div>

@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 from draft_forms.models import DraftFormsTable
 from forms.models import FormsTable
 from forms.serializers import FormsSerializer
-from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
+from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER
 from management.utils import get_inferior_units
 from msgs.utils import new_event_msgs, delete_event_messages, update_user_event_deleted
 
@@ -22,7 +22,7 @@ import csv
 from datetime import datetime
 
 @csrf_exempt
-@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_USER=True)
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER], RETURN_USER=True)
 def forms_list(request, event_type, user):
     '''
         Responsible to hendle requests from main control table page.
@@ -46,7 +46,7 @@ def forms_list(request, event_type, user):
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 @csrf_exempt
-@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER])
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER]) # maybe EVENT_AUTHORIZER needs to be removed
 def new_event_form(request):
     '''
         New Event Form load all its initial values from here.
@@ -58,7 +58,7 @@ def new_event_form(request):
         return JsonResponse(payload, safe=False)
             
 @csrf_exempt
-@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER])
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER])
 def download_file(request, path):
     '''
         Download file from given path in the request url.
@@ -71,7 +71,7 @@ def download_file(request, path):
             return response
     
 @csrf_exempt
-@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER])
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER])
 def download_xl_file(request, event_type):
     '''
         Export xl file following the given url
@@ -105,7 +105,7 @@ class OfficialEventFrom(APIView):
 
     parser_classes = (MultiPartParser, FormParser)
     
-    @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)
+    @check_permissions_dec([MANAGER, EVENTS_REPORTER, REPORTER_MANAGER], API_VIEW=True)
     def post(self, request, reference, *args, **kwargs):
         form_serializer = FormsSerializer(data=request.data)
         if form_serializer.is_valid():
@@ -116,8 +116,8 @@ class OfficialEventFrom(APIView):
             return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
-        
-    @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)
+
+    @check_permissions_dec([MANAGER, EVENTS_REPORTER, REPORTER_MANAGER], API_VIEW=True)
     def put(self, request, reference,*args, **kwargs):
         try: 
             event_form = FormsTable.objects.get(reference=reference)
@@ -130,8 +130,7 @@ class OfficialEventFrom(APIView):
         else:
             return HttpResponse(form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    
-    @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], API_VIEW=True)
+    @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER], API_VIEW=True)
     def get(self, request, reference, *args, **kwargs):
         try: 
             event_form = FormsTable.objects.get(reference=reference)

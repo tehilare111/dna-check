@@ -42,9 +42,9 @@ import { EventStatusShortedComponent } from './components/event-status-shorted/e
 import { CorruptionFormComponent } from './corruption-form/corruption-form.component';
 import { FileDownloadButtonComponent } from './components/file-download-button/file-download-button.component';
 import { FormTopButtonsComponent } from './components/form-top-buttons/form-top-buttons.component';
-
 import {NbDateFnsDateModule} from '@nebular/date-fns';
 import { PendingChangesGuardGuard } from '../pending-changes-guard.guard';
+import { EventShareComponent } from './components/event-share/event-share.component';
 
 
 @NgModule({
@@ -91,6 +91,7 @@ import { PendingChangesGuardGuard } from '../pending-changes-guard.guard';
     EventStatusShortedComponent,
     FileDownloadButtonComponent,
     FormTopButtonsComponent,
+    EventShareComponent,
   ],
 })
 export class FormsModule { }

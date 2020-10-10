@@ -7,25 +7,24 @@ from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from management.utils import constants_fields_array
 from management.models import UnitsTree, ConstantsFields
-from users.utils import check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER, check_token, create_jwt
+from users.utils import check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, check_token, create_jwt, REPORTER_MANAGER
 
 
 ###############################################################
 #                      Create new user                        #
 ###############################################################
 @csrf_exempt 
-@check_permissions_dec([MANAGER])
+@check_permissions_dec([MANAGER, REPORTER_MANAGER])
 def create_user(request):
     user_data = JSONParser().parse(request)
     user_serializer = UsersSerilazers(data=user_data)
-    
     if request.method == 'POST':
-        
         if(user_serializer.is_valid() and not check_user_and_personal_number(user_data)):
             user_serializer.save()
             return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
         return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+    
 ###############################################################
 #                         Login page                          #
 ###############################################################
@@ -61,7 +60,7 @@ def check_user_and_personal_number(user_data):
 #                    Get groups permissions                   #
 ###############################################################
 @csrf_exempt 
-@check_permissions_dec([MANAGER])
+@check_permissions_dec([MANAGER, REPORTER_MANAGER])
 def groups_permissions_list(request, unit, token):
     if request.method == 'GET':
             users = Users.objects.filter(unit=unit)
@@ -74,18 +73,34 @@ def groups_permissions_list(request, unit, token):
 #                         Update user                         #
 ###############################################################
 @csrf_exempt 
-@check_permissions_dec([MANAGER])
+@check_permissions_dec([MANAGER, REPORTER_MANAGER])
 def update_permissions_users(request, personalnumber):
     try: 
         event_form = Users.objects.get(personalNumber=personalnumber)
     except Users.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
     if request.method=='GET':
-            customer_serializer = UsersSerilazers(event_form)
-            return JsonResponse(customer_serializer.data)
+        customer_serializer = UsersSerilazers(event_form)
+        return JsonResponse(customer_serializer.data)
     elif request.method == 'PUT':
         form_data = JSONParser().parse(request)
         form_serializer = UsersSerilazers(event_form, data=form_data["permissions"])
         if form_serializer.is_valid():
             form_serializer.save()
-            return JsonResponse({"data":form_serializer.data},status=status.HTTP_204_NO_CONTENT)
+            return JsonResponse({"data":form_serializer.data})
+        else:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+
+###############################################################
+#                         Delete user                         #
+###############################################################
+@csrf_exempt 
+@check_permissions_dec([MANAGER, REPORTER_MANAGER])
+def delete_user(request, personalNumber):
+    if request.method=='DELETE':
+        user = Users.objects.filter(personalNumber=personalNumber) # Looking for user with this personal number at the DB.
+        if not user.exists():
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND) # Return 404 if there is no user with this personal number in the DB.
+        user.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+            

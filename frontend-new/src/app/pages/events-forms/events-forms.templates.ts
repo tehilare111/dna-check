@@ -8,6 +8,7 @@ export class Form{
     messages: any[];
     writtenInFormals: boolean = false;
     writtenInDrafts: boolean = false;
+    eventAuthorizers: string[] = [];
 }
 
 export class EventForm extends Form{

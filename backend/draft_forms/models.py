@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from multiplefilefield.fields import MultipleFileModelField
 
@@ -21,6 +22,7 @@ class DraftForm(models.Model):
     editStateBlocked = models.BooleanField(default=False)
     writtenInFormals = models.BooleanField(default=False)
     writtenInDrafts = models.BooleanField(default=False)
+    eventAuthorizers = ArrayField(models.CharField(blank=True, max_length=70), default=[]) # array of event_authorizers personal number . type : string[] 
 
     class Meta:
       abstract = True

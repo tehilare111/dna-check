@@ -1,0 +1,3 @@
+<nb-select fullWidth name="permissions" placeholder="הרשאה" fieldSize="small" [(ngModel)]="permissions" (selectedChange)='onItemSelected($event)'>
+  <nb-option *ngFor="let permiss of permission" [value]="permiss">{{[permiss]}}</nb-option>
+</nb-select>

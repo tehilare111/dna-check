@@ -1,0 +1,14 @@
+<h6>:הוסף גורם\מים מאשר\ים</h6>
+<div class="row">
+  <div class="col-md-12">
+    <div class="form-group">
+      <input type="text" nbInput fullWidth #eventAuthorizer="ngModel" status="primary" [(ngModel)]="factorId" placeholder="מספר מזהה" pattern="^[somr][0-9]{7}$" required> 
+      <button nbButton status="primary" [disabled]="!eventAuthorizer.valid" (click)="addEventAutorizer(eventAuthorizer.value)">הוסף מאשר</button>
+    </div> 
+    <ul>
+      <li *ngFor="let id of eventAuthorizers">{{ id }}
+        <button [disableRipple]="true" mat-icon-button (click)="removeEventAuthorizer(id)"><mat-icon>delete</mat-icon></button> 
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,7 +1,4 @@
-
-<ngx-form-top-buttons [editStateBlocked]="this.form.editStateBlocked" (sendEvent)="sendEvent()" (printForm)="printForm()" (updateEditState)="updateEditState()" (saveEvent)="saveEvent()" (deleteEventForm)="deleteEventForm()" [isDraft]="isDraft" [reference]="reference" [reporterUnit]="form.reporterUnit" id="outOfPrint"></ngx-form-top-buttons>
-
-
+<ngx-form-top-buttons [editStateBlocked]="this.form.editStateBlocked" (sendEvent)="onEventSubmit(true)" (printForm)="printForm()" (updateEditState)="updateEditState()" (saveEvent)="onEventSubmit(false)" (deleteEventForm)="deleteEventForm()" [isDraft]="isDraft" [reference]="reference" [reporterUnit]="form.reporterUnit" id="outOfPrint"></ngx-form-top-buttons>
 
 <div class="row" id="print-section">
   <div class="col-md-3">
@@ -133,49 +130,53 @@
         <div style="display: flex; justify-content: center;">
           <h6><u>טיפול באירוע</u></h6>
         </div>
-        <form>
-          <h6>פרטי הבירור:</h6>
-          <div class="row">
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="investigationDate" class="label">תאריך הבירור</label>
-                <input [readonly]="auth.check_permissions(['צופה אירועים'])" type="text" nbInput fullWidth name="investigationDate" #investigationDate="ngModel" id="investigationDate" status="primary" placeholder="תאריך הבירור" [(ngModel)]="form.investigationDate"  dateValidation>
-                <div *ngIf="investigationDate.invalid&&investigationDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div>
+        <div class="row">
+          <div class="col-md-8">
+            <form>
+              <h6>פרטי הבירור:</h6>
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <label for="investigationDate" class="label">תאריך הבירור</label>
+                    <input [readonly]="auth.check_permissions(['מאשר אירועים','צופה אירועים'])" type="text" nbInput fullWidth name="investigationDate" #investigationDate="ngModel" id="investigationDate" status="primary" placeholder="תאריך הבירור" [(ngModel)]="form.investigationDate"  dateValidation>
+                    <div *ngIf="investigationDate.invalid&&investigationDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div>
+                  </div>
+                </div>
+                <div *ngIf="form.investigationFile" class="col-md-3">
+                  <ngx-file-download-button [fileFullName]="form.investigationFile"></ngx-file-download-button>
+                </div>
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <label for="investigationFile" class="label">צרף קובץ</label>
+                    <input [disabled]="auth.check_permissions(['מאשר אירועים','צופה אירועים'])" type="file" (change)="handleFileUpload($event)" name="investigationFile" id="investigationFile">
+              <h6>פרטי הטיפול:</h6>
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <label for="handlingDate" class="label">תאריך הטיפול</label>
+                    <input [readonly]="auth.check_permissions(['צופה אירועים'])" type="text" nbInput fullWidth #handlingDate="ngModel" name="handlingDate" id="handlingDate" status="primary" placeholder="תאריך הטיפול" [(ngModel)]="form.handlingDate"  dateValidation>
+                    <div *ngIf="handlingDate.invalid&&handlingDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div>
+                  </div>
+                </div>
+                <div *ngIf="form.handlingFile" class="col-md-3">
+                  <ngx-file-download-button [fileFullName]="form.handlingFile"></ngx-file-download-button>
+                </div>
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <label for="handlingFile" class="label">צרף קובץ</label>
+                    <input [disabled]="auth.check_permissions(['צופה אירועים'])" type="file" (change)="handleFileUpload($event)" name="handlingFile" id="handlingFile">
+                  </div>
+                </div>
               </div>
-            </div>
-            <div *ngIf="form.investigationFile" class="col-md-3">
-              <ngx-file-download-button [fileFullName]="form.investigationFile"></ngx-file-download-button>
-            </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="investigationFile" class="label">צרף קובץ</label>
-                <input [disabled]="auth.check_permissions(['צופה אירועים'])" type="file" (change)="handleFileUpload($event)" name="investigationFile" id="investigationFile">
+              <div *ngIf="form.reference" #chatWrapper id="outOfPrint">
+                <chat #chat [messages]="msgs" [reference]="form.reference"></chat>
               </div>
-            </div>
+            </form>
           </div>
-          <h6>פרטי הטיפול:</h6>
-          <div class="row">
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="handlingDate" class="label">תאריך הטיפול</label>
-                <input [readonly]="auth.check_permissions(['צופה אירועים'])" type="text" nbInput fullWidth #handlingDate="ngModel" name="handlingDate" id="handlingDate" status="primary" placeholder="תאריך הטיפול" [(ngModel)]="form.handlingDate"  dateValidation>
-                <div *ngIf="handlingDate.invalid&&handlingDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div>
-              </div>
-            </div>
-            <div *ngIf="form.handlingFile" class="col-md-3">
-              <ngx-file-download-button [fileFullName]="form.handlingFile"></ngx-file-download-button>
-            </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="handlingFile" class="label">צרף קובץ</label>
-                <input [disabled]="auth.check_permissions(['צופה אירועים'])" type="file" (change)="handleFileUpload($event)" name="handlingFile" id="handlingFile">
-              </div>
-            </div>
+          <div class="col-md-4">
+            <event-share [eventAuthorizers]="form.eventAuthorizers" [editStateBlocked]="this.form.editStateBlocked" [events]='eventsSubject.asObservable()' (onEventSubmit)="updateEventAuthorizers($event)"></event-share>
           </div>
-          <div *ngIf="form.reference" #chatWrapper id="outOfPrint">
-            <chat #chat [messages]="msgs" [reference]="form.reference"></chat>
-          </div>
-        </form>
+        </div>
       </nb-card-body>
     </nb-card>
   </div>  

@@ -25,6 +25,7 @@ import {format} from 'date-fns'
 import { Observable } from 'rxjs';
 
 
+import { User } from '../management/users';
 export abstract class FormBaseComponent<FormType extends EventForm, EventStatusType extends EventStatusBase> implements OnInit {
   
   /* Angular and ngx-admin imports */
@@ -67,6 +68,9 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   constantsFieldsComponent = new ConstantsFieldsComponent(null, null)
   fieldsValid =false
 
+  ADMINISTRATIVE_UNIT = "יחידה מנהלת"; // const that define the administrative unit, assigned to eventAuthorizer unit. Because he should get access to all the forms he assigned to. 
+
+
   constructor(){
       this.RestApiService = AppInjector.injector.get(RestApiService);
       this.auth = AppInjector.injector.get(AuthService);
@@ -91,6 +95,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   exisitingFormLoadData(reference: string){
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
       let regEx = /^\d\d\d\d\-\d\d\-\d\d$/i; //django represention of date in db
+      data.eventAuthorizers = data.eventAuthorizers[0].split(","); // The fucking django works awful with string[] so its converting it to ["personal,personal"]
       this.form = data;
       for(let [key, value] of Object.entries(this.form)){
         if(this.isConstantField(key)){
@@ -160,7 +165,6 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: FormType) => {
-            console.log(data);
             this.uploadLoading = false;
             if (data.editStateBlocked){
               this.popUpDialogContext = `האירוע נסגר לעריכה`;
@@ -204,6 +208,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       this.openWithoutBackdropClick(this.simpleDialog)
     } else {
       this.openWithoutBackdropClick(this.directingDialog);
+
       this.save();
     }
   }
@@ -255,12 +260,16 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     // insert lostForm to FormData object
     for(let [key, value] of Object.entries(this.form)){
       if(this.isConstantField(key)){
-       value = this.getIdFromFieldName(key, value)!=undefined?this.getIdFromFieldName(key, value):value}      
-
-
-     if (value && ! this.eventFilesFields.includes(key) && value.length!=0 && !(Array.isArray(value) && value.length==0)) 
-      { if (value instanceof Date) { value = format(value,"yyyy-MM-dd")} //for django save in db
-        formData.append(key, value);}  }
+       value = this.getIdFromFieldName(key, value)!=undefined?this.getIdFromFieldName(key, value):value
+      }      
+      if (value && ! this.eventFilesFields.includes(key) && value.length!=0 && !(Array.isArray(value) && value.length==0)) 
+      {
+        if (value instanceof Date) {
+          value = format(value,"yyyy-MM-dd")
+        } //for django save in db
+        formData.append(key, value);
+      }  
+    }
 
     // insert all files to FormData object
     for( let formFile of this.formFiles ){
@@ -274,6 +283,8 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
             this.uploadLoading = false;
             this.reference = data.reference;
             this.popUpDialogContext = `האירוע התעדכן בהצלחה, סימוכין: ${this.reference}`;
+            // creating event Authorizers if the event submitted.
+            if (!this.drafting) this.createTempEventAuthorizers(this.reference, this.form.eventAuthorizers);
           },
           error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
           
@@ -284,12 +295,37 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
           this.uploadLoading = false;
           this.reference = data.reference;
           this.popUpDialogContext = `האירוע ${!this.drafting?'נוצר':'נשמר'} בהצלחה, סימוכין: ${this.reference}`;
-          
+          // creating event Authorizers if the event submitted.
+          if (!this.drafting) this.createTempEventAuthorizers(this.reference, this.form.eventAuthorizers);
         },
         error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
     }
   }
   
+
+  //Creates the temp event authorizers
+  createTempEventAuthorizers(reference:string, eventAuthorizers:string[]){
+    var newUserForm: User = new User();
+    eventAuthorizers.forEach(eventAutorizer => {
+      // add data to user
+      newUserForm.permissions = "מאשר אירועים";
+      newUserForm.personalNumber = eventAutorizer;
+      newUserForm.username = eventAutorizer;
+      newUserForm.unit = this.ADMINISTRATIVE_UNIT;
+      this.RestApiService.CreateUser(newUserForm)
+      .subscribe(
+        data =>{
+          newUserForm = new User();
+        },
+        error => {
+          // IDK, probebly toast dervice.
+          console.log(error);
+          this.uploadLoading = false;
+          this.popUpDialogContext = `אירעה שגיאה בהוספת מאשר  ${eventAutorizer}`;
+        }
+      )
+    });
+  }
 
   getFileName(fileNameWithPath){
     if (fileNameWithPath) return fileNameWithPath.substring(fileNameWithPath.lastIndexOf('/') + 1)
