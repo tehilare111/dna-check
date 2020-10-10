@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser, FormParser
 from rest_framework import status
 
-from users.utils import check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
+from users.utils import check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER
 from msgs.serializers import MsgsSerializer
 from msgs.models import Msgs
 

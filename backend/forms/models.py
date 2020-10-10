@@ -21,6 +21,7 @@ class Form(models.Model):
     editStateBlocked = models.BooleanField(default=False)
     writtenInFormals = models.BooleanField(default=False)
     writtenInDrafts = models.BooleanField(default=False)
+    eventAuthorizers = ArrayField(models.CharField(blank=True, max_length=8), default=[]) # array of event_authorizers personal number . type : string[] 
 
     class Meta:
       abstract = True

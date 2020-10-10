@@ -24,7 +24,7 @@ export class FormTopButtonsComponent implements OnInit {
   }
 
   checkPermissions(){
-    return ((this.auth.check_permissions(['מדווח אירועים']) && localStorage.getItem('unit') == this.reporterUnit) || this.auth.check_permissions(['מנהלן מערכת']))
+    return ((this.auth.check_permissions(['מדווח אירועים', 'מנהלן הרשאות']) && localStorage.getItem('unit') == this.reporterUnit) || this.auth.check_permissions(['מנהלן מערכת']))
   }
 
   sendEventEmtr(){

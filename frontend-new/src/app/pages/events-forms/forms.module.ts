@@ -36,7 +36,8 @@ import { EventStatusShortedComponent } from './components/event-status-shorted/e
 import { CorruptionFormComponent } from './corruption-form/corruption-form.component';
 import { FileDownloadButtonComponent } from './components/file-download-button/file-download-button.component';
 import { FormTopButtonsComponent } from './components/form-top-buttons/form-top-buttons.component';
-
+import { EventShareComponent } from './components/event-share/event-share.component';
+import {AngularMaterialModule} from '../../material-module';
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import { FormTopButtonsComponent } from './components/form-top-buttons/form-top-
     NbSelectModule,
     ngFormsModule,
     NbSpinnerModule,
-    NbChatModule
+    NbChatModule,
+    AngularMaterialModule
   ],
   declarations: [
     FormsComponent,
@@ -76,6 +78,7 @@ import { FormTopButtonsComponent } from './components/form-top-buttons/form-top-
     EventStatusShortedComponent,
     FileDownloadButtonComponent,
     FormTopButtonsComponent,
+    EventShareComponent,
   ],
 })
 export class FormsModule { }

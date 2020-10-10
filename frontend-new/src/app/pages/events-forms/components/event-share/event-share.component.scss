@@ -1,0 +1,15 @@
+.form-group > * {
+    margin-bottom: 10px;
+}
+
+ul {
+	list-style: none;
+}
+
+ul li:before {
+	content: "\00BB \0020";
+}
+
+.mat-icon-button{
+	background-color: transparent;
+  }

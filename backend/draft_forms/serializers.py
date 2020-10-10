@@ -15,7 +15,8 @@ class DraftFormSerializer(serializers.ModelSerializer):
             'reporterUnit',            
             'editStateBlocked',
             'writtenInFormals',
-            'writtenInDrafts')
+            'writtenInDrafts',
+            'eventAuthorizers')
 
         
 class DraftEventFormSerializer(DraftFormSerializer):

@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 from forms.views import generate_reference
 from draft_forms.models import DraftFormsTable
 from draft_forms.serializers import DraftFormsSerializer
-from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
+from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER
 from management.utils import get_inferior_units
 from msgs.utils import new_event_msgs, delete_event_messages
 
@@ -22,7 +22,7 @@ import csv
 from datetime import datetime
 
 @csrf_exempt
-@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_UNIT=True)
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER], RETURN_UNIT=True)
 def draft_forms_list(request, event_type, unit):
     '''
         Responsible to hendle requests from main control table page.
@@ -45,7 +45,7 @@ class DraftEventFrom(APIView):
 
     parser_classes = (MultiPartParser, FormParser)
     
-    @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)
+    @check_permissions_dec([MANAGER, EVENTS_REPORTER, REPORTER_MANAGER], API_VIEW=True)
     def post(self, request, reference, *args, **kwargs):
         draft_form_serializer = DraftFormsSerializer(data=request.data)
 
@@ -58,7 +58,7 @@ class DraftEventFrom(APIView):
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
     
-    @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)
+    @check_permissions_dec([MANAGER, EVENTS_REPORTER, REPORTER_MANAGER], API_VIEW=True)
     def put(self, request, reference,*args, **kwargs):
         try: 
             draft_event_form = DraftFormsTable.objects.get(reference=reference) 
@@ -72,7 +72,7 @@ class DraftEventFrom(APIView):
         else:
             return HttpResponse(form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], API_VIEW=True)
+    @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER], API_VIEW=True)
     def get(self, request, reference, *args, **kwargs):
         try: 
             draft_event_form = DraftFormsTable.objects.get(reference=reference)

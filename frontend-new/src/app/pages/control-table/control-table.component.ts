@@ -5,6 +5,8 @@ import { SmartTableData } from '../../@core/data/smart-table';
 import { RestApiService } from '../../services/rest-api.service';
 import { ToastService } from '../../services/toast.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { filter } from 'rxjs/operators';
 @Component({
   selector: 'ngx-control-table',
   templateUrl: './control-table.component.html',
@@ -50,7 +52,11 @@ export class ControlTableComponent implements OnInit {
   data = [];
   isDraft:boolean = false;
 
+  authService : AuthService = new AuthService(); // used to custom this page for event authorizer
+  eventAuthorizer = ["מאשר אירועים"];
+  isEventAuthorizer = false;
   constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router) { 
+    this.isEventAuthorizer = this.authService.check_permissions(this.eventAuthorizer);
   } 
   
 
@@ -71,9 +77,13 @@ export class ControlTableComponent implements OnInit {
 
   loadData(eventType: string) {
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${eventType}`).subscribe((data_from_server) => {
-      this.data=data_from_server
+      this.data = (this.isEventAuthorizer) ? this.filterEvents(data_from_server, localStorage.getItem('username')) : data_from_server;
       this.source.load(this.data);
     });
+  }
+
+  filterEvents(events, eventAuthorizer){
+    return events.filter(event => event.eventAuthorizers.includes(eventAuthorizer));
   }
 
   formClicked(event) {
