@@ -58,8 +58,8 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
 
   updateValidationFormGroup(){
     this.formGroup = new FormGroup({
-    'equipmentMark': new FormControl(this.form.equipmentMark, [this.markValidator()]),
-    'equipmentMakat': new FormControl(this.form.equipmentMakat, [this.makatCopyValidator()]),
+    // 'equipmentMark': new FormControl(this.form.equipmentMark, [this.markValidator()]),
+    // 'equipmentMakat': new FormControl(this.form.equipmentMakat, [this.makatCopyValidator()]),
     'reviewReference': new FormControl(this.form.reviewReference, [this.textValidator()]),
     'reviewDate': new FormControl(this.form.reviewDate, [this.dateValidator()]),
     })

@@ -36,6 +36,12 @@ import { EventStatusShortedComponent } from './components/event-status-shorted/e
 import { CorruptionFormComponent } from './corruption-form/corruption-form.component';
 import { FileDownloadButtonComponent } from './components/file-download-button/file-download-button.component';
 import { FormTopButtonsComponent } from './components/form-top-buttons/form-top-buttons.component';
+import { EquipmentsCustomComponentComponent } from './components/equipments-table/equipments-custom-component/equipments-custom-component.component';
+import { EquipmentsTypeCustomComponent } from './components/equipments-table/equipments-type-custom/equipments-type-custom.component';
+import { EquipmentsMarkCustomInputComponent } from './components/equipments-table/equipments-mark-custom-input/equipments-mark-custom-input.component';
+import { EquipmentsMakatCustomInputComponent } from './components/equipments-table/equipments-makat-custom-input/equipments-makat-custom-input.component';
+import { EquipmentsTableComponent } from './components/equipments-table/equipments-table.component';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 
 
@@ -55,7 +61,8 @@ import { FormTopButtonsComponent } from './components/form-top-buttons/form-top-
     NbSelectModule,
     ngFormsModule,
     NbSpinnerModule,
-    NbChatModule
+    NbChatModule,
+    Ng2SmartTableModule,
   ],
   declarations: [
     FormsComponent,
@@ -76,6 +83,12 @@ import { FormTopButtonsComponent } from './components/form-top-buttons/form-top-
     EventStatusShortedComponent,
     FileDownloadButtonComponent,
     FormTopButtonsComponent,
+    EquipmentsCustomComponentComponent,
+    EquipmentsTypeCustomComponent,
+    EquipmentsMarkCustomInputComponent,
+    EquipmentsMakatCustomInputComponent,
+    EquipmentsTableComponent,
   ],
+  entryComponents:[EquipmentsCustomComponentComponent, EquipmentsTypeCustomComponent,EquipmentsMarkCustomInputComponent,EquipmentsMakatCustomInputComponent]
 })
 export class FormsModule { }

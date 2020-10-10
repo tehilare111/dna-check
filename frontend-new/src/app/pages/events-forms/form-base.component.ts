@@ -21,6 +21,7 @@ import { textValidator } from './validation-directives/text.directive';
 
 import { EventStatusBase } from './components/event-status-base.component';
 import { EventForm } from './events-forms.templates';
+import { EquipmentsTableComponent } from './components/equipments-table/equipments-table.component';
 
 export abstract class FormBaseComponent<FormType extends EventForm, EventStatusType extends EventStatusBase> implements OnInit {
   
@@ -41,7 +42,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   protected markValidator = markValidator;
   protected timeValidator = timeValidator;
   protected textValidator = textValidator;
-
+  protected equipments_array
   /* components value */
   protected form: FormType;
   protected eventFilesFields: string[];
@@ -49,7 +50,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   protected directingDialog: ElementRef;
   protected simpleDialog: ElementRef;
   protected eventStatusForm: EventStatusType;
-
+  equipmentsTable:EquipmentsTableComponent=new EquipmentsTableComponent(this.RestApiService,this.router);
   protected popUpDialogContext: string = '';
   protected formFiles : {'id': string, 'file': File}[] = [];
   protected readonly : boolean = true;
@@ -87,7 +88,8 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   exisitingFormLoadData(reference: string){
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
       this.form = data
-      console.log(this.form);      
+      console.log("data",data)
+      this.equipmentsTable.equipments=this.form["event_form_equipments"];      
       /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
           this.form.editStateBlocked = false
@@ -183,11 +185,19 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   }
 
   save() {
-    
+    let eq=[]
+    let datas=this.equipmentsTable.data_table.map(a=>a)
+    console.log("table data",datas)
+    for(var i in datas){
+      console.log(datas[i])
+      eq.push("$$",JSON.stringify(datas[i]))
+    }
+    eq.push("$$")
+  
     this.form = this.eventStatusForm.pushFormFields<FormType>(this.form);
 
     const formData: FormData = new FormData();
-
+    formData.append("equipments",eq.toString())
     // insert lostForm to FormData object
     for(let [key, value] of Object.entries(this.form)){
       if (value && ! this.eventFilesFields.includes(key)) { formData.append(key, value); }
@@ -205,6 +215,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
           (data: FormType) => {
             this.uploadLoading = false;
             this.reference = data.reference;
+            
             this.popUpDialogContext = `האירוע התעדכן בהצלחה, סימוכין: ${this.reference}`;
           },
           error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
@@ -215,6 +226,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         (data: FormType) => {
           this.uploadLoading = false;
           this.reference = data.reference;
+          console.log("data to save",data)
           this.popUpDialogContext = `האירוע ${!this.drafting?'נוצר':'נשמר'} בהצלחה, סימוכין: ${this.reference}`;
         },
         error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })

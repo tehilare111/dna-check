@@ -22,9 +22,9 @@ export class EquipmentsTableComponent implements OnInit {
   @Input () units:any[]
   @Input () equipments:any[]
   @Input() form: Form = new Form();
-  flag_true_or_false=true
-  selected=""
-  reference=""
+  @Input () reference:any
+  flagTrueOrFalse=true
+  reference1=""
   count_flag=0
   counts_flag_change=0
   auth:AuthService=new AuthService()
@@ -33,7 +33,9 @@ export class EquipmentsTableComponent implements OnInit {
   
   eventEquipments:EventEquipments=new EventEquipments();
   equipmentType: any;
-
+  source: LocalDataSource
+  data_table = [
+  ];
   constructor(private RestApiService:RestApiService,private router:Router) { 
     const data= this.source= new LocalDataSource(this.data_table);}
     settings = {
@@ -103,37 +105,41 @@ export class EquipmentsTableComponent implements OnInit {
     },
     },
   };
-  source: LocalDataSource
-  data_table = [
-  ];
+  
   ngOnInit() {
     console.log("reference:",this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference)
-    this.reference = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference;
-    this.exisitingFormLoadData(this.reference)
+    console.log("reference original:",this.reference)
+    this.reference1 = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference;
+    this.exisitingFormLoadData(this.reference1)
     this.source.load(this.data_table)
-  }
-  exisitingFormLoadData(reference: string){
-    this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: EquipmentReviewTemplate) => {
-      this.data_table =data_from_server["equipments"]
-      this.source.load(this.data_table)
-      console.log("edit block",this.form.editStateBlocked)
-      if(this.form.editStateBlocked||this.auth.checkPermissions(['מנהלן מערכת', 'מדווח אירועים']))
+    if(this.form.editStateBlocked||this.auth.checkPermissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
           console.log(this.settings)
+          this.settings.actions.add=true
+          this.settings.actions.edit=true
+          this.settings.actions.delete=true
+          this.settings=Object.assign({},this.settings)
+         
+        }else{
           this.settings.actions.add=false
           this.settings.actions.edit=false
           this.settings.actions.delete=false
           this.settings=Object.assign({},this.settings)
-         
-        }else{
-          this.settings.actions.edit=true
-          this.settings.actions.delete=true
-          this.settings=Object.assign({},this.settings)
         }
+  }
+  exisitingFormLoadData(reference: string){
+    // this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: EquipmentReviewTemplate) => {
+    //   this.data_table =data_from_server["equipments"]
+    //   this.source.load(this.data_table)
+    //   console.log("edit block",this.form.editStateBlocked)
+      
        
-    });
-    
-
+    // });
+    if(reference!=undefined){
+      console.log(this.equipments)
+      this.data_table=this.equipments
+      // this.source.load(this.data_table)
+  }
 
   }
 

@@ -10,8 +10,8 @@ from django.conf import settings
 from rest_framework.views import APIView
 
 from draft_forms.models import DraftFormsTable
-from forms.models import FormsTable
-from forms.serializers import FormsSerializer
+from forms.models import FormsTable,EventsEquipments
+from forms.serializers import FormsSerializer,EquipmentSerializer
 from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
 from management.utils import get_inferior_units
 from msgs.utils import new_event_msgs, delete_event_messages
@@ -118,9 +118,9 @@ class OfficialEventFrom(APIView):
             new_event_msgs(reference)
             # form_serializer.save(reference=reference, writtenInFormals=True)
             # return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
-            new_event_msgs(reference)
             f=form.saveAll(request,reference)
-            return JsonResponse(form.data, status=status.HTTP_201_CREATED)
+            print("data for event",f)
+            return JsonResponse(f.data, status=status.HTTP_201_CREATED)
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
     
@@ -143,11 +143,13 @@ class OfficialEventFrom(APIView):
         try: 
             print(reference)
             event_form = FormsTable.objects.get(reference=reference)
-        except FormsTable.DoesNotExist: 
+            event_form_equipments =EventsEquipments.objects.get(reference1=reference)
+        except FormsTable.DoesNotExist and event_form_equipments.DoesNotExist: 
             return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
     
         form_serializer = FormsSerializer(event_form)
-        return JsonResponse(form_serializer.data)
+        equipments_serializer=EquipmentSerializer(event_form_equipments)
+        return JsonResponse({"form_event":form_serializer.data,"event_form_equipments":equipments_serializer.data})
 
     @check_permissions_dec([MANAGER], API_VIEW=True)
     def delete(self, request, reference, *args, **kwargs):

@@ -45,7 +45,9 @@ class EquipmentSerializer(serializers.ModelSerializer):
         'equipmentMark',
         'equipmentMakat',
         ]
+    
 class FormsSerializer(serializers.ModelSerializer):
+    equipments=EquipmentSerializer(many=True,required=False)
     class Meta:
         model = FormsTable
         fields = EventFormSerializer.Meta.fields + (
@@ -67,21 +69,27 @@ class FormsSerializer(serializers.ModelSerializer):
             'reviewDate',
             'reviewFile',
             'reviewReference',
-            'isMatchToReport'
+            'isMatchToReport',
+            'equipments',
         )
     def saveAll(self,request,reference):
-        self.save(reference=reference,writtenInFormals=True)
-
+        self.save(reference=reference)
         print("SELF",request)
+        # equip=""
         data=request.data["equipments"]
         data = data.split("$$")[1:-1]
         data2=[json.loads(eq[1:-1]) for eq in data]
         for i in data2:
+            print("data",i)
             equip=EquipmentSerializer(data=i)
+            print(equip)
             if equip.is_valid():
+                print("Data",self.instance)
                 print("shalom tehila")
                 equip.save(reference1=self.instance)
+                print("equips",equip.data)
+                
             else:
                 print(equip.errors)
-                return HttpResponse(equip.errors,status=status.HTTP_400_BAD_REQUEST)
-        return JsonResponse(equip.data, status=status.HTTP_201_CREATED )
+                return equip.errors
+        return equip
