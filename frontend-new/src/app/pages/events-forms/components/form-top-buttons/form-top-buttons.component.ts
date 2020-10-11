@@ -21,6 +21,7 @@ export class FormTopButtonsComponent implements OnInit {
   constructor(private auth: AuthService) { }
 
   ngOnInit() {
+   
   }
 
   checkPermissions(){
@@ -28,7 +29,9 @@ export class FormTopButtonsComponent implements OnInit {
   }
 
   sendEventEmtr(){
+    console.log("1")
     this.sendEvent.emit();
+    console.log("2")
   }
 
   printFormEmtr(){

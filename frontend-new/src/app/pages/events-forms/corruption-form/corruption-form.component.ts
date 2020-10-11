@@ -38,8 +38,6 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
   ngOnInit() {
     // Load all pages constants
     this.getConstasFeilds()
-
-    // Set eventType field according to the form event type
     this.form.eventType = this.eventType
     
     super.ngOnInit()
@@ -74,9 +72,7 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
     
   onSubmit() {
     this.uploadLoading = true
-    
     this.updateValidationFormGroup();
-
     super.onSubmit();
   }
 }

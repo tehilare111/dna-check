@@ -21,6 +21,7 @@ import { textValidator } from './validation-directives/text.directive';
 
 import { EventStatusBase } from './components/event-status-base.component';
 import { EventForm } from './events-forms.templates';
+import { EquipmentsTableComponent } from './components/equipments-table/equipments-table.component';
 
 export abstract class FormBaseComponent<FormType extends EventForm, EventStatusType extends EventStatusBase> implements OnInit {
   
@@ -49,7 +50,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   protected directingDialog: ElementRef;
   protected simpleDialog: ElementRef;
   protected eventStatusForm: EventStatusType;
-
+  equipmentsTable:EquipmentsTableComponent=new EquipmentsTableComponent(this.router);
   protected popUpDialogContext: string = '';
   protected formFiles : {'id': string, 'file': File}[] = [];
   protected readonly : boolean = true;
@@ -88,12 +89,12 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
       this.form = data
       console.log(this.form);      
-      /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
+      if(this.form.editStateBlocked || this.auth.checkPermissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
           this.form.editStateBlocked = false
         }else{
           this.form.editStateBlocked = true
-        }*/
+        }
       });
     // this.get_constas_feilds()
   }
@@ -111,7 +112,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       dialog,
       {
         //context: this.formUploadResult.reference,
-        closeOnBackdropClick: false,
+        closeOnBackdropClick:false,
       });
   }
 
@@ -160,6 +161,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   }
 
   sendEvent(){
+    console.log("bar agever etzah")
     this.drafting = false;
     this.onSubmit();
   }
@@ -171,23 +173,28 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
 
   onSubmit() {
     this.uploadLoading = true
-    
     if (!this.drafting && !this.checkFieldsValid()){
       this.uploadLoading = false
       this.popUpDialogContext = `שדה אחד לפחות לא תקין או חסר`;
       this.openWithoutBackdropClick(this.simpleDialog)
     } else {
       this.openWithoutBackdropClick(this.directingDialog);
+      console.log("f")
       this.save();
     }
   }
 
   save() {
-    
+    let eq=[]
+    let arrayEquipments=this.equipmentsTable.data_table.map(a=>a)
+    for(var i in arrayEquipments){
+      eq.push("$$",JSON.stringify(arrayEquipments[i]))
+    }
+    eq.push("$$")
     this.form = this.eventStatusForm.pushFormFields<FormType>(this.form);
 
     const formData: FormData = new FormData();
-
+    formData.append("equipments",eq.toString())
     // insert lostForm to FormData object
     for(let [key, value] of Object.entries(this.form)){
       if (value && ! this.eventFilesFields.includes(key)) { formData.append(key, value); }

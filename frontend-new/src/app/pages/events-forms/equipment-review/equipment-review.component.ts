@@ -48,6 +48,7 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
 
   getConstasFeilds() {
     this.RestApiService.getConstansFieldsAndUnitsArray().subscribe((data) => {
+      console.log("data",data)
       this.equipmentsType = data.equipmentType
       this.ranks = data.rank
       this.materialsType = data.materialType
@@ -58,8 +59,6 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
 
   updateValidationFormGroup(){
     this.formGroup = new FormGroup({
-    'equipmentMark': new FormControl(this.form.equipmentMark, [this.markValidator()]),
-    'equipmentMakat': new FormControl(this.form.equipmentMakat, [this.makatCopyValidator()]),
     'reviewReference': new FormControl(this.form.reviewReference, [this.textValidator()]),
     'reviewDate': new FormControl(this.form.reviewDate, [this.dateValidator()]),
     })

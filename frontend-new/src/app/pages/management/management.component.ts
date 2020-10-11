@@ -97,6 +97,7 @@ export class ManagementComponent implements OnInit {
     let dataToServer = {'maxTreeNodeId': this.maxTreeNodeId, 'treeNode': this.nodes};
     this.RestApiService.postTreeUnits(dataToServer).subscribe(
       data=> {
+        console.log(data)
         this.ToastService.showToast('success', 'נשמר בהצלחה!', '') 
         this.uploadLoading = true
       },

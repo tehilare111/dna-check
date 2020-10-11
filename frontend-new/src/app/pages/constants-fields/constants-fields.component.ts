@@ -39,12 +39,14 @@ export class ConstantsFieldsComponent implements OnInit {
     this.uploadLoading = true
     this.RestApiService.getConstatnsFields().subscribe(
       (data: ConstantsFields) => {
+        console.log(data)
         this.ConstantsFields = data;
+        this.ConstantsFields.equipmentType=data.equipmentType
         this.uploadLoading = false
       },
       err => {
 
-        this.ConstantsFields = {eventStatus: [], materialType: [], equipmentType:[], equipmentMakat:[], handlingStatus:[], rank:[]};
+        this.ConstantsFields = {eventStatus: [''], materialType: [''], equipmentType:[''], equipmentMakat:[''], handlingStatus:[''], rank:['']};
         this.uploadLoading = false
       } 
     )
