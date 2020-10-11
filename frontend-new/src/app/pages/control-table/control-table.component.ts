@@ -12,6 +12,11 @@ import { Router } from '@angular/router';
 })
 export class ControlTableComponent implements OnInit {
   eventsToPickUp = {
+    'EventsForms': {
+      'name': 'אירועים',
+      'route': '/pages/events-forms/lost-form',
+      'columns': {'reference': {'title': 'סימוכין', 'type': 'string'}, 'reporterName': {'title': 'שם מדווח', 'type': 'string'}, 'reporterUnit': {'title': 'יחידת מדווח', 'type': 'string'}}
+    },
     'EquipmentReview': {
       'name': 'ספירות',
       'route': '/pages/events-forms/equipment-review',
@@ -30,6 +35,11 @@ export class ControlTableComponent implements OnInit {
    
   }
   eventsToPickUp2 = {
+    'defualtForms': {
+      'name': 'אירועים',
+      'route': '/pages/events-forms/lost-form',
+      'columns': {'reference': {'title': 'סימוכין', 'type': 'string'}, 'reporterName': {'title': 'שם מדווח', 'type': 'string'}, 'reporterUnit': {'title': 'יחידת מדווח', 'type': 'string'}}
+    },
     'EquipmentReview': {
       'name': 'ספירות',
       'route': '/pages/events-forms/equipment-review',
@@ -40,6 +50,7 @@ export class ControlTableComponent implements OnInit {
       'route': '/pages/events-forms/lost-form',
       'columns': {'reference': {'title': 'סימוכין', 'type': 'string'}, 'reporterName': {'title': 'שם מדווח', 'type': 'string'}, 'reporterUnit': {'title': 'יחידת מדווח', 'type': 'string'}}
     },
+    
   }
   pickedUpEvent = this.eventsToPickUp.defaultForms;
   settings = {
