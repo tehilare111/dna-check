@@ -22,7 +22,11 @@ export class EquipmentsTableComponent implements OnInit {
   @Input () units:any[]
   @Input () equipments:any[]
   @Input() form: Form = new Form();
-  reference=""
+
+  reference1=""
+
+  @Input () reference:any
+
   count_flag=0
   auth:AuthService=new AuthService()
  
@@ -30,33 +34,31 @@ export class EquipmentsTableComponent implements OnInit {
   
   eventEquipments:EventEquipments=new EventEquipments();
   equipmentType: any;
-  settings = {
-    actions:{
-      add:true,
-      edit:true,
-      delete:true,     
-     
-    },
-    add: {
-      addButtonContent: '<i class="nb-plus"></i>',
-      createButtonContent: '<i class="nb-checkmark"></i>',
+  source: LocalDataSource
+  data_table = [
+  ];
+  constructor(private router:Router) { 
+    const data= this.source= new LocalDataSource(this.data_table);}
+    settings = {
+      actions:{
+        add:true,
+        edit:true,
+        delete:true,     
+       
+      },
+      add: {
+        addButtonContent: '<i class="nb-plus"></i>',
+        createButtonContent: '<i class="nb-checkmark"></i>',
+        cancelButtonContent: '<i class="nb-close"></i>',
+        
+      },
+   
+      edit: {
+      editButtonContent: '<i class="nb-edit"></i>',
+      saveButtonContent: '<i class="nb-checkmark"></i>',
       cancelButtonContent: '<i class="nb-close"></i>',
       
-    },
- 
-    edit: {
-    editButtonContent: '<i class="nb-edit"></i>',
-    saveButtonContent: '<i class="nb-checkmark"></i>',
-    cancelButtonContent: '<i class="nb-close"></i>',
-    edit:true
-    },
-
-    delete: {
-    deleteButtonContent: '<i class="nb-trash"></i>',
-    confirmDelete: true,
-    delete:true
-    },
-  
+    }, 
   
   
   columns: {
@@ -97,15 +99,14 @@ export class EquipmentsTableComponent implements OnInit {
   },
   },
 };
-source: LocalDataSource
-data_table = [
-];
-  constructor(private router:Router) { 
-    const data= this.source= new LocalDataSource(this.data_table);}
-    
+
+
+
   ngOnInit() {
-    this.reference = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference;
-    // this.exisitingFormLoadData(this.reference)
+    console.log("reference:",this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference)
+    console.log("reference original:",this.reference)
+    this.reference1 = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference;
+    this.exisitingFormLoadData(this.reference1)
     this.source.load(this.data_table)
     if(this.form.editStateBlocked||this.auth.checkPermissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
@@ -121,6 +122,21 @@ data_table = [
           this.settings.actions.delete=false
           this.settings=Object.assign({},this.settings)
         }
+
+  }
+  exisitingFormLoadData(reference: string){
+    // this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: EquipmentReviewTemplate) => {
+    //   this.data_table =data_from_server["equipments"]
+    //   this.source.load(this.data_table)
+    //   console.log("edit block",this.form.editStateBlocked)
+      
+       
+    // });
+    if(reference!=undefined){
+      console.log(this.equipments)
+      this.data_table=this.equipments
+      // this.source.load(this.data_table)
+  }
   }
 
   // exisitingFormLoadData(reference: string){

@@ -42,7 +42,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   protected markValidator = markValidator;
   protected timeValidator = timeValidator;
   protected textValidator = textValidator;
-
+  protected equipments_array
   /* components value */
   protected form: FormType;
   protected eventFilesFields: string[];
@@ -90,6 +90,14 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       this.form = data
       console.log(this.form);      
       if(this.form.editStateBlocked || this.auth.checkPermissions(['מנהלן מערכת', 'מדווח אירועים']))
+      {
+      
+      console.log("data",data)
+      this.equipmentsTable.equipments=this.form["event_form_equipments"];    
+      }  
+    });
+      /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
+
         {
           this.form.editStateBlocked = false
         }else{
@@ -98,6 +106,8 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       });
     // this.get_constas_feilds()
   }
+  */
+}
 
   newFormLoadData() {
     this.RestApiService.getNewEventForm().subscribe((data) => {
@@ -191,6 +201,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       eq.push("$$",JSON.stringify(arrayEquipments[i]))
     }
     eq.push("$$")
+
     this.form = this.eventStatusForm.pushFormFields<FormType>(this.form);
 
     const formData: FormData = new FormData();
@@ -212,6 +223,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
           (data: FormType) => {
             this.uploadLoading = false;
             this.reference = data.reference;
+            
             this.popUpDialogContext = `האירוע התעדכן בהצלחה, סימוכין: ${this.reference}`;
           },
           error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
@@ -222,6 +234,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         (data: FormType) => {
           this.uploadLoading = false;
           this.reference = data.reference;
+          console.log("data to save",data)
           this.popUpDialogContext = `האירוע ${!this.drafting?'נוצר':'נשמר'} בהצלחה, סימוכין: ${this.reference}`;
         },
         error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })

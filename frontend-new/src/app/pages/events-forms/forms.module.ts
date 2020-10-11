@@ -36,11 +36,19 @@ import { EventStatusShortedComponent } from './components/event-status-shorted/e
 import { CorruptionFormComponent } from './corruption-form/corruption-form.component';
 import { FileDownloadButtonComponent } from './components/file-download-button/file-download-button.component';
 import { FormTopButtonsComponent } from './components/form-top-buttons/form-top-buttons.component';
+<<<<<<< HEAD
 import { EquipmentsTableComponent } from './components/equipments-table//equipments-table.component';
 import { EquipmentsTypeCustomComponent } from './components/equipments-table/equipments-type-custom/equipments-type-custom.component';
 import { EquipmentsCustomComponentComponent } from './components/equipments-table/equipments-custom-component/equipments-custom-component.component';
 import { EquipmentsMarkCustomInputComponent } from './components/equipments-table/equipments-mark-custom-input/equipments-mark-custom-input.component';
 import { EquipmentsMakatCustomInputComponent } from './components/equipments-table/equipments-makat-custom-input/equipments-makat-custom-input.component';
+=======
+import { EquipmentsCustomComponentComponent } from './components/equipments-table/equipments-custom-component/equipments-custom-component.component';
+import { EquipmentsTypeCustomComponent } from './components/equipments-table/equipments-type-custom/equipments-type-custom.component';
+import { EquipmentsMarkCustomInputComponent } from './components/equipments-table/equipments-mark-custom-input/equipments-mark-custom-input.component';
+import { EquipmentsMakatCustomInputComponent } from './components/equipments-table/equipments-makat-custom-input/equipments-makat-custom-input.component';
+import { EquipmentsTableComponent } from './components/equipments-table/equipments-table.component';
+>>>>>>> 6e6617b18a610e1e6d6b0f5b162dee78365be452
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 
@@ -83,11 +91,19 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
     EventStatusShortedComponent,
     FileDownloadButtonComponent,
     FormTopButtonsComponent,
+<<<<<<< HEAD
     EquipmentsTableComponent,
     EquipmentsTypeCustomComponent,
     EquipmentsCustomComponentComponent,
     EquipmentsMarkCustomInputComponent,
     EquipmentsMakatCustomInputComponent,
+=======
+    EquipmentsCustomComponentComponent,
+    EquipmentsTypeCustomComponent,
+    EquipmentsMarkCustomInputComponent,
+    EquipmentsMakatCustomInputComponent,
+    EquipmentsTableComponent,
+>>>>>>> 6e6617b18a610e1e6d6b0f5b162dee78365be452
   ],
   entryComponents:[EquipmentsCustomComponentComponent, EquipmentsTypeCustomComponent,EquipmentsMarkCustomInputComponent,EquipmentsMakatCustomInputComponent]
 })

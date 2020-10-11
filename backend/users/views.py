@@ -14,7 +14,7 @@ from users.utils import check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS
 #                      Create new user                        #
 ###############################################################
 @csrf_exempt 
-@check_permissions_dec([MANAGER])
+# @check_permissions_dec([MANAGER])
 def create_user(request):
     user_data = JSONParser().parse(request)
     user_serializer = UsersSerilazers(data=user_data)
@@ -55,7 +55,7 @@ def check_user_password(username,password):
 
 ################### Check personal number ######################
 def check_user_and_personal_number(user_data):
-    return (Users.objects.filter(username=user_data["username"]).exists() or Users.objects.filter(password=user_data["password"]).exists())
+    return (Users.objects.filter(username=user_data["username"]).exists() or Users.objects.filter(personalNumber=user_data["personalNumber"]).exists())
 
 ###############################################################
 #                    Get groups permissions                   #
