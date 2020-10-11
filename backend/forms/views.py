@@ -112,6 +112,7 @@ class OfficialEventFrom(APIView):
         data=request.data
         form=FormsSerializer(data=data)
         if (form.is_valid()):
+            print("tehila look:",form)
             reference =generate_reference(reference)
             # Create instance for this event form in the messages database
             # Create instance for this event form in the messages database
@@ -120,7 +121,7 @@ class OfficialEventFrom(APIView):
             # return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
             f=form.saveAll(request,reference)
             print("data for event",f)
-            return JsonResponse(f.data, status=status.HTTP_201_CREATED)
+            return JsonResponse({"data":"dsasad"},status=status.HTTP_201_CREATED)
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
     
@@ -143,12 +144,14 @@ class OfficialEventFrom(APIView):
         try: 
             print(reference)
             event_form = FormsTable.objects.get(reference=reference)
-            event_form_equipments =EventsEquipments.objects.get(reference1=reference)
-        except FormsTable.DoesNotExist and event_form_equipments.DoesNotExist: 
+            event_form_equipments=EventsEquipments.objects.filter(reference1=reference)
+            # print("data event_equipment",event_form_equipments)
+        except FormsTable.DoesNotExist and EventsEquipments.DoesNotExist: 
             return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
     
         form_serializer = FormsSerializer(event_form)
-        equipments_serializer=EquipmentSerializer(event_form_equipments)
+        equipments_serializer=EquipmentSerializer(event_form_equipments,many=True)
+        print("equipments_serializer",equipments_serializer)
         return JsonResponse({"form_event":form_serializer.data,"event_form_equipments":equipments_serializer.data})
 
     @check_permissions_dec([MANAGER], API_VIEW=True)

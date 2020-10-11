@@ -20,9 +20,11 @@ export class EquipmentsTableComponent implements OnInit {
   @Input () equipmentsType:any[]
   @Input () materialsType:any[]
   @Input () units:any[]
-  @Input () equipments:any[]
+  @Input () equipmentArray:any[]
   @Input() form: Form = new Form();
+  // equipments=[]
 
+  
   reference1=""
 
   @Input () reference:any
@@ -71,7 +73,7 @@ export class EquipmentsTableComponent implements OnInit {
       component:EquipmentsCustomComponentComponent
     },
     },    
-    equipmentstype: {
+    equipmentType: {
       title: 'סוג ציוד/חומר',
       type: 'html',
       filter:'false', 
@@ -80,7 +82,7 @@ export class EquipmentsTableComponent implements OnInit {
         component:EquipmentsTypeCustomComponent
       },
     },
-    equipmentsMark: {
+    equipmentMark: {
       title: 'סימון ציוד/חומר',
       filter:'false', 
       type:"html",
@@ -89,7 +91,7 @@ export class EquipmentsTableComponent implements OnInit {
         component:EquipmentsMarkCustomInputComponent
     },
   },
-    equipmentsMakat: {
+    equipmentMakat: {
       title: 'מק"ט ציוד/עותק חומר',
       type:"html",
       editor:{
@@ -106,7 +108,7 @@ export class EquipmentsTableComponent implements OnInit {
     console.log("reference:",this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference)
     console.log("reference original:",this.reference)
     this.reference1 = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference;
-    this.exisitingFormLoadData(this.reference1)
+    this.exisitingFormLoadData(this.reference)
     this.source.load(this.data_table)
     if(this.form.editStateBlocked||this.auth.checkPermissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
@@ -125,17 +127,9 @@ export class EquipmentsTableComponent implements OnInit {
 
   }
   exisitingFormLoadData(reference: string){
-    // this.RestApiService.getExistingEventForm(reference).subscribe((data_from_server: EquipmentReviewTemplate) => {
-    //   this.data_table =data_from_server["equipments"]
-    //   this.source.load(this.data_table)
-    //   console.log("edit block",this.form.editStateBlocked)
-      
-       
-    // });
     if(reference!=undefined){
-      console.log(this.equipments)
-      this.data_table=this.equipments
-      // this.source.load(this.data_table)
+      console.log(this.equipmentArray)
+      // this.data_table=this.equipments
   }
   }
 

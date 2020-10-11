@@ -66,3 +66,5 @@ class EventsEquipments(models.Model):
     equipmentType = models.CharField(max_length=70, blank=False, default='')
     equipmentMark = models.CharField(max_length=70, blank=False, default='')
     equipmentMakat = models.CharField(max_length=70, blank=False, default='')
+   
+      

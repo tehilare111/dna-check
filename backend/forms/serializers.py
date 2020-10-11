@@ -45,6 +45,8 @@ class EquipmentSerializer(serializers.ModelSerializer):
         'equipmentMark',
         'equipmentMakat',
         ]
+    # def save(self,*args, **kwargs):
+    #   print("bar agever:",self)
     
 class FormsSerializer(serializers.ModelSerializer):
     equipments=EquipmentSerializer(many=True,required=False)
@@ -73,23 +75,25 @@ class FormsSerializer(serializers.ModelSerializer):
             'equipments',
         )
     def saveAll(self,request,reference):
-        self.save(reference=reference)
+        self.save(reference=reference,writtenInFormals=True)
+        print("self after save",self)
         print("SELF",request)
-        # equip=""
+        equip=" "
         data=request.data["equipments"]
         data = data.split("$$")[1:-1]
         data2=[json.loads(eq[1:-1]) for eq in data]
-        for i in data2:
-            print("data",i)
-            equip=EquipmentSerializer(data=i)
-            print(equip)
+        for equipment in data2:
+            equip=EquipmentSerializer(data=equipment)
+            print("data beffor ",equip)
             if equip.is_valid():
-                print("Data",self.instance)
+                print("Data: ",self.instance)
                 print("shalom tehila")
                 equip.save(reference1=self.instance)
-                print("equips",equip.data)
+                print("equips after",equip)
+                
                 
             else:
                 print(equip.errors)
                 return equip.errors
-        return equip
+        if equip!=" ":
+            return equip

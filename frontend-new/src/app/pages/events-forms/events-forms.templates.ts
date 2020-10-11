@@ -8,6 +8,7 @@ export class Form{
     messages: any[];
     writtenInFormals: boolean = false;
     writtenInDrafts: boolean = false;
+    equipmentArray:any[];
 }
 
 export class EventForm extends Form{

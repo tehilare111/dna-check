@@ -87,14 +87,11 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
 
   exisitingFormLoadData(reference: string){
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
-      this.form = data
+      this.form = data["form_event"]
       console.log(this.form);      
-      if(this.form.editStateBlocked || this.auth.checkPermissions(['מנהלן מערכת', 'מדווח אירועים']))
-      {
-      
       console.log("data",data)
-      this.equipmentsTable.equipments=this.form["event_form_equipments"];    
-      }  
+      this.form.equipmentArray=data["event_form_equipments"];
+      console.log(this.form)   
     });
       /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
 
