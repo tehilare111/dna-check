@@ -41,8 +41,8 @@ import { EquipmentsTypeCustomComponent } from './components/equipments-table/equ
 import { EquipmentsCustomComponentComponent } from './components/equipments-table/equipments-custom-component/equipments-custom-component.component';
 import { EquipmentsMarkCustomInputComponent } from './components/equipments-table/equipments-mark-custom-input/equipments-mark-custom-input.component';
 import { EquipmentsMakatCustomInputComponent } from './components/equipments-table/equipments-makat-custom-input/equipments-makat-custom-input.component';
-
 import { Ng2SmartTableModule } from 'ng2-smart-table';
+
 
 
 
@@ -89,6 +89,7 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
     EquipmentsCustomComponentComponent,
     EquipmentsMarkCustomInputComponent,
     EquipmentsMakatCustomInputComponent,
+    
 
   ],
   entryComponents:[EquipmentsCustomComponentComponent, EquipmentsTypeCustomComponent,EquipmentsMarkCustomInputComponent,EquipmentsMakatCustomInputComponent]

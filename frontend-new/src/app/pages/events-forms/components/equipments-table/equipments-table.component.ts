@@ -23,12 +23,12 @@ export class EquipmentsTableComponent implements OnInit {
   @Input() editStateBlocked:boolean;
   @Input () equipmentArray:any[]
   @Input() form: Form = new Form();
+  @Input () reference:any
   // equipments=[]
 
-  
   reference1=""
 
-  @Input () reference:any
+
 
   count_flag=0
   auth:AuthService=new AuthService()
@@ -40,41 +40,37 @@ export class EquipmentsTableComponent implements OnInit {
   source: LocalDataSource
   data_table = [
   ];
-  constructor(private router:Router) { 
-    
-    const data= this.source= new LocalDataSource(this.data_table);}
-    settings = {
-      actions:{
-        add:true,
-        edit:true,
-        delete:true,     
-       
-      },
-      add: {
-        addButtonContent: '<i class="nb-plus"></i>',
-        createButtonContent: '<i class="nb-checkmark"></i>',
-        cancelButtonContent: '<i class="nb-close"></i>',
-        
-      },
-   
-      edit: {
-      editButtonContent: '<i class="nb-edit"></i>',
-      saveButtonContent: '<i class="nb-checkmark"></i>',
+  
+  settings = {
+    hideSubHeader: false,
+    actions: {
+      add:true,
+      edit:true,
+      delete:true
+    },
+    add: {
+      addButtonContent: '<i class="nb-plus"></i>',
+      createButtonContent: '<i class="nb-checkmark"></i>',
       cancelButtonContent: '<i class="nb-close"></i>',
       
     },
+ 
+    edit: {
+    editButtonContent: '<i class="nb-edit"></i>',
+    saveButtonContent: '<i class="nb-checkmark"></i>',
+    cancelButtonContent: '<i class="nb-close"></i>',
+    
+  },
     delete: {
-      deleteButtonContent: '<i class="nb-trash"></i>',
-      confirmDelete: true,
-      delete:true
-    }, 
-  
-  
+    deleteButtonContent: '<i class="nb-trash"></i>',
+    confirmDelete: true,
+    delete:true
+  },     
   columns: {
     equipment: {
       title:'ציוד/חומר',
       type: 'html', 
-      filter:'False', 
+      filter:true, 
       editor: {
       type: 'custom',
       component:EquipmentsCustomComponentComponent
@@ -83,7 +79,7 @@ export class EquipmentsTableComponent implements OnInit {
     equipmentType: {
       title: 'סוג ציוד/חומר',
       type: 'html',
-      filter:'false', 
+      filter:true, 
       editor: {
         type: 'custom',
         component:EquipmentsTypeCustomComponent
@@ -91,7 +87,7 @@ export class EquipmentsTableComponent implements OnInit {
     },
     equipmentMark: {
       title: 'סימון ציוד/חומר',
-      filter:'false', 
+      filter:true, 
       type:"html",
       editor:{
       type: 'custom',
@@ -101,67 +97,55 @@ export class EquipmentsTableComponent implements OnInit {
     equipmentMakat: {
       title: 'מק"ט ציוד/עותק חומר',
       type:"html",
+      filter:true,
       editor:{
       type: 'custom',
       component:EquipmentsMakatCustomInputComponent
     }
   },
-  },
+},
 };
-settings2 = {
-  actions:false,
-  add: {
-    addButtonContent: '<i class="nb-plus"></i>',
-    createButtonContent: '<i class="nb-checkmark"></i>',
-    cancelButtonContent: '<i class="nb-close"></i>',
-    
-  },
 
-  edit: {
-  editButtonContent: '<i class="nb-edit"></i>',
-  saveButtonContent: '<i class="nb-checkmark"></i>',
-  cancelButtonContent: '<i class="nb-close"></i>',
-  
-},
-delete: {
-  deleteButtonContent: '<i class="nb-trash"></i>',
-  confirmDelete: true,
-  delete:true
-},
+settings2 = {
+  hideSubHeader: true,
+  actions:{
+    add:false,
+    edit:false,
+    delete:false,
+  },
+ 
 columns: {
   equipment: {
     title:'ציוד/חומר',
     type: 'html', 
-    filter:'False', 
+    filter:true, 
     editor: {
     type: 'custom',
     component:EquipmentsCustomComponentComponent,
-    editable: false
   },
   },    
   equipmentType: {
     title: 'סוג ציוד/חומר',
     type: 'html',
-    filter:'false', 
+    filter:true, 
     editor: {
       type: 'custom',
       component:EquipmentsTypeCustomComponent,
-      editable: false
     },
   },
   equipmentMark: {
     title: 'סימון ציוד/חומר',
-    filter:'false', 
+    filter:true, 
     type:"html",
     editor:{
     type: 'custom',
       component:EquipmentsMarkCustomInputComponent,
-      editable: false
   },
 },
   equipmentMakat: {
     title: 'מק"ט ציוד/עותק חומר',
     type:"html",
+    filter:true, 
     editor:{
     type: 'custom',
     component:EquipmentsMakatCustomInputComponent,
@@ -171,53 +155,56 @@ columns: {
 }, 
 }
 
-
+constructor(private router:Router) {
+  this.source = new LocalDataSource(this.data_table);
+ }
 
   ngOnInit() {
-    console.log("reference:",this.editStateBlocked)
+    console.log("editStateBlocked",this.editStateBlocked)
+    console.log("editStateBlocked form",this.form.editStateBlocked)
+    this.source = new LocalDataSource(this.data_table);
     this.reference1 = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference;
-    if(this.editStateBlocked||this.auth.checkPermissions(['מנהלן מערכת', 'מדווח אירועים']))
-        {
-
-          console.log(this.settings)
-          this.settings.actions.add=true
-          this.settings.actions.edit=true
-          this.settings.actions.delete=true
-          this.settings=Object.assign({},this.settings)
+    // if(!this.editStateBlocked||this.auth.checkPermissions(['מנהלן מערכת', 'מדווח אירועים']))
+    //     {
+    //       this.settings.hideSubHeader=true
+    //       this.settings.actions.add=false
+    //       this.settings.actions.edit=false
+    //       this.settings.actions.delete=false
+    //       this.settings=Object.assign({},this.settings)
          
-        }else{
-          this.settings.actions.add=false
-          this.settings.actions.edit=false
-          this.settings.actions.delete=false
-          this.settings=Object.assign(this.settings2,this.settings)
-        }
+    //     }else{
+    //       this.settings.hideSubHeader=false
+    //       this.settings.actions.add=true
+    //       this.settings.actions.edit=true
+    //       this.settings.actions.delete=true
+    //       this.settings=Object.assign({},this.settings);
+         
+    //     }
         
         
 
   }
   exisitingFormLoadData(array:any[]){
-    console.log(array)
       this.data_table=array
       this.source.load(this.data_table)
   }
   stateBlocked(editStateBlockeds)
-  {
-    this.editStateBlocked=editStateBlockeds
+  { 
+    
     if(editStateBlockeds)
-        {
-          this.settings.actions.add=false
-          this.settings.actions.edit=false
-          this.settings.actions.delete=false
-          this.settings=Object.assign({},this.settings)
+      {
+        this.editStateBlocked=editStateBlockeds
+        this.ngOnInit()
+      }
+    else{
+        this.ngOnInit()
         }
-        else{
-          this.settings.actions.add=true
-          this.settings.actions.edit=true
-          this.settings.actions.delete=true
-          this.settings=Object.assign({},this.settings)
-        }
-        this.settings=Object.assign({},this.settings)
+    
 
+  }
+  returnStatBlock(){
+    console.log(this.form.editStateBlocked)
+    return this.editStateBlocked
   }
 
   onDeleteConfirm(event): void {
@@ -227,12 +214,4 @@ columns: {
       event.confirm.reject();
     }
   }
-  // onCreateConfirm(event): void {
-  //   event.confirm.resolve();
-  // }
-  
-
-    // second parameter specifying whether to perform 'AND' or 'OR' search 
-    // (meaning all columns should contain search query or at least one)
-    // 'AND' by default, so changing to 'OR' by setting false her
 }

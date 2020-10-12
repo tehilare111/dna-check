@@ -7,8 +7,8 @@ import { userInfo } from 'os';
 })
 
 export class AuthService  {
-    checkPermissions(array_permission)
+    checkPermissions(arrayPermission)
     {
-        return array_permission.includes(localStorage.getItem("permissions"))
+        return arrayPermission.includes(localStorage.getItem("permissions"))
     }
 }

@@ -41,14 +41,12 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
     // Set eventType field according to the form event type
     this.form.eventType = this.eventType
     this.form.editStateBlocked=this.form.editStateBlocked
-    console.log(this.form)
     super.ngOnInit()
   }
 
 
   getConstasFeilds() {
     this.RestApiService.getConstansFieldsAndUnitsArray().subscribe((data) => {
-      console.log("data",data)
       this.equipmentsType = data.equipmentType
       this.ranks = data.rank
       this.materialsType = data.materialType

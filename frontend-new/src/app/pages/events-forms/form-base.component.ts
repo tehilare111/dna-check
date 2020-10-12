@@ -77,6 +77,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   ngOnInit(){
     // Recieve form data from db according to its reference
     this.reference = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference;
+    console.log("reference exist:",this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference)
     this.isDraft = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.isDraft == 'true';
 
     if (this.reference){
@@ -90,22 +91,17 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   exisitingFormLoadData(reference: string){
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
       this.form = data["form_event"]
-      console.log(this.form);      
-      console.log("data",data)
       this.equipmentsTable.exisitingFormLoadData(data["event_form_equipments"]);
     });
-      /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
+      if(this.form.editStateBlocked || this.auth.checkPermissions(['מנהלן מערכת', 'מדווח אירועים']))
 
         {
           this.form.editStateBlocked = false
         }else{
           this.form.editStateBlocked = true
         }
-      });
     // this.get_constas_feilds()
   }
-  */
-}
 
   newFormLoadData() {
     this.RestApiService.getNewEventForm().subscribe((data) => {
@@ -152,11 +148,9 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: FormType) => {
-            console.log(data);
             this.uploadLoading = false;
             if (data.editStateBlocked){
               this.popUpDialogContext = `האירוע נסגר לעריכה`;
-              this.editStateBlocked=data.editStateBlocked
               this.equipmentsTable.stateBlocked(data.editStateBlocked)
             } else {
               this.popUpDialogContext = `האירוע נפתח לעריכה`;
@@ -172,7 +166,6 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   }
 
   sendEvent(){
-    console.log("bar agever etzah")
     this.drafting = false;
     this.onSubmit();
   }
@@ -190,23 +183,22 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       this.openWithoutBackdropClick(this.simpleDialog)
     } else {
       this.openWithoutBackdropClick(this.directingDialog);
-      console.log("f")
       this.save();
     }
   }
 
   save() {
-    let eq=[]
+    let equipmenatsFailds=[]
     let arrayEquipments=this.equipmentsTable.data_table.map(a=>a)
     for(var i in arrayEquipments){
-      eq.push("$$",JSON.stringify(arrayEquipments[i]))
+      equipmenatsFailds.push("$$",JSON.stringify(arrayEquipments[i]))
     }
-    eq.push("$$")
+    equipmenatsFailds.push("$$")
 
     this.form = this.eventStatusForm.pushFormFields<FormType>(this.form);
 
     const formData: FormData = new FormData();
-    formData.append("equipments",eq.toString())
+    formData.append("equipments",equipmenatsFailds.toString())
     // insert lostForm to FormData object
     for(let [key, value] of Object.entries(this.form)){
       if (value && ! this.eventFilesFields.includes(key)) { formData.append(key, value); }
@@ -235,7 +227,6 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         (data: FormType) => {
           this.uploadLoading = false;
           this.reference = data.reference;
-          console.log("data to save",data)
           this.popUpDialogContext = `האירוע ${!this.drafting?'נוצר':'נשמר'} בהצלחה, סימוכין: ${this.reference}`;
         },
         error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
