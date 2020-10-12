@@ -3,7 +3,7 @@ import { NbDialogService } from '@nebular/theme';
 import { FormGroup, FormControl } from "@angular/forms";
 
 import { FormBaseComponent } from '../form-base.component'
-import { EquipmentReviewTemplate } from '../events-forms.templates';
+import { EquipmentReviewTemplate, EventForm } from '../events-forms.templates';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
 import { EquipmentsTableComponent } from '../components/equipments-table/equipments-table.component';
 
@@ -16,13 +16,13 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
   eventType: string = 'ביקורת ציוד';
   form: EquipmentReviewTemplate = new EquipmentReviewTemplate();
   eventFilesFields: string[] = ['reviewFile'];
+  editStateBlocked
   @ViewChild("equipmentsTable") equipmentsTable:EquipmentsTableComponent;
   @ViewChild("status") eventStatusForm : EventStatusComponent;
   // @ViewChild("chat") chatMessages : ChatComponent;
   @ViewChild("directingDialog") directingDialog : ElementRef;
   @ViewChild("simpleDialog") simpleDialog : ElementRef;
-  
- eventStatusOptions = ["טופל", "טרם טופל"]
+  eventStatusOptions = ["טופל", "טרם טופל"]
   units = []
   ranks = []
   equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
@@ -38,10 +38,10 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
   ngOnInit() {
     // Load all pages constants
     this.getConstasFeilds()
-
     // Set eventType field according to the form event type
     this.form.eventType = this.eventType
-    
+    this.form.editStateBlocked=this.form.editStateBlocked
+    console.log(this.form)
     super.ngOnInit()
   }
 

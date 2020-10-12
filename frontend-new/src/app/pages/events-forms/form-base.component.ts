@@ -42,7 +42,9 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   protected markValidator = markValidator;
   protected timeValidator = timeValidator;
   protected textValidator = textValidator;
-  protected equipments_array
+  protected equipments_array; 
+  protected editStateBlocked:boolean;
+
   /* components value */
   protected form: FormType;
   protected eventFilesFields: string[];
@@ -90,8 +92,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       this.form = data["form_event"]
       console.log(this.form);      
       console.log("data",data)
-      this.form.equipmentArray=data["event_form_equipments"];
-      console.log(this.form)   
+      this.equipmentsTable.exisitingFormLoadData(data["event_form_equipments"]);
     });
       /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
 
@@ -155,8 +156,11 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
             this.uploadLoading = false;
             if (data.editStateBlocked){
               this.popUpDialogContext = `האירוע נסגר לעריכה`;
+              this.editStateBlocked=data.editStateBlocked
+              this.equipmentsTable.stateBlocked(data.editStateBlocked)
             } else {
               this.popUpDialogContext = `האירוע נפתח לעריכה`;
+              this.equipmentsTable.stateBlocked(data.editStateBlocked)
             }   
           },
           error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${this.reference}`; })

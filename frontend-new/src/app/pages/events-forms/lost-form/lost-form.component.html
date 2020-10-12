@@ -105,7 +105,7 @@
                 <input [readonly]="this.form.editStateBlocked" type="text" nbInput fullWidth #equipmentMakat="ngModel" name="equipmentMakat" id="equipmentMakat" status="primary" placeholder="מק''ט ציוד/עותק חומר" [(ngModel)]="form.equipmentMakat" makatCopyValidation>
                 <div *ngIf="equipmentMakat.invalid&&equipmentMakat.dirty"><label class="label red">3 ספרות או 12 תווים</label></div>
               </div> -->
-               <ngx-equipments-table #equipmentsTable [form]="form" [equipmentsType]="equipmentsType" [materialsType]="materialsType" [units]="units" ></ngx-equipments-table>
+               <ngx-equipments-table #equipmentsTable [form]="form" [equipmentsType]="equipmentsType" [materialsType]="materialsType" [units]="units" [equipmentArray]="equipments_array" [reference]="reference"></ngx-equipments-table>
             </div>
           </div>
           <h6><b>גורמים ומקומות רלוונטים לאירוע:</b></h6>
