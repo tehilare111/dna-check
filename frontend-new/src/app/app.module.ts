@@ -19,9 +19,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CustomHttpInterceptor } from './injectables/custom-http-interceptor';
 import { NbToastrModule } from '@nebular/theme';
 
-
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -41,7 +42,6 @@ import { NbToastrModule } from '@nebular/theme';
       multi: true
     },
   ],
-
 })
 
 export class AppModule {

@@ -69,5 +69,4 @@ const SERVICES = [
     ...ENTRY_COMPONENTS,
   ],
 })
-export class ModalOverlaysModule {
-}
+export class ModalOverlaysModule {}

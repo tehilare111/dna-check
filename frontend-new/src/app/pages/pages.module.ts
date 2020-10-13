@@ -32,6 +32,9 @@ const PAGES_COMPONENTS = [
     MiscellaneousModule,
     TreeModule,
   ],
+  entryComponents: [
+    NotReadMsgsColComponent
+  ],
   declarations: [
     ...PAGES_COMPONENTS,
     ControlTableComponent,
@@ -40,11 +43,8 @@ const PAGES_COMPONENTS = [
     ConstantsFieldsComponent,
     FieldBoxComponent,
     RegisterComponent,
-    NotReadMsgsColComponent
+    NotReadMsgsColComponent,
   ],
-  entryComponents: [
-    NotReadMsgsColComponent
-  ]
 })
 export class PagesModule {
 }
