@@ -75,7 +75,6 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     // Recieve form data from db according to its reference
     this.reference = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference;
     this.isDraft = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.isDraft == 'true';
-    console.log("true_false:",this.form.editStateBlocked)
 
     if (this.reference){
       this.exisitingFormLoadData(this.reference);
