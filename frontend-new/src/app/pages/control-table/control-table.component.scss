@@ -2,3 +2,31 @@
     padding: 4px 4px 4px 4px;
     
 }
+:host /deep/ ng2-smart-table thead > tr > th  { 
+    background-color:#f4f4fc;
+    // background-color: var(--main-bg-color);
+    border-color:#f4f4fc; 
+    color-adjust: white;
+    color: white;
+    text-align: center;
+}
+
+:host /deep/ ng2-smart-table >tr { 
+    color: white;
+}
+.colorButton-events{
+    background-attachment: fixed;
+   background-color:#0095b6;
+}
+.colorButton-revew{
+    background-attachment: fixed;
+    background-color:#0095b6
+ }
+.colorButton-lost-form{
+    background-attachment: fixed;
+    background-color:#0095b6
+ }
+ .colorButton-Drafts{
+     background-color: #7df9ff;
+     background-attachment: fixed;
+ }

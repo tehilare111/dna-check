@@ -12,34 +12,38 @@ import { Router } from '@angular/router';
 })
 export class ControlTableComponent implements OnInit {
   eventsToPickUp = {
-    'EventsForms': {
-      'name': 'אירועים',
-      'route': '/pages/events-forms/lost-form',
-      'columns': {'reference': {'title': 'סימוכין', 'type': 'string'}, 'reporterName': {'title': 'שם מדווח', 'type': 'string'}, 'reporterUnit': {'title': 'יחידת מדווח', 'type': 'string'}}
-    },
-    'EquipmentReview': {
-      'name': 'ספירות',
-      'route': '/pages/events-forms/equipment-review',
-      'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': { 'title': 'יחידת מדווח'}}
-    },
-    'LostForm': {
-      'name': 'אובדנים',
-      'route': '/pages/events-forms/lost-form',
-      'columns': {'reference': {'title': 'סימוכין', 'type': 'string'}, 'reporterName': {'title': 'שם מדווח', 'type': 'string'}, 'reporterUnit': {'title': 'יחידת מדווח', 'type': 'string'}}
-  },
-    'defaultForms': {
+    'a_defaultForms': {
+      'name':"אירועים",
       'route': undefined,
-      'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}} 
+      'type':'html',
+      'color':"#5bc0de",
+      'columns': {'reference': {'title': 'סימוכין'},'eventType': {'title': 'סוג אירוע'}, 'date': {'title': 'תאריך פתיחת האירוע'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'message': {'title': 'הודעות שנקראו/ לא נקראו'},"lastDate":{"title":"תאריך עדכון אחרון"}},
+      'status':'info',
+      'class':'colorButton-events'
+    },
+    'b_EquipmentReview': {
+      'name': 'ספירות',
+      'type':'html',
+      'route': '/pages/events-forms/equipment-review',
+      'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': { 'title': 'יחידת מדווח'}},
+      'status':'info',
+      'color':"#5bc0de",
+      'class':'colorButton-revew'
+    },
+    'c_LostForm': {
+      'name': 'אובדנים',
+      'status':'info',
+      'type':'html',
+      'color':"#5bc0de",
+      'route': '/pages/events-forms/lost-form',
+      'class':'colorButton-lost-form',
+      'columns': {'reference': {'title': 'סימוכין', 'type': 'string'}, 'reporterName': {'title': 'שם מדווח', 'type': 'string'}, 'reporterUnit': {'title': 'יחידת מדווח', 'type': 'string'},'eventStatusShorted': {'title': 'סטאטוס טיפול', 'type': 'string'}, 'eventStatus': {'title': 'סטאטוס אירוע', 'type': 'string'}, 'equipmnetsType': {'title': 'סוג ציוד/חומר', 'type': 'string'}, 'equipmnetsMark': {'title': 'סימון ציוד/חומר', 'type': 'string'}, 'equipmnetsMakat': {'title': 'מספר ציוד/חומר', 'type': 'string'}, 'reportDate': {'title': 'תאריך דיווח', 'type': 'string'},'bargainDate': {'title': 'תאריך מציאה', 'type': 'string'},'clarificationDate': {'title': 'תאריך בירור', 'type': 'string'},'shortDate': {'title': 'תאריך טיפול', 'type': 'string'}},
+      
     },
     
-   
-  }
+    
+}
   eventsToPickUp2 = {
-    'defualtForms': {
-      'name': 'אירועים',
-      'route': '/pages/events-forms/lost-form',
-      'columns': {'reference': {'title': 'סימוכין', 'type': 'string'}, 'reporterName': {'title': 'שם מדווח', 'type': 'string'}, 'reporterUnit': {'title': 'יחידת מדווח', 'type': 'string'}}
-    },
     'EquipmentReview': {
       'name': 'ספירות',
       'route': '/pages/events-forms/equipment-review',
@@ -48,21 +52,31 @@ export class ControlTableComponent implements OnInit {
     'LostForm': {
       'name': 'אובדנים',
       'route': '/pages/events-forms/lost-form',
-      'columns': {'reference': {'title': 'סימוכין', 'type': 'string'}, 'reporterName': {'title': 'שם מדווח', 'type': 'string'}, 'reporterUnit': {'title': 'יחידת מדווח', 'type': 'string'}}
+      'columns': {'reference': {'title': 'סימוכין', 'type': 'string'}, 'reporterName': {'title': 'שם מדווח', 'type': 'string'}, 'reporterUnit': {'title': 'יחידת מדווח', 'type': 'string'},'eventStatusShorted': {'title': 'סטאטוס טיפול', 'type': 'string'}, 'eventStatus': {'title': 'סטאטוס אירוע', 'type': 'string'}, 'equipmnetsType': {'title': 'סוג ציוד/חומר', 'type': 'string'}, 'equipmnetsMark': {'title': 'סימון ציוד/חומר', 'type': 'string'}, 'equipmnetsMakat': {'title': 'מספר ציוד/חומר', 'type': 'string'}, 'reportDate': {'title': 'תאריך דיווח', 'type': 'string'},'bargainDate': {'title': 'תאריך מציאה', 'type': 'string'},'clarificationDate': {'title': 'תאריך בירור', 'type': 'string'},'shortDate': {'title': 'תאריך טיפול', 'type': 'string'}}
     },
     
+    
+    
+    
   }
-  pickedUpEvent = this.eventsToPickUp.defaultForms;
+  pickedUpEvent = this.eventsToPickUp.a_defaultForms;
   settings = {
     actions: false,
-    columns: {...this.pickedUpEvent.columns}
-  }
-  
+    columns: {
+      
+      ...this.pickedUpEvent.columns},
+      
+      attr:{
+        
+      }
+      
+  };
+  routeDrafts=true
   source: LocalDataSource = new LocalDataSource();
   formalsUrl: string = '/forms/';
   draftsUrl: string = '/draft-forms/';
   data = [];
-  flagDesable=false
+  flagDesable:boolean=true;
   isDraft:boolean = false;
 
   constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router) { 
@@ -76,27 +90,29 @@ export class ControlTableComponent implements OnInit {
 
   draftsColumns(){
     var value=document.getElementById("טיוטות").title
-    this.loadData(value)
-    this.settings.columns={'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}} 
+    this.routeDrafts=false
+    this.settings.columns={'reference': {'title': 'סימוכין'},'eventType': {'title': 'סוג אירוע'}, 'date': {'title': 'תאריך פתיחת האירוע'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'message': {'title': 'הודעות שנקראו/ לא נקראו'},"lastDate":{"title":"תאריך עדכון אחרון"}}
     this.settings = Object.assign({}, this.settings);
     this.isDraft=true
+    this.loadData("טיוטות")
   }
-  defualtForms(){
-    var value=document.getElementById("אירועים").title
-    console.log(value) 
-    this.loadData(value)
-    this.settings.columns={'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}}
-    this.settings = Object.assign({}, this.settings);
-  }
+  // defualtForms(){
+  //   var value=document.getElementById("אירועים").title
+  //   this.loadTable(value)
+  //   this.settings.columns={'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}}
+  //   this.settings = Object.assign({}, this.settings);
+  // }
   loadTable(value){
     // if (value.name == this.eventsToPickUp.Drafts.name) this.isDraft = true;
     // else this.isDraft = false;
-    console.log(value)
-    // this.loadData(value.route?value.name:'');
-
+    
+    this.routeDrafts=true
+    this.loadData(value.route?value.name:'');
     this.settings.columns = value.columns;
     this.settings = Object.assign({}, this.settings);
+    
   }
+  
 
   loadData(eventType: string) {
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${eventType}`).subscribe((data_from_server) => {
@@ -108,12 +124,21 @@ export class ControlTableComponent implements OnInit {
 
   formClicked(event) {
     let path = ''
+    console.log(event.data.eventType)
     for(let [key, value] of Object.entries(this.eventsToPickUp)){
       if(value['name'] == event.data.eventType){
+        console.log("ok")
         path = value['route']
+        this.ToastService.showToast('success', 'הועברת לטופס: '+event.data.eventType, '')
       }
+      
     }
+    console.log(path)
+    if (path==''){
+      this.ToastService.showToast('fail', 'הדף לא נמצא', '')
+    }else{
     this.router.navigate([path, {reference: event.data.reference, isDraft: this.isDraft}]);
+  }
   }
 
   exportToXL(value){

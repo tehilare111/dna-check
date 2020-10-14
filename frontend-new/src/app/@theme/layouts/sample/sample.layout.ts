@@ -15,14 +15,31 @@ import { StateService } from '../../../@core/utils';
 @Component({
   selector: 'ngx-sample-layout',
   styleUrls: ['./sample.layout.scss'],
+  // template: `
+  //     <nb-layout [center]="layout.id === 'center-column'" windowMode>
+  //     <nb-layout-header fixed>
+  //       <ngx-header [position]="sidebar.id === 'start' ? 'normal': 'inverse'"></ngx-header>
+  //     </nb-layout-header>
+
+  // <nb-sidebar class="menu-sidebar compacted"
+  //                    tag="menu-sidebar"  >   
+                     
+                     
+
+  //                    <nb-layout-column class="main-content">
+  //                            <ng-content select="router-outlet"></ng-content>
+  //                          </nb-layout-column>
+  //       </nb-sidebar>
+  // `
   template: `
     <nb-layout [center]="layout.id === 'center-column'" windowMode>
       <nb-layout-header fixed>
         <ngx-header [position]="sidebar.id === 'start' ? 'normal': 'inverse'"></ngx-header>
       </nb-layout-header>
 
-      <nb-sidebar class="menu-sidebar"
+      <nb-sidebar state="compacted" class="main-content"
                    tag="menu-sidebar"
+                   style="width:'3.5rem'"
                    responsive
                    [end]="sidebar.id === 'end'"> 
         <ng-content select="nb-menu"></ng-content>
@@ -43,17 +60,7 @@ import { StateService } from '../../../@core/utils';
       <nb-layout-footer fixed>
         <ngx-footer></ngx-footer>
       </nb-layout-footer>
-
-      <nb-sidebar class="settings-sidebar"
-                   tag="settings-sidebar"
-                   state="collapsed"
-                   fixed
-                   [end]="sidebar.id !== 'end'">
-        <ngx-theme-settings></ngx-theme-settings>
-      </nb-sidebar>
-    </nb-layout>
-    <ngx-toggle-settings-button></ngx-toggle-settings-button>
-  `,
+`,
 })
 export class SampleLayoutComponent implements OnDestroy {
 
