@@ -75,6 +75,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     // Recieve form data from db according to its reference
     this.reference = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference;
     this.isDraft = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.isDraft == 'true';
+    console.log("true_false:",this.form.editStateBlocked)
 
     if (this.reference){
       this.exisitingFormLoadData(this.reference);
@@ -88,12 +89,13 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
       this.form = data
       console.log(this.form);      
-      /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
+      if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
-          this.form.editStateBlocked = false
-        }else{
           this.form.editStateBlocked = true
-        }*/
+        }else{
+          this.form.editStateBlocked =false
+        }
+        
       });
     // this.get_constas_feilds()
   }
@@ -179,9 +181,19 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     } else {
       this.openWithoutBackdropClick(this.directingDialog);
       this.save();
+      this.DeleteFormFromDrafts(this.reference)
     }
   }
+  DeleteFormFromDrafts(reference){
+    this.RestApiService.delete(`${this.draftsUrl}${this.reference}`)
+    .subscribe(
+        (data: FormType) => {
+          this.uploadLoading = false;
+        },
+        error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${this.reference}`; })
+  }
 
+  
   save() {
     
     this.form = this.eventStatusForm.pushFormFields<FormType>(this.form);
@@ -216,6 +228,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
           this.uploadLoading = false;
           this.reference = data.reference;
           this.popUpDialogContext = `האירוע ${!this.drafting?'נוצר':'נשמר'} בהצלחה, סימוכין: ${this.reference}`;
+          this.form.editStateBlocked=true;
         },
         error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
     }
