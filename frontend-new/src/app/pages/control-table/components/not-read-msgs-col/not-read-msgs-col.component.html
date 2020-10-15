@@ -1,8 +1,2 @@
-<!--<i *ngIf="renderValue > 0" class="ion-alert-circled" status="primary" style="color: red"></i>-->
-<div *ngIf="this.renderValue" [nbPopover]="template" [nbPopoverContext]="{ text: 'Example context' }" nbPopoverTrigger="hover" nbPopoverStatus="info" nbPopoverPlacement="top" class="circle">{{renderValue}}</div>
-
-<ng-template #template let-data>
-    <button nbButton status="info" (click)="updateMessagesRead()" hero>סמן כנקרא</button>
-    <br>
-    <button nbButton status="info" hero>סמן כלא נקרא</button>
-</ng-template>
+<div *ngIf="!renderValue" nbPopover="סמן הודעה כלא נקראה" (click)="updateEventChange()" nbPopoverTrigger="hint" nbPopoverPlacement="top" class="circle white"></div>
+<div *ngIf="renderValue" nbPopover="סמן הודעה כנקראה" (click)="updateMessagesRead()" nbPopoverTrigger="hint" nbPopoverPlacement="top" class="circle red">{{renderValue}}</div>

@@ -21,6 +21,8 @@ export class NotReadMsgsColComponent implements ViewCell, OnInit {
 
   @Output() updateMsgsInControlTable = new EventEmitter<any>();
 
+  //ViewChild() circle: ElementRef;
+
   constructor(private RestApiService: RestApiService, private ToastService:ToastService) { }
 
   ngOnInit() {
@@ -54,5 +56,9 @@ export class NotReadMsgsColComponent implements ViewCell, OnInit {
       },
       (error) => { this.ToastService.showToast('fail', 'בעיה בעדכון השרת', ''); }
     )
+  }
+
+  toggleColor(){
+       
   }
 }
