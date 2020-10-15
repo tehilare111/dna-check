@@ -1,23 +1,51 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild,AfterViewInit } from '@angular/core';
 import { LocalDataSource } from 'ng2-smart-table';
-
+import {merge, Observable, of as observableOf} from 'rxjs';
 import { SmartTableData } from '../../@core/data/smart-table';
 import { RestApiService } from '../../services/rest-api.service';
 import { ToastService } from '../../services/toast.service';
 import { Router } from '@angular/router';
+import {MatSort} from '@angular/material/sort';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource,MatPaginatorModule} from '@angular/material';
+
+
+
+
+export interface PeriodicElement {
+  reference: string;
+  eventType: string;
+  date: string;
+  reporterName: string;
+  reporterUnit: string;
+  message: string;
+  reviewDate: string;
+
+}
+const ELEMENT_DATA: PeriodicElement[] = [
+]
+
 @Component({
   selector: 'ngx-control-table',
   templateUrl: './control-table.component.html',
   styleUrls: ['./control-table.component.scss']
 })
-export class ControlTableComponent implements OnInit {
+export class ControlTableComponent implements OnInit,AfterViewInit{
+  displayedColumnsTitle:string[]= [];
+  dataSource=new MatTableDataSource<any>();
+  @ViewChild(MatPaginator) paginator: MatPaginator
+
+  draftsTtile=['סימוכין','סוג אירוע','תאריך פתיחת האירוע','שם מדווח','יחידת מדווח','הודעות שנקראו/ לא נקראו']
+  draftsColumn=['reference','eventType','date','reporterName','reporterUnit','message']
+
   eventsToPickUp = {
     'a_defaultForms': {
       'name':"אירועים",
       'route': undefined,
       'type':'html',
       'color':"#5bc0de",
-      'columns': {'reference': {'title': 'סימוכין'},'eventType': {'title': 'סוג אירוע'}, 'date': {'title': 'תאריך פתיחת האירוע'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'message': {'title': 'הודעות שנקראו/ לא נקראו'},"lastDate":{"title":"תאריך עדכון אחרון"}},
+      'title':['סימוכין','סוג אירוע','תאריך פתיחת האירוע','שם מדווח','יחידת מדווח','הודעות שנקראו/ לא נקראו','תאריך עדכון אחרון'],
+      'columns': ['reference','eventType','date','reporterName','reporterUnit','message','reviewDate'],
       'status':'info',
       'class':'colorButton-events'
     },
@@ -25,7 +53,8 @@ export class ControlTableComponent implements OnInit {
       'name': 'ספירות',
       'type':'html',
       'route': '/pages/events-forms/equipment-review',
-      'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': { 'title': 'יחידת מדווח'}},
+      'title': ['סימוכין','תאריך','שם מדווח','יחידת מדווח'],
+      'columns': ['reference', 'date', 'reporterName', 'reporterUnit'],
       'status':'info',
       'color':"#5bc0de",
       'class':'colorButton-revew'
@@ -37,28 +66,11 @@ export class ControlTableComponent implements OnInit {
       'color':"#5bc0de",
       'route': '/pages/events-forms/lost-form',
       'class':'colorButton-lost-form',
-      'columns': {'reference': {'title': 'סימוכין', 'type': 'string'}, 'reporterName': {'title': 'שם מדווח', 'type': 'string'}, 'reporterUnit': {'title': 'יחידת מדווח', 'type': 'string'},'eventStatusShorted': {'title': 'סטאטוס טיפול', 'type': 'string'}, 'eventStatus': {'title': 'סטאטוס אירוע', 'type': 'string'}, 'equipmnetsType': {'title': 'סוג ציוד/חומר', 'type': 'string'}, 'equipmnetsMark': {'title': 'סימון ציוד/חומר', 'type': 'string'}, 'equipmnetsMakat': {'title': 'מספר ציוד/חומר', 'type': 'string'}, 'reportDate': {'title': 'תאריך דיווח', 'type': 'string'},'bargainDate': {'title': 'תאריך מציאה', 'type': 'string'},'clarificationDate': {'title': 'תאריך בירור', 'type': 'string'},'shortDate': {'title': 'תאריך טיפול', 'type': 'string'}},
+      'title': ['סימוכין','שם מדווח','יחידת מדווח', 'סטאטוס טיפול','סטאטוס אירוע' ,'סוג ציוד/חומר' , 'סימון ציוד/חומר', 'מספר ציוד/חומר', 'תאריך דיווח','תאריך מציאה', 'תאריך בירור','תאריך טיפול'],
+      'columns': ['reference','reporterName', 'reporterUnit','eventStatusShorted', 'eventStatus', 'equipmnetsType', 'equipmnetsMark', 'equipmnetsMakat', 'reportDate','bargainDate','clarificationDate','shortDate'],
       
-    },
-    
-    
+    },  
 }
-  eventsToPickUp2 = {
-    'EquipmentReview': {
-      'name': 'ספירות',
-      'route': '/pages/events-forms/equipment-review',
-      'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': { 'title': 'יחידת מדווח'}}
-    },
-    'LostForm': {
-      'name': 'אובדנים',
-      'route': '/pages/events-forms/lost-form',
-      'columns': {'reference': {'title': 'סימוכין', 'type': 'string'}, 'reporterName': {'title': 'שם מדווח', 'type': 'string'}, 'reporterUnit': {'title': 'יחידת מדווח', 'type': 'string'},'eventStatusShorted': {'title': 'סטאטוס טיפול', 'type': 'string'}, 'eventStatus': {'title': 'סטאטוס אירוע', 'type': 'string'}, 'equipmnetsType': {'title': 'סוג ציוד/חומר', 'type': 'string'}, 'equipmnetsMark': {'title': 'סימון ציוד/חומר', 'type': 'string'}, 'equipmnetsMakat': {'title': 'מספר ציוד/חומר', 'type': 'string'}, 'reportDate': {'title': 'תאריך דיווח', 'type': 'string'},'bargainDate': {'title': 'תאריך מציאה', 'type': 'string'},'clarificationDate': {'title': 'תאריך בירור', 'type': 'string'},'shortDate': {'title': 'תאריך טיפול', 'type': 'string'}}
-    },
-    
-    
-    
-    
-  }
   pickedUpEvent = this.eventsToPickUp.a_defaultForms;
   settings = {
     actions: false,
@@ -72,43 +84,55 @@ export class ControlTableComponent implements OnInit {
       
   };
   routeDrafts=true
-  source: LocalDataSource = new LocalDataSource();
   formalsUrl: string = '/forms/';
   draftsUrl: string = '/draft-forms/';
   data = [];
   flagDesable:boolean=true;
   isDraft:boolean = false;
-
-  constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router) { 
-  } 
+  displayedColumns=[]
+  @ViewChild(MatSort) sort: MatSort;
+  constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router) {
+    this.displayedColumns=this.pickedUpEvent.columns
+    this.displayedColumnsTitle=this.pickedUpEvent.title
+  }
   
-
-  ngOnInit() {
-    this.source.load(this.data);
+  ngAfterViewInit (){
+    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+  }
+  ngOnInit() :void{
+    this.dataSource.data=this.data;
+    this.dataSource.paginator = this.paginator;
     this.loadData('');
   }
-
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+  sortData($event){
+    const sortId=$event.active;
+    const sortDirection=$event.direction
+    if('asc'==sortDirection){
+      this.dataSource.data=this.data.slice().sort((a,b)=>(a[sortId]>b[sortId]?1:0));
+      
+    }else{
+      this.dataSource.data=this.data.slice().sort((a,b)=>(a[sortId]<b[sortId]?1:0));
+    }
+   }
   draftsColumns(){
+   
     var value=document.getElementById("טיוטות").title
     this.routeDrafts=false
-    this.settings.columns={'reference': {'title': 'סימוכין'},'eventType': {'title': 'סוג אירוע'}, 'date': {'title': 'תאריך פתיחת האירוע'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'message': {'title': 'הודעות שנקראו/ לא נקראו'},"lastDate":{"title":"תאריך עדכון אחרון"}}
     this.settings = Object.assign({}, this.settings);
     this.isDraft=true
+    this.displayedColumns=this.draftsColumn
+    this.displayedColumnsTitle=this.draftsTtile
     this.loadData("טיוטות")
   }
-  // defualtForms(){
-  //   var value=document.getElementById("אירועים").title
-  //   this.loadTable(value)
-  //   this.settings.columns={'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}}
-  //   this.settings = Object.assign({}, this.settings);
-  // }
   loadTable(value){
-    // if (value.name == this.eventsToPickUp.Drafts.name) this.isDraft = true;
-    // else this.isDraft = false;
-    
     this.routeDrafts=true
     this.loadData(value.route?value.name:'');
-    this.settings.columns = value.columns;
+    this.displayedColumnsTitle=value.title
+    this.displayedColumns=value.columns
     this.settings = Object.assign({}, this.settings);
     
   }
@@ -116,29 +140,33 @@ export class ControlTableComponent implements OnInit {
 
   loadData(eventType: string) {
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${eventType}`).subscribe((data_from_server) => {
+      console.log(data_from_server)
       this.data=data_from_server
-      this.source.load(this.data);
+      this.dataSource.data=this.data
+      // this.source.load(this.data);
       this.isDraft=false
     });
   }
 
   formClicked(event) {
     let path = ''
-    console.log(event.data.eventType)
+    console.log(event)
     for(let [key, value] of Object.entries(this.eventsToPickUp)){
-      if(value['name'] == event.data.eventType){
-        console.log("ok")
+      if(value['name'] == event.eventType){
+        console.log(value['route'])
         path = value['route']
-        this.ToastService.showToast('success', 'הועברת לטופס: '+event.data.eventType, '')
+        this.ToastService.showToast('success', 'הועברת לטופס: '+event.eventType, '')
+        
       }
       
     }
-    console.log(path)
     if (path==''){
       this.ToastService.showToast('fail', 'הדף לא נמצא', '')
-    }else{
-    this.router.navigate([path, {reference: event.data.reference, isDraft: this.isDraft}]);
-  }
+      
+    }
+    else{
+      this.router.navigate([path, {reference: event.reference, isDraft: this.isDraft}]);
+    }
   }
 
   exportToXL(value){
@@ -157,17 +185,29 @@ export class ControlTableComponent implements OnInit {
     anchor.click();
   }
 
-  onSearch(query: string = '') {
-    // Deny table filterring when there is no input
-    if(query == ''){ this.source.setFilter([]); return; }
+  openFilter(col:string){
+    console.log(col)
+    document.getElementById(col+'-filter').removeAttribute('hidden')
+  }
+  closeFilter(col:string){
+    document.getElementById(col+'-filter').setAttribute('hidden','true')
+  }
 
-    // Orgenize fields in search structure 
-    var tableFieldsForSerach = Object.keys(this.pickedUpEvent.columns).map(el => { return {field: el, search: query}; });
+  onSearch(col:string,filterText:string) {
+    if(filterText.trim()!=''){
+      this.dataSource.data=this.data.slice().filter((element)=>JSON.stringify(element[col]).indexOf(filterText)>-1);
+    }
     
-    this.source.setFilter(
-      // fields we want to include in the search
-      tableFieldsForSerach
-    , false);
+    // Deny table filterring when there is no input
+    // if(query == ''){ this.source.setFilter([]); return; }
+
+    // // Orgenize fields in search structure 
+    // var tableFieldsForSerach = Object.keys(this.pickedUpEvent.columns).map(el => { return {field: el, search: query}; });
+    
+    // this.source.setFilter(
+    //   // fields we want to include in the search
+    //   tableFieldsForSerach
+    // , false);
     // second parameter specifying whether to perform 'AND' or 'OR' search 
     // (meaning all columns should contain search query or at least one)
     // 'AND' by default, so changing to 'OR' by setting false here

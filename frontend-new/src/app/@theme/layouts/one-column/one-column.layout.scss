@@ -105,7 +105,7 @@
       }
     }
 
-    &.compacted {
+    &.compacted,&.expended.start {
 
       /deep/ nb-sidebar-header {
         padding-left: 0;
@@ -138,7 +138,7 @@
     nb-sidebar.menu-sidebar {
 
       margin-top: 0;
-      width: 10rem;
+      width: 3.5rem;
       /deep/ .main-container {
         height: calc(#{nb-theme(sidebar-height)} - #{nb-theme(header-height)}) !important;
         @include nb-ltr(border-top-right-radius, 0);

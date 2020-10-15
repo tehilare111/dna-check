@@ -18,6 +18,7 @@ import { ThemeModule } from './@theme/theme.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CustomHttpInterceptor } from './injectables/custom-http-interceptor';
 import { NbToastrModule } from '@nebular/theme';
+import {MatPaginatorModule} from '@angular/material'
 
 
 @NgModule({
@@ -32,6 +33,8 @@ import { NbToastrModule } from '@nebular/theme';
     ThemeModule.forRoot(),
     CoreModule.forRoot(),
     NoopAnimationsModule,
+    MatPaginatorModule,
+    
   ],
   bootstrap: [AppComponent],
   providers: [

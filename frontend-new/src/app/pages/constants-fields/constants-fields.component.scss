@@ -2,6 +2,29 @@ h1 {
     color: white;
     float: right;
 }
+.nb-icon{
+    //margin: 0.5rem;
+    margin: 0 0.5rem 0 0.5rem;
+}
+.icon {
+    display: inline-block;
+    width: 3rem;
+    padding: 0.8rem 0;
+    text-align: center;
+    font-size: 1.3rem;
+
+    i:hover {
+    opacity: 0.3;
+    cursor: pointer;
+    }
+}
+.icon_1 {
+ display: inline-block;
+ width: 3rem;
+ padding: 0.8rem 0;
+ text-align: center;
+ font-size: 1.5rem;
+}
 
 .saveButton{
     margin-bottom: 1rem;

@@ -31,8 +31,8 @@ export class HeaderComponent implements OnInit {
   }
 
   toggleSidebar(): boolean {
-    this.sidebarService.toggle(true, 'menu-sidebar');
-    this.layoutService.changeLayoutSize();
+    // this.sidebarService.toggle(true, 'menu-sidebar');
+    // this.layoutService.changeLayoutSize();
 
     return false;
   }

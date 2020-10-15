@@ -12,7 +12,7 @@ import { takeWhile } from 'rxjs/operators';
         <ngx-header></ngx-header>
       </nb-layout-header>
 
-      <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive>
+      <nb-sidebar state="compacted" class="menu-sidebar" tag="menu-sidebar" responsive>
         <nb-sidebar-header *ngIf="currentTheme !== 'corporate'">
         </nb-sidebar-header>
         <ng-content select="nb-menu"></ng-content>
