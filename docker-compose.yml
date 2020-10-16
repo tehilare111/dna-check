@@ -1,0 +1,15 @@
+version: '3.3'
+
+services:
+        front:
+                container_name: front
+                build:
+                        context: './frontend-new'
+                        dockerfile: Dockerfile
+                volumes:
+                        - './frontend-new:/app'
+                        - '/app/node_modules'
+                expose:
+                        - '4200'
+                ports:
+                        - '4201:4200'
