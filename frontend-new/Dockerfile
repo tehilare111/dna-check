@@ -18,7 +18,9 @@ COPY package.json /app/package.json
 # RUN npm install -g @angular/cli@7.3.9
 
 # add app
-COPY . /app
+# COPY . /app
+
+EXPOSE 4200 49153
 
 # start app
 CMD npm i && npm start
