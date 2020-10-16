@@ -13,7 +13,8 @@ import { ToastService } from '../../../../services/toast.service';
 export class NotReadMsgsColComponent implements ViewCell, OnInit {
 
   renderValue;
-  url = '/msg-read/'
+  urlRead = '/msg-read/'
+  urlNotRead = '/msg-unread/'
   reference: string;
 
   @Input() value: string | number;
@@ -29,13 +30,12 @@ export class NotReadMsgsColComponent implements ViewCell, OnInit {
     const values = this.value.toString().split(';')
     this.reference = values[1];
     const temp = parseInt(values[0]);
-
-    switch(true){
-      
+    
+    switch(true){  
       case temp > 0:
         this.renderValue = temp;
         break;
-      case temp == -1:
+      case temp == 0:
         this.renderValue = '';
         break;
       default:
@@ -44,10 +44,24 @@ export class NotReadMsgsColComponent implements ViewCell, OnInit {
     }
   }
 
+  updateMessagesNotRead(){
+    let unreadedMessages = JSON.parse(localStorage.getItem('unreadedMessages'));
+
+    this.RestApiService.put(`${this.urlNotRead}${this.reference}`, {}).subscribe(
+      (data) => {
+        this.renderValue = '';
+        unreadedMessages[this.reference] = 0;
+        localStorage.setItem("unreadedMessages", JSON.stringify(unreadedMessages))
+        this.updateMsgsInControlTable.emit({'value': this.renderValue, 'row': this.rowData});
+      },
+      (error) => { this.ToastService.showToast('fail', 'בעיה בעדכון השרת', ''); }
+    )
+  }
+
   updateMessagesRead(){
     let unreadedMessages = JSON.parse(localStorage.getItem('unreadedMessages'));
 
-    this.RestApiService.put(`${this.url}${this.reference}`, {}).subscribe(
+    this.RestApiService.put(`${this.urlRead}${this.reference}`, {}).subscribe(
       (data) => {
         this.renderValue = 0;
         delete unreadedMessages[this.reference];
@@ -56,9 +70,5 @@ export class NotReadMsgsColComponent implements ViewCell, OnInit {
       },
       (error) => { this.ToastService.showToast('fail', 'בעיה בעדכון השרת', ''); }
     )
-  }
-
-  toggleColor(){
-       
   }
 }

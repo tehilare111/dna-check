@@ -22,8 +22,8 @@ import csv
 from datetime import datetime
 
 @csrf_exempt
-@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_UNIT=True)
-def draft_forms_list(request, event_type, unit):
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_USER=True)
+def draft_forms_list(request, event_type, user):
     '''
         Responsible to hendle requests from main control table page.
         Relevant urls: /api/draft-forms/*
@@ -31,7 +31,7 @@ def draft_forms_list(request, event_type, unit):
         DELETE - Delete all table content. 
     '''
     if request.method == 'GET':
-        forms = DraftFormsTable.objects.filter(reporterUnit__in=[unit])
+        forms = DraftFormsTable.objects.filter(reporterUnit__in=[user.unit])
         draft_form_serializer = DraftFormsSerializer(forms, many=True)
 
         return JsonResponse(draft_form_serializer.data, safe=False) 
@@ -82,8 +82,8 @@ class DraftEventFrom(APIView):
         draft_form_serializer = DraftFormsSerializer(draft_event_form)
         return JsonResponse(draft_form_serializer.data)
 
-    @check_permissions_dec([MANAGER], API_VIEW=True, RETURN_UNIT=True)
-    def delete(self, request, reference, unit, *args, **kwargs):
+    @check_permissions_dec([MANAGER], API_VIEW=True, RETURN_USER=True)
+    def delete(self, request, reference, user, *args, **kwargs):
         try: 
             draft_event_form = DraftFormsTable.objects.get(reference=reference)
         except DraftFormsTable.DoesNotExist: 
@@ -92,6 +92,6 @@ class DraftEventFrom(APIView):
         # Delete this event form instance from the messages database
         delete_event_messages(reference)
         # Delete this event messages from all relevant users
-        update_user_event_deleted(reference, unit)
+        update_user_event_deleted(reference, user.unit)
         draft_event_form.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)  

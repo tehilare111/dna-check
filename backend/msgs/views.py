@@ -11,8 +11,8 @@ from msgs.models import Msgs
 from msgs.utils import update_message_for_relevant_users, update_user_read_msg
 
 @csrf_exempt
-@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_UNIT=True)
-def msgs(request, reference, unit):
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_USER=True)
+def msgs(request, reference, user):
     try: 
         event_form_msgs = Msgs.objects.get(reference=reference) 
     except Msgs.DoesNotExist: 
@@ -28,17 +28,31 @@ def msgs(request, reference, unit):
         
         if event_form_msgs_serializer.is_valid():
             event_form_msgs_serializer.save()
-            update_message_for_relevant_users(unit, event_form_msgs_serializer.data['reporterUnit'], reference)
+            update_message_for_relevant_users(user.unit, event_form_msgs_serializer.data['reporterUnit'], reference)
             return JsonResponse(event_form_msgs_serializer.data) 
         else:
             return HttpResponse(event_form_msgs_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @csrf_exempt
-@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_PERSONAL_NUMBER=True)
-def user_read_msg(request, reference, personal_number):
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_USER=True)
+def user_read_msg(request, reference, user):
     
-    if update_user_read_msg(personal_number, reference):
+    if str(reference) in user.unreadedMessages:
+        del user.unreadedMessages[str(reference)]
+        user.save()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
     
-    return HttpResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+
+@csrf_exempt
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_USER=True)
+def user_not_read_msg(request, reference, user):
+    try:
+        user.unreadedMessages[str(reference)] = 0
+        user.save()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+    
+    except:
+        return HttpResponse(status=status.HTTP_400_BAD_REQUEST)

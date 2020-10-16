@@ -1,2 +1,2 @@
-<div *ngIf="!renderValue" nbPopover="סמן הודעה כלא נקראה" (click)="updateEventChange()" nbPopoverTrigger="hint" nbPopoverPlacement="top" class="circle white"></div>
-<div *ngIf="renderValue" nbPopover="סמן הודעה כנקראה" (click)="updateMessagesRead()" nbPopoverTrigger="hint" nbPopoverPlacement="top" class="circle red">{{renderValue}}</div>
+<div *ngIf="renderValue==undefined" nbPopover="סמן כלא נקרא" (click)="updateMessagesNotRead()" nbPopoverTrigger="hint" nbPopoverPlacement="top" class="circle white"></div>
+<div *ngIf="renderValue!=undefined" nbPopover="סמן כנקרא" (click)="updateMessagesRead()" nbPopoverTrigger="hint" nbPopoverPlacement="top" class="circle red">{{renderValue}}</div>

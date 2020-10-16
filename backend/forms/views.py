@@ -22,8 +22,8 @@ import csv
 from datetime import datetime
 
 @csrf_exempt
-@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_UNIT=True)
-def forms_list(request, event_type, unit):
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_USER=True)
+def forms_list(request, event_type, user):
     '''
         Responsible to hendle requests from main control table page.
         Relevant urls: /api/forms/*
@@ -33,9 +33,9 @@ def forms_list(request, event_type, unit):
     '''
     if request.method == 'GET':
         if event_type == '':
-            forms = FormsTable.objects.filter(reporterUnit__in=get_inferior_units(unit))
+            forms = FormsTable.objects.filter(reporterUnit__in=get_inferior_units(user.unit))
         else:
-            forms = FormsTable.objects.filter(eventType=event_type, reporterUnit__in=get_inferior_units(unit))
+            forms = FormsTable.objects.filter(eventType=event_type, reporterUnit__in=get_inferior_units(user.unit))
         
         form_serializer = FormsSerializer(forms, many=True)
 
@@ -142,8 +142,8 @@ class OfficialEventFrom(APIView):
         form_serializer = FormsSerializer(event_form)
         return JsonResponse(form_serializer.data)
 
-    @check_permissions_dec([MANAGER], API_VIEW=True, RETURN_UNIT=True)
-    def delete(self, request, reference, unit, *args, **kwargs):
+    @check_permissions_dec([MANAGER], API_VIEW=True, RETURN_USER=True)
+    def delete(self, request, reference, user, *args, **kwargs):
         try: 
             event_form = FormsTable.objects.get(reference=reference)
         except FormsTable.DoesNotExist: 
@@ -152,6 +152,6 @@ class OfficialEventFrom(APIView):
         # Delete this event form instance from the messages database
         delete_event_messages(reference)
         # Delete this event messages from all relevant users
-        update_user_event_deleted(reference, unit)
+        update_user_event_deleted(reference, user.unit)
         event_form.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
