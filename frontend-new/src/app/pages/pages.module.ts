@@ -14,8 +14,8 @@ import { RegisterComponent } from './details_users/register/register.component';
 import { ManagementComponent } from './management/management.component';
 import { TreeModule } from 'angular-tree-component';
 import { LoginComponent } from './details_users/login/login.component';
-
-
+import {MatTableModule} from '@angular/material'
+import {MatInputModule,MatOptionModule, MatSelectModule,MatPaginatorModule ,MatIconModule,MatSortModule} from '@angular/material'
 const PAGES_COMPONENTS = [
   PagesComponent,
 ];
@@ -23,13 +23,19 @@ const PAGES_COMPONENTS = [
 @NgModule({
   imports: [
     Ng2SmartTableModule,
-
     PagesRoutingModule,
     ThemeModule,
     DashboardModule,
     ECommerceModule,
     MiscellaneousModule,
     TreeModule,
+    MatTableModule,
+    MatInputModule,
+    MatSortModule,
+    MatSelectModule,
+    MatOptionModule,
+    
+    
   ],
   declarations: [
     ...PAGES_COMPONENTS,
@@ -38,7 +44,9 @@ const PAGES_COMPONENTS = [
     LoginComponent,
     ConstantsFieldsComponent,
     FieldBoxComponent,
-    RegisterComponent
+    RegisterComponent,
+  
+
 
   ],
 })

@@ -1,108 +1,172 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild,AfterViewInit } from '@angular/core';
 import { LocalDataSource } from 'ng2-smart-table';
-
+import {merge, Observable, of as observableOf} from 'rxjs';
 import { SmartTableData } from '../../@core/data/smart-table';
 import { RestApiService } from '../../services/rest-api.service';
 import { ToastService } from '../../services/toast.service';
 import { Router } from '@angular/router';
+import {MatSort} from '@angular/material/sort';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource,MatPaginatorModule} from '@angular/material';
+
+
+
+
+export interface PeriodicElement {
+  reference: string;
+  eventType: string;
+  date: string;
+  reporterName: string;
+  reporterUnit: string;
+  message: string;
+  reviewDate: string;
+
+}
+const ELEMENT_DATA: PeriodicElement[] = [
+]
+
 @Component({
   selector: 'ngx-control-table',
   templateUrl: './control-table.component.html',
   styleUrls: ['./control-table.component.scss']
 })
-export class ControlTableComponent implements OnInit {
+export class ControlTableComponent implements OnInit,AfterViewInit{
+  displayedColumnsTitle:string[]= [];
+  dataSource=new MatTableDataSource<any>();
+  @ViewChild(MatPaginator) paginator: MatPaginator
+
+  draftsTtile=['סימוכין','סוג אירוע','תאריך פתיחת האירוע','שם מדווח','יחידת מדווח','הודעות שנקראו/ לא נקראו']
+  draftsColumn=['reference','eventType','date','reporterName','reporterUnit','message']
+
   eventsToPickUp = {
-    'EquipmentReview': {
-      'name': 'ספירות',
-      'route': '/pages/events-forms/equipment-review',
-      'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': { 'title': 'יחידת מדווח'}}
-    },
-    'LostForm': {
-      'name': 'אובדנים',
-      'route': '/pages/events-forms/lost-form',
-      'columns': {'reference': {'title': 'סימוכין', 'type': 'string'}, 'reporterName': {'title': 'שם מדווח', 'type': 'string'}, 'reporterUnit': {'title': 'יחידת מדווח', 'type': 'string'}}
-  },
-    'defaultForms': {
+    'a_defaultForms': {
+      'name':"אירועים",
       'route': undefined,
-      'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}} 
+      'type':'html',
+      'color':"#5bc0de",
+      'title':['סימוכין','סוג אירוע','תאריך פתיחת האירוע','שם מדווח','יחידת מדווח','הודעות שנקראו/ לא נקראו','תאריך עדכון אחרון'],
+      'columns': ['reference','eventType','date','reporterName','reporterUnit','message','reviewDate'],
+      'status':'info',
+      'class':'colorButton-events'
     },
-    
-   
-  }
-  eventsToPickUp2 = {
-    'EquipmentReview': {
+    'b_EquipmentReview': {
       'name': 'ספירות',
+      'type':'html',
       'route': '/pages/events-forms/equipment-review',
-      'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': { 'title': 'יחידת מדווח'}}
+      'title': ['סימוכין','תאריך','שם מדווח','יחידת מדווח'],
+      'columns': ['reference', 'date', 'reporterName', 'reporterUnit'],
+      'status':'info',
+      'color':"#5bc0de",
+      'class':'colorButton-revew'
     },
-    'LostForm': {
+    'c_LostForm': {
       'name': 'אובדנים',
+      'status':'info',
+      'type':'html',
+      'color':"#5bc0de",
       'route': '/pages/events-forms/lost-form',
-      'columns': {'reference': {'title': 'סימוכין', 'type': 'string'}, 'reporterName': {'title': 'שם מדווח', 'type': 'string'}, 'reporterUnit': {'title': 'יחידת מדווח', 'type': 'string'}}
-    },
-  }
-  pickedUpEvent = this.eventsToPickUp.defaultForms;
+      'class':'colorButton-lost-form',
+      'title': ['סימוכין','שם מדווח','יחידת מדווח', 'סטאטוס טיפול','סטאטוס אירוע' ,'סוג ציוד/חומר' , 'סימון ציוד/חומר', 'מספר ציוד/חומר', 'תאריך דיווח','תאריך מציאה', 'תאריך בירור','תאריך טיפול'],
+      'columns': ['reference','reporterName', 'reporterUnit','eventStatusShorted', 'eventStatus', 'equipmnetsType', 'equipmnetsMark', 'equipmnetsMakat', 'reportDate','bargainDate','clarificationDate','shortDate'],
+      
+    },  
+}
+  pickedUpEvent = this.eventsToPickUp.a_defaultForms;
   settings = {
     actions: false,
-    columns: {...this.pickedUpEvent.columns}
-  }
-  
-  source: LocalDataSource = new LocalDataSource();
+    columns: {
+      
+      ...this.pickedUpEvent.columns},
+      
+      attr:{
+        
+      }
+      
+  };
+  routeDrafts=true
   formalsUrl: string = '/forms/';
   draftsUrl: string = '/draft-forms/';
   data = [];
-  flagDesable=false
+  flagDesable:boolean=true;
   isDraft:boolean = false;
-
-  constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router) { 
-  } 
+  displayedColumns=[]
+  @ViewChild(MatSort) sort: MatSort;
+  constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router) {
+    this.displayedColumns=this.pickedUpEvent.columns
+    this.displayedColumnsTitle=this.pickedUpEvent.title
+  }
   
-
-  ngOnInit() {
-    this.source.load(this.data);
+  ngAfterViewInit (){
+    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+  }
+  ngOnInit() :void{
+    this.dataSource.data=this.data;
+    this.dataSource.paginator = this.paginator;
     this.loadData('');
   }
-
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+  sortData($event){
+    const sortId=$event.active;
+    const sortDirection=$event.direction
+    if('asc'==sortDirection){
+      this.dataSource.data=this.data.slice().sort((a,b)=>(a[sortId]>b[sortId]?1:0));
+      
+    }else{
+      this.dataSource.data=this.data.slice().sort((a,b)=>(a[sortId]<b[sortId]?1:0));
+    }
+   }
   draftsColumns(){
+   
     var value=document.getElementById("טיוטות").title
-    this.loadData(value)
-    this.settings.columns={'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}} 
+    this.routeDrafts=false
     this.settings = Object.assign({}, this.settings);
     this.isDraft=true
-  }
-  defualtForms(){
-    var value=document.getElementById("אירועים").title
-    console.log(value) 
-    this.loadData(value)
-    this.settings.columns={'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}}
-    this.settings = Object.assign({}, this.settings);
+    this.displayedColumns=this.draftsColumn
+    this.displayedColumnsTitle=this.draftsTtile
+    this.loadData("טיוטות")
   }
   loadTable(value){
-    // if (value.name == this.eventsToPickUp.Drafts.name) this.isDraft = true;
-    // else this.isDraft = false;
-    console.log(value)
-    // this.loadData(value.route?value.name:'');
-
-    this.settings.columns = value.columns;
+    this.routeDrafts=true
+    this.loadData(value.route?value.name:'');
+    this.displayedColumnsTitle=value.title
+    this.displayedColumns=value.columns
     this.settings = Object.assign({}, this.settings);
+    
   }
+  
 
   loadData(eventType: string) {
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${eventType}`).subscribe((data_from_server) => {
+      console.log(data_from_server)
       this.data=data_from_server
-      this.source.load(this.data);
+      this.dataSource.data=this.data
+      // this.source.load(this.data);
       this.isDraft=false
     });
   }
 
   formClicked(event) {
     let path = ''
+    console.log(event)
     for(let [key, value] of Object.entries(this.eventsToPickUp)){
-      if(value['name'] == event.data.eventType){
+      if(value['name'] == event.eventType){
+        console.log(value['route'])
         path = value['route']
+        this.ToastService.showToast('success', 'הועברת לטופס: '+event.eventType, '')
+        
       }
+      
     }
-    this.router.navigate([path, {reference: event.data.reference, isDraft: this.isDraft}]);
+    if (path==''){
+      this.ToastService.showToast('fail', 'הדף לא נמצא', '')
+      
+    }
+    else{
+      this.router.navigate([path, {reference: event.reference, isDraft: this.isDraft}]);
+    }
   }
 
   exportToXL(value){
@@ -121,17 +185,29 @@ export class ControlTableComponent implements OnInit {
     anchor.click();
   }
 
-  onSearch(query: string = '') {
-    // Deny table filterring when there is no input
-    if(query == ''){ this.source.setFilter([]); return; }
+  openFilter(col:string){
+    console.log(col)
+    document.getElementById(col+'-filter').removeAttribute('hidden')
+  }
+  closeFilter(col:string){
+    document.getElementById(col+'-filter').setAttribute('hidden','true')
+  }
 
-    // Orgenize fields in search structure 
-    var tableFieldsForSerach = Object.keys(this.pickedUpEvent.columns).map(el => { return {field: el, search: query}; });
+  onSearch(col:string,filterText:string) {
+    if(filterText.trim()!=''){
+      this.dataSource.data=this.data.slice().filter((element)=>JSON.stringify(element[col]).indexOf(filterText)>-1);
+    }
     
-    this.source.setFilter(
-      // fields we want to include in the search
-      tableFieldsForSerach
-    , false);
+    // Deny table filterring when there is no input
+    // if(query == ''){ this.source.setFilter([]); return; }
+
+    // // Orgenize fields in search structure 
+    // var tableFieldsForSerach = Object.keys(this.pickedUpEvent.columns).map(el => { return {field: el, search: query}; });
+    
+    // this.source.setFilter(
+    //   // fields we want to include in the search
+    //   tableFieldsForSerach
+    // , false);
     // second parameter specifying whether to perform 'AND' or 'OR' search 
     // (meaning all columns should contain search query or at least one)
     // 'AND' by default, so changing to 'OR' by setting false here
