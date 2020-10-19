@@ -232,6 +232,7 @@ var RestApiService = /** @class */ (function () {
     RestApiService.prototype.getFormsList = function (eventType) {
         return this.http.get(this.baseUrl + "/forms/" + eventType);
     };
+    
     RestApiService.prototype.getUsersList = function (unit) {
         return this.http.get(this.baseUrl + "/get_group_permissions_List/" + unit + "/");
     };
@@ -243,6 +244,9 @@ var RestApiService = /** @class */ (function () {
     };
     RestApiService.prototype.CheckLogin = function (customer) {
         return this.http.post(this.baseUrl + "/check_login/", customer);
+    };
+    RestApiService.prototype.isUserAllowedToReport = function () {
+        return this.http.get(this.baseUrl + "/isUserAllowedToReport/");
     };
     RestApiService.prototype.deleteAll = function () {
         return this.http.delete(this.baseUrl + "/forms/");

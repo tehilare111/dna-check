@@ -89,3 +89,20 @@ def update_permissions_users(request, personalnumber):
         if form_serializer.is_valid():
             form_serializer.save()
             return JsonResponse({"data":form_serializer.data},status=status.HTTP_204_NO_CONTENT)
+
+
+###############################################################
+#                is a given user allowed to report            #
+###############################################################
+@csrf_exempt 
+def isUserAllowedToReport(request, username):
+    isUserAllowed = False
+    if request.method == 'GET':
+        user = Users.objects.get(username=username)
+        user_serializer = UsersSerilazers(user)
+        permission = user_serializer.data["permissions"]
+        isUserAllowed = (permission==MANAGER or permission==EVENTS_REPORTER)
+        print("IsUserAllowed====" + str(isUserAllowed))
+        return JsonResponse({"isUserAllowed":isUserAllowed},status=status.HTTP_200_OK)
+
+    
