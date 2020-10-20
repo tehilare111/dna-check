@@ -6,7 +6,7 @@
 <div class="row" id="print-section">
 <div class="col-md-3">
   <ngx-event-details [form]="form"></ngx-event-details>
-  <ngx-event-status #status [eventForm]="form" [readonly]="this.form.editStateBlocked" [eventStatusOptions]="eventStatusOptions"></ngx-event-status>
+  <ngx-event-status #status [eventForm]="form" [readonly]="this.form.editStateBlocked" [handlingStatusOptions]="handlingStatusOptions" [eventStatusOptions]="eventStatusOptions"></ngx-event-status>
 </div>
 <div class="col-md-9">
   <nb-card>
@@ -43,7 +43,7 @@
           <div class="col-md-2">
             <div class="form-group">
               <label for="rank" class="label">דרגה</label>
-              <nb-select [disabled]="this.form.editStateBlocked" name="rank" id="rank" status="primary" placeholder="דרגה" [(ngModel)]="form.rank">
+              <nb-select [disabled]="this.form.editStateBlocked" name="rank" id="rank" status="primary" [placeholder]="form.rank?form.rank:'דרגה'" [(ngModel)]="form.rank">
                 <nb-option *ngFor="let rank of ranks" [value]="rank">{{rank}}</nb-option>  
               </nb-select>
             </div>

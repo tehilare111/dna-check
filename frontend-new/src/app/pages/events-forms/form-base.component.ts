@@ -94,9 +94,9 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         
       /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
-          this.form.editStateBlocked = true 
+          this.form.editStateBlocked = false 
         }else{
-          this.form.editStateBlocked =false
+          this.form.editStateBlocked = true
         }*/
         
       });

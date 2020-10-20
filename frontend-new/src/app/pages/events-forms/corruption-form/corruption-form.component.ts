@@ -23,6 +23,7 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
   
   // select fields options:
   eventStatusOptions = ["טופל", "טרם טופל"]
+  handlingStatusOptions = []
   units = ["מצוב", "מעוף", "מצפן", "פלגת חוד"]
   ranks = ["סמל", "רבט", "טוראי"]
   equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
@@ -50,6 +51,7 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
       this.ranks = data.rank
       this.materialsType = data.materialType
       this.eventStatusOptions = data.eventStatus
+      this.handlingStatusOptions = data.handlingStatus
       this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
     });
   }

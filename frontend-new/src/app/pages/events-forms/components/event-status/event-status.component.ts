@@ -13,10 +13,10 @@ export class EventStatusComponent extends EventStatusBase implements OnInit {
 
   @Input() eventForm: EventForm = new EventForm();
   @Input() readonly: boolean = true;
-  constatns_array = []
+  constants_array = []
   @Input() eventStatusOptions = [];
   results = ["פתוח", "סגור"]
-  handlingStatusOptions = ["אבד", "נמצא"]
+  @Input() handlingStatusOptions = []
 
   constructor(private RestApiService:RestApiService) { super(); }
 
@@ -24,8 +24,8 @@ export class EventStatusComponent extends EventStatusBase implements OnInit {
     // this.get_constas_feilds()
   }
   get_constas_feilds() {
-    this.constatns_array=["eventStatus","hamdlingStatus"]
-    this.RestApiService.getConstansFialdsNotPermissions(this.constatns_array).subscribe((data_from_server) => {
+    this.constants_array=["eventStatus","handlingStatus"]
+    this.RestApiService.getConstansFialdsNotPermissions(this.constants_array).subscribe((data_from_server) => {
       this.eventStatusOptions=data_from_server.data.eventStatus
       this.handlingStatusOptions=data_from_server.data.handlingStatus
     });
