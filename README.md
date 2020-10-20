@@ -22,14 +22,15 @@ We Are using:
  Afterwords:
   Open browser: http://127.0.0.1:4200
 
- Connect with:  
-   user: mb
-   pass: 1
+ Connect with:    
+   user: mb  
+   pass: 1  
   
- Additional actions:
+ Additional actions:  
   1. commit save button in constants-fields page
   2. commit save on units management page - units tree save button
-  
+    
+      
  Inspect servers logs (for developers):
  ```
  $ docker-compose logs -t -f 
