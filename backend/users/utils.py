@@ -79,4 +79,3 @@ def check_permissions(request, permissions_array):
     token=token[1]
     permission=check_token(token)
     return permission in permissions_array
-
