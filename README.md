@@ -10,7 +10,7 @@ We Are using:
   
 ## Setup Using Docker:
 
- First of all, make sure you have [docker desktop]https://www.docker.com/products/docker-desktop on your local pc.
+ First of all, make sure you have [docker desktop](https://www.docker.com/products/docker-desktop) running on your local pc.
 
  Then, inside your local project repository directory, you should see the docker-compose.yml file.
  In this folder, execute the follwoing commands:
@@ -22,14 +22,14 @@ We Are using:
  Afterwords:
   Open browser: http://127.0.0.1:4200
 
- Connect with:
-  user: mb
-  pass: 1
-
+ Connect with:  
+   user: mb
+   pass: 1
+  
  Additional actions:
   1. commit save button in constants-fields page
   2. commit save on units management page - units tree save button
-
+  
  Inspect servers logs (for developers):
  ```
  $ docker-compose logs -t -f 
