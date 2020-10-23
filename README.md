@@ -13,7 +13,7 @@ We Are using:
  First of all, make sure you have [docker desktop](https://www.docker.com/products/docker-desktop) running on your local pc.
 
  Then, inside your local project repository directory, you should see the docker-compose.yml file.
- In this folder, execute the follwoing commands:
+ In this folder, execute the follwoing commands (Add sudo when running on linux / run shell as administrator when on windows):
  ```
  $ docker-compose up --build -d
  $ docker-compose exec db psql --username=postgres --dbname=postgres
