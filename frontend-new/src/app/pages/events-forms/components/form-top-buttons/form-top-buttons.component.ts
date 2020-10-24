@@ -18,6 +18,8 @@ export class FormTopButtonsComponent implements OnInit {
   @Input() reference;
   @Input() reporterUnit;
 
+  eventAuthorizersToggle: boolean = false;
+
   constructor(private auth: AuthService) { }
 
   ngOnInit() {
@@ -45,5 +47,9 @@ export class FormTopButtonsComponent implements OnInit {
   
   deleteEventFormEmtr(){
     this.deleteEventForm.emit();
+  }
+
+  openEventAuthorizersWindow(){
+    this.eventAuthorizersToggle = true;
   }
 }

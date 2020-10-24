@@ -13,6 +13,12 @@
     <button *ngIf="true" nbButton status="primary" (click)="deleteEventFormEmtr()">מחק אירוע</button>
   </nb-card>
   <nb-card *ngIf ="checkPermissions()">
+    <button *ngIf="true" nbButton status="primary" (click)="openEventAuthorizersWindow()">שתף אירוע</button>
+  </nb-card>
+  <nb-card *ngIf ="checkPermissions()">
     <button type="submit" nbButton status="primary" (click)="saveEventEmtr()" nbTooltip="האירוע לא יועבר לגורם הממונה" nbTooltipPlacement="top">שמור אירוע</button>
+  </nb-card>
+  <nb-card *ngIf ="checkPermissions() && eventAuthorizersToggle">
+    <event-share [eventAuthorizers]="eventAuthorizers" [editStateBlocked]="this.form.editStateBlocked" [events]='eventsSubject.asObservable()' (onEventSubmit)="updateEventAuthorizers($event)"></event-share>
   </nb-card>
 </div>
