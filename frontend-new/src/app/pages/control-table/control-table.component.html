@@ -21,39 +21,48 @@
     <!-- <div class="row"> -->
       <div class="row">
         <div class="col-md-12" style="margin-bottom:3px;">
-        <button  *ngFor="let button of eventsToPickUp |keyvalue"  class={{button.value.class}}  nbButton (click)="loadTable(pickedUpEvent=button.value)" style="margin: 3px;" hero>{{button.value.name}}</button>
-        <input #search matInput id="search" class="search-input" placeholder="חיפוש בטבלה:" (input)="onSearch(search.value)" style="margin: 3px;">
-        <button nbButton  class='colorButton-Drafts' title='טיוטות' id='טיוטות' (click)="draftsColumns()" style="margin:3px; " hero>
+        <button  *ngFor="let button of eventsToPickUp |keyvalue"  status="info"  nbButton (click)="loadTable(pickedUpEvent=button.value)" style="margin: 3px;" hero>{{button.value.name}}</button>
+        <input nbInput #search matInput id="search" class="search-input" placeholder="חיפוש בטבלה:" (input)="applyFilter($event.target.value)" style="margin: 3px;">
+        <button nbButton  status="info" title='טיוטות' id='טיוטות' (click)="draftsColumns()" style="margin:3px; " hero>
           טיוטות
         </button>
       </div>
       </div>
      
     <!-- </div> -->
-
+<!-- <sd (click)="$event.stopPropagation() -->
     <!-- <ng2-smart-table [settings]="settings" [source]="source"  (userRowSelect)="formClicked($event)">
     </ng2-smart-table> -->
-    <nb-card>
-      <nb-card-body>
-      
-    <table  mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
-     
+    <table  mat-table [dataSource]="dataSource" matSort  (matSortChange)="sortData($event)">
       <ng-container *ngFor="let column of displayedColumnsTitle; let i =index" matColumnDef="{{displayedColumns[i]}}"
       [sticky]="i==0">
-      
-       
-        <th  mat-header-cell *matHeaderCellDef mat-sort-header> {{column }}
-        
+
+        <th  mat-header-cell id="{{column}}" #idsss *matHeaderCellDef mat-sort-header> {{column }}<mat-icon (click)="getArrayItems(idsss.id)"   [matMenuTriggerFor]="menu">menu</mat-icon>
         </th>
         <td class="example-element-row td" mat-cell *matCellDef="let element"> {{element[displayedColumns[i]]}} 
-          
         </td>
       </ng-container>
-    
       <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true;" ></tr>
       <tr mat-row (click)='formClicked(myRowData)' *matRowDef="let myRowData; columns: displayedColumns"></tr>
+      
     </table>
-</nb-card-body>
-</nb-card>
+
+    <mat-menu #menu="matMenu">
+
+      <div (click)="$event.stopPropagation();">
+      
+            <div>
+          <nb-card>
+          <nb-card-body>
+          <mat-select [formControl]="toppings" multiple [(ngModel)]="topping" (selectionChange)="applyFilter($event.value)" placeholder="מיון">
+            <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+          </mat-select>
+        </nb-card-body>
+        </nb-card>
+        </div>
+
+      </div>
+    </mat-menu>
+   
   </nb-card-body>
 </nb-card>

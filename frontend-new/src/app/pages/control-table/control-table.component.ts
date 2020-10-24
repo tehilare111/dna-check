@@ -7,7 +7,9 @@ import { ToastService } from '../../services/toast.service';
 import { Router } from '@angular/router';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource,MatPaginatorModule} from '@angular/material';
+import {MatMenuTrigger, MatTableDataSource} from '@angular/material';
+import {FormControl} from '@angular/forms';
+
 
 
 
@@ -33,6 +35,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class ControlTableComponent implements OnInit,AfterViewInit{
   displayedColumnsTitle:string[]= [];
   dataSource=new MatTableDataSource<any>();
+  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
   @ViewChild(MatPaginator) paginator: MatPaginator
 
   draftsTtile=['סימוכין','סוג אירוע','תאריך פתיחת האירוע','שם מדווח','יחידת מדווח','הודעות שנקראו/ לא נקראו']
@@ -71,6 +74,9 @@ export class ControlTableComponent implements OnInit,AfterViewInit{
       
     },  
 }
+toppings = new FormControl();
+public toppingList: string[] = [];
+public arrayItems=[];
   pickedUpEvent = this.eventsToPickUp.a_defaultForms;
   settings = {
     actions: false,
@@ -92,31 +98,46 @@ export class ControlTableComponent implements OnInit,AfterViewInit{
   displayedColumns=[]
   @ViewChild(MatSort) sort: MatSort;
   constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router) {
-    this.displayedColumns=this.pickedUpEvent.columns
-    this.displayedColumnsTitle=this.pickedUpEvent.title
+    
   }
   
   ngAfterViewInit (){
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+   
   }
   ngOnInit() :void{
+    this.toppings = new FormControl();
+    this.displayedColumns=this.pickedUpEvent.columns
+    this.displayedColumnsTitle=this.pickedUpEvent.title
     this.dataSource.data=this.data;
     this.dataSource.paginator = this.paginator;
     this.loadData('');
   }
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  applyFilter(value) {
+   console.log(value.toString())
+   this.dataSource.filter=value.toString().trim().toLocaleLowerCase()
+  }
+  getArrayItems(event){
+    console.log(event)
+    for(let i of this.dataSource.data)
+    {
+      this.arrayItems.push(i[event])
+    }
+    this.toppingList=this.arrayItems
+    this.arrayItems=[]
   }
   sortData($event){
     const sortId=$event.active;
+    console.log(sortId)
     const sortDirection=$event.direction
-    if('asc'==sortDirection){
+    if('asc'===sortDirection){
+     
       this.dataSource.data=this.data.slice().sort((a,b)=>(a[sortId]>b[sortId]?1:0));
-      
     }else{
       this.dataSource.data=this.data.slice().sort((a,b)=>(a[sortId]<b[sortId]?1:0));
     }
+    this.dataSource.data=this.data.slice().sort((a,b)=>(a[sortId]<b[sortId]?1:0));
    }
   draftsColumns(){
    
@@ -143,6 +164,7 @@ export class ControlTableComponent implements OnInit,AfterViewInit{
       console.log(data_from_server)
       this.data=data_from_server
       this.dataSource.data=this.data
+     
       // this.source.load(this.data);
       this.isDraft=false
     });

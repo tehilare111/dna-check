@@ -15,7 +15,10 @@ import { ManagementComponent } from './management/management.component';
 import { TreeModule } from 'angular-tree-component';
 import { LoginComponent } from './details_users/login/login.component';
 import {MatTableModule} from '@angular/material'
-import {MatInputModule,MatOptionModule, MatSelectModule,MatPaginatorModule ,MatIconModule,MatSortModule} from '@angular/material'
+import {MatInputModule,MatOptionModule, MatSelectModule,MatPaginatorModule ,MatSortModule} from '@angular/material'
+import {MatIconModule} from '@angular/material/icon'
+import {MatMenuModule} from '@angular/material/menu';
+
 const PAGES_COMPONENTS = [
   PagesComponent,
 ];
@@ -34,6 +37,10 @@ const PAGES_COMPONENTS = [
     MatSortModule,
     MatSelectModule,
     MatOptionModule,
+    MatPaginatorModule,
+    MatIconModule,
+    MatMenuModule,
+
     
     
   ],
