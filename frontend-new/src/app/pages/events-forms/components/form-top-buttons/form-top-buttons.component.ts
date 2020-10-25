@@ -38,9 +38,6 @@ export class FormTopButtonsComponent implements OnInit {
   }
 
   updateEditStateEmtr(){
-    console.log("====")
-    console.log(localStorage)
-    console.log(this)
     this.updateEditState.emit();
     this.formIsOnEditState = !this.formIsOnEditState
     

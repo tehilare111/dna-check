@@ -12,7 +12,7 @@
   <nb-card *ngIf ="auth.check_permissions(['מנהלן מערכת'])&&reference!=undefined" >
     <button *ngIf="true" nbButton status="primary" (click)="deleteEventFormEmtr()">מחק אירוע</button>
   </nb-card>
-  <nb-card *ngIf ="checkPermissions()">
-    <button type="submit" nbButton status="primary" (click)="saveEventEmtr()" nbTooltip="האירוע לא יועבר לגורם הממונה" nbTooltipPlacement="top">שמור אירוע</button>
+  <nb-card *ngIf ="checkPermissions() && (isDraft || reference==undefined)">
+    <button type="submit" nbButton status="primary" (click)="saveEventEmtr()" nbTooltip="האירוע לא יועבר לגורם הממונה" nbTooltipPlacement="top">שמור כטיוטה</button>
   </nb-card>
 </div>
