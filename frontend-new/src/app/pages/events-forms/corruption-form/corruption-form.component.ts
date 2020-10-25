@@ -5,6 +5,7 @@ import { FormGroup, FormControl } from "@angular/forms";
 import { FormBaseComponent } from '../form-base.component'
 import { CorruptionFormTemplate } from '../events-forms.templates';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
+import { DataRowOutlet } from '@angular/cdk/table';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -22,12 +23,12 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
   @ViewChild("simpleDialog") simpleDialog : ElementRef;
   
   // select fields options:
-  eventStatusOptions = ["טופל", "טרם טופל"]
+  eventStatusOptions = []
   handlingStatusOptions = []
-  units = ["מצוב", "מעוף", "מצפן", "פלגת חוד"]
-  ranks = ["סמל", "רבט", "טוראי"]
-  equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
-  materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
+  units = []
+  ranks = []
+  equipmentsType = []
+  materialsType = []
   equipments = [{"name": "ציוד", "list" : this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
   
   constructor(
@@ -49,6 +50,7 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
     this.RestApiService.getConstansFieldsAndUnitsArray().subscribe((data) => {
       this.equipmentsType = data.equipmentType
       this.ranks = data.rank
+      this.units = data.units
       this.materialsType = data.materialType
       this.eventStatusOptions = data.eventStatus
       this.handlingStatusOptions = data.handlingStatus

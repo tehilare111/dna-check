@@ -1,12 +1,12 @@
 
-<ngx-form-top-buttons (sendEvent)="sendEvent()" (printForm)="printForm()" (updateEditState)="updateEditState()" (saveEvent)="saveEvent()" (deleteEventForm)="deleteEventForm()" [reference]="reference" [reporterUnit]="form.reporterUnit" id="outOfPrint"></ngx-form-top-buttons>
+<ngx-form-top-buttons (sendEvent)="sendEvent()" (printForm)="printForm()" (updateEditState)="updateEditState()" (saveEvent)="saveEvent()" (deleteEventForm)="deleteEventForm()" [isDraft]="isDraft" [reference]="reference" [reporterUnit]="form.reporterUnit" id="outOfPrint"></ngx-form-top-buttons>
 
 <div *ngIf="isDraft"><p class="red">טיוטה</p></div>
 
 <div class="row" id="print-section">
   <div class="col-md-3">
     <ngx-event-details [form]="form"></ngx-event-details>
-    <ngx-event-status #status [eventForm]="form" [readonly]="this.form.editStateBlocked" [handlingStatusOptions]="handlingStatusOptions" [eventStatusOptions]="eventStatusOptions"></ngx-event-status>
+    <ngx-event-status #status [eventForm]="form" [readonly]="!(auth.check_permissions(['מנהלן מערכת']))" [handlingStatusOptions]="handlingStatusOptions" [eventStatusOptions]="eventStatusOptions"></ngx-event-status>
   </div>
 
   <div class="col-md-9">
@@ -82,16 +82,16 @@
                 <label for="equipment" class="label">ציוד/חומר</label>
                 <div>
                 </div>
-                <nb-select [disabled]="this.form.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="form.equipment">
-                  <nb-option *ngFor="let equipment of equipments" value="equipment.name" (click)="equipmentsTypeOptions=equipment.list; form.equipmentType=''">{{equipment.name}}</nb-option>  
+                <nb-select [disabled]="this.form.editStateBlocked" name="equipment" id="equipment" status="primary" [placeholder]="form.equipment?form.equipment:'ציוד/חומר'" [(ngModel)]="form.equipment">
+                  <nb-option *ngFor="let equipment of equipments" [value]="equipment.name" (click)="equipmentsTypeOptions=equipment.list; form.equipmentType=''">{{equipment.name}}</nb-option>  
                 </nb-select>
               </div>
             </div>
             <div class="col-md-2">
               <div class="form-group">
-                <label for="equipmentType" class="label">סוג ציוד/חומר</label>
-                <nb-select [disabled]="this.form.editStateBlocked" name="equipmentType" id="equipmentType" status="primary" placeholder="סוג ציוד/חומר" [(ngModel)]="form.equipmentType">
-                  <nb-option *ngFor="let equipment of equipmentsTypeOptions" value="equipment">{{equipment}}</nb-option>  
+                <label for="equipmentType" class="label">סוג ציוד/חומר</label>    
+                <nb-select [disabled]="this.form.editStateBlocked" name="equipmentType" id="equipmentType" status="primary" [placeholder]="form.equipmentType?form.equipmentType:'סוג ציוד/חומר'" [(ngModel)]="form.equipmentType">
+                  <nb-option *ngFor="let equipment of equipmentsTypeOptions" [value]="equipment">{{equipment}}</nb-option>  
                 </nb-select>
               </div>
             </div>
@@ -138,7 +138,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="investigationDate" class="label">תאריך הבירור</label>
-                <input [readonly]="this.form.editStateBlocked" type="text" nbInput fullWidth name="investigationDate" #investigationDate="ngModel" id="investigationDate" status="primary" placeholder="תאריך הבירור" [(ngModel)]="form.investigationDate"  dateValidation>
+                <input [readonly]="auth.check_permissions(['צופה אירועים'])" type="text" nbInput fullWidth name="investigationDate" #investigationDate="ngModel" id="investigationDate" status="primary" placeholder="תאריך הבירור" [(ngModel)]="form.investigationDate"  dateValidation>
                 <div *ngIf="investigationDate.invalid&&investigationDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div>
               </div>
             </div>
@@ -148,7 +148,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="investigationFile" class="label">צרף קובץ</label>
-                <input [readonly]="this.form.editStateBlocked" type="file" (change)="handleFileUpload($event)" name="investigationFile" id="investigationFile">
+                <input [disabled]="auth.check_permissions(['צופה אירועים'])" type="file" (change)="handleFileUpload($event)" name="investigationFile" id="investigationFile">
               </div>
             </div>
           </div>
@@ -157,7 +157,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="handlingDate" class="label">תאריך הטיפול</label>
-                <input [readonly]="this.form.editStateBlocked" type="text" nbInput fullWidth #handlingDate="ngModel" name="handlingDate" id="handlingDate" status="primary" placeholder="תאריך הטיפול" [(ngModel)]="form.handlingDate"  dateValidation>
+                <input [readonly]="auth.check_permissions(['צופה אירועים'])" type="text" nbInput fullWidth #handlingDate="ngModel" name="handlingDate" id="handlingDate" status="primary" placeholder="תאריך הטיפול" [(ngModel)]="form.handlingDate"  dateValidation>
                 <div *ngIf="handlingDate.invalid&&handlingDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div>
               </div>
             </div>
@@ -167,7 +167,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="handlingFile" class="label">צרף קובץ</label>
-                <input [readonly]="this.form.editStateBlocked" type="file" (change)="handleFileUpload($event)" name="handlingFile" id="handlingFile">
+                <input [disabled]="auth.check_permissions(['צופה אירועים'])" type="file" (change)="handleFileUpload($event)" name="handlingFile" id="handlingFile">
               </div>
             </div>
           </div>
