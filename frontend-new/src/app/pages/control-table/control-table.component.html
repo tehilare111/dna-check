@@ -35,9 +35,7 @@
     </ng2-smart-table> -->
     <nb-card>
       <nb-card-body>
-      
     <table  mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
-     
       <ng-container *ngFor="let column of displayedColumnsTitle; let i =index" matColumnDef="{{displayedColumns[i]}}"
       [sticky]="i==0">
       
