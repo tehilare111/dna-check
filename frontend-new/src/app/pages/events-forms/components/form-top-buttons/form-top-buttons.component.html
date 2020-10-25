@@ -1,9 +1,9 @@
 <div class="row col-md-12" id="outOfPrint">
   
   <nb-card *ngIf ="checkPermissions()" >
-    <button type="submit" nbButton status="primary" (click)="sendEventEmtr()">שלח אירוע</button>
+    <button type="submit" nbButton status="primary" [disabled]="(this.formIsOnEditState && reference!=undefined) && !isDraft" (click)="sendEventEmtr()">שלח אירוע</button>
   </nb-card>
-  <nb-card *ngIf ="auth.check_permissions(['מנהלן מערכת'])&&reference!=undefined"> 
+  <nb-card *ngIf ="auth.check_permissions(['מנהלן מערכת'])&&reference!=undefined && !isDraft"> 
     <button *ngIf="true" nbButton status="primary" (click)="updateEditStateEmtr()">פתח/סגור אירוע לעריכה</button>
   </nb-card>
   <nb-card>

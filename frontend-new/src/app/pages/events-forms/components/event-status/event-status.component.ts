@@ -15,8 +15,9 @@ export class EventStatusComponent extends EventStatusBase implements OnInit {
   @Input() readonly: boolean = true;
   constants_array = []
   @Input() eventStatusOptions = [];
-  results = ["פתוח", "סגור"]
   @Input() handlingStatusOptions = []
+  results = ["פתוח", "סגור"]
+ 
 
   constructor(private RestApiService:RestApiService) { super(); }
 

@@ -17,10 +17,12 @@ export class FormTopButtonsComponent implements OnInit {
 
   @Input() reference;
   @Input() reporterUnit;
-
+  formIsOnEditState = true
+  @Input() isDraft=false;
   constructor(private auth: AuthService) { }
 
   ngOnInit() {
+
   }
 
   checkPermissions(){
@@ -36,7 +38,12 @@ export class FormTopButtonsComponent implements OnInit {
   }
 
   updateEditStateEmtr(){
+    console.log("====")
+    console.log(localStorage)
+    console.log(this)
     this.updateEditState.emit();
+    this.formIsOnEditState = !this.formIsOnEditState
+    
   }
 
   saveEventEmtr(){

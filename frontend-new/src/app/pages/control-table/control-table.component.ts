@@ -56,18 +56,13 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
   userIsAllowedToReport:boolean = false;
   userUnreadedMessages = {};
   @ViewChild("dialog") dialog : TemplateRef<any>;
+  allowedUsers = ['מדווח אירועים', 'מנהלן מערכת'];
   constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router, private activatedRoute: ActivatedRoute, private dialogService: NbDialogService) { 
     this.isUserAllowedToReport();
   } 
   
   isUserAllowedToReport(){
-    this.RestApiService.IsUserAllowedToReport(localStorage.getItem("username")).subscribe(
-      (data_from_server:{'isUserAllowed': boolean}) =>{
-      this.userIsAllowedToReport = data_from_server.isUserAllowed;
-    },
-    error=>{
-      return error;
-    });
+    this.userIsAllowedToReport = this.allowedUsers.includes(localStorage.getItem("permissions"))
   }
 
   ngOnInit() {

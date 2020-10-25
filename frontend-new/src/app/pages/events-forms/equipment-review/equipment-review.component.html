@@ -1,5 +1,5 @@
 
-<ngx-form-top-buttons (sendEvent)="sendEvent()" (printForm)="printForm()" (updateEditState)="updateEditState()" (saveEvent)="saveEvent()" (deleteEventForm)="deleteEventForm()" [reference]="reference" [reporterUnit]="form.reporterUnit" id="outOfPrint"></ngx-form-top-buttons>
+<ngx-form-top-buttons (sendEvent)="sendEvent()" (printForm)="printForm()" (updateEditState)="updateEditState()" (saveEvent)="saveEvent()" (deleteEventForm)="deleteEventForm()" [reference]="reference" [reporterUnit]="form.reporterUnit" [isDraft]="isDraft" id="outOfPrint"></ngx-form-top-buttons>
 
 <div *ngIf="isDraft"><p class="red">טיוטה</p></div>
 

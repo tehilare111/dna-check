@@ -30,10 +30,6 @@ export class RestApiService {
   CheckLogin(customer:object): Observable<Object> {
     return this.http.post(`${this.baseUrl}/check_login/`, customer);
   }
-
-  IsUserAllowedToReport(username:string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/isUserAllowedToReport/${username}`);
-  }
    
   deleteAll(): Observable<any> {
     return this.http.delete(`${this.baseUrl}/forms/`);

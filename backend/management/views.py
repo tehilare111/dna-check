@@ -100,5 +100,6 @@ def constants_fields(request):
 def constans_fields_and_units(request):
     if request.method == 'GET':
         data = constants_fields_array()
+        print(data)
         data["units"] = units_array()
         return JsonResponse(data)
