@@ -37,6 +37,7 @@ export class FieldBoxComponent implements OnInit {
       editButtonContent: '<i class="nb-edit" nbPopover="עריכה תשנה את ערך השדה רטרואקטיבית" nbPopoverMode="hover"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
       cancelButtonContent: '<i class="nb-close"></i>',
+      confirmSave: true,
     },
     delete: {
       deleteButtonContent: '<i class="nb-trash" nbPopover="מחיקה תסיר את השדה משימוש עתידי, אך לא תשנה את ערכו בטפסים קיימים" nbPopoverMode="hover"></i>',
@@ -128,11 +129,24 @@ export class FieldBoxComponent implements OnInit {
   }
 
   onDeleteConfirm(event){
-    // Delete item from array
-    let index = this.fieldOptions.indexOf(event.data);
-    this.fieldOptions.splice(index, 1);
+     if (window.confirm('האם אתה בטוח שברצונך למחוק? מחיקה תסיר את השדה משימוש עתידי, אך לא תשנה את ערכו באירועים קיימים')) {
+       // Delete item from array
+      let index = this.fieldOptions.indexOf(event.data);
+      this.fieldOptions.splice(index, 1);
 
-    // Update the local datasource
-    this.reloadFieldOptions();
+      // Update the local datasource
+      this.reloadFieldOptions();
+      event.confirm.resolve();
+    } else {
+      event.confirm.reject();
+    }
+  }
+
+  onEditConfirm(event) {
+    if (window.confirm('האם אתה בטוח שברצונך לערוך את השדה? עריכה תשנה את ערכו של השדה בכל האירועים, רטרואקטיבית')) {
+      event.confirm.resolve(event.newData);
+    } else {
+      event.confirm.reject();
+    }
   }
 }
