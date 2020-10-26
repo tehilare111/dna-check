@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatIconModule} from '@angular/material/icon';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 import { PagesComponent } from './pages.component';
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -15,6 +18,7 @@ import { ManagementComponent } from './management/management.component';
 import { TreeModule } from 'angular-tree-component';
 import { LoginComponent } from './details_users/login/login.component';
 import { NotReadMsgsColComponent } from './control-table/components/not-read-msgs-col/not-read-msgs-col.component';
+import { CustomEditorComponent } from './constants-fields/components/custom-editor/custom-editor.component';
 
 
 const PAGES_COMPONENTS = [
@@ -31,9 +35,13 @@ const PAGES_COMPONENTS = [
     ECommerceModule,
     MiscellaneousModule,
     TreeModule,
+    MatChipsModule,
+    MatIconModule,
+    MatFormFieldModule
   ],
   entryComponents: [
-    NotReadMsgsColComponent
+    NotReadMsgsColComponent,
+    CustomEditorComponent
   ],
   declarations: [
     ...PAGES_COMPONENTS,
@@ -44,6 +52,7 @@ const PAGES_COMPONENTS = [
     FieldBoxComponent,
     RegisterComponent,
     NotReadMsgsColComponent,
+    CustomEditorComponent,
   ],
 })
 export class PagesModule {

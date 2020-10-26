@@ -1,36 +1,28 @@
 <nb-card>
     <nb-card-header>
         <h6>{{fieldName}}</h6>
-        <div class="iconsId">
-            <i class="ion-plus-round" [nbPopover]="icon" (click)="action='add'"></i>
-            <i class='ion-edit' [nbPopover]="icon" (click)="action='edit'"></i>
-            <i class='ion-close-round' [nbPopover]="icon" (click)="action='delete'"></i>
-        </div>
+        <i class="nb-plus iconsId" (click)="addFields()"></i>
     </nb-card-header>
     <nb-card-body>
-        <nb-select status="primary" placeholder="שדה" [(ngModel)]="currentField">
-            <nb-option *ngFor="let fieldOption of fieldOptions" [value]="fieldOption">{{fieldOption}}</nb-option>  
-        </nb-select>
-        <div *ngIf="action=='add'">
-            <input nbInput fullwidth placeholder="הוסף שדה" [(ngModel)]="tmpField">
-            <div class="buttonWrapper">
-                <button nbButton (click)="cancel()">ביטול</button>
-                <button nbButton status="primary" (click)="addField()">אישור</button>
-            </div>
+        <div class="row">
+            <mat-form-field>
+                <mat-chip-list #chipList>
+                <mat-chip color="primary" *ngFor="let field of inputFieldOptions"
+                        [removable]="true" (removed)="removeFromInput(field)">
+                    {{field}}
+                    <i class='ion-close-round' matChipRemove [nbPopover]="icon"></i>
+                </mat-chip>
+                <input (paste)="onPaste($event)"
+                        (drop)="xlDropped($event)"
+                        [(ngModel)]="text"
+                        placeholder="הכנס שדה קבוע..."
+                        [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        (matChipInputTokenEnd)="addToInput($event)">
+                </mat-chip-list>
+            </mat-form-field>          
         </div>
-        <div *ngIf="action=='edit'">
-            <input nbInput fullwidth placeholder="ערוך שדה" [(ngModel)]="tmpField">
-            <div class="buttonWrapper">
-                <button nbButton (click)="cancel()">ביטול</button>
-                <button nbButton status="primary" (click)="editField()">אישור</button>
-            </div>
-        </div>
-        <div *ngIf="action=='delete'">
-            <p>האם למחוק את השדה?</p>
-            <div class="buttonWrapper">
-                <button nbButton (click)="cancel()">ביטול</button>
-                <button nbButton status="primary" (click)="deleteField()">אישור</button>
-            </div>
-        </div>
+        
+        <ng2-smart-table [settings]="settings" [source]="source" (deleteConfirm)="onDeleteConfirm($event)"></ng2-smart-table>
     </nb-card-body>
 </nb-card>  

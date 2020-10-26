@@ -12,11 +12,24 @@ nb-card-body{
     min-height: 11rem;
 }
 
+nb-card-header{
+    padding: 0.9rem;
+}
+
 .iconsId{
     float: left;
     display:      block;
     margin-left:  auto;
     margin-right: 0;
+    background-color: limegreen;
+    color: white;
+    padding: 3px 4px;
+    border-radius: 50%;
+}
+
+i{
+    font-size: large;
+    font-weight: bold;
 }
 
 h6{
@@ -24,8 +37,8 @@ h6{
     float: right;
 }
 
-nb-select{
-    width: 100%
+mat-form-field {
+    width: 90%;
 }
 
 /deep/ .cdk-global-scrollblock {
