@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Ng2SmartTableModule, LocalDataSource } from 'ng2-smart-table';
 import {MatChipInputEvent} from '@angular/material';
 import {ENTER} from '@angular/cdk/keycodes';
+import { CustomEditorComponent } from './custom-editor/custom-editor.component';
 
 @Component({
   selector: 'ngx-field-box',
@@ -28,24 +29,23 @@ export class FieldBoxComponent implements OnInit {
     noDataMessage: 'אין ערכים עבור שדה זה',
     actions:{
       add: false,
-      position: 'left',
     },
     /*add: {
       addButtonContent: '<i class="nb-edit"></i>',
     },*/
     edit: {
-      editButtonContent: '<i class="nb-edit" nbPopover="עריכה תשנה את ערך השדה רטרואקטיבית" nbPopoverMode="hover"></i>',
+      editButtonContent: '<i class="nb-edit"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
       cancelButtonContent: '<i class="nb-close"></i>',
-      confirmSave: true,
+      // confirmSave:true,
     },
     delete: {
-      deleteButtonContent: '<i class="nb-trash" nbPopover="מחיקה תסיר את השדה משימוש עתידי, אך לא תשנה את ערכו בטפסים קיימים" nbPopoverMode="hover"></i>',
+      deleteButtonContent: '<i class="nb-trash"></i>',
       confirmDelete: true,
     },
-    pager: {
+    setPaging: {
       perPage: 5
-    },
+    }
   }
 
   constructor() {  }
@@ -53,18 +53,7 @@ export class FieldBoxComponent implements OnInit {
   ngOnInit(): void { }
 
   addFields(){
-    this.fieldOptions = this.fieldOptions.concat(this.inputFieldOptions).map(
-      el => { 
-        if (el.field) return el; 
-        
-        
-        // check if value already exists
-        if (!this.fieldOptions.some(f => { return f['field']===el; })){
-          return {field: el};
-        }
-      }
-    ).filter(el => el != undefined);
-    
+    this.fieldOptions = this.fieldOptions.concat(this.inputFieldOptions).map(el => { if (el.field) return el; return {field: el};});
     this.reloadFieldOptions();
     this.inputFieldOptions = [];
   }
@@ -129,24 +118,11 @@ export class FieldBoxComponent implements OnInit {
   }
 
   onDeleteConfirm(event){
-     if (window.confirm('האם אתה בטוח שברצונך למחוק? מחיקה תסיר את השדה משימוש עתידי, אך לא תשנה את ערכו באירועים קיימים')) {
-       // Delete item from array
-      let index = this.fieldOptions.indexOf(event.data);
-      this.fieldOptions.splice(index, 1);
+    // Delete item from array
+    let index = this.fieldOptions.indexOf(event.data);
+    this.fieldOptions.splice(index, 1);
 
-      // Update the local datasource
-      this.reloadFieldOptions();
-      event.confirm.resolve();
-    } else {
-      event.confirm.reject();
-    }
-  }
-
-  onEditConfirm(event) {
-    if (window.confirm('האם אתה בטוח שברצונך לערוך את השדה? עריכה תשנה את ערכו של השדה בכל האירועים, רטרואקטיבית')) {
-      event.confirm.resolve(event.newData);
-    } else {
-      event.confirm.reject();
-    }
+    // Update the local datasource
+    this.reloadFieldOptions();
   }
 }

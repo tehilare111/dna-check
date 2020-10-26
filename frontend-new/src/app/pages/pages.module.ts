@@ -18,6 +18,7 @@ import { ManagementComponent } from './management/management.component';
 import { TreeModule } from 'angular-tree-component';
 import { LoginComponent } from './details_users/login/login.component';
 import { NotReadMsgsColComponent } from './control-table/components/not-read-msgs-col/not-read-msgs-col.component';
+import { CustomEditorComponent } from './constants-fields/components/custom-editor/custom-editor.component';
 
 
 const PAGES_COMPONENTS = [
@@ -40,6 +41,7 @@ const PAGES_COMPONENTS = [
   ],
   entryComponents: [
     NotReadMsgsColComponent,
+    CustomEditorComponent
   ],
   declarations: [
     ...PAGES_COMPONENTS,
@@ -50,6 +52,7 @@ const PAGES_COMPONENTS = [
     FieldBoxComponent,
     RegisterComponent,
     NotReadMsgsColComponent,
+    CustomEditorComponent,
   ],
 })
 export class PagesModule {
