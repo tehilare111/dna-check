@@ -14,15 +14,13 @@ export class FormTopButtonsComponent implements OnInit {
   @Output() saveEvent = new EventEmitter<any>();
   @Output() updateEditState = new EventEmitter<any>();
   @Output() deleteEventForm = new EventEmitter<any>();
-
+  @Input() editStateBlocked;
   @Input() reference;
   @Input() reporterUnit;
-  formIsOnEditState = true
   @Input() isDraft=false;
   constructor(private auth: AuthService) { }
 
   ngOnInit() {
-
   }
 
   checkPermissions(){
@@ -34,13 +32,12 @@ export class FormTopButtonsComponent implements OnInit {
   }
 
   printFormEmtr(){
+    console.log("editStateBlocked " + this.editStateBlocked)
     this.printForm.emit();
   }
 
   updateEditStateEmtr(){
     this.updateEditState.emit();
-    this.formIsOnEditState = !this.formIsOnEditState
-    
   }
 
   saveEventEmtr(){

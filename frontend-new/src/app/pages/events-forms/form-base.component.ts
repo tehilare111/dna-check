@@ -91,9 +91,9 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
       this.form = data
       console.log(this.form); 
-      if(!this.isDraft){
+      /*if(!this.isDraft){
         this.form.editStateBlocked = true
-      }
+      }*/
         
       /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
@@ -169,8 +169,8 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   }
 
   sendEvent(){
-    console.log("isNewForm" + this.isNewForm)
     this.drafting = false;
+    this.form.editStateBlocked = true;
     this.onSubmit();
     if(!this.isNewForm){
       this.DeleteFormFromDrafts(this.reference)
