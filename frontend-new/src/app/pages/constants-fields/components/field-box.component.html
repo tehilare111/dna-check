@@ -1,26 +1,30 @@
 <nb-card>
     <nb-card-header>
         <h6>{{fieldName}}</h6>
-        <i class="nb-plus iconsId" (click)="addFields()"></i>
     </nb-card-header>
     <nb-card-body>
         <div class="row">
-            <mat-form-field>
-                <mat-chip-list #chipList>
-                <mat-chip color="primary" *ngFor="let field of inputFieldOptions"
-                        [removable]="true" (removed)="removeFromInput(field)">
-                    {{field}}
-                    <i class='ion-close-round' matChipRemove [nbPopover]="icon"></i>
-                </mat-chip>
-                <input (paste)="onPaste($event)"
-                        (drop)="xlDropped($event)"
-                        [(ngModel)]="text"
-                        placeholder="הכנס שדה קבוע..."
-                        [matChipInputFor]="chipList"
-                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                        (matChipInputTokenEnd)="addToInput($event)">
-                </mat-chip-list>
-            </mat-form-field>          
+            <div class="col-md-2">
+                <i class="nb-plus iconsId" nbPopover="הוסף שדה" nbPopoverMode="hover" (click)="addFields()"></i>
+            </div>
+            <div class="col-md-10">
+                <mat-form-field>
+                    <mat-chip-list #chipList>
+                    <mat-chip color="primary" *ngFor="let field of inputFieldOptions"
+                            [removable]="true" (removed)="removeFromInput(field)">
+                        {{field}}
+                        <i class='ion-close-round' matChipRemove [nbPopover]="icon"></i>
+                    </mat-chip>
+                    <input (paste)="onPaste($event)"
+                            (drop)="xlDropped($event)"
+                            [(ngModel)]="text"
+                            placeholder="הכנס שדה קבוע..."
+                            [matChipInputFor]="chipList"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                            (matChipInputTokenEnd)="addToInput($event)">
+                    </mat-chip-list>
+                </mat-form-field>          
+            </div>
         </div>
         
         <ng2-smart-table [settings]="settings" [source]="source" (deleteConfirm)="onDeleteConfirm($event)"></ng2-smart-table>

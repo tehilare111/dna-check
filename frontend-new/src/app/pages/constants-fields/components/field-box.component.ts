@@ -28,23 +28,23 @@ export class FieldBoxComponent implements OnInit {
     noDataMessage: 'אין ערכים עבור שדה זה',
     actions:{
       add: false,
+      position: 'left',
     },
     /*add: {
       addButtonContent: '<i class="nb-edit"></i>',
     },*/
     edit: {
-      editButtonContent: '<i class="nb-edit"></i>',
+      editButtonContent: '<i class="nb-edit" nbPopover="עריכה תשנה את ערך השדה רטרואקטיבית" nbPopoverMode="hover"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
       cancelButtonContent: '<i class="nb-close"></i>',
-      // confirmSave:true,
     },
     delete: {
-      deleteButtonContent: '<i class="nb-trash"></i>',
+      deleteButtonContent: '<i class="nb-trash" nbPopover="מחיקה תסיר את השדה משימוש עתידי, אך לא תשנה את ערכו בטפסים קיימים" nbPopoverMode="hover"></i>',
       confirmDelete: true,
     },
-    setPaging: {
+    pager: {
       perPage: 5
-    }
+    },
   }
 
   constructor() {  }
@@ -52,7 +52,18 @@ export class FieldBoxComponent implements OnInit {
   ngOnInit(): void { }
 
   addFields(){
-    this.fieldOptions = this.fieldOptions.concat(this.inputFieldOptions).map(el => { if (el.field) return el; return {field: el};});
+    this.fieldOptions = this.fieldOptions.concat(this.inputFieldOptions).map(
+      el => { 
+        if (el.field) return el; 
+        
+        
+        // check if value already exists
+        if (!this.fieldOptions.some(f => { return f['field']===el; })){
+          return {field: el};
+        }
+      }
+    ).filter(el => el != undefined);
+    
     this.reloadFieldOptions();
     this.inputFieldOptions = [];
   }

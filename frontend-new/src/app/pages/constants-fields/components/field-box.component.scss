@@ -9,7 +9,9 @@ input {
 }
 
 nb-card-body{
-    min-height: 11rem;
+    min-height: 32rem;
+    max-height: 32rem;
+    overflow-y: auto;
 }
 
 nb-card-header{
@@ -25,6 +27,7 @@ nb-card-header{
     color: white;
     padding: 3px 4px;
     border-radius: 50%;
+    cursor: pointer;
 }
 
 i{
@@ -40,8 +43,3 @@ h6{
 mat-form-field {
     width: 90%;
 }
-
-/deep/ .cdk-global-scrollblock {
-    position: static;
-    overflow: hidden !important;
-  }
