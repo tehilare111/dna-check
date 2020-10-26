@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Ng2SmartTableModule, LocalDataSource } from 'ng2-smart-table';
 import {MatChipInputEvent} from '@angular/material';
 import {ENTER} from '@angular/cdk/keycodes';
-import { CustomEditorComponent } from './custom-editor/custom-editor.component';
 
 @Component({
   selector: 'ngx-field-box',
