@@ -61,7 +61,6 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   protected draftsUrl: string = '/drafts-event-forms/';
   protected isDraft: boolean; // For a given form, determine if it is a draft or not
   protected drafting: boolean; // Determine whether to save the form or send it
-  protected isNewForm : boolean;
 
 
   constructor(){
@@ -78,12 +77,10 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     this.isDraft = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.isDraft == 'true';
 
     if (this.reference){
-      this.isNewForm = false;
       this.exisitingFormLoadData(this.reference);
     } else {
-      this.isNewForm = true;
-       this.readonly = false;
-       this.newFormLoadData();
+      this.readonly = false;
+      this.newFormLoadData();
     }
   }
 
@@ -172,7 +169,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     this.drafting = false;
     this.form.editStateBlocked = true;
     this.onSubmit();
-    if(!this.isNewForm){
+    if(this.isDraft){
       this.DeleteFormFromDrafts(this.reference)
     }
     
