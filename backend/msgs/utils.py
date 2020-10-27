@@ -33,6 +33,8 @@ def update_message_for_relevant_users(sender_unit, reporterUnit, reference):
     units_to_update_msg = get_superior_units(reporterUnit)
 
     users_to_update_msg = Users.objects.filter(unit__in=units_to_update_msg)
+    # remove sender_user from this units_to_update_msg users array - so the message wont update for him
+    # Will be possible after merging with constatnts-fields redesign(Sender User object is accessible more easly in this branch)
     for user in users_to_update_msg:
         user.unreadedMessages[str(reference)] = user.unreadedMessages.get(str(reference), 0) + 1
         user.save()
