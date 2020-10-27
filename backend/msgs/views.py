@@ -8,7 +8,7 @@ from rest_framework import status
 from users.utils import check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
 from msgs.serializers import MsgsSerializer
 from msgs.models import Msgs
-from msgs.utils import update_message_for_relevant_users, update_user_read_msg
+from msgs.utils import update_message_for_relevant_users
 
 @csrf_exempt
 @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_USER=True)

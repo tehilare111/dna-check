@@ -65,7 +65,7 @@ def check_permissions_dec(permissions_array, API_VIEW=False, RETURN_USER=False):
             token = request.headers['Authorization'].split(" ")[1]        
             user = check_token(token)
     
-            if user.permissions in permissions_array:
+            if user and user.permissions in permissions_array:
                 return view_function(*args, **kwargs) if not RETURN_USER else view_function(user=user, *args, **kwargs)
     
             else:

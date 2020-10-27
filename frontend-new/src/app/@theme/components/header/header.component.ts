@@ -13,7 +13,6 @@ import { LayoutService } from '../../../@core/utils';
 export class HeaderComponent implements OnInit {
 
   @Input() position = 'normal';
-  localStorage = localStorage;
 
   user: any;
 
@@ -46,7 +45,7 @@ export class HeaderComponent implements OnInit {
     this.analyticsService.trackEvent('startSearch');
   }
 
-  setted(){
+  setUnreadedMsgNumber(){
     let unreadedMessagesAmount = 0;
     if (localStorage.getItem('unreadedMessages') === null) {
       return unreadedMessagesAmount

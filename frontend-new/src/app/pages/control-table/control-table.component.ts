@@ -18,7 +18,7 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
     'defaultForms': {
       'name': 'כלל הטפסים',
       'route': undefined,
-    'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}, 'unreadedMessages': {'title': 'הודעות שלא נקראו', 'filter': false, type: 'custom', 'renderComponent': NotReadMsgsColComponent, onComponentInitFunction: (instance) => {instance.updateMsgsInControlTable.subscribe(updatedData => { this.handleUpdatedUser(updatedData) })}}}
+      'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}, 'unreadedMessages': {'title': 'הודעות שלא נקראו', 'filter': false, type: 'custom', 'renderComponent': NotReadMsgsColComponent, onComponentInitFunction: (instance) => {instance.updateMsgsInControlTable.subscribe(updatedData => { this.handleUpdatedUser(updatedData) })}}}
     },
     'CorruptionForm': {
       'name': 'השמדת ציוד',
@@ -103,7 +103,6 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
   }
 
   formClicked(event) {
-    console.log(event);
     let path = ''
     for(let [key, value] of Object.entries(this.eventsToPickUp)){
       if(value['name'] == event.data.eventType){
