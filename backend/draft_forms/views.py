@@ -94,4 +94,4 @@ class DraftEventFrom(APIView):
         # Delete this event messages from all relevant users
         update_user_event_deleted(reference, user.unit)
         draft_event_form.delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)  
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
