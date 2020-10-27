@@ -1,57 +1,49 @@
 <nb-card>
   <nb-card-body>
-    <div class="row">
-      <div class="col-sm-11" >
-          <button nbButton status="success" [disabled]="(pickedUpEvent.route!=undefined && this.routeDrafts?false:true)" [routerLink]="[pickedUpEvent.route]" hero style="margin: 3px;">
-            דווח אירוע
-          </button>
-          
-          
-        
-    </div>
-    <div class="col-sm-1">
-      <button nbButton status="success" class="images" (click)="exportToXL(pickedUpEvent)" style="height: 42px; text-align: center; right: 80%;" hero>
-        <img class='img' src="assets/images/xl.png">
-      </button>
-      </div>
-       
-    </div>
-    
-
-    <!-- <div class="row"> -->
       <div class="row">
         <div class="col-md-12" style="margin-bottom:3px;">
-        <button  *ngFor="let button of eventsToPickUp |keyvalue"  class={{button.value.class}}  nbButton (click)="loadTable(pickedUpEvent=button.value)" style="margin: 3px;" hero>{{button.value.name}}</button>
-        <input #search matInput id="search" class="search-input" placeholder="חיפוש בטבלה:" (input)="onSearch(search.value)" style="margin: 3px;">
-        <button nbButton  class='colorButton-Drafts' title='טיוטות' id='טיוטות' (click)="draftsColumns()" style="margin:3px; " hero>
+          <button nbButton status="success" [disabled]="(pickedUpEvent.route!=undefined && this.routeDrafts?false:true)" [routerLink]="[pickedUpEvent.route]" hero style="margin: 3px;">
+            <i class="ion-plus-round" [nbPopover]="icon" ></i>
+          </button>
+        <button  *ngFor="let button of eventsToPickUp |keyvalue"  status="info"  nbButton (click)="loadTable(pickedUpEvent=button.value)" style="margin: 3px;" hero>{{button.value.name}}</button>
+        <input nbInput #search matInput id="search" class="search-input" placeholder="חיפוש בטבלה:" (input)="applyFilter($event.target.value)" style="margin: 3px;">
+        <button nbButton  status="info" title='טיוטות' id='טיוטות' (click)="draftsColumns()" style="margin:3px; " hero>
           טיוטות
         </button>
+        <img class='img' src="assets/images/excel_Offical.png" (click)="exportToXL(pickedUpEvent)" style=" margin-right: 3px; height:42px;width: 40px; align-items: center;">
       </div>
       </div>
-     
-    <!-- </div> -->
-
-    <!-- <ng2-smart-table [settings]="settings" [source]="source"  (userRowSelect)="formClicked($event)">
-    </ng2-smart-table> -->
     <nb-card>
       <nb-card-body>
-    <table  mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+    <table  mat-table [dataSource]="dataSourceFilter" matSort  (matSortChange)="sortData($event)">
       <ng-container *ngFor="let column of displayedColumnsTitle; let i =index" matColumnDef="{{displayedColumns[i]}}"
       [sticky]="i==0">
-      
-       
-        <th  mat-header-cell *matHeaderCellDef mat-sort-header> {{column }}
-        
+              <th class="header" mat-header-cell id="{{column}}" #idHeader *matHeaderCellDef mat-sort-header> {{column }} <mat-icon (click)="this.jsonArrayItems[i].flagDisplay=!this.jsonArrayItems[i].flagDisplay;getArrayItems(idHeader.id,i)" >menu</mat-icon>
+                  <div class="filter">
+                  <ngx-select *ngIf="this.jsonArrayItems[i].flagDisplay"  [multiple]="true" 
+                  [items]="this.jsonArrayItems[i].array"
+                  [(ngModel)]="this.jsonArrayItems[i].value"
+                  #columnTitle
+                  [autoClearSearch]="true"
+                  placeholder="{{column}}"
+                  (selectionChanges)="applyFilter($event,i)">
+                </ngx-select>
+              </div>
         </th>
         <td class="example-element-row td" mat-cell *matCellDef="let element"> {{element[displayedColumns[i]]}} 
-          
         </td>
       </ng-container>
-    
       <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true;" ></tr>
       <tr mat-row (click)='formClicked(myRowData)' *matRowDef="let myRowData; columns: displayedColumns"></tr>
     </table>
-</nb-card-body>
-</nb-card>
+    <!-- <mat-menu class="sizeMenu" #menu="matMenu" xPosition='before' yPosition='above'>
+      <div class="sizeMenu" (click)="$event.stopPropagation();">
+        <div class="example-block">
+          <div class="example-block__item">
+          </div>
+      </div>
+       </div>
+    </mat-menu>
+    -->
   </nb-card-body>
 </nb-card>

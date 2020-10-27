@@ -7,12 +7,12 @@ import { takeWhile } from 'rxjs/operators';
   selector: 'ngx-one-column-layout',
   styleUrls: ['./one-column.layout.scss'],
   template: `
-    <nb-layout>
+    <nb-layout >
       <nb-layout-header fixed>
         <ngx-header></ngx-header>
       </nb-layout-header>
 
-      <nb-sidebar state="compacted" class="menu-sidebar" tag="menu-sidebar" responsive>
+      <nb-sidebar  class="menu-sidebar" tag="menu-sidebar" responsive>
         <nb-sidebar-header *ngIf="currentTheme !== 'corporate'">
         </nb-sidebar-header>
         <ng-content select="nb-menu"></ng-content>

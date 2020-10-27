@@ -15,45 +15,28 @@ import { StateService } from '../../../@core/utils';
 @Component({
   selector: 'ngx-sample-layout',
   styleUrls: ['./sample.layout.scss'],
-  // template: `
-  //     <nb-layout [center]="layout.id === 'center-column'" windowMode>
-  //     <nb-layout-header fixed>
-  //       <ngx-header [position]="sidebar.id === 'start' ? 'normal': 'inverse'"></ngx-header>
-  //     </nb-layout-header>
-
-  // <nb-sidebar class="menu-sidebar compacted"
-  //                    tag="menu-sidebar"  >   
-                     
-                     
-
-  //                    <nb-layout-column class="main-content">
-  //                            <ng-content select="router-outlet"></ng-content>
-  //                          </nb-layout-column>
-  //       </nb-sidebar>
-  // `
   template: `
-    <nb-layout [center]="layout.id === 'center-column'" windowMode>
+    <nb-layout  [center]="layout.id === 'center-column'" windowMode>
       <nb-layout-header fixed>
         <ngx-header [position]="sidebar.id === 'start' ? 'normal': 'inverse'"></ngx-header>
       </nb-layout-header>
 
-      <nb-sidebar state="compacted" class="main-content"
+      <nb-sidebar class="compacted !imported"
                    tag="menu-sidebar"
-                   style="width:'3.5rem'"
                    responsive
                    [end]="sidebar.id === 'end'"> 
-        <ng-content select="nb-menu"></ng-content>
+        <ng-content  select="nb-menu"></ng-content>
       </nb-sidebar>
 
-      <nb-layout-column class="main-content">
+      <nb-layout-column class="main-content compacted">
         <ng-content select="router-outlet"></ng-content>
       </nb-layout-column>
 
-      <nb-layout-column start class="small" *ngIf="layout.id === 'two-column' || layout.id === 'three-column'">
+      <nb-layout-column  start class="small" *ngIf="layout.id === 'two-column' || layout.id === 'three-column'">
         <nb-menu [items]="subMenu"></nb-menu>
       </nb-layout-column>
 
-      <nb-layout-column class="small" *ngIf="layout.id === 'three-column'">
+      <nb-layout-column state="compacted" class="small" *ngIf="layout.id === 'three-column'">
         <nb-menu [items]="subMenu"></nb-menu>
       </nb-layout-column>
 

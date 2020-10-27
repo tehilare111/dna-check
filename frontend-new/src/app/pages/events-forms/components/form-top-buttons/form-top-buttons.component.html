@@ -1,17 +1,17 @@
 <div class="col-md-12" id="div_maring_bottom" >
   <!-- <nb-card  > -->
-    <button *ngIf ="checkPermissions()"type="submit" nbButton status="primary" (click)="sendEventEmtr()">שלח אירוע</button>
+    <button status="info" *ngIf ="checkPermissions()"type="submit" nbButton  (click)="sendEventEmtr()">שלח אירוע</button>
   <!-- </nb-card> -->
   <!-- <nb-card >  -->
-    <button *ngIf ="auth.check_permissions(['מנהלן מערכת'])&&reference!=undefined" nbButton status="primary" (click)="updateEditStateEmtr()">פתח/סגור אירוע לעריכה</button>
+    <button status="info" *ngIf ="auth.check_permissions(['מנהלן מערכת'])&&reference!=undefined" nbButton  (click)="updateEditStateEmtr()">פתח/סגור אירוע לעריכה</button>
   <!-- </nb-card>
   <nb-card> -->
-    <button *ngIf="true" nbButton status="primary" (click)="printFormEmtr()">הדפס אירוע</button>
+    <button status="info" *ngIf="true" nbButton  (click)="printFormEmtr()">הדפס אירוע</button>
   <!-- </nb-card> -->
   <!-- <nb-card *ngIf ="auth.check_permissions(['מנהלן מערכת'])&&reference!=undefined" > -->
-    <button *ngIf ="auth.check_permissions(['מנהלן מערכת'])&&reference!=undefined" nbButton status="primary" (click)="deleteEventFormEmtr()">מחק אירוע</button>
+    <button status="info" *ngIf ="auth.check_permissions(['מנהלן מערכת'])&&reference!=undefined" nbButton (click)="deleteEventFormEmtr()">מחק אירוע</button>
   <!-- </nb-card> -->
   <!-- <nb-card> -->
-    <button  *ngIf ="checkPermissions()" type="submit" nbButton status="primary" (click)="saveEventEmtr()" nbTooltip="האירוע לא יועבר לגורם הממונה" nbTooltipPlacement="top">שמור אירוע</button>
+    <button status="info"  *ngIf ="checkPermissions()" type="submit" nbButton  (click)="saveEventEmtr()" nbTooltip="האירוע לא יועבר לגורם הממונה" nbTooltipPlacement="top">שמור אירוע</button>
   <!-- </nb-card> -->
   </div>

@@ -20,7 +20,7 @@
           <div class="col-md-2">
             <div class="form-group">
               <label for="signerUnit" class="label">יחידת החתום</label>
-              <nb-select [disabled]="this.form.editStateBlocked" name="signerUnit" id="signerUnit" status="primary" placeholder="יחידת החתום" [(ngModel)]="form.signerUnit">
+              <nb-select status="info" [disabled]="this.form.editStateBlocked" name="signerUnit" id="signerUnit" placeholder="יחידת החתום" [(ngModel)]="form.signerUnit">
                 <nb-option *ngFor="let unit of units" [value]="unit">{{unit}}</nb-option>  
               </nb-select>
             </div>
@@ -42,7 +42,7 @@
           <div class="col-md-2">
             <div class="form-group">
               <label for="rank" class="label">דרגה</label>
-              <nb-select [disabled]="this.form.editStateBlocked" name="rank" id="rank" status="primary" placeholder="דרגה" [(ngModel)]="form.rank">
+              <nb-select status="info" [disabled]="this.form.editStateBlocked" name="rank" id="rank"  placeholder="דרגה" [(ngModel)]="form.rank">
                 <nb-option *ngFor="let rank of ranks" [value]="rank">{{rank}}</nb-option>  
               </nb-select>
             </div>
@@ -79,7 +79,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="equipment" class="label">ציוד/חומר</label>
-                <nb-select [disabled]="this.form.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="form.equipment">
+                <nb-select status="info" [disabled]="this.form.editStateBlocked" name="equipment" id="equipment" placeholder="ציוד/חומר" [(ngModel)]="form.equipment">
                   <nb-option *ngFor="let equipment of equipments" [value]="equipment.name" (click)="equipmentsTypeOptions=equipment.list; form.equipmentType=''">{{equipment.name}}</nb-option>  
                 </nb-select>
               </div>
@@ -87,7 +87,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="equipmentType" class="label">סוג ציוד/חומר</label>
-                <nb-select [disabled]="this.form.editStateBlocked" name="equipmentType" id="equipmentType" status="primary" placeholder="סוג ציוד/חומר" [(ngModel)]="form.equipmentType">
+                <nb-select status="info" [disabled]="this.form.editStateBlocked" name="equipmentType" id="equipmentType"  placeholder="סוג ציוד/חומר" [(ngModel)]="form.equipmentType">
                   <nb-option *ngFor="let equipment of equipmentsTypeOptions" [value]="equipment">{{equipment}}</nb-option>  
                 </nb-select>
               </div>
@@ -95,14 +95,14 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="equipmentMark" class="label">סימון ציוד/חומר</label>
-                <input [readonly]="this.form.editStateBlocked" type="text" nbInput fullWidth #equipmentMark="ngModel" name="equipmentMark" id="equipmentMark" status="primary" placeholder="סימון ציוד/חומר" [(ngModel)]="form.equipmentMark" markValidation>
+                <input [readonly]="this.form.editStateBlocked" type="text" nbInput fullWidth #equipmentMark="ngModel" name="equipmentMark" id="equipmentMark"  placeholder="סימון ציוד/חומר" [(ngModel)]="form.equipmentMark" markValidation>
                 <div *ngIf="equipmentMark.invalid&&equipmentMark.dirty"><label class="label red">XXXXXXXXX או YYYYYY-XXX</label></div>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="equipmentMakat" class="label">מק"ט ציוד/עותק חומר</label>
-                <input [readonly]="this.form.editStateBlocked" type="text" nbInput fullWidth #equipmentMakat="ngModel" name="equipmentMakat" id="equipmentMakat" status="primary" placeholder="מק''ט ציוד/עותק חומר" [(ngModel)]="form.equipmentMakat" makatCopyValidation>
+                <input [readonly]="this.form.editStateBlocked" type="text" nbInput fullWidth #equipmentMakat="ngModel" name="equipmentMakat" id="equipmentMakat" placeholder="מק''ט ציוד/עותק חומר" [(ngModel)]="form.equipmentMakat" makatCopyValidation>
                 <div *ngIf="equipmentMakat.invalid&&equipmentMakat.dirty"><label class="label red">3 ספרות או 12 תווים</label></div>
               </div>
             </div>

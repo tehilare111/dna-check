@@ -7,7 +7,10 @@ import { ToastService } from '../../services/toast.service';
 import { Router } from '@angular/router';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource,MatPaginatorModule} from '@angular/material';
+import {MatMenuTrigger, MatTableDataSource} from '@angular/material';
+import {FormControl} from '@angular/forms';
+import { INgxSelectOption } from 'ngx-select-ex';
+
 
 
 
@@ -33,11 +36,12 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class ControlTableComponent implements OnInit,AfterViewInit{
   displayedColumnsTitle:string[]= [];
   dataSource=new MatTableDataSource<any>();
+  dataSourceFilter=new MatTableDataSource<any>()
+  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
   @ViewChild(MatPaginator) paginator: MatPaginator
 
   draftsTtile=['סימוכין','סוג אירוע','תאריך פתיחת האירוע','שם מדווח','יחידת מדווח','הודעות שנקראו/ לא נקראו']
   draftsColumn=['reference','eventType','date','reporterName','reporterUnit','message']
-
   eventsToPickUp = {
     'a_defaultForms': {
       'name':"אירועים",
@@ -56,67 +60,104 @@ export class ControlTableComponent implements OnInit,AfterViewInit{
       'title': ['סימוכין','תאריך','שם מדווח','יחידת מדווח'],
       'columns': ['reference', 'date', 'reporterName', 'reporterUnit'],
       'status':'info',
-      'color':"#5bc0de",
       'class':'colorButton-revew'
     },
     'c_LostForm': {
       'name': 'אובדנים',
       'status':'info',
       'type':'html',
-      'color':"#5bc0de",
       'route': '/pages/events-forms/lost-form',
       'class':'colorButton-lost-form',
       'title': ['סימוכין','שם מדווח','יחידת מדווח', 'סטאטוס טיפול','סטאטוס אירוע' ,'סוג ציוד/חומר' , 'סימון ציוד/חומר', 'מספר ציוד/חומר', 'תאריך דיווח','תאריך מציאה', 'תאריך בירור','תאריך טיפול'],
       'columns': ['reference','reporterName', 'reporterUnit','eventStatusShorted', 'eventStatus', 'equipmnetsType', 'equipmnetsMark', 'equipmnetsMakat', 'reportDate','bargainDate','clarificationDate','shortDate'],
-      
     },  
 }
+toppings = new FormControl();
+public toppingList: string[] = [];
+public arrayItems=[];
+jsonArrayItems=[]
   pickedUpEvent = this.eventsToPickUp.a_defaultForms;
   settings = {
     actions: false,
     columns: {
       
       ...this.pickedUpEvent.columns},
-      
       attr:{
-        
       }
-      
   };
   routeDrafts=true
   formalsUrl: string = '/forms/';
   draftsUrl: string = '/draft-forms/';
   data = [];
-  flagDesable:boolean=true;
+  flagDesable:boolean=false;
   isDraft:boolean = false;
   displayedColumns=[]
+  ngxValue: any = [];
   @ViewChild(MatSort) sort: MatSort;
-  constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router) {
-    this.displayedColumns=this.pickedUpEvent.columns
-    this.displayedColumnsTitle=this.pickedUpEvent.title
+  constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router) { 
   }
-  
   ngAfterViewInit (){
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+   
   }
   ngOnInit() :void{
+    this.toppings = new FormControl();
+    this.displayedColumns=this.pickedUpEvent.columns
+    this.displayedColumnsTitle=this.pickedUpEvent.title
     this.dataSource.data=this.data;
     this.dataSource.paginator = this.paginator;
+    this.dataSourceFilter.data=this.data;
     this.loadData('');
+    this.createJsonItems(this.pickedUpEvent.columns)
   }
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+ 
+  applyFilter(value,index) {
+  var arrayEmpty=[]
+  var tempData = [];
+  this.dataSource.data.forEach(val => tempData.push(Object.assign({}, val)));
+  this.jsonArrayItems[index].arrayByColumnOption=value
+  for (let item of this.jsonArrayItems )
+  {
+    for (let option of item.arrayByColumnOption)
+    {
+      for (let j of tempData)
+      {
+        if (!j[item.title].toString().localeCompare(option.value.toString()))
+        {
+          arrayEmpty.push(j)
+        }
+      }
+    }
+      if(item.arrayByColumnOption.length!=0){
+        tempData = arrayEmpty
+        arrayEmpty = []
+      }
+      this.dataSourceFilter.data = tempData
+    }
+  }
+  
+  getArrayItems(title,index){
+    console.log(title)
+    for(let i of this.dataSource.data)
+    {
+      this.arrayItems.push(i[title])
+    }
+    var Items=new Set(this.arrayItems)
+    this.jsonArrayItems[index].array=Array.from(Items)
+    this.arrayItems=[]
+    
   }
   sortData($event){
     const sortId=$event.active;
     const sortDirection=$event.direction
-    if('asc'==sortDirection){
+    if('asc'===sortDirection){
+     
       this.dataSource.data=this.data.slice().sort((a,b)=>(a[sortId]>b[sortId]?1:0));
-      
     }else{
       this.dataSource.data=this.data.slice().sort((a,b)=>(a[sortId]<b[sortId]?1:0));
     }
+    
    }
   draftsColumns(){
    
@@ -128,22 +169,31 @@ export class ControlTableComponent implements OnInit,AfterViewInit{
     this.displayedColumnsTitle=this.draftsTtile
     this.loadData("טיוטות")
   }
+  createJsonItems(titleColumn)
+  {
+    var array=[]
+    for(let title in titleColumn){
+      array.push({"title":titleColumn[title],"array":this.toppingList,"flagDisplay":false,"value":" ","arrayByColumnOption":[]})
+      
+    }
+    this.jsonArrayItems=array    
+  }
   loadTable(value){
     this.routeDrafts=true
     this.loadData(value.route?value.name:'');
     this.displayedColumnsTitle=value.title
     this.displayedColumns=value.columns
     this.settings = Object.assign({}, this.settings);
+    this.createJsonItems(this.displayedColumnsTitle)
     
   }
   
 
   loadData(eventType: string) {
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${eventType}`).subscribe((data_from_server) => {
-      console.log(data_from_server)
       this.data=data_from_server
       this.dataSource.data=this.data
-      // this.source.load(this.data);
+      this.dataSourceFilter.data=this.data
       this.isDraft=false
     });
   }
@@ -186,7 +236,6 @@ export class ControlTableComponent implements OnInit,AfterViewInit{
   }
 
   openFilter(col:string){
-    console.log(col)
     document.getElementById(col+'-filter').removeAttribute('hidden')
   }
   closeFilter(col:string){

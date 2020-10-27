@@ -42,12 +42,12 @@
                   ומצאתי כי:</p>
               </div>
               <div>
-                  <nb-radio-group [(value)]="form.isMatchToReport" name="isMatchToReport" [(ngModel)]="form.isMatchToReport">
-                      <nb-radio
+                  <nb-radio-group status="info" [(value)]="form.isMatchToReport" name="isMatchToReport" [(ngModel)]="form.isMatchToReport">
+                      <nb-radio status="info"
                       [value]="true">
                       יש התאמה מלאה בין הנתונים שהופקו בדו"ח אל מול הבדיקה הפיסית שנערכה
                       </nb-radio>
-                      <nb-radio
+                      <nb-radio status="info"
                       [value]="false">
                       אין התאמה מלאה בין הנתונים שהופקו בדו"ח אל מול הבדיקה הפיסית שנערכה. להלן רשימת הסימונים החסרים
                       </nb-radio>
@@ -61,7 +61,7 @@
                 <label for="equipment" class="label">ציוד/חומר</label>
                 <div>
                 </div>
-                <nb-select [disabled]="this.form.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="form.equipment">
+                <nb-select [disabled]="this.form.editStateBlocked" name="equipment" id="equipment" status="info" placeholder="ציוד/חומר" [(ngModel)]="form.equipment">
                   <nb-option *ngFor="let equipment of equipments" value="equipment.name" (click)="equipmentsTypeOptions=equipment.list; form.equipmentType=''">{{equipment.name}}</nb-option>  
                 </nb-select>
               </div>
@@ -70,7 +70,7 @@
               <div class="form-group">
                 <label for="equipmentType" class="label">סוג ציוד/חומר</label>
                 
-                <nb-select [disabled]="this.form.editStateBlocked" name="equipmentType" id="equipmentType" status="primary" placeholder="סוג ציוד/חומר" [(ngModel)]="form.equipmentType">
+                <nb-select [disabled]="this.form.editStateBlocked" name="equipmentType" id="equipmentType" status="info" placeholder="סוג ציוד/חומר" [(ngModel)]="form.equipmentType">
                   <nb-option *ngFor="let equipment of equipmentsTypeOptions" value="equipment">{{equipment}}</nb-option>  
                 </nb-select>
               </div>
@@ -119,7 +119,7 @@
     <nb-card-header>מעלה את הבקשה</nb-card-header>
     <nb-card-body>{{this.popUpDialogContext}}</nb-card-body>
     <nb-card-footer style="display: flex; justify-content: center;">
-      <button nbButton (click)="ref.close()" status="primary" [disabled]="uploadLoading" routerLink="/pages/control-table" hero>סיום</button>
+      <button nbButton (click)="ref.close()" status="info" [disabled]="uploadLoading" routerLink="/pages/control-table" hero>סיום</button>
     </nb-card-footer>
   </nb-card>
 </ng-template>
@@ -129,7 +129,7 @@
     <nb-card-header>מטפל בבקשה</nb-card-header>
     <nb-card-body>{{this.popUpDialogContext}}</nb-card-body>
     <nb-card-footer style="display: flex; justify-content: center;">
-      <button nbButton (click)="ref.close()" status="primary" [disabled]="uploadLoading" hero>סיום</button>
+      <button nbButton (click)="ref.close()" status="info" [disabled]="uploadLoading" hero>סיום</button>
     </nb-card-footer>
   </nb-card>
 </ng-template>

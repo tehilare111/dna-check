@@ -15,6 +15,7 @@ export class HeaderComponent implements OnInit {
   @Input() position = 'normal';
 
   user: any;
+  id:any;
 
   userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
 
@@ -28,11 +29,15 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.userService.getUsers()
       .subscribe((users: any) => this.user = users.nick);
+      this.id =setInterval(() => {
+        this.userService.getUsers()
+        .subscribe((users: any) => this.user = users.login_user); 
+        }, 1000);
   }
 
   toggleSidebar(): boolean {
-    // this.sidebarService.toggle(true, 'menu-sidebar');
-    // this.layoutService.changeLayoutSize();
+    this.sidebarService.toggle(true, 'menu-sidebar');
+    this.layoutService.changeLayoutSize();
 
     return false;
   }
