@@ -12,7 +12,7 @@ class UploadTo:
 
 # Create your models here.
 class DraftForm(models.Model):
-    reference = models.IntegerField(blank=False, default=0)
+    reference = models.IntegerField(primary_key=True, blank=False, default=0)
     eventType = models.CharField(max_length=70, blank=False, default='')
     date = models.CharField(max_length=70, blank=False, default='')
     reporterName = models.CharField(max_length=70, blank=False, default='')
