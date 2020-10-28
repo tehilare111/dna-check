@@ -20,14 +20,22 @@ import { LoginComponent } from './details_users/login/login.component';
 import { NotReadMsgsColComponent } from './control-table/components/not-read-msgs-col/not-read-msgs-col.component';
 
 
+//angular Material Modules
+import {AngularMaterialModule} from '../material-module';
+
+//time picker
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import {NbDateFnsDateModule} from '@nebular/date-fns';
+
 const PAGES_COMPONENTS = [
   PagesComponent,
 ];
 
 @NgModule({
   imports: [
+    AngularMaterialModule,
+    NgxMaterialTimepickerModule,
     Ng2SmartTableModule,
-
     PagesRoutingModule,
     ThemeModule,
     DashboardModule,
@@ -36,8 +44,7 @@ const PAGES_COMPONENTS = [
     TreeModule,
     MatChipsModule,
     MatIconModule,
-    MatFormFieldModule
-  ],
+    MatFormFieldModule    NbDateFnsDateModule,  ],
   entryComponents: [
     NotReadMsgsColComponent,
   ],

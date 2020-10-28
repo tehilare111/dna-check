@@ -16,21 +16,21 @@ export class FileDownloadButtonComponent implements OnInit {
   ngOnInit() {
   }
 
-  /*getFile(value){
-    this.RestApiService.getFile(url: string).subscribe(
-      data => { this.downloadFile(data); },
+  getFile(value){
+    this.RestApiService.getFile(value).subscribe(
+      data => { this.downloadFile(data, value); },
       error => { this.ToastService.showToast('fail', 'בעיה בהורדת הקובץ', '') },
     );
   }
 
-  downloadFile(data) {
+  downloadFile(data, fileFullName) {
     var blob = new Blob([data], { type: 'text/csv' });
     var url = window.URL.createObjectURL(blob);
     var anchor = document.createElement("a");
-    anchor.download = "file name";
+    anchor.download = this.getFileName(fileFullName);
     anchor.href = url;
     anchor.click();
-  }*/
+  }
 
   getFileName(fileNameWithPath){
     if (fileNameWithPath) return fileNameWithPath.substring(fileNameWithPath.lastIndexOf('/') + 1)

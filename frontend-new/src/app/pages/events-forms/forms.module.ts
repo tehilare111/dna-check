@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+
 import {
   NbActionsModule,
   NbButtonModule,
@@ -14,6 +15,11 @@ import {
   NbChatModule
 } from '@nebular/theme';
 
+//angular Material Modules
+import {AngularMaterialModule} from '../../material-module';
+//time picker
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { NgxSelectModule } from 'ngx-select-ex';
 import { ThemeModule } from '../../@theme/theme.module';
 import { FormsRoutingModule } from './forms-routing.module';
 import { FormsComponent } from './forms.component';
@@ -37,12 +43,15 @@ import { CorruptionFormComponent } from './corruption-form/corruption-form.compo
 import { FileDownloadButtonComponent } from './components/file-download-button/file-download-button.component';
 import { FormTopButtonsComponent } from './components/form-top-buttons/form-top-buttons.component';
 
+import {NbDateFnsDateModule} from '@nebular/date-fns';
 
 
 @NgModule({
   imports: [
     NbDialogModule.forChild(),
     ThemeModule,
+    NgxMaterialTimepickerModule,
+    NgxSelectModule,
     NbInputModule,
     NbCardModule,
     NbButtonModule,
@@ -55,7 +64,9 @@ import { FormTopButtonsComponent } from './components/form-top-buttons/form-top-
     NbSelectModule,
     ngFormsModule,
     NbSpinnerModule,
-    NbChatModule
+    NbChatModule,
+    AngularMaterialModule,
+    NbDateFnsDateModule
   ],
   declarations: [
     FormsComponent,

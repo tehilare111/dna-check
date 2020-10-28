@@ -108,7 +108,6 @@ class OfficialEventFrom(APIView):
     @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)
     def post(self, request, reference, *args, **kwargs):
         form_serializer = FormsSerializer(data=request.data)
-
         if form_serializer.is_valid():
             reference = generate_reference(reference)
             # Create instance for this event form in the messages database
@@ -117,20 +116,20 @@ class OfficialEventFrom(APIView):
             return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
-    
+        
     @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)
     def put(self, request, reference,*args, **kwargs):
         try: 
-            event_form = FormsTable.objects.get(reference=reference) 
+            event_form = FormsTable.objects.get(reference=reference)
         except FormsTable.DoesNotExist: 
             return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
-
         form_serializer = FormsSerializer(event_form, data=request.data)
         if form_serializer.is_valid():
             form_serializer.save()
             return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
             return HttpResponse(form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
     
     @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], API_VIEW=True)
     def get(self, request, reference, *args, **kwargs):

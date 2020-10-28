@@ -1,4 +1,5 @@
 from django.db import models
+from multiplefilefield.fields import MultipleFileModelField
 
 class UploadTo:
   def __init__(self, field):
@@ -50,11 +51,11 @@ class DraftFormsTable(DraftEventForm):
     eventRelevantPlacesAndFactors = models.CharField(max_length=70, blank=False, default='')
     eventInitialDetails = models.CharField(max_length=70, blank=False, default='')
     investigationDate = models.CharField(max_length=70, blank=False, default='')
-    investigationFile = models.FileField(upload_to=UploadTo('investigationFile'), max_length=100, blank=True, null=True)
+    investigationFile = MultipleFileModelField(name="investigationFile",upload_to=UploadTo('investigationFile'), max_length=1000, blank=True, null=True)
     handlingDate = models.CharField(max_length=70, blank=False, default='')
     findingDate = models.CharField(max_length=70, blank=False, default='')
-    findingFile = models.FileField(upload_to=UploadTo('findingFile'), max_length=100, blank=True, null=True)
-    handlingFile = models.FileField(upload_to=UploadTo('handlingFile'), max_length=100, blank=True, null=True)
+    findingFile = MultipleFileModelField(name="findingFile", upload_to=UploadTo('findingFile'), max_length=1000, blank=True, null=True)
+    handlingFile = MultipleFileModelField(name="handlingFile",upload_to=UploadTo('handlingFile'), max_length=1000, blank=True, null=True)
     
     # Reviews Form
     reviewFile = models.FileField(upload_to=UploadTo('reviewFile'), max_length=100, blank=True, null=True)
