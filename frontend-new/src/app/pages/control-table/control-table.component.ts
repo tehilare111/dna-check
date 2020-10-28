@@ -1,21 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
 import { LocalDataSource } from 'ng2-smart-table';
-
 import { SmartTableData } from '../../@core/data/smart-table';
 import { RestApiService } from '../../services/rest-api.service';
 import { ToastService } from '../../services/toast.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { NbDialogService } from '@nebular/theme';
+
+import { NotReadMsgsColComponent } from './components/not-read-msgs-col/not-read-msgs-col.component';
+
 @Component({
   selector: 'ngx-control-table',
   templateUrl: './control-table.component.html',
   styleUrls: ['./control-table.component.scss']
 })
-export class ControlTableComponent implements OnInit {
+export class ControlTableComponent implements OnInit,  AfterViewInit {
   eventsToPickUp = {
     'defaultForms': {
       'name': 'כלל הטפסים',
       'route': undefined,
-      'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}} 
+      'columns': {'reference': {'title': 'סימוכין'}, 'date': {'title': 'תאריך'}, 'reporterName': {'title': 'שם מדווח'}, 'reporterUnit': {'title': 'יחידת מדווח'}, 'eventStatus': {'title': 'סטאטוס אירוע'}, 'unreadedMessages': {'title': 'הודעות שלא נקראו', 'filter': false, type: 'custom', 'renderComponent': NotReadMsgsColComponent, onComponentInitFunction: (instance) => {instance.updateMsgsInControlTable.subscribe(updatedData => { this.handleUpdatedUser(updatedData) })}}}
     },
     'CorruptionForm': {
       'name': 'השמדת ציוד',
@@ -49,14 +52,34 @@ export class ControlTableComponent implements OnInit {
   draftsUrl: string = '/draft-forms/';
   data = [];
   isDraft:boolean = false;
+  userUnreadedMessages = {};
+  @ViewChild("dialog") dialog : TemplateRef<any>;
 
-  constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router) { 
+  constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router, private activatedRoute: ActivatedRoute, private dialogService: NbDialogService) { 
   } 
   
 
   ngOnInit() {
     this.source.load(this.data);
     this.loadData('');
+    this.userUnreadedMessages = JSON.parse(localStorage.getItem('unreadedMessages'))
+  }
+
+  ngAfterViewInit(){
+    if(this.activatedRoute.snapshot.params.isLogin) this.openJustLoginDialog();
+  }
+
+  openJustLoginDialog(){
+    let unreadedMessagesAmount = 0;
+    for(let [key, value] of Object.entries(JSON.parse(localStorage.getItem('unreadedMessages')))){
+      unreadedMessagesAmount += parseInt(value.toString());
+    }
+    this.dialogService.open(
+      this.dialog,
+      {
+        context: unreadedMessagesAmount.toString(),
+        // closeOnBackdropClick: false,
+      });
   }
 
   loadTable(value){
@@ -72,6 +95,9 @@ export class ControlTableComponent implements OnInit {
   loadData(eventType: string) {
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${eventType}`).subscribe((data_from_server) => {
       this.data=data_from_server
+      // Update unread messages amount of the user in the table, parallel to the event's reference
+      if(eventType == ''){ this.data.forEach((element) => { element['unreadedMessages'] = `${this.userUnreadedMessages[element['reference']]};${element['reference']}` }); }
+      
       this.source.load(this.data);
     });
   }
@@ -116,5 +142,10 @@ export class ControlTableComponent implements OnInit {
     // second parameter specifying whether to perform 'AND' or 'OR' search 
     // (meaning all columns should contain search query or at least one)
     // 'AND' by default, so changing to 'OR' by setting false here
+  }
+
+  private handleUpdatedUser(updatedData: any) {
+    // TODO is it possible to update only single row with update result instead of full table?
+    this.source.update(updatedData.row, {'unreadedMessages': updatedData.value});
   }
 }

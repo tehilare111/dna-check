@@ -12,4 +12,5 @@ class UsersSerilazers(serializers.ModelSerializer):
             'rank',
             'position',
             'permissions',
-            'unit',)
+            'unit',
+            'unreadedMessages')

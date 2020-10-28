@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  db:
+    container_name: "db"
+    image: "postgres:12"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+  front:
+    container_name: "front"
+    build: 
+      context: "./frontend-new"
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+      - "49153:49153"
+    volumes:
+      - "/app/node_modules"
+      - "./frontend-new:/app"
+  back:
+    container_name: "back"
+    build:
+      context: "./backend"
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./backend:/app"

@@ -3,4 +3,6 @@ from msgs import views
  
 urlpatterns = [
     url(r'^msgs/(?P<reference>[0-9]+)$',views.msgs),
+    url(r'^msg-read/(?P<reference>[0-9]+)$',views.user_read_msg),
+    url(r'^msg-unread/(?P<reference>[0-9]+)$',views.user_not_read_msg),
 ]

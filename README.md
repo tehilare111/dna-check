@@ -8,6 +8,34 @@ We Are using:
   - npm 6.13.4
   - postgresql 12.2
   
+## Setup Using Docker:
+
+ First of all, make sure you have [docker desktop](https://www.docker.com/products/docker-desktop) running on your local pc.
+
+ Then, inside your local project repository directory, you should see the docker-compose.yml file.
+ In this folder, execute the follwoing commands (Add sudo when running on linux / run shell as administrator when on windows):
+ ```
+ $ docker-compose up --build -d
+ $ docker-compose exec db psql --username=postgres --dbname=postgres
+ postgres=# INSERT INTO users_users VALUES (0, '1999-01-01 00:00:00', true, 'michael', 'bauer', 'mb@gmail,.com', false, true, '1999-01-01 00:00:00', 'mb', 'מיכאל', 'באואר', '1', 8481678, 'סמ"ר', 'משק', 'מנהלן מערכת', 'מצו"ב', '{}');
+ ```
+ Afterwords:
+  Open browser: http://127.0.0.1:4200
+
+ Connect with:    
+   user: mb  
+   pass: 1  
+  
+ Additional actions:  
+  1. commit save button in constants-fields page
+  2. commit save on units management page - units tree save button
+    
+      
+ Inspect servers logs (for developers):
+ ```
+ $ docker-compose logs -t -f 
+ ```
+ 
  ## setup django environment
  **Pay attention, we are using python 3.6.x and pip 19.x.x.**
  

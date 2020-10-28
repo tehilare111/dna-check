@@ -46,16 +46,12 @@ def create_jwt(user_data):
 def check_token(token):
     try:
         auth = jwt.decode(token, 'secret', algorithms=['HS256'])
-        return get_permissions(auth["username"])
+        return Users.objects.get(username=auth['username'])
     except Exception as e:
-        return (False,False)
+        return False
 
-def get_permissions(username):
-    user = Users.objects.get(username=username)
-    user_serializer = UsersSerilazers(user)
-    return (user_serializer.data["permissions"], user_serializer.data["unit"])
 
-def check_permissions_dec(permissions_array, API_VIEW=False, RETURN_UNIT=False):
+def check_permissions_dec(permissions_array, API_VIEW=False, RETURN_USER=False):
     
     def wrapper(view_function):
         def functions_args(*args, **kwargs):
@@ -67,10 +63,11 @@ def check_permissions_dec(permissions_array, API_VIEW=False, RETURN_UNIT=False):
                 return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
             
             token = request.headers['Authorization'].split(" ")[1]        
-            permission, unit = check_token(token)
+            user = check_token(token)
     
-            if permission in permissions_array:
-                return view_function(*args, **kwargs) if not RETURN_UNIT else view_function(unit=unit, *args, **kwargs)
+            if user and user.permissions in permissions_array:
+                return view_function(*args, **kwargs) if not RETURN_USER else view_function(user=user, *args, **kwargs)
+    
             else:
                 return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
         return functions_args
@@ -82,4 +79,3 @@ def check_permissions(request, permissions_array):
     token=token[1]
     permission=check_token(token)
     return permission in permissions_array
-

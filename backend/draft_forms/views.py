@@ -14,7 +14,7 @@ from draft_forms.models import DraftFormsTable
 from draft_forms.serializers import DraftFormsSerializer
 from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
 from management.utils import get_inferior_units
-from msgs.utils import new_event_msgs, delete_event_messages
+from msgs.utils import new_event_msgs, delete_event_messages, update_user_event_deleted
 
 import time
 import os
@@ -22,8 +22,8 @@ import csv
 from datetime import datetime
 
 @csrf_exempt
-@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_UNIT=True)
-def draft_forms_list(request, event_type, unit):
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_USER=True)
+def draft_forms_list(request, event_type, user):
     '''
         Responsible to hendle requests from main control table page.
         Relevant urls: /api/draft-forms/*
@@ -31,7 +31,7 @@ def draft_forms_list(request, event_type, unit):
         DELETE - Delete all table content. 
     '''
     if request.method == 'GET':
-        forms = DraftFormsTable.objects.filter(reporterUnit__in=[unit])
+        forms = DraftFormsTable.objects.filter(reporterUnit__in=[user.unit])
         draft_form_serializer = DraftFormsSerializer(forms, many=True)
 
         return JsonResponse(draft_form_serializer.data, safe=False) 
@@ -52,7 +52,7 @@ class DraftEventFrom(APIView):
         if draft_form_serializer.is_valid():
             reference = generate_reference(reference)
             # Create instance for this event form in the messages database
-            new_event_msgs(reference)
+            new_event_msgs(reference, draft_form_serializer.validated_data['reporterUnit'])
             draft_form_serializer.save(reference=reference, writtenInDrafts=True)
             return JsonResponse(draft_form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
@@ -82,12 +82,16 @@ class DraftEventFrom(APIView):
         draft_form_serializer = DraftFormsSerializer(draft_event_form)
         return JsonResponse(draft_form_serializer.data)
 
-    @check_permissions_dec([MANAGER], API_VIEW=True)
-    def delete(self, request, reference, *args, **kwargs):
+    @check_permissions_dec([MANAGER], API_VIEW=True, RETURN_USER=True)
+    def delete(self, request, reference, user, *args, **kwargs):
         try: 
             draft_event_form = DraftFormsTable.objects.get(reference=reference)
         except DraftFormsTable.DoesNotExist: 
             return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
-
+        
+        # Delete this event form instance from the messages database
+        delete_event_messages(reference)
+        # Delete this event messages from all relevant users
+        update_user_event_deleted(reference, user.unit)
         draft_event_form.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)

@@ -44,4 +44,16 @@ export class HeaderComponent implements OnInit {
   startSearch() {
     this.analyticsService.trackEvent('startSearch');
   }
+
+  setNotReadMsgNumber(){
+    let unreadedMessagesAmount = 0;
+    if (localStorage.getItem('unreadedMessages') === null) {
+      return unreadedMessagesAmount
+    }    
+
+    for(let [key, value] of Object.entries(JSON.parse(localStorage.getItem('unreadedMessages')))){
+      unreadedMessagesAmount += parseInt(value.toString());
+    }
+    return unreadedMessagesAmount;
+  }
 }
