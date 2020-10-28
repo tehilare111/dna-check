@@ -13,22 +13,31 @@
         <img class='img' src="assets/images/excel_Offical.png" (click)="exportToXL(pickedUpEvent)" style=" margin-right: 3px; height:42px;width: 40px; align-items: center;">
       </div>
       </div>
-    <nb-card>
-      <nb-card-body>
-    <table  mat-table [dataSource]="dataSourceFilter" matSort  (matSortChange)="sortData($event)">
+    
+    <table  mat-table [dataSource]="dataSourceFilter" matSort  (matSortChange)="sortData($event)"  class="my-table mat-elevation-z4">
       <ng-container *ngFor="let column of displayedColumnsTitle; let i =index" matColumnDef="{{displayedColumns[i]}}"
       [sticky]="i==0">
-              <th class="header" mat-header-cell id="{{column}}" #idHeader *matHeaderCellDef mat-sort-header> {{column }} <mat-icon (click)="this.jsonArrayItems[i].flagDisplay=!this.jsonArrayItems[i].flagDisplay;getArrayItems(idHeader.id,i)" >menu</mat-icon>
-                  <div class="filter">
-                  <ngx-select *ngIf="this.jsonArrayItems[i].flagDisplay"  [multiple]="true" 
-                  [items]="this.jsonArrayItems[i].array"
-                  [(ngModel)]="this.jsonArrayItems[i].value"
-                  #columnTitle
-                  [autoClearSearch]="true"
-                  placeholder="{{column}}"
-                  (selectionChanges)="applyFilter($event,i)">
-                </ngx-select>
-              </div>
+              <th class="header" mat-header-cell id="{{column}}" #idHeader *matHeaderCellDef mat-sort-header> {{column }} <mat-icon (click)="this.jsonArrayItems[i].flagDisplay=!this.jsonArrayItems[i].flagDisplay;getArrayItems(idHeader.id,i)" [matMenuTriggerFor]="menu" >menu</mat-icon>
+                <mat-menu class="sizeMenu" #menu="matMenu" xPosition='before' yPosition='below'>
+                  <div class="sizeMenu" (click)="$event.stopPropagation();">
+                    <div class="example-block">
+                      <div class="example-block__item">
+                        <div class="filter">
+                          <angular2-multiselect id="hiddens" [data]="this.jsonArrayItems[i].array" [(ngModel)]="this.jsonArrayItems[i].value" 
+                          [settings]="dropdownSettings" 
+                          (onSelect)="createArraySeclect($event,i);applyFilter($event,i)" 
+                          (onDeSelect)="removeArraySelect($event,i);applyFilter($event,i)"
+                          (onSelectAll)="createArrayAllSelect($event,i);applyFilter($event,i)"
+                          enableCheckAll="true"
+                          showCheckbox="true"
+                          position="rtl"
+                          (onDeSelectAll)="removeArrayAllSelect($event,i);applyFilter($event,i)"></angular2-multiselect>
+                        
+                      </div>
+                      </div>
+                  </div>
+                   </div>
+                </mat-menu>
         </th>
         <td class="example-element-row td" mat-cell *matCellDef="let element"> {{element[displayedColumns[i]]}} 
         </td>
@@ -36,14 +45,27 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true;" ></tr>
       <tr mat-row (click)='formClicked(myRowData)' *matRowDef="let myRowData; columns: displayedColumns"></tr>
     </table>
-    <!-- <mat-menu class="sizeMenu" #menu="matMenu" xPosition='before' yPosition='above'>
-      <div class="sizeMenu" (click)="$event.stopPropagation();">
-        <div class="example-block">
-          <div class="example-block__item">
-          </div>
-      </div>
-       </div>
-    </mat-menu>
-    -->
+      <!-- <mat-menu class="sizeMenu" #menu="matMenu" xPosition='before' yPosition='below'>
+                  <div class="sizeMenu" (click)="$event.stopPropagation();">
+                    <div class="example-block">
+                      <div class="example-block__item">
+                        <div class="filter">
+                          <ngx-select [multiple]="true"
+                          (open)="false" 
+                          [items]="this.jsonArrayItems[i].array"
+                          [(ngModel)]="this.jsonArrayItems[i].value"
+                          #columnTitle
+                          keepSelectMenuOpened="true"
+                          [autoClearSearch]="true"
+                          placeholder="{{column}}"
+                          (selectionChanges)="applyFilter($event,i)">
+                          
+                        </ngx-select>
+                      </div>
+                      </div>
+                  </div>
+                   </div>
+                </mat-menu> -->
+   
   </nb-card-body>
 </nb-card>

@@ -19,6 +19,7 @@ import {MatInputModule,MatOptionModule, MatSelectModule,MatPaginatorModule ,MatS
 import {MatIconModule} from '@angular/material/icon'
 import {MatMenuModule} from '@angular/material/menu';
 import { NgxSelectModule } from 'ngx-select-ex';
+import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 
 const PAGES_COMPONENTS = [
   PagesComponent,
@@ -43,6 +44,7 @@ const PAGES_COMPONENTS = [
     MatMenuModule,
     NgxSelectModule,
     MatFormFieldModule,
+    AngularMultiSelectModule,
     
     
   ],

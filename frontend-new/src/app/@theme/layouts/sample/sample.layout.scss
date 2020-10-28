@@ -24,9 +24,10 @@
     // &.expanded, &.expanded.start {
     //   transform: translate3d(0, 0, 0);
     // }
+    
 
     /deep/ .scrollable {
-      width: $sidebar-width;
+      width:7rem !important ;
       padding: 3.4rem 0.25rem;
     }
 
@@ -46,6 +47,7 @@
       }
     }
   }
+  
 
   nb-sidebar.menu-sidebar {
 

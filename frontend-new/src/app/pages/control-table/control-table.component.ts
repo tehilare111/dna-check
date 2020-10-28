@@ -10,6 +10,10 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatMenuTrigger, MatTableDataSource} from '@angular/material';
 import {FormControl} from '@angular/forms';
 import { INgxSelectOption } from 'ngx-select-ex';
+import { isBoolean } from 'util';
+import { AngularMultiSelect } from 'angular2-multiselect-dropdown';
+
+
 
 
 
@@ -28,6 +32,7 @@ export interface PeriodicElement {
 const ELEMENT_DATA: PeriodicElement[] = [
 ]
 
+
 @Component({
   selector: 'ngx-control-table',
   templateUrl: './control-table.component.html',
@@ -35,11 +40,17 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class ControlTableComponent implements OnInit,AfterViewInit{
   displayedColumnsTitle:string[]= [];
+
+  dropdownList = [];
+  dropdownSettings = {};
+  selectedItems = [];
+  
+
   dataSource=new MatTableDataSource<any>();
   dataSourceFilter=new MatTableDataSource<any>()
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
   @ViewChild(MatPaginator) paginator: MatPaginator
-
+  @ViewChild('dropdownRef') dropdownRef: AngularMultiSelect;
   draftsTtile=['סימוכין','סוג אירוע','תאריך פתיחת האירוע','שם מדווח','יחידת מדווח','הודעות שנקראו/ לא נקראו']
   draftsColumn=['reference','eventType','date','reporterName','reporterUnit','message']
   eventsToPickUp = {
@@ -72,6 +83,7 @@ export class ControlTableComponent implements OnInit,AfterViewInit{
       'columns': ['reference','reporterName', 'reporterUnit','eventStatusShorted', 'eventStatus', 'equipmnetsType', 'equipmnetsMark', 'equipmnetsMakat', 'reportDate','bargainDate','clarificationDate','shortDate'],
     },  
 }
+
 toppings = new FormControl();
 public toppingList: string[] = [];
 public arrayItems=[];
@@ -85,6 +97,7 @@ jsonArrayItems=[]
       attr:{
       }
   };
+  
   routeDrafts=true
   formalsUrl: string = '/forms/';
   draftsUrl: string = '/draft-forms/';
@@ -102,6 +115,37 @@ jsonArrayItems=[]
    
   }
   ngOnInit() :void{
+    this.dropdownSettings = { 
+      singleSelection: false, 
+      text:"חיפוש",
+      selectAllText:'בחר הכל',
+      unSelectAllText:'הסר הכל',
+      enableSearchFilter: true,
+      searchFilter:"חייפוש",
+      open:true,
+      classes:"myclass custom-class-example"
+      
+    };
+    
+    this.dropdownList = [
+      // {"id":1,"itemName":"India"},
+      // {"id":2,"itemName":"Singapore"},
+      // {"id":3,"itemName":"Australia"},
+      // {"id":4,"itemName":"Canada"},
+      // {"id":5,"itemName":"South Korea"},
+      // {"id":6,"itemName":"Germany"},
+      // {"id":7,"itemName":"France"},
+      // {"id":8,"itemName":"Russia"},
+      // {"id":9,"itemName":"Italy"},
+      // {"id":10,"itemName":"Sweden"}
+    ];
+    this.selectedItems = [
+      // {"id":2,"itemName":"Singapore"},
+      // {"id":3,"itemName":"Australia"},
+      // {"id":4,"itemName":"Canada"},
+      // {"id":5,"itemName":"South Korea"}
+  ];
+             
     this.toppings = new FormControl();
     this.displayedColumns=this.pickedUpEvent.columns
     this.displayedColumnsTitle=this.pickedUpEvent.title
@@ -116,14 +160,16 @@ jsonArrayItems=[]
   var arrayEmpty=[]
   var tempData = [];
   this.dataSource.data.forEach(val => tempData.push(Object.assign({}, val)));
-  this.jsonArrayItems[index].arrayByColumnOption=value
+  // this.jsonArrayItems[index].arrayByColumnOption.push(value.itemName)
+  // console.log(this.jsonArrayItems[index].arrayByColumnOption.itemName)
+  console.log(this.jsonArrayItems[index].arrayByColumnOption)
   for (let item of this.jsonArrayItems )
   {
     for (let option of item.arrayByColumnOption)
     {
       for (let j of tempData)
       {
-        if (!j[item.title].toString().localeCompare(option.value.toString()))
+        if (!j[item.title].toString().localeCompare(option))
         {
           arrayEmpty.push(j)
         }
@@ -136,15 +182,39 @@ jsonArrayItems=[]
       this.dataSourceFilter.data = tempData
     }
   }
-  
+
+  createArraySeclect(value,index){
+    console.log("ins",value.itemName)
+    this.jsonArrayItems[index].arrayByColumnOption.push(value.itemName)
+  }
+  removeArraySelect(value,index){
+    console.log("remv",value.itemName,"index",index)
+    for(let i of this.jsonArrayItems[index].arrayByColumnOption){
+      console.log(i)
+      if(value.itemName==i){
+        this.jsonArrayItems[index].arrayByColumnOption = this.jsonArrayItems[index].arrayByColumnOption.filter(item => item !== value.itemName)
+        }
+      }
+  }
+  createArrayAllSelect(value,index){
+    for(let i of value){
+    this.jsonArrayItems[index].arrayByColumnOption.push(i.itemName)
+  }
+  }
+  removeArrayAllSelect(value,index)
+  {
+    this.jsonArrayItems[index].arrayByColumnOption=[]
+  }
   getArrayItems(title,index){
     console.log(title)
-    for(let i of this.dataSource.data)
+    for(let i in this.dataSource.data)
     {
-      this.arrayItems.push(i[title])
+      this.dropdownList.push()
+      this.arrayItems.push({"id":i,"itemName":this.dataSource.data[i][title].toString()})
     }
     var Items=new Set(this.arrayItems)
     this.jsonArrayItems[index].array=Array.from(Items)
+    console.log("json",this.jsonArrayItems)   
     this.arrayItems=[]
     
   }
@@ -173,7 +243,7 @@ jsonArrayItems=[]
   {
     var array=[]
     for(let title in titleColumn){
-      array.push({"title":titleColumn[title],"array":this.toppingList,"flagDisplay":false,"value":" ","arrayByColumnOption":[]})
+      array.push({"title":titleColumn[title],"array":this.toppingList,"flagDisplay":false,"value":[],"arrayByColumnOption":[]})
       
     }
     this.jsonArrayItems=array    
