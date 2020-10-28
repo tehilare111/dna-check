@@ -40,6 +40,12 @@ export class ConstantsFieldsComponent implements OnInit {
     this.RestApiService.getConstatnsFields().subscribe(
       (data: ConstantsFields) => {
         this.ConstantsFields = data;
+        
+        let allComponents = {'eventStatus': this.eventStatus, 'materialType': this.materialType, 'equipmentType': this.materialType, 'equipmentMakat': this.equipmentMakat, 'rank': this.rank, 'handlingStatus': this.handlingStatus}
+        for(let [key, value] of Object.entries(allComponents)){
+          value.setTable(this.ConstantsFields[key]);
+        }
+        
         this.uploadLoading = false
       },
       err => {
@@ -71,5 +77,4 @@ export class ConstantsFieldsComponent implements OnInit {
       }
     )
   }
-
 }

@@ -1,4 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Ng2SmartTableModule, LocalDataSource } from 'ng2-smart-table';
+import {MatChipInputEvent} from '@angular/material';
+import {ENTER} from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'ngx-field-box',
@@ -7,45 +10,143 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class FieldBoxComponent implements OnInit {
   
-  @Input('fieldOptions') fieldOptions = [];
   @Input('fieldName') fieldName = '';
-  currentField;
+  
+  text: string= '';
+  fieldOptions = []
+  inputFieldOptions = []
   uploadLoading:boolean = false
-  tmpField:string = ''
-  action: string = ''
-
-  constructor() { }
-
-  ngOnInit(): void {
+  source: LocalDataSource = new LocalDataSource();
+  readonly separatorKeysCodes: number[] = [ENTER];
+  settings = {
+    columns: {
+      field:{
+        title: 'חיפוש',
+      }
+    },
+    hideHeader: true,
+    noDataMessage: 'אין ערכים עבור שדה זה',
+    actions:{
+      add: false,
+      position: 'left',
+    },
+    /*add: {
+      addButtonContent: '<i class="nb-edit"></i>',
+    },*/
+    edit: {
+      editButtonContent: '<i class="nb-edit" nbPopover="עריכה תשנה את ערך השדה רטרואקטיבית" nbPopoverMode="hover"></i>',
+      saveButtonContent: '<i class="nb-checkmark"></i>',
+      cancelButtonContent: '<i class="nb-close"></i>',
+      confirmSave: true,
+    },
+    delete: {
+      deleteButtonContent: '<i class="nb-trash" nbPopover="מחיקה תסיר את השדה משימוש עתידי, אך לא תשנה את ערכו בטפסים קיימים" nbPopoverMode="hover"></i>',
+      confirmDelete: true,
+    },
+    pager: {
+      perPage: 5
+    },
   }
 
-  deleteField(){
-    const index: number = this.fieldOptions.indexOf(this.currentField);
-    this.fieldOptions.splice(index, 1);
-    if(this.fieldOptions.length == 0) this.fieldOptions = []
-    this.cancel()
+  constructor() {  }
+
+  ngOnInit(): void { }
+
+  addFields(){
+    this.fieldOptions = this.fieldOptions.concat(this.inputFieldOptions).map(
+      el => { 
+        if (el.field) return el; 
+        
+        
+        // check if value already exists
+        if (!this.fieldOptions.some(f => { return f['field']===el; })){
+          return {field: el};
+        }
+      }
+    ).filter(el => el != undefined);
+    
+    this.reloadFieldOptions();
+    this.inputFieldOptions = [];
   }
 
-  addField(){
-    this.fieldOptions.push(this.tmpField);
-    this.cancel()
+  reloadFieldOptions(){
+    if(this.fieldOptions){
+      this.source.load(this.fieldOptions);
+    }
   }
 
-  editField(){
-    const index: number = this.fieldOptions.indexOf(this.currentField);
-    this.fieldOptions.splice(index, 1);
-    this.fieldOptions.push(this.tmpField);
-    this.cancel()
-  }
-
-  cancel(){
-    this.action = ''
-    this.tmpField = ''
-    this.currentField = 'שדה'
+  setTable(loadedFields: []){
+    this.fieldOptions = loadedFields.map(el => { return { field: el } });
+    this.reloadFieldOptions();
   }
 
   getFieldValue(){
-    return (this.fieldOptions)?this.fieldOptions.slice():[];
+    return (this.fieldOptions)?this.fieldOptions.map(el => { return el.field } ):[];
   }
 
+  xlDropped(event){
+    event.preventDefault();
+    var data = event.dataTransfer.getData("text").split('\n');
+    data.splice(-1, 1);
+    this.inputFieldOptions.push(...data);
+
+    setTimeout(() => {
+      this.text = "";
+    }, 0);
+  }
+
+  onPaste(event){
+    let data = (event.clipboardData || event.originalEvent.clipboardData).getData('text').split('\n');
+    data.splice(-1, 1);
+    this.inputFieldOptions.push(...data);
+
+    setTimeout(() => {
+      this.text = "";
+    }, 0);
+  }
+
+  addToInput(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+
+    // Add our field
+    if ((value || '').trim()) {
+      this.inputFieldOptions.push( value.trim() );
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+  }
+
+  removeFromInput(field: string): void {
+    const index = this.inputFieldOptions.indexOf(field);
+
+    if (index >= 0) {
+      this.inputFieldOptions.splice(index, 1);
+    }
+  }
+
+  onDeleteConfirm(event){
+     if (window.confirm('האם אתה בטוח שברצונך למחוק? מחיקה תסיר את השדה משימוש עתידי, אך לא תשנה את ערכו באירועים קיימים')) {
+       // Delete item from array
+      let index = this.fieldOptions.indexOf(event.data);
+      this.fieldOptions.splice(index, 1);
+
+      // Update the local datasource
+      this.reloadFieldOptions();
+      event.confirm.resolve();
+    } else {
+      event.confirm.reject();
+    }
+  }
+
+  onEditConfirm(event) {
+    if (window.confirm('האם אתה בטוח שברצונך לערוך את השדה? עריכה תשנה את ערכו של השדה בכל האירועים, רטרואקטיבית')) {
+      event.confirm.resolve(event.newData);
+    } else {
+      event.confirm.reject();
+    }
+  }
 }
