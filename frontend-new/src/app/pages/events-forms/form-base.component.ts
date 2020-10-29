@@ -219,7 +219,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     }
     
     // If form has a reference we need to check if it's already written in the relevenat DB: Formals or Drafts
-    if (this.reference && ((this.drafting&&this.form.writtenInDrafts)||(!this.drafting&&this.form.writtenInFormals))){
+    if (this.reference != undefined && ((this.drafting && this.isDraft) || (!this.isDraft))){
       this.RestApiService.put(`${(this.drafting)?this.draftsUrl:this.formalsUrl}${(this.reference)?this.reference:''}`, formData, {headers: {'enctype': 'multipart/form-data'}})
         .subscribe(
           (data: FormType) => {
