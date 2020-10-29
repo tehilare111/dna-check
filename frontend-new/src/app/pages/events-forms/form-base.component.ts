@@ -149,12 +149,15 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         .subscribe(
           (data: FormType) => {
             this.uploadLoading = false;
+            this.equipmentsTable.stateBlocked()
             if (data.editStateBlocked){
               this.popUpDialogContext = `האירוע נסגר לעריכה`;
-              this.equipmentsTable.stateBlocked(data.editStateBlocked)
+              
+
             } else {
               this.popUpDialogContext = `האירוע נפתח לעריכה`;
-              this.equipmentsTable.stateBlocked(data.editStateBlocked)
+              
+
             }   
           },
           error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${this.reference}`; })
