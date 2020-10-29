@@ -86,11 +86,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
 
   exisitingFormLoadData(reference: string){
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
-      this.form = data
-      /*if(!this.isDraft){
-        this.form.editStateBlocked = true
-      }*/
-        
+      this.form = data;
       /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
           this.form.editStateBlocked = false 
@@ -130,7 +126,6 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     }
     return fieldsValid
   }
-
   printForm() {
     window.print()
   }
@@ -161,7 +156,10 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
 
   handleFileUpload(event){
     var target = event.target || event.srcElement || event.currentTarget;
-    this.formFiles.push({'id': target.attributes.id.value, 'file': target.files.item(0)});
+    for (let i = 0; i < target.files.length; i++) {
+      let file = target.files[i];
+      this.formFiles.push({'id': target.attributes.id.value, 'file': target.files[i]});
+    }
   }
 
   sendEvent(){
@@ -244,7 +242,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   getFileName(fileNameWithPath){
     if (fileNameWithPath) return fileNameWithPath.substring(fileNameWithPath.lastIndexOf('/') + 1)
   }
-
+ 
   deleteEventForm(){
     this.uploadLoading = true;
     

@@ -31,3 +31,14 @@ nb-checkbox {
         display: none;
     }
   }
+    ngx-timepicker-field.ngx-timepicker
+    {
+      direction: ltr;
+      align-items: center;
+      display: flex;
+    }
+    ::ng-deep  .ngx-select__choices
+    {
+      color: black !important;
+      text-align: right; 
+    }
