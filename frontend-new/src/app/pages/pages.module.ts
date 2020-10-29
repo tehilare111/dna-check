@@ -44,7 +44,9 @@ const PAGES_COMPONENTS = [
     TreeModule,
     MatChipsModule,
     MatIconModule,
-    MatFormFieldModule    NbDateFnsDateModule,  ],
+    MatFormFieldModule,
+    NbDateFnsDateModule,
+    ],
   entryComponents: [
     NotReadMsgsColComponent,
   ],
