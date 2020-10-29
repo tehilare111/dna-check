@@ -7,7 +7,7 @@
         <div class="form-group row">
           <label for="eventStatus" class="label col-sm-3 form-control-label">סטאטוס אירוע</label>
           <div class="col-sm-9">
-            <nb-select [disabled]="readonly" name="eventStatus" id="eventStatus" placeholder="סטאטוס אירוע" [(ngModel)]="eventForm.eventStatus">
+            <nb-select [disabled]="readonly" name="eventStatus" id="eventStatus" [placeholder]="eventForm.eventStatus?eventForm.eventStatus:'סטאטוס אירוע'" [(ngModel)]="eventForm.eventStatus">
               <nb-option *ngFor="let status of eventStatusOptions" [value]="status">{{status}}</nb-option>
             </nb-select>
           </div>

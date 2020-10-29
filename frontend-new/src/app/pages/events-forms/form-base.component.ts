@@ -79,21 +79,25 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     if (this.reference){
       this.exisitingFormLoadData(this.reference);
     } else {
-       this.readonly = false;
-       this.newFormLoadData();
+      this.readonly = false;
+      this.newFormLoadData();
     }
   }
 
   exisitingFormLoadData(reference: string){
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
       this.form = data
-      console.log(this.form);      
+      /*if(!this.isDraft){
+        this.form.editStateBlocked = true
+      }*/
+        
       /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
-          this.form.editStateBlocked = false
+          this.form.editStateBlocked = false 
         }else{
           this.form.editStateBlocked = true
         }*/
+        
       });
     // this.get_constas_feilds()
   }
@@ -152,6 +156,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
             }   
           },
           error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${this.reference}`; })
+    return this.form.editStateBlocked
   }
 
   handleFileUpload(event){
@@ -161,7 +166,12 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
 
   sendEvent(){
     this.drafting = false;
+    this.form.editStateBlocked = true;
     this.onSubmit();
+    if(this.isDraft){
+      this.DeleteFormFromDrafts(this.reference)
+    }
+    
   }
 
   saveEvent(){
@@ -182,6 +192,15 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     }
   }
 
+  DeleteFormFromDrafts(reference){
+    this.RestApiService.delete(`${this.draftsUrl}${reference}`)
+    .subscribe(
+        (data: FormType) => {
+          this.uploadLoading = false;
+        },
+        error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${reference}`; })
+  }
+
   save() {
     
     this.form = this.eventStatusForm.pushFormFields<FormType>(this.form);
@@ -199,7 +218,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     }
     
     // If form has a reference we need to check if it's already written in the relevenat DB: Formals or Drafts
-    if (this.reference && ((this.drafting&&this.form.writtenInDrafts)||(!this.drafting&&this.form.writtenInFormals))){
+    if (this.reference != undefined && ((this.drafting && this.isDraft) || (!this.isDraft))){
       this.RestApiService.put(`${(this.drafting)?this.draftsUrl:this.formalsUrl}${(this.reference)?this.reference:''}`, formData, {headers: {'enctype': 'multipart/form-data'}})
         .subscribe(
           (data: FormType) => {
@@ -216,6 +235,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
           this.uploadLoading = false;
           this.reference = data.reference;
           this.popUpDialogContext = `האירוע ${!this.drafting?'נוצר':'נשמר'} בהצלחה, סימוכין: ${this.reference}`;
+          
         },
         error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
     }

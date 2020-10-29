@@ -82,7 +82,7 @@ class DraftEventFrom(APIView):
         draft_form_serializer = DraftFormsSerializer(draft_event_form)
         return JsonResponse(draft_form_serializer.data)
 
-    @check_permissions_dec([MANAGER], API_VIEW=True, RETURN_USER=True)
+    @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True, RETURN_USER=True)
     def delete(self, request, reference, user, *args, **kwargs):
         try: 
             draft_event_form = DraftFormsTable.objects.get(reference=reference)

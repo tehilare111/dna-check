@@ -77,7 +77,6 @@ def constants_fields(request):
     
     elif request.method == 'POST': 
         data = JSONParser().parse(request) 
-        print('data',data)
         constants_fields_serializer = ConstantsFieldsSerializer(data=data) if not constants_fields else ConstantsFieldsSerializer(constants_fields, data=data) 
             
         if constants_fields_serializer.is_valid():              

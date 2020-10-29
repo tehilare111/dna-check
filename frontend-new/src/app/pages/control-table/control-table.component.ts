@@ -8,6 +8,7 @@ import { NbDialogService } from '@nebular/theme';
 
 import { NotReadMsgsColComponent } from './components/not-read-msgs-col/not-read-msgs-col.component';
 
+import { User } from '../management/users';
 @Component({
   selector: 'ngx-control-table',
   templateUrl: './control-table.component.html',
@@ -52,12 +53,17 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
   draftsUrl: string = '/draft-forms/';
   data = [];
   isDraft:boolean = false;
+  userIsAllowedToReport:boolean = false;
   userUnreadedMessages = {};
   @ViewChild("dialog") dialog : TemplateRef<any>;
-
+  allowedUsers = ['מדווח אירועים', 'מנהלן מערכת'];
   constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router, private activatedRoute: ActivatedRoute, private dialogService: NbDialogService) { 
+    this.isUserAllowedToReport();
   } 
   
+  isUserAllowedToReport(){
+    this.userIsAllowedToReport = this.allowedUsers.includes(localStorage.getItem("permissions"))
+  }
 
   ngOnInit() {
     this.source.load(this.data);

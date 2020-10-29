@@ -14,10 +14,10 @@ export class FormTopButtonsComponent implements OnInit {
   @Output() saveEvent = new EventEmitter<any>();
   @Output() updateEditState = new EventEmitter<any>();
   @Output() deleteEventForm = new EventEmitter<any>();
-
+  @Input() editStateBlocked;
   @Input() reference;
   @Input() reporterUnit;
-
+  @Input() isDraft=false;
   constructor(private auth: AuthService) { }
 
   ngOnInit() {

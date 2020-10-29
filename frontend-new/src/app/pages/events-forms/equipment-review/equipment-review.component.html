@@ -1,12 +1,12 @@
 
-<ngx-form-top-buttons (sendEvent)="sendEvent()" (printForm)="printForm()" (updateEditState)="updateEditState()" (saveEvent)="saveEvent()" (deleteEventForm)="deleteEventForm()" [reference]="reference" [reporterUnit]="form.reporterUnit" id="outOfPrint"></ngx-form-top-buttons>
+<ngx-form-top-buttons [editStateBlocked]="this.form.editStateBlocked" (sendEvent)="sendEvent()" (printForm)="printForm()" (updateEditState)="updateEditState()" (saveEvent)="saveEvent()" (deleteEventForm)="deleteEventForm()" [reference]="reference" [reporterUnit]="form.reporterUnit" [isDraft]="isDraft" id="outOfPrint"></ngx-form-top-buttons>
 
-<div *ngIf="isDraft"><p class="red">טיוטה</p></div>
+
 
 <div class="row" id="print-section">
   <div class="col-md-3">
     <ngx-event-details [form]="form"></ngx-event-details>
-    <ngx-event-status-shorted #status [eventForm]="form" [readonly]="this.form.editStateBlocked" [eventStatusOptions]="eventStatusOptions"></ngx-event-status-shorted>
+    <ngx-event-status-shorted #status [eventForm]="form" [readonly]="!(auth.check_permissions(['מנהלן מערכת']))" [eventStatusOptions]="eventStatusOptions"></ngx-event-status-shorted>
   </div>
 
   <div class="col-md-9">
@@ -31,7 +31,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="reviewFile" class="label">צרף קובץ</label>
-                <input [readonly]="this.form.editStateBlocked" type="file" (change)="handleFileUpload($event)" name="reviewFile" id="reviewFile">
+                <input [disabled]="this.form.editStateBlocked" type="file" (change)="handleFileUpload($event)" name="reviewFile" id="reviewFile">
               </div>
             </div>
           </div>
@@ -42,7 +42,7 @@
                   ומצאתי כי:</p>
               </div>
               <div>
-                  <nb-radio-group [(value)]="form.isMatchToReport" name="isMatchToReport" [(ngModel)]="form.isMatchToReport">
+                  <nb-radio-group [(value)]="form.isMatchToReport" [disabled]="this.form.editStateBlocked" name="isMatchToReport" [(ngModel)]="form.isMatchToReport">
                       <nb-radio
                       [value]="true">
                       יש התאמה מלאה בין הנתונים שהופקו בדו"ח אל מול הבדיקה הפיסית שנערכה
@@ -61,17 +61,16 @@
                 <label for="equipment" class="label">ציוד/חומר</label>
                 <div>
                 </div>
-                <nb-select [disabled]="this.form.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="form.equipment">
-                  <nb-option *ngFor="let equipment of equipments" value="equipment.name" (click)="equipmentsTypeOptions=equipment.list; form.equipmentType=''">{{equipment.name}}</nb-option>  
+                <nb-select [disabled]="this.form.editStateBlocked" name="equipment" id="equipment" status="primary" [placeholder]="form.equipment?form.equipment:'ציוד/חומר'" [(ngModel)]="form.equipment">
+                  <nb-option *ngFor="let equipment of equipments" [value]="equipment.name" (click)="equipmentsTypeOptions=equipment.list; form.equipmentType=''">{{equipment.name}}</nb-option>  
                 </nb-select>
               </div>
             </div>
             <div class="col-md-2">
               <div class="form-group">
-                <label for="equipmentType" class="label">סוג ציוד/חומר</label>
-                
-                <nb-select [disabled]="this.form.editStateBlocked" name="equipmentType" id="equipmentType" status="primary" placeholder="סוג ציוד/חומר" [(ngModel)]="form.equipmentType">
-                  <nb-option *ngFor="let equipment of equipmentsTypeOptions" value="equipment">{{equipment}}</nb-option>  
+                <label for="equipmentType" class="label">סוג ציוד/חומר</label>    
+                <nb-select [disabled]="this.form.editStateBlocked" name="equipmentType" id="equipmentType" status="primary" [placeholder]="form.equipmentType?form.equipmentType:'סוג ציוד/חומר'" [(ngModel)]="form.equipmentType">
+                  <nb-option *ngFor="let equipment of equipmentsTypeOptions" [value]="equipment">{{equipment}}</nb-option>  
                 </nb-select>
               </div>
             </div>

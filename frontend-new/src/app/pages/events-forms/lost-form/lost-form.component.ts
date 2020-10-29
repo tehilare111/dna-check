@@ -22,12 +22,13 @@ export class LostFormComponent extends FormBaseComponent<LostFormTemplate, Event
   @ViewChild("simpleDialog") simpleDialog : ElementRef;
   
   eventStatusOptions = ["טופל", "טרם טופל"]
+  handlingStatusOptions = []
   units = []
   ranks = []
-  equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
-  materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
-  //equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
-  //equipmentsTypeOptions = []
+  equipmentsType = []
+  materialsType = []
+  equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+  equipmentsTypeOptions = []
   
   constructor(
     ) {
@@ -69,8 +70,9 @@ export class LostFormComponent extends FormBaseComponent<LostFormTemplate, Event
       this.ranks = data.rank
       this.materialsType = data.materialType
       this.eventStatusOptions = data.eventStatus
+      this.handlingStatusOptions = data.handlingStatus
       this.units = data.units
-      //this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+      this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
       //this.equipmentsTypeOptions = this.equipments.map(el => {if(el['name']==this.form.equipment) return el['list']; else return undefined; }).filter(el => el!=null)[0]
     });
   }

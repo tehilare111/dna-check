@@ -31,6 +31,7 @@ public DEF_MENU:NbMenuItem[] = [
   link: '/pages/control-table',
   home: true,
 },
+
 {
   title:'התחברות',
   icon: 'nb-gear',
