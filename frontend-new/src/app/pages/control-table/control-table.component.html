@@ -6,7 +6,7 @@
             <i class="ion-plus-round" [nbPopover]="icon" ></i>
           </button>
         <button  *ngFor="let button of eventsToPickUp |keyvalue"  status="info"  nbButton (click)="loadTable(pickedUpEvent=button.value)" style="margin: 3px;" hero>{{button.value.name}}</button>
-        <input nbInput #search matInput id="search" class="search-input" placeholder="חיפוש בטבלה:" (input)="applyFilter($event.target.value)" style="margin: 3px;">
+        <input nbInput #search id="search" status="info" class="search-input" placeholder="חיפוש בטבלה:" (input)="onSearch(search.value)" style="margin: 3px;" >
         <button nbButton  status="info" title='טיוטות' id='טיוטות' (click)="draftsColumns()" style="margin:3px; " hero>
           טיוטות
         </button>
@@ -18,20 +18,19 @@
       <ng-container *ngFor="let column of displayedColumnsTitle; let i =index" matColumnDef="{{displayedColumns[i]}}"
       [sticky]="i==0">
               <th class="header" mat-header-cell id="{{column}}" #idHeader *matHeaderCellDef mat-sort-header> {{column }} <mat-icon (click)="this.jsonArrayItems[i].flagDisplay=!this.jsonArrayItems[i].flagDisplay;getArrayItems(idHeader.id,i)" [matMenuTriggerFor]="menu" >menu</mat-icon>
-                <mat-menu class="sizeMenu" #menu="matMenu" xPosition='before' yPosition='below'>
+                <mat-menu overlapTrigger="false" class="sizeMenu" #menu="matMenu" xPosition='before' yPosition='below'>
                   <div class="sizeMenu" (click)="$event.stopPropagation();">
                     <div class="example-block">
                       <div class="example-block__item">
-                        <div class="filter">
-                          <angular2-multiselect id="hiddens" [data]="this.jsonArrayItems[i].array" [(ngModel)]="this.jsonArrayItems[i].value" 
-                          [settings]="dropdownSettings" 
+                        <div>
+                          <angular2-multiselect id="hiddens" class="custom-class-example" [data]="this.jsonArrayItems[i].array" [(ngModel)]="this.jsonArrayItems[i].value" 
+                          [settings]="dropdownSettings"
                           (onSelect)="createArraySeclect($event,i);applyFilter($event,i)" 
                           (onDeSelect)="removeArraySelect($event,i);applyFilter($event,i)"
                           (onSelectAll)="createArrayAllSelect($event,i);applyFilter($event,i)"
-                          enableCheckAll="true"
-                          showCheckbox="true"
-                          position="rtl"
-                          (onDeSelectAll)="removeArrayAllSelect($event,i);applyFilter($event,i)"></angular2-multiselect>
+                          (onDeSelectAll)="removeArrayAllSelect(i);applyFilter($event,i)"
+                          #dropdownRef 
+                          ></angular2-multiselect>
                         
                       </div>
                       </div>
@@ -45,27 +44,5 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true;" ></tr>
       <tr mat-row (click)='formClicked(myRowData)' *matRowDef="let myRowData; columns: displayedColumns"></tr>
     </table>
-      <!-- <mat-menu class="sizeMenu" #menu="matMenu" xPosition='before' yPosition='below'>
-                  <div class="sizeMenu" (click)="$event.stopPropagation();">
-                    <div class="example-block">
-                      <div class="example-block__item">
-                        <div class="filter">
-                          <ngx-select [multiple]="true"
-                          (open)="false" 
-                          [items]="this.jsonArrayItems[i].array"
-                          [(ngModel)]="this.jsonArrayItems[i].value"
-                          #columnTitle
-                          keepSelectMenuOpened="true"
-                          [autoClearSearch]="true"
-                          placeholder="{{column}}"
-                          (selectionChanges)="applyFilter($event,i)">
-                          
-                        </ngx-select>
-                      </div>
-                      </div>
-                  </div>
-                   </div>
-                </mat-menu> -->
-   
   </nb-card-body>
 </nb-card>
