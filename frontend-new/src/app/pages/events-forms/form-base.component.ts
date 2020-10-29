@@ -87,7 +87,6 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   exisitingFormLoadData(reference: string){
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
       this.form = data
-      console.log(this.form); 
       /*if(!this.isDraft){
         this.form.editStateBlocked = true
       }*/

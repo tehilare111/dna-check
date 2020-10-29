@@ -30,7 +30,7 @@ export class RestApiService {
   CheckLogin(customer:object): Observable<Object> {
     return this.http.post(`${this.baseUrl}/check_login/`, customer);
   }
-   
+  
   deleteAll(): Observable<any> {
     return this.http.delete(`${this.baseUrl}/forms/`);
   }

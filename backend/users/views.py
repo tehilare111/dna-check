@@ -14,7 +14,7 @@ from users.utils import check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS
 #                      Create new user                        #
 ###############################################################
 @csrf_exempt 
-# @check_permissions_dec([MANAGER])
+@check_permissions_dec([MANAGER])
 def create_user(request):
     user_data = JSONParser().parse(request)
     user_serializer = UsersSerilazers(data=user_data)
@@ -89,6 +89,3 @@ def update_permissions_users(request, personalnumber):
         if form_serializer.is_valid():
             form_serializer.save()
             return JsonResponse({"data":form_serializer.data},status=status.HTTP_204_NO_CONTENT)
-
-
-    

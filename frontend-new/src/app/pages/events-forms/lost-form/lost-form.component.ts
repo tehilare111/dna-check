@@ -67,7 +67,6 @@ export class LostFormComponent extends FormBaseComponent<LostFormTemplate, Event
   getConstasFeilds() {
     this.RestApiService.getConstansFieldsAndUnitsArray().subscribe((data) => {  
       this.equipmentsType = data.equipmentType
-      console.log(data)
       this.ranks = data.rank
       this.materialsType = data.materialType
       this.eventStatusOptions = data.eventStatus

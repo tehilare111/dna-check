@@ -32,7 +32,6 @@ export class FormTopButtonsComponent implements OnInit {
   }
 
   printFormEmtr(){
-    console.log("editStateBlocked " + this.editStateBlocked)
     this.printForm.emit();
   }
 
