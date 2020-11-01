@@ -237,7 +237,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       newUserForm.permissions = "מאשר אירועים";
       newUserForm.personalNumber = eventAutorizer;
       newUserForm.username = eventAutorizer;
-      newUserForm.unit = this.ADMINISTRATIVE_UNIT;
+      //newUserForm.unit = this.ADMINISTRATIVE_UNIT;
       this.RestApiService.CreateUser(newUserForm)
       .subscribe(
         data =>{

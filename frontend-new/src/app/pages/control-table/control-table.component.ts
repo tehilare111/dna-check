@@ -77,14 +77,15 @@ export class ControlTableComponent implements OnInit {
 
   loadData(eventType: string) {
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${eventType}`).subscribe((data_from_server) => {
-      this.data = (this.isEventAuthorizer) ? this.filterEvents(data_from_server, localStorage.getItem('username')) : data_from_server;
+      //this.data = (this.isEventAuthorizer) ? this.filterEvents(data_from_server, localStorage.getItem('username')) : data_from_server;
+      this.data = data_from_server;
       this.source.load(this.data);
     });
   }
 
-  filterEvents(events, eventAuthorizer){
-    return events.filter(event => event.eventAuthorizers.includes(eventAuthorizer);
-  }
+  /*filterEvents(events, eventAuthorizer){
+    return events.filter(event => event.eventAuthorizers.includes(eventAuthorizer));
+  }*/
 
   formClicked(event) {
     let path = ''

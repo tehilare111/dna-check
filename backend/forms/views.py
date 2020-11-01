@@ -21,9 +21,11 @@ import os
 import csv
 from datetime import datetime
 
+from itertools import chain
+
 @csrf_exempt
-@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER], RETURN_UNIT=True)
-def forms_list(request, event_type, unit):
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER], RETURN_UNIT=True, RETURN_PERSONAL=True)
+def forms_list(request, event_type, unit, personal_number):
     '''
         Responsible to hendle requests from main control table page.
         Relevant urls: /api/forms/*
@@ -33,9 +35,11 @@ def forms_list(request, event_type, unit):
     '''
     if request.method == 'GET':
         if event_type == '':
-            forms = FormsTable.objects.filter(reporterUnit__in=get_inferior_units(unit))
+            unitForms = FormsTable.objects.filter(reporterUnit__in=get_inferior_units(unit))
+            forms = chain(unitForms, getForms(FormsTable, unit, personal_number))
         else:
-            forms = FormsTable.objects.filter(eventType=event_type, reporterUnit__in=get_inferior_units(unit))
+            unitForms = FormsTable.objects.filter(eventType=event_type, reporterUnit__in=get_inferior_units(unit))
+            forms = chain(unitForms, getForms(FormsTable, unit, personal_number))
         
         form_serializer = FormsSerializer(forms, many=True)
 
@@ -44,6 +48,14 @@ def forms_list(request, event_type, unit):
     elif request.method == 'DELETE':
         FormsTable.objects.all().delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+def getForms(FormsTable, unit, personal_number):
+    unitForms = FormsTable.objects.filter(reporterUnit__in=get_inferior_units(unit))
+    authorizedForms = []  # Get all the forms that shared with the user.
+    for form in FormsTable.objects.filter():
+        if personal_number in form.eventAuthorizers and not FormsTable.objects.filter(reporterUnit__in=get_inferior_units(unit), id=form.id).exists():
+            authorizedForms.append(form)
+    return authorizedForms
 
 @csrf_exempt
 @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER]) # maybe EVENT_AUTHORIZER needs to be removed

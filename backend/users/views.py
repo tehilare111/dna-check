@@ -7,7 +7,7 @@ from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from management.utils import constants_fields_array
 from management.models import UnitsTree, ConstantsFields
-from users.utils import check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, check_token, create_jwt, REPORTER_MANAGER
+from users.utils import check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, check_token, create_jwt, REPORTER_MANAGER, EVENT_AUTHORIZER
 
 
 ###############################################################
@@ -19,9 +19,18 @@ def create_user(request):
     user_data = JSONParser().parse(request)
     user_serializer = UsersSerilazers(data=user_data)
     if request.method == 'POST':
-        if(user_serializer.is_valid() and not check_user_and_personal_number(user_data)):
-            user_serializer.save()
-            return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+        if(user_serializer.is_valid()):
+            if(not check_user_and_personal_number(user_data)):
+                user_serializer.save()
+                return HttpResponse(status=status.HTTP_204_NO_CONTENT)  
+            elif(Users.objects.filter(personalNumber=user_data["personalNumber"], permissions=EVENT_AUTHORIZER).exists()): # Avoid sending error when the existing user is event authorizer.
+                if(user_data.permissions != EVENT_AUTHORIZER): # If user known as event authorizer created as permanent user the event authorizer user deleted.
+                    delete_user(request)
+                    user_serializer.save()
+                else: # Avoid sending error when a event authorizer shared with multiple forms. 
+                    return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+            elif(user_data["permissions"] == EVENT_AUTHORIZER): # Avoid sending error when the user that request to be added as event authorizer already a permanent user. 
+                return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
         return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
     
