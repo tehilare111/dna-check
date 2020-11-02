@@ -164,7 +164,6 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
 
   sendEvent(){
     this.drafting = false;
-    this.form.editStateBlocked = true;
     this.onSubmit();
     if(this.isDraft){
       this.DeleteFormFromDrafts(this.reference)
@@ -186,6 +185,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       this.openWithoutBackdropClick(this.simpleDialog)
     } else {
       this.openWithoutBackdropClick(this.directingDialog);
+      this.form.editStateBlocked = true;
       this.save();
     }
   }
