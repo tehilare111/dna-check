@@ -13,7 +13,6 @@ import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatMenuTrigger, MatTableDataSource} from '@angular/material';
 import { AngularMultiSelect} from 'angular2-multiselect-dropdown';
-import { ConstantsFieldsComponent } from '../constants-fields/constants-fields.component';
 
 @Component({
   selector: 'ngx-control-table',

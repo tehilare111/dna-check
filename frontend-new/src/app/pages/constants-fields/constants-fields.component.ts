@@ -1,9 +1,11 @@
-import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewChild,HostListener } from '@angular/core';
 import { RestApiService } from '../../services/rest-api.service';
 import { ToastService } from '../../services/toast.service';
 import { FieldBoxComponent } from './components/field-box.component';
 import { Router } from '@angular/router';
 
+import { Observable } from 'rxjs';
+import {componentCanDeactivate}from '../pending-changes-guard.guard';
 class ConstantsFields{
   equipmentType: string[];
   materialType: string[];
@@ -60,6 +62,7 @@ export class ConstantsFieldsComponent implements OnInit {
     this.uploadLoading = true
     
     this.ConstantsFields.eventStatus = this.eventStatus.getFieldValue()
+    
     this.ConstantsFields.materialType = this.materialType.getFieldValue()
     this.ConstantsFields.equipmentType = this.equipmentType.getFieldValue()
     this.ConstantsFields.rank = this.rank.getFieldValue()
@@ -77,4 +80,5 @@ export class ConstantsFieldsComponent implements OnInit {
       }
     )
   }
+  
 }

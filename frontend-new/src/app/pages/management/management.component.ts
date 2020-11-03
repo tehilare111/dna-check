@@ -79,7 +79,6 @@ export class ManagementComponent implements OnInit {
     this.uploadLoading = true
     this.RestApiService.getTreeUnits().subscribe(
       (data: {'maxTreeNodeId': string, 'treeNode': TreeNodeCustom[]}) => {
-        console.log(data)
         this.nodes = data.treeNode
         this.maxTreeNodeId = data.maxTreeNodeId
         
