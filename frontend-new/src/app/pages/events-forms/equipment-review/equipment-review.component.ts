@@ -12,7 +12,7 @@ import { EventStatusComponent } from '../components/event-status/event-status.co
   styleUrls: ['./equipment-review.component.scss']
 })
 export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewTemplate, EventStatusComponent> implements OnInit{
-  eventType: string = 'ביקורת ציוד';
+  eventType: string = 'ספירות';
   form: EquipmentReviewTemplate = new EquipmentReviewTemplate();
   eventFilesFields: string[] = ['reviewFile'];
 

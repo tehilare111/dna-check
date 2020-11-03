@@ -16,7 +16,6 @@ export class NotReadMsgsColComponent implements ViewCell, OnInit {
   urlRead = '/msg-read/'
   urlNotRead = '/msg-unread/'
   reference: string;
-
   @Input() value: string | number;
   @Input() rowData: any;
 
@@ -27,10 +26,10 @@ export class NotReadMsgsColComponent implements ViewCell, OnInit {
   constructor(private RestApiService: RestApiService, private ToastService:ToastService) { }
 
   ngOnInit() {
+    if(this.value!=undefined){
     const values = this.value.toString().split(';')
     this.reference = values[1];
     const temp = parseInt(values[0]);
-    
     switch(true){  
       case temp > 0:
         this.renderValue = temp;
@@ -42,6 +41,7 @@ export class NotReadMsgsColComponent implements ViewCell, OnInit {
         this.renderValue = undefined;
         break;
     }
+  }
   }
 
   updateMessagesNotRead(){

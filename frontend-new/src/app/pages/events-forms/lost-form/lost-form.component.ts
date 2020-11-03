@@ -12,7 +12,7 @@ import { EventStatusComponent } from '../components/event-status/event-status.co
   styleUrls: ['./lost-form.component.scss'],
 })
 export class LostFormComponent extends FormBaseComponent<LostFormTemplate, EventStatusComponent> implements OnInit {
-  eventType: string = 'אובדן ציוד';
+  eventType: string = 'אובדנים';
   form: LostFormTemplate = new LostFormTemplate();
   eventFilesFields: string[] = ['handlingFile', 'findingFile', 'investigationFile'];
 

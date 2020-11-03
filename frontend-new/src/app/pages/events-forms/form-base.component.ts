@@ -186,7 +186,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       this.openWithoutBackdropClick(this.simpleDialog)
     } else {
       this.openWithoutBackdropClick(this.directingDialog);
-      this.save();
+    this.save();
     }
   }
 

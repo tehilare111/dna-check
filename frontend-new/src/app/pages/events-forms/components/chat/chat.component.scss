@@ -11,7 +11,7 @@
 
   nb-chat {
     //margin: 3rem auto 0;
-    width: 500px;
+    width: 500px auto 1;
   }
 
   .chat-container {
@@ -21,7 +21,28 @@
       padding-top: 1rem;
     }
   }
+  .buttonColor{
+    background-color:#6bcef7 !important ;
+}
 
+.buttonColor:hover{
+  background-color:#0f588b !important ;
+}
+/deep/.buttonColor:focus{
+  background-color:#0f588b !important ;
+}
+/deep/ .nb-theme-default [nbButton]::after {
+  background-color:#0f588b !important;
+}
+/deep/ .nb-theme-default [nbButton]::after {
+  background-color:#0f588b !important;
+}
+/deep/ .nb-theme-default nb-chat.primary-chat .header {
+  background-color:#6bcef7 !important ;
+}
+/deep/.nb-theme-default nb-chat.primary-chat button.btn{
+  background-color:#6bcef7 !important ;
+}
   .chart-description {
     text-align: center;
     margin: 0 auto;
@@ -70,7 +91,6 @@
 .floating-btn {
     width: 50px;
     height: 50px;
-    background: #3366ff;
     text-decoration: none;
     border-radius: 50%;
     color: #ffffff;
@@ -127,6 +147,6 @@
   .form-box.open {
     transform: translate(10px, -70px);
     height: 576px;
-    width: 400px;
+    width: 400px ;
     opacity: 1;
   }
