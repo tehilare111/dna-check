@@ -1,0 +1,252 @@
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+.images{
+padding: 4px 4px 4px 4px;
+
+}
+table {
+width: 100%;
+}
+
+.sizeMenu{
+height: 188px;
+width: 100%;
+}
+.example-element-description {
+padding: 16px;
+}
+
+.example-element-description-attribution {
+opacity: 0.5;
+}
+::ng-deep .mat-menu-content{
+width: 150px;
+padding-top: 0 !important;
+padding-bottom: 0 !important;
+}
+.mat-header-row .ng-star-inserted {
+background-color: #6bcef7;
+color:black;
+font-weight: bold;
+;
+}
+.mat-table{
+  text-align: right
+}
+/deep/.mat-row:hover{
+    background-color: #d6e3ec;
+  }
+/deep/ .c-btn {
+background: #fff;
+border: 1px solid #ccc;
+color: #333; 
+;}
+
+/deep/ .selected-list .c-list .c-token {
+background:#6bcef7;
+direction: ltr !important; }
+/deep/ .selected-list .c-list .c-token .c-label {
+color: #fff;
+direction: ltr !important; }
+/deep/  .selected-list .c-list .c-token .c-remove svg {
+fill: #fff;
+direction: ltr !important; }
+
+/deep/  .selected-list .c-angle-down svg, .selected-list .c-angle-up svg {
+fill: #333;
+direction: ltr !important; }
+
+/deep/  .dropdown-list ul li:hover {
+background: #f5f5f5;
+visibility:visible !important }
+
+/deep/  .arrow-up, .arrow-down {
+border-bottom: 15px solid #fff;
+direction: ltr !important; }
+
+/deep/ .arrow-2 {
+border-bottom: 15px solid #ccc;
+direction: ltr !important; }
+
+/deep/ .list-area {
+border: 1px solid #ccc;
+background: #fff;
+box-shadow: 0px 1px 5px #959595;
+direction: ltr !important;
+margin-top: auto;
+}
+
+/deep/ .select-all {
+font-size: small;
+border-bottom: 1px solid #ccc;
+direction: rtl !important;
+text-align: right !important; }
+
+/deep/ .list-filter {
+border-bottom: 1px solid #ccc;
+direction: rtl !important;
+border-bottom: 1px solid #ccc;
+position: relative;
+padding-left: 35px;
+padding-right: 7px;
+
+}
+/deep/ .pure-checkbox input[type=checkbox]+label{
+    
+}
+
+
+
+
+/deep/  .list-filter .c-search svg {
+fill: #888; }
+/deep/  .list-filter .c-clear svg {
+fill: #888; }
+/deep/ .pure-checkbox input[type=checkbox]+label{
+    flex-direction: row-reverse !important;
+    position: relative;
+    padding-left: 2em;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    margin: 0;
+    font-weight: 300;
+    display: flex;
+}
+
+
+/deep/ .pure-checkbox input[type="checkbox"]:focus + label:before, .pure-checkbox input[type="checkbox"]:hover + label:before {
+border-color: #6bcef7;
+background-color: #f2f2f2;
+direction: ltr !important;
+; }
+/deep/ .pure-checkbox{
+    direction: ltr !important;
+}
+/deep/ .pure-checkbox input[type="checkbox"] + label {
+color: #000;
+direction: ltr !important;
+; }
+
+/deep/ .pure-checkbox input[type="checkbox"] + label:before {
+color: #6bcef7;
+border: 1px solid #6bcef7;
+direction: ltr !important;
+
+; }
+
+/deep/ .pure-checkbox input[type="checkbox"] + label:after {
+background-color: #6bcef7; 
+direction: rtl !important;
+}
+
+/deep/ .pure-checkbox input[type="checkbox"]:disabled + label:before {
+border-color: #cccccc; 
+direction: ltr !important;}
+
+/deep/ .pure-checkbox input[type="checkbox"]:disabled:checked + label:before {
+background-color: #cccccc; 
+direction: ltr !important;}
+
+/deep/ .pure-checkbox input[type="checkbox"] + label:after {
+border-color: #ffffff;
+text-align: right !important;}
+
+/deep/ .pure-checkbox input[type="radio"]:checked + label:before {
+background-color: white;
+direction: ltr !important;}
+
+/deep/ .pure-checkbox input[type="checkbox"]:checked + label:before {
+background: #6bcef7;
+direction: ltr !important;}
+/deep/ .multi-select-mode .pure-checkbox input[type="checkbox"]:focus + label:before, .multi-select-mode .pure-checkbox input[type="checkbox"]:hover + label:before {
+border-color: #6bcef7;
+background-color: #f2f2f2;
+direction: ltr !important;}
+
+/deep/ .multi-select-mode .pure-checkbox input[type="checkbox"] + label {
+color: #000; 
+direction: ltr !important;}
+
+/deep/ .multi-select-mode .pure-checkbox input[type="checkbox"] + label:before {
+color: transparent !important;
+border: 0px solid #6bcef7; 
+direction: ltr !important;}
+
+/deep/ .multi-select-mode .pure-checkbox input[type="checkbox"] + label:after {
+background-color: transparent !important; 
+direction: ltr !important;}
+
+/deep/  .multi-select-mode .pure-checkbox input[type="checkbox"]:disabled + label:before {
+border-color: #cccccc; 
+direction: ltr !important;}
+
+/deep/ .multi-select-mode .pure-checkbox input[type="checkbox"]:disabled:checked + label:before {
+background-color: #cccccc;
+direction: ltr !important;}
+
+
+/deep/ .multi-select-mode .pure-checkbox input[type="checkbox"] + label:after {
+border-color: #6bcef7;
+direction: ltr !important;}
+
+/deep/ .multi-select-mode .pure-checkbox input[type="radio"]:checked + label:before {
+background-color: white;
+direction: ltr !important;}
+
+
+/deep/ .multi-select-mode .pure-checkbox input[type="checkbox"]:checked + label:before {
+background: none !important; 
+direction: ltr !important;}
+
+/deep/ .selected-item {
+background: #e9f4ff;direction: rtl !important; }
+
+/deep/ .btn-iceblue {
+background: #6bcef7;
+border: 1px solid #ccc;
+color: #fff;
+direction: ltr !important;}
+
+/deep/ .pure-checkbox .ng-star-inserted{
+    direction: ltr !important;
+}
+/deep/ .dropdown-list{
+    direction: rtl !important;
+    height: calc(100%-(250px - 180px)) !important;
+} 
+/deep/ .nb-theme-default ul
+{
+    padding-right: 0 !important;
+
+}
+/deep/ .dropdown-list  ul li {
+
+    text-align: right !important;
+    padding-top: 10rem;
+}
+/deep/ .selected-list{
+    height: 100% !important;
+}
+
+/deep/ .lazyContainer{
+    direction: rtl !important;
+}
+.buttonColor{
+    background-color:#6bcef7 ;
+}
+.buttonColor:hover{
+    background-color:#0f588b !important ;
+}
+/deep/.buttonColor:focus{
+    background-color:#0f588b !important ;
+}
+/deep/ .nb-theme-default [nbButton]::after {
+    background-color:#0f588b !important;
+}
+/deep/ .nb-theme-default [nbInput].input-info{
+    border-color:#6bcef7 !important;
+}

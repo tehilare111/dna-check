@@ -1,3 +1,23 @@
 .red{
     color: red;
   }
+  #div_maring_bottom{
+    width: auto;
+    margin-bottom: 6%;
+    left: auto;
+}
+button{
+  margin: 2px;
+}
+  .buttonColor{
+    background-color:#6bcef7 ;
+}
+.buttonColor:hover{
+    background-color:#0f588b !important ;
+}
+/deep/.buttonColor:focus{
+    background-color:#0f588b !important ;
+}
+/deep/ .nb-theme-default [nbButton] {
+    background-color:#6bcef7 !important;
+}

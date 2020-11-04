@@ -81,3 +81,22 @@
         }
       }
     }
+    .buttonColor{
+      background-color:#6bcef7 ;
+  }
+  .buttonColor:hover{
+      background-color:#0f588b !important ;
+  }
+  /deep/.buttonColor:focus{
+      background-color:#0f588b !important ;
+  }
+  /deep/ .nb-theme-default [nbButton]::after {
+      background-color:#0f588b !important;
+  }
+  /deep/ .nb-theme-default [nbButton]::after {
+    background-color:#0f588b !important;
+  }
+  /deep/ .nb-theme-default nb-card.info-card nb-card-header {
+    background-color:#6bcef7 !important ;
+    border-bottom-color:#6bcef7 !important;
+  }

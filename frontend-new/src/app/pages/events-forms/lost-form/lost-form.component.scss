@@ -42,3 +42,27 @@ nb-checkbox {
       color: black !important;
       text-align: right; 
     }
+
+    .buttonColor{
+      background-color:#6bcef7 ;
+    }
+    .buttonColor:hover{
+      background-color:#0f588b !important ;
+    }
+    /deep/.buttonColor:focus{
+      background-color:#0f588b !important ;
+    }
+    /deep/ .nb-theme-default [nbButton]::after {
+      background-color:#0f588b !important;
+    }
+    
+    /deep/ .nb-theme-default nb-card.select.primary{
+      border:2px solid #6bcef7 !important ;
+    }
+    /deep/.nb-theme-default  nb-option.selected {
+      background-color:#6bcef7 !important;
+      border:2px solid #6bcef7 !important ;
+    }
+    /deep/ .nb-theme-default nb-option:hover{
+      background-color:#6bcef7 !important;
+    }

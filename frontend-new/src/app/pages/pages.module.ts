@@ -18,7 +18,7 @@ import { ManagementComponent } from './management/management.component';
 import { TreeModule } from 'angular-tree-component';
 import { LoginComponent } from './details_users/login/login.component';
 import { NotReadMsgsColComponent } from './control-table/components/not-read-msgs-col/not-read-msgs-col.component';
-
+import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 
 //angular Material Modules
 import {AngularMaterialModule} from '../material-module';
@@ -46,6 +46,7 @@ const PAGES_COMPONENTS = [
     MatIconModule,
     MatFormFieldModule,
     NbDateFnsDateModule,
+    AngularMultiSelectModule,
     ],
   entryComponents: [
     NotReadMsgsColComponent,
