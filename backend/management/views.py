@@ -7,8 +7,8 @@ from rest_framework import status
 from django.conf import settings
 
 from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
-from management.models import UnitsTree, ConstantsFields
-from management.serializers import UnitsTreeSerializer, ConstantsFieldsSerializer
+from management.models import UnitsTree, ConstantsFields, ConstantFieldsWithId
+from management.serializers import UnitsTreeSerializer, ConstantsFieldsSerializer, ConstantFieldsWithIdSerializer
 from management.utils import get_inferior_units, constants_fields_array, units_array, UNITS_TREE_OBJECT_STATIC_ID, CONSTATNS_FIELDS_OBJECT_STATIC_ID
 
 #############################################################
@@ -64,7 +64,7 @@ def units_tree_register(request):
 @check_permissions_dec([MANAGER])
 def constants_fields(request):
     try: 
-        constants_fields = ConstantsFields.objects.get(constantFieldId=CONSTATNS_FIELDS_OBJECT_STATIC_ID) 
+        constants_fields = ConstantFieldsWithId.objects.all()
     except ConstantsFields.DoesNotExist: 
         constants_fields = None
     
@@ -72,7 +72,7 @@ def constants_fields(request):
         if not constants_fields:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
         
-        constants_fields_serializer = ConstantsFieldsSerializer(constants_fields)
+        constants_fields_serializer = ConstantFieldsWithIdSerializer(constants_fields, many=True)
         return JsonResponse(constants_fields_serializer.data, safe=False)
     
     elif request.method == 'POST': 

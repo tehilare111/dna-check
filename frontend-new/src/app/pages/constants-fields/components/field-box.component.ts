@@ -75,7 +75,8 @@ export class FieldBoxComponent implements OnInit {
     }
   }
 
-  setTable(loadedFields: []){
+  setTable(loadedFields : string[]){
+    //this.fieldOptions= fields
     this.fieldOptions = loadedFields.map(el => { return { field: el } });
     this.reloadFieldOptions();
   }

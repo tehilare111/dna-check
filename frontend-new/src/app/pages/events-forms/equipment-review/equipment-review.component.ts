@@ -5,6 +5,7 @@ import { FormGroup, FormControl } from "@angular/forms";
 import { FormBaseComponent } from '../form-base.component'
 import { EquipmentReviewTemplate } from '../events-forms.templates';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
+import { ConstantsFieldsComponent } from '../../constants-fields/constants-fields.component';
 
 @Component({
   selector: 'ngx-equipment-review',
@@ -15,6 +16,7 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
   eventType: string = 'ביקורת ציוד';
   form: EquipmentReviewTemplate = new EquipmentReviewTemplate();
   eventFilesFields: string[] = ['reviewFile'];
+  constantsFieldsComponent = new ConstantsFieldsComponent(null, null)
 
   @ViewChild("status") eventStatusForm : EventStatusComponent;
   // @ViewChild("chat") chatMessages : ChatComponent;
@@ -46,13 +48,22 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
 
 
   getConstasFeilds() {
-    this.RestApiService.getConstansFieldsAndUnitsArray().subscribe((data) => {
-      this.equipmentsType = data.equipmentType
-      this.ranks = data.rank
-      this.materialsType = data.materialType
-      this.eventStatusOptions = data.eventStatus
-      this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
-    });
+    this.RestApiService.getConstatnsFields().subscribe(
+      (data) => {
+        this.constantsFieldsComponent.fillListOfCategoryfromdata(data);
+        this.constantsFieldsComponent.listOfCategories;
+        console.log(this.constantsFieldsComponent.listOfCategories)
+        this.equipmentsType = this.constantsFieldsComponent.getFieldsFromCategoryName("equipmentType")
+        this.ranks = this.constantsFieldsComponent.getFieldsFromCategoryName("rank")
+        this.materialsType = this.constantsFieldsComponent.getFieldsFromCategoryName("materialType")
+        this.eventStatusOptions = this.constantsFieldsComponent.getFieldsFromCategoryName("eventStatus")
+        this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+        this.equipmentsTypeOptions = this.equipments.map(el => {if(el['name']==this.form.equipment) return el['list']; else return undefined; }).filter(el => el!=null)[0]
+        console.log()
+      },
+      err => {
+      }
+    );
   }
 
   updateValidationFormGroup(){

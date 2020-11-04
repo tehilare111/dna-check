@@ -6,7 +6,7 @@
 <div class="row" id="print-section">
 <div class="col-md-3">
   <ngx-event-details [form]="form"></ngx-event-details>
-  <ngx-event-status #status [eventForm]="form" [readonly]="this.form.editStateBlocked" [eventStatusOptions]="eventStatusOptions"></ngx-event-status>
+  <ngx-event-status #status [eventForm]="form" [readonly]="this.form.editStateBlocked" [handlingStatusOptions]="handlingStatusOptions" [eventStatusOptions]="eventStatusOptions"></ngx-event-status>
 </div>
 <div class="col-md-9">
   <nb-card>
@@ -22,7 +22,8 @@
                 <label for="signerUnit" class="label">יחידת החתום</label>
                 <ngx-select [dropDownMenuOtherClasses]="ngx-selectt" id="signerUnit" name="signerUnit"
                 [items]="units" [disabled]="this.form.editStateBlocked" [(ngModel)]="form.signerUnit" [autoClearSearch]="true"
-                noResultsFound= "לא נמצאו תוצאות" [placeholder]="form.signerUnit? form.signerUnit : 'יחידת החתום'"></ngx-select>
+                noResultsFound= "לא נמצאו תוצאות" [placeholder]="form.signerUnit? form.signerUnit : 'יחידת החתום'">
+              </ngx-select>
             </div>
           </div>
           <div class="col-md-2">
