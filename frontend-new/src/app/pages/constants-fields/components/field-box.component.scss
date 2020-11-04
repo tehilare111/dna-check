@@ -7,6 +7,9 @@ nb-icon{
 input {
     margin: 0.5rem 0 0.5rem 0;
 }
+/deep/ .mat-input-element{
+    caret-color:#6bcef7 !important ;
+}
 
 nb-card-body{
     min-height: 32rem;

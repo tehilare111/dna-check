@@ -7,7 +7,7 @@
          <nb-card-body>
            <div class="row">
                <div class="col-md-6">
-                 <button nbButton status="primary" #saveButton (click)="saveData()">שמור עץ יחידות</button>
+                 <button nbButton class="buttonColor" #saveButton (click)="saveData()">שמור עץ יחידות</button>
                  <tree-root #tree (activate)="onNodePickedUp($event)" (deactivate)="onNodeDeactivate($event)" [nodes]="nodes" [options]="options"></tree-root>
                </div> 
                <div class="col-md-6">
@@ -54,7 +54,6 @@
        </nb-card-body>    
        </nb-card>
      </div>
-
   <div class="col-md-6">
     <nb-card nb-card class="main-nb-card" status="primary" nbSpinnerStatus="primary" nbSpinnerSize="giant">
       <nb-card-header>
@@ -69,12 +68,12 @@
           <input type="text" #search fullWidth #Personal="ngModel" name="personalnumber" nbInput placeholder="מספר מזהה" [(ngModel)]=user.personalNumber required pattern="[0-9]{7}" (input)="onSearch(search.value)" > 
         </div>
         <div class="col">
-          <nb-select fullWidth name="permissions" status="privmary" placeholder="הרשאה" id="permissions" fieldSize="small" [(ngModel)]="user.permissions">
+          <nb-select fullWidth name="permissions"  placeholder="הרשאה" id="permissions" [size]="medium" [(ngModel)]="user.permissions">
             <nb-option *ngFor="let permiss of permission" [value]="permiss">{{[permiss]}}</nb-option>
           </nb-select>
         </div>
         <div class="col">
-          <button fullWidth nbButton [disabled]="Personal.invalid  || Personal.undirty"   status="primary" (click)=updatePermissionUser(Personal.value)>שנה הרשאות</button>     
+          <button fullWidth nbButton  class="buttonColor" [disabled]="Personal.invalid  || Personal.undirty"  (click)=updatePermissionUser(Personal.value)>שנה הרשאות</button>     
         </div>
       </div>
       
@@ -109,7 +108,7 @@
 
       <div class="row">
         <p>יחידת השמשתמש: <span style="font-weight:bold">{{this.pickedUpUnit}}</span>, הרשאות המשתמש: <span style="font-weight:bold">צופה אירועים</span><p>
-        <button [disabled]="pF.invalid || fN.invalid || pN.invalid || uN.invalid" #createNewUserButton nbButton (click)="createNewUser()">צור משתמש</button>
+        <button [disabled]="pF.invalid || fN.invalid || pN.invalid || uN.invalid" #createNewUserButton nbButton  class="buttonColor" (click)="createNewUser()">צור משתמש</button>
       </div>
     </nb-card-body>
     

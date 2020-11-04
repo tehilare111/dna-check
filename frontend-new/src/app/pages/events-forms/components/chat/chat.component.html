@@ -1,7 +1,7 @@
 
 <div class="form-box " id="myDIV">
   <div class="chat-container">
-    <nb-chat title="שיח רציף" size="large" status="primary">
+    <nb-chat title="שיח רציף" size="large" status="primary" >
     <nb-chat-message *ngFor="let msg of messages"
                         [type]="msg.type"
                         [message]="msg.text"
@@ -21,7 +21,7 @@
 
 </div>
 
-<button class="floating-btn" (click)="open()">
+<button class="floating-btn buttonColor" (click)="open()">
     <i class="ion-email"></i>
     <span *ngIf="unreadedMessageAmount > 0" class="badge">{{unreadedMessageAmount}}</span>
   </button>

@@ -1,20 +1,19 @@
 <div class="row col-md-12" id="outOfPrint">
   
-  <nb-card *ngIf ="checkPermissions()" >
-    <button type="submit" nbButton status="primary" [disabled]="this.editStateBlocked" (click)="sendEventEmtr()">שלח אירוע</button>
-  </nb-card>
-  <nb-card *ngIf ="auth.check_permissions(['מנהלן מערכת'])&&reference!=undefined && !isDraft"> 
-    <button *ngIf="true" nbButton status="primary" (click)="updateEditStateEmtr()">פתח/סגור אירוע לעריכה</button>
-  </nb-card>
-  <nb-card>
-    <button *ngIf="true" nbButton status="primary" (click)="printFormEmtr()">הדפס אירוע</button>
-  </nb-card>
-  <nb-card *ngIf ="auth.check_permissions(['מנהלן מערכת'])&&reference!=undefined" >
-    <button *ngIf="true" nbButton status="primary" (click)="deleteEventFormEmtr()">מחק אירוע</button>
-  </nb-card>
-  <nb-card *ngIf ="checkPermissions() && (isDraft || reference==undefined)">
-    <button type="submit" nbButton status="primary" (click)="saveEventEmtr()" nbTooltip="האירוע לא יועבר לגורם הממונה" nbTooltipPlacement="top">שמור כטיוטה</button>
-  </nb-card>
+
+    <button type="submit" nbButton class="buttonColor" *ngIf ="checkPermissions()"  [disabled]="this.editStateBlocked" (click)="sendEventEmtr()">שלח אירוע</button>
+
+
+    <button *ngIf="auth.check_permissions(['מנהלן מערכת'])&&reference!=undefined && !isDraft"  nbButton  class="buttonColor" (click)="updateEditStateEmtr()">פתח/סגור אירוע לעריכה</button>
+
+    <button *ngIf="true" nbButton class="buttonColor" (click)="printFormEmtr()">הדפס אירוע</button>
+
+
+    <button *ngIf="auth.check_permissions(['מנהלן מערכת'])&&reference!=undefined" nbButton class="buttonColor"  (click)="deleteEventFormEmtr()">מחק אירוע</button>
+
+
+    <button type="submit" *ngIf="checkPermissions() && (isDraft || reference==undefined)" nbButton class="buttonColor"  (click)="saveEventEmtr()" nbTooltip="האירוע לא יועבר לגורם הממונה" nbTooltipPlacement="top">שמור כטיוטה</button>
+
 </div>
 <div *ngIf="isDraft"><p class="red">טיוטה</p></div>
 <div *ngIf="!isDraft && this.editStateBlocked && reference!=undefined"><p class="red">האירוע סגור לעריכה</p></div>
