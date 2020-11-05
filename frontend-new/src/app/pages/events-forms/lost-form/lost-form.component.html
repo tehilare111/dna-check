@@ -61,15 +61,15 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="eventDate" class="label">תאריך גילוי האירוע</label>
-                <input [disabled]="this.form.editStateBlocked" [nbDatepicker]="datepicker" nbInput fullWidth name="eventDate" id="eventDate" #eventDate="ngModel" status="primary" placeholder="תאריך גילוי האירוע" [(ngModel)]="this.form.eventDate"  dateValidation >
-                <nb-datepicker  status="primary" #datepicker format="dd/MM/yyyy"></nb-datepicker>
+                <input [disabled]="this.form.editStateBlocked" [nbDatepicker]="eventdatepicker" nbInput fullWidth name="eventDate" id="eventDate" #eventDate="ngModel" status="primary" placeholder="תאריך גילוי האירוע" [(ngModel)]="this.form.eventDate"  dateValidation >
+                <nb-datepicker  status="primary" #eventdatepicker format="dd/MM/yyyy"></nb-datepicker>
                 <!-- <div *ngIf="eventDate.invalid&&eventDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div> -->
               </div>
             </div>
             <div class="col-md-1.5 ">
               <div class="form-group">
                 <label for="eventHour" class="label">שעת גילוי האירוע</label>
-                  <ngx-timepicker-field  class="ngx-timepicker" [format]="24" [defaultTime]="'12:34'" #eventHour name="eventHour" id="eventHour"  [(ngModel)]="form.eventHour" [controlOnly]="true"[disabled]= "this.form.editStateBlocked" timeValidation></ngx-timepicker-field>
+                  <ngx-timepicker-field  class="ngx-timepicker" [format]="24"  #eventHour name="eventHour" id="eventHour"  [(ngModel)]="form.eventHour" [controlOnly]="true"[disabled]= "this.form.editStateBlocked" timeValidation></ngx-timepicker-field>
                 <div *ngIf="eventHour.invalid&&eventHour.dirty"><label class="label red">פורמט השעה: 00:00</label></div>
               </div>
             </div>
