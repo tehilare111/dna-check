@@ -21,6 +21,7 @@ import { textValidator } from './validation-directives/text.directive';
 
 import { EventStatusBase } from './components/event-status-base.component';
 import { EventForm } from './events-forms.templates';
+import {format} from 'date-fns'
 
 export abstract class FormBaseComponent<FormType extends EventForm, EventStatusType extends EventStatusBase> implements OnInit {
   
@@ -86,6 +87,10 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
 
   exisitingFormLoadData(reference: string){
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
+      let regEx = /^\d\d\d\d\-\d\d\-\d\d$/i; //django represention of date in db
+      for(let [key, value] of Object.entries(data))
+      //db can save only strings, but datepicker excpect Date object.
+      {if (regEx.test(value)) {data[key]= new Date(value)}} 
       this.form = data;
       /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
@@ -207,8 +212,9 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
 
     // insert lostForm to FormData object
     for(let [key, value] of Object.entries(this.form)){
-      if (value && ! this.eventFilesFields.includes(key)) { formData.append(key, value); }
-    }
+      if (value && ! this.eventFilesFields.includes(key)) 
+      { if (value instanceof Date) { value = format(value,"yyyy-MM-dd")} //for django save in db
+        formData.append(key, value);}  }
 
     // insert all files to FormData object
     for( let formFile of this.formFiles ){
