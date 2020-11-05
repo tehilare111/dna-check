@@ -1,5 +1,5 @@
-import { OnInit, Injector, ElementRef } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { OnInit, Injector, ElementRef,HostListener } from '@angular/core';
+import { Router, ActivatedRoute,CanDeactivate  } from '@angular/router';
 import { NbDialogService } from '@nebular/theme';
 import { FormGroup } from "@angular/forms";
 
@@ -21,6 +21,7 @@ import { textValidator } from './validation-directives/text.directive';
 import {ConstantsFieldsComponent} from '../constants-fields/constants-fields.component'
 import { EventStatusBase } from './components/event-status-base.component';
 import { EventForm } from './events-forms.templates';
+import { Observable } from 'rxjs';
 
 export abstract class FormBaseComponent<FormType extends EventForm, EventStatusType extends EventStatusBase> implements OnInit {
   
@@ -62,7 +63,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   protected isDraft: boolean; // For a given form, determine if it is a draft or not
   protected drafting: boolean; // Determine whether to save the form or send it
   constantsFieldsComponent = new ConstantsFieldsComponent(null, null)
-
+  fieldsValid =false
 
   constructor(){
       this.RestApiService = AppInjector.injector.get(RestApiService);
@@ -71,12 +72,12 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       this.dialogService = AppInjector.injector.get(NbDialogService);
       this.router = AppInjector.injector.get(Router);
   }
-
+    
   ngOnInit(){
     // Recieve form data from db according to its reference
     this.reference = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference;
     this.isDraft = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.isDraft == 'true';
-
+    
     if (this.reference){
       this.exisitingFormLoadData(this.reference);
     } else {
@@ -128,15 +129,19 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
 
   checkFieldsValid(){
     /* Each form should have its own fields to be validated */ 
-    let fieldsValid = true
+    this.fieldsValid = true
     for (const field in this.formGroup.controls){
       if (!this.formGroup.controls[field].valid){
     //  if(field.valid && field.dirty) {
-        fieldsValid = false
+      this.fieldsValid = false
       }
     }
-    return fieldsValid
+    return this.fieldsValid
   }
+  checkChangeData(){
+    //if input chanegd or selected then we want the guard to be activated.
+    this.fieldsValid=true
+}
   printForm() {
     window.print()
   }
@@ -175,6 +180,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
 
   sendEvent(){
     this.drafting = false;
+    this.fieldsValid=false
     this.onSubmit();
     if(this.isDraft){
       this.DeleteFormFromDrafts(this.reference)
@@ -195,6 +201,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       this.popUpDialogContext = `שדה אחד לפחות לא תקין או חסר`;
       this.openWithoutBackdropClick(this.simpleDialog)
     } else {
+      this.form.editStateBlocked = true;
       this.openWithoutBackdropClick(this.directingDialog);
       this.form.editStateBlocked = true;
       this.save();
@@ -243,11 +250,8 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   }
 
   save() {
-    
     this.form = this.eventStatusForm.pushFormFields<FormType>(this.form);
-
     const formData: FormData = new FormData();
-
     // insert lostForm to FormData object
     for(let [key, value] of Object.entries(this.form)){
       if(this.isConstantField(key)){
@@ -259,12 +263,10 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       //console.log("key", key, "--value", value);
       if (value && ! this.eventFilesFields.includes(key)) { formData.append(key, value); }
     }
-
     // insert all files to FormData object
     for( let formFile of this.formFiles ){
       formData.append(formFile['id'], formFile['file'], formFile['file'].name);
     }
-    
     // If form has a reference we need to check if it's already written in the relevenat DB: Formals or Drafts
     if (this.reference != undefined && ((this.drafting && this.isDraft) || (!this.isDraft))){
       this.RestApiService.put(`${(this.drafting)?this.draftsUrl:this.formalsUrl}${(this.reference)?this.reference:''}`, formData, {headers: {'enctype': 'multipart/form-data'}})
@@ -311,5 +313,10 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
           },
           error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${this.reference}`; })
     }  
+  }
+  @HostListener('window:beforeunload')
+  canDeactivate(): boolean |Observable<boolean>{
+    if(this.fieldsValid!=false) {return this.fieldsValid? false:true;}
+    else {return true}
   }
 }

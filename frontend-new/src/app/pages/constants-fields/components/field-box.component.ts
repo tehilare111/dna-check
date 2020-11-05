@@ -149,7 +149,6 @@ export class FieldBoxComponent implements OnInit {
       this.text = "";
     }, 0);
   }
-
   addToInput(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;

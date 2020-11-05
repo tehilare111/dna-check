@@ -4,6 +4,8 @@ import { ToastService } from '../../services/toast.service';
 import { FieldBoxComponent } from './components/field-box.component';
 import { Router } from '@angular/router';
 
+import { Observable } from 'rxjs';
+import {componentCanDeactivate}from '../pending-changes-guard.guard';
 class ConstantsFields{
   equipmentType: string[];
   materialType: string[];
@@ -113,4 +115,5 @@ export class ConstantsFieldsComponent implements OnInit {
       }
     )
   }
+  
 }
