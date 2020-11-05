@@ -43,7 +43,7 @@ export class ConstantsFieldsComponent implements OnInit {
     let fields = []
     for (var category in this.listOfCategories){
       fields = this.getFieldArrayFromCategory(category);
-      this.fieldbox._results[category].setTable(fields)
+      this.fieldbox.toArray()[category].setTable(fields);
     }
     
   }
