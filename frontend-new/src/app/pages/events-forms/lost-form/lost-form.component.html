@@ -89,7 +89,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="equipmentType" class="label">סוג ציוד/חומר</label>
-                <nb-select [disabled]="this.form.editStateBlocked" name="equipmentType" id="equipmentType" status="primary" placeholder="סוג ציוד/חומר" [(ngModel)]="form.equipmentType">
+                <nb-select [disabled]="this.form.editStateBlocked" name="equipmentType" id="equipmentType" status="primary" [placeholder]="form.equipmentType?form.equipmentType:'סוג ציוד/חומר'" [(ngModel)]="form.equipmentType">
                   <nb-option *ngFor="let equipment of equipmentsTypeOptions" [value]="equipment">{{equipment}}</nb-option>  
                 </nb-select>
               </div>

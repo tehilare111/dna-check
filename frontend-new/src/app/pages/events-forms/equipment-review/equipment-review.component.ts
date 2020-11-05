@@ -16,7 +16,6 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
   eventType: string = 'ספירות';
   form: EquipmentReviewTemplate = new EquipmentReviewTemplate();
   eventFilesFields: string[] = ['reviewFile'];
-  constantsFieldsComponent = new ConstantsFieldsComponent(null, null)
 
   @ViewChild("status") eventStatusForm : EventStatusComponent;
   // @ViewChild("chat") chatMessages : ChatComponent;
@@ -26,8 +25,8 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
  eventStatusOptions = ["טופל", "טרם טופל"]
   units = []
   ranks = []
-  equipmentsType = ["סוג 1", "סוג 2", "סוג 3"]
-  materialsType = ["חומר 1" , "חומר 2", "חומר 3"]
+  equipmentsType = []
+  materialsType = []
   equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
   equipmentsTypeOptions = []
   

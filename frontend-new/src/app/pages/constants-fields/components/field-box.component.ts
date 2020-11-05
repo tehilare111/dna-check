@@ -2,6 +2,9 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Ng2SmartTableModule, LocalDataSource } from 'ng2-smart-table';
 import {MatChipInputEvent} from '@angular/material';
 import {ENTER} from '@angular/cdk/keycodes';
+import { RestApiService } from '../../../services/rest-api.service';
+import { ToastService } from '../../../services/toast.service';
+import { ConstantsFieldsComponent } from '../../constants-fields/constants-fields.component';
 
 @Component({
   selector: 'ngx-field-box',
@@ -11,7 +14,6 @@ import {ENTER} from '@angular/cdk/keycodes';
 export class FieldBoxComponent implements OnInit {
   
   @Input('fieldName') fieldName = '';
-  
   text: string= '';
   fieldOptions = []
   inputFieldOptions = []
@@ -47,8 +49,36 @@ export class FieldBoxComponent implements OnInit {
       perPage: 5
     },
   }
+  removeDuplicatesFormArray(array){
+    var uniqueElements  = []
+    for(var element in array){
+      if(!uniqueElements.includes(array[element]))
+        uniqueElements.push(array[element])
+    }
+    return uniqueElements
+  }
+  removeFieldIsAlreadyInDatabase(array){
+    var arrayWithoutDuplicates  = []
+    var elementApears = false
+    for(var element in array){
+      elementApears = false
+      for(var field in this.fieldOptions){
+        if(this.fieldOptions[field].field == array[element]){
+          window.confirm("this name is already in the database")
 
-  constructor() {  }
+          elementApears = true
+        }
+      }
+      if(!elementApears){
+        arrayWithoutDuplicates.push(array[element])
+      }
+    }
+    return arrayWithoutDuplicates
+  
+
+  }
+
+  constructor(private RestApiService: RestApiService  ,private ToastService: ToastService) { }
 
   ngOnInit(): void { }
 
@@ -64,10 +94,25 @@ export class FieldBoxComponent implements OnInit {
         }
       }
     ).filter(el => el != undefined);
-    
+    this.addFieldToDatabase(this.fieldName, this.inputFieldOptions)
     this.reloadFieldOptions();
     this.inputFieldOptions = [];
   }
+
+  addFieldToDatabase(constantFieldGroupName, newFields){
+    var jsonData = {"constantFieldGroupName" : constantFieldGroupName, "newFields" : newFields}
+    this.RestApiService.addConstantFields(jsonData).subscribe(
+      (data_from_server) => {
+        if(data_from_server == "success") { this.ToastService.showToast('success', 'נשמר בהצלחה!', '') }
+        this.uploadLoading = false
+      },
+      err => {
+        this.ToastService.showToast('fail', 'לא נשמר בהצלחה!', '')
+        this.uploadLoading = false
+      }
+    )
+  }
+
 
   reloadFieldOptions(){
     if(this.fieldOptions){
@@ -76,7 +121,6 @@ export class FieldBoxComponent implements OnInit {
   }
 
   setTable(loadedFields : string[]){
-    //this.fieldOptions= fields
     this.fieldOptions = loadedFields.map(el => { return { field: el } });
     this.reloadFieldOptions();
   }
@@ -113,6 +157,8 @@ export class FieldBoxComponent implements OnInit {
     // Add our field
     if ((value || '').trim()) {
       this.inputFieldOptions.push( value.trim() );
+      this.inputFieldOptions = this.removeDuplicatesFormArray(this.inputFieldOptions)
+      this.inputFieldOptions = this.removeFieldIsAlreadyInDatabase(this.inputFieldOptions)
     }
 
     // Reset the input value
@@ -145,9 +191,26 @@ export class FieldBoxComponent implements OnInit {
 
   onEditConfirm(event) {
     if (window.confirm('האם אתה בטוח שברצונך לערוך את השדה? עריכה תשנה את ערכו של השדה בכל האירועים, רטרואקטיבית')) {
+      this.editField(this.fieldName, event.data, event.newData)
       event.confirm.resolve(event.newData);
     } else {
       event.confirm.reject();
     }
+  }
+
+  editField(constantFieldGroupName, previousField, newField){
+    console.log(constantFieldGroupName, previousField['field'], newField['field']);
+    var jsonData = {"constantFieldGroupName" : constantFieldGroupName,
+     "previousField" : previousField['field'],
+     "newField" : newField['field']}
+     this.RestApiService.editConstantField(jsonData).subscribe(
+      (data_from_server) => {
+        this.uploadLoading = false
+      },
+      err => {
+        this.ToastService.showToast('fail', 'לא נשמר בהצלחה!', '')
+        this.uploadLoading = false
+      }
+    )
   }
 }

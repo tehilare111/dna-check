@@ -60,6 +60,56 @@ def units_tree_register(request):
 ###############################################################
 #                     Constants fields                        #
 ###############################################################
+
+@csrf_exempt
+@check_permissions_dec([MANAGER])
+def add_constant_fields(request):
+    if request.method == 'POST':
+        data = JSONParser().parse(request)
+        constantFieldGroupName = data["constantFieldGroupName"]
+        newFields = data["newFields"]
+        constant_field_category = ConstantFieldsWithId.objects.get(constantFieldName=constantFieldGroupName)
+        constantFieldsWithIdSerializer = ConstantFieldsWithIdSerializer(constant_field_category)
+        constant_field_category_id = constantFieldsWithIdSerializer.data["idOfConstantField"]
+        for newFieldName in newFields :
+            newFieldId = findNewFieldId(constant_field_category_id)
+            newIdOfConstantField = findNewConstantFieldId()
+            add_constant_field(newIdOfConstantField, constant_field_category_id, newFieldId, newFieldName)
+        return HttpResponse(status=status.HTTP_200_OK)
+
+@csrf_exempt
+def add_constant_field(newIdOfConstantField, constant_field_category_id, newFieldId, newFieldName):
+    data = {'idOfConstantField' : newIdOfConstantField, 'categroryId' : constant_field_category_id, 'constantFieldName' : newFieldName, 'fieldOfCategoryId' : newFieldId, 'isCategory' : False}
+    constants_fields_serializer = ConstantFieldsWithIdSerializer(data = data)
+    if constants_fields_serializer.is_valid():
+        constants_fields_serializer.save() 
+
+@csrf_exempt
+def findNewFieldId(constant_field_category_id):
+    newFieldId = 0
+    constant_fields_of_category = ConstantFieldsWithId.objects.filter(categroryId=constant_field_category_id)
+    for field in constant_fields_of_category:
+        constantFieldsOfCategorySerializer = ConstantFieldsWithIdSerializer(field)
+        newFieldId = max(constantFieldsOfCategorySerializer.data["fieldOfCategoryId"], newFieldId)
+    return (newFieldId+1)
+
+@csrf_exempt
+def findNewConstantFieldId():
+    return ConstantFieldsWithId.objects.latest('idOfConstantField').idOfConstantField + 1
+
+
+@csrf_exempt
+def edit_constant_field(request):
+    if request.method == 'POST':
+        data = JSONParser().parse(request)
+        constantFieldGroupName = data["constantFieldGroupName"]
+        previousField = data["previousField"]
+        newField = data["newField"]
+        fieldToModify = ConstantFieldsWithId.objects.get(constantFieldName=previousField)
+        fieldToModify.constantFieldName = newField
+        fieldToModify.save()
+        return HttpResponse(status=status.HTTP_200_OK)
+           
 @csrf_exempt
 @check_permissions_dec([MANAGER])
 def constants_fields(request):

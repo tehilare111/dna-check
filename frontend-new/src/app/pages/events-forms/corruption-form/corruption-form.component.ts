@@ -17,7 +17,6 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
   eventType: string = 'השמדת ציוד';
   form: CorruptionFormTemplate = new CorruptionFormTemplate();
   eventFilesFields: string[] = ['handlingFile', 'investigationFile'];
-  constantsFieldsComponent = new ConstantsFieldsComponent(null, null)
   
   @ViewChild("status") eventStatusForm : EventStatusComponent;
   // @ViewChild("chat") chatMessages : ChatComponent;
@@ -32,7 +31,7 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
   equipmentsType = []
   materialsType = []
   equipments = [{"name": "ציוד", "list" : this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
-  equipmentsTypeOptions: [];
+  equipmentsTypeOptions: any [];
   
   constructor(
     ) {

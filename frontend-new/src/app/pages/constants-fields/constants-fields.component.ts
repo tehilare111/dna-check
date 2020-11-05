@@ -40,7 +40,6 @@ export class ConstantsFieldsComponent implements OnInit {
 }
   
   putFieldsInTable(){
-    console.log(this.listOfCategories)
     let fields = []
     for (var category in this.listOfCategories){
       fields = this.getFieldArrayFromCategory(category);
