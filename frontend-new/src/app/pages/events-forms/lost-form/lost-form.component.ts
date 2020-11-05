@@ -6,6 +6,7 @@ import { FormBaseComponent } from '../form-base.component'
 import { LostFormTemplate } from '../events-forms.templates';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
 
+
 @Component({
   selector: 'ngx-form-layouts',
   templateUrl: './lost-form.component.html',

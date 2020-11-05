@@ -21,7 +21,8 @@
                             placeholder="הכנס שדה קבוע..."
                             [matChipInputFor]="chipList"
                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                            (matChipInputTokenEnd)="addToInput($event)">
+                            (matChipInputTokenEnd)="addToInput($event)"
+                            (input)="isCheckValid()">
                     </mat-chip-list>
                 </mat-form-field>          
             </div>

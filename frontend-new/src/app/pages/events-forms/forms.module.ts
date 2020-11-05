@@ -44,6 +44,7 @@ import { FileDownloadButtonComponent } from './components/file-download-button/f
 import { FormTopButtonsComponent } from './components/form-top-buttons/form-top-buttons.component';
 
 import {NbDateFnsDateModule} from '@nebular/date-fns';
+import { PendingChangesGuardGuard } from '../pending-changes-guard.guard';
 
 
 @NgModule({
@@ -67,6 +68,9 @@ import {NbDateFnsDateModule} from '@nebular/date-fns';
     NbChatModule,
     AngularMaterialModule,
     NbDateFnsDateModule
+  ],
+  providers:[
+    [PendingChangesGuardGuard],
   ],
   declarations: [
     FormsComponent,

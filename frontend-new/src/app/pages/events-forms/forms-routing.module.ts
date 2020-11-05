@@ -8,6 +8,7 @@ import { EquipmentReviewComponent } from './equipment-review/equipment-review.co
 import { CorruptionFormComponent } from './corruption-form/corruption-form.component';
 // import { CorruptionFormComponent } from './corruption-form/corruption-form.component';
 // import { EquipmentReviewComponent } from './equipment-review/equipment-review.component';
+import {PendingChangesGuardGuard}from '../pending-changes-guard.guard';
 
 const routes: Routes = [
   {
@@ -17,14 +18,17 @@ const routes: Routes = [
       {
         path: 'lost-form',
         component: LostFormComponent,
+        canDeactivate: [PendingChangesGuardGuard],
       },
       {
         path: 'corruption-form',
         component: CorruptionFormComponent,
+        canDeactivate: [PendingChangesGuardGuard],
       },
       {
         path: 'equipment-review',
         component: EquipmentReviewComponent,
+        canDeactivate: [PendingChangesGuardGuard],
       },
     ],
   },
