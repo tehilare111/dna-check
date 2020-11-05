@@ -267,7 +267,6 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
   formClicked(event) {
     let path = ''
     for(let [key, value] of Object.entries(this.eventsToPickUp)){
-      console.log(value)
       if(value['name'] == event.eventType){
         path = value['route']
         this.ToastService.showToast('success', 'הועברת לטופס: '+event.eventType, '')

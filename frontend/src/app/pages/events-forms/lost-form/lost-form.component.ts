@@ -14,7 +14,7 @@ import { idValidator } from "../validation-directives/id.directive";
 import { makatCopyValidator } from "../validation-directives/makat-copy.directive";
 import { markValidator } from "../validation-directives/mark.directive";
 import { timeValidator } from "../validation-directives/time.directive";
-
+import {ConstantsFieldsComponent} from "../../constants-fields/constants-fields.component"
 import { AuthService } from '../../../services/auth-service';
 
 @Component({
@@ -93,6 +93,7 @@ export class LostFormComponent {
     // Set eventType field according to the form event type
     this.lostForm.eventType = this.eventType
     this.get_constas_feilds()
+    
     // Recieve form data from db according to its reference
     this.reference = this.activatedRoute.snapshot.params.reference;
     if (this.reference){
@@ -118,7 +119,7 @@ export class LostFormComponent {
     this.RestApiService.Get_constans_fiald(this.constans_array).subscribe((data_from_server) => {
        
       this.equipmentsType=data_from_server.data.equipmentType
-      this.ranks = data_from_server.data.rank
+      this.ranks = ['jo']
       this.materialsType=data_from_server.data.materialType
       this.eventStatusForm=data_from_server.data.eventStatus
       this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]

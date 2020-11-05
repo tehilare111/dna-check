@@ -18,7 +18,7 @@ import { makatCopyValidator } from "./validation-directives/makat-copy.directive
 import { markValidator } from "./validation-directives/mark.directive";
 import { timeValidator } from "./validation-directives/time.directive";
 import { textValidator } from './validation-directives/text.directive';
-
+import {ConstantsFieldsComponent} from '../constants-fields/constants-fields.component'
 import { EventStatusBase } from './components/event-status-base.component';
 import { EventForm } from './events-forms.templates';
 import { Observable } from 'rxjs';
@@ -62,6 +62,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   protected draftsUrl: string = '/drafts-event-forms/';
   protected isDraft: boolean; // For a given form, determine if it is a draft or not
   protected drafting: boolean; // Determine whether to save the form or send it
+  constantsFieldsComponent = new ConstantsFieldsComponent(null, null)
   fieldsValid =false
 
   constructor(){
@@ -88,6 +89,16 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   exisitingFormLoadData(reference: string){
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
       this.form = data;
+      for(let [key, value] of Object.entries(this.form)){
+        console.log(key, value );
+        if(this.isConstantField(key)){
+          this.form[key] = this.getNameFromFieldId(key, value)!=undefined?this.getNameFromFieldId(key, value):null
+          console.log(this.form[key]);
+          console.log(this.form.eventStatus);
+          
+        }
+      }
+      console.log(this.constantsFieldsComponent.listOfCategories)
       /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
           this.form.editStateBlocked = false 
@@ -192,7 +203,8 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     } else {
       this.form.editStateBlocked = true;
       this.openWithoutBackdropClick(this.directingDialog);
-    this.save();
+      this.form.editStateBlocked = true;
+      this.save();
     }
   }
 
@@ -204,12 +216,51 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         },
         error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${reference}`; })
   }
+  isConstantField(key : string){
+    for(let category in this.constantsFieldsComponent.listOfCategories){
+      if(this.constantsFieldsComponent.listOfCategories[category][1]==key){
+        return true 
+      }
+    }
+    return false
+  }
+
+  getIdFromFieldName(categoryName: string, fieldName: string){
+    for(let category in this.constantsFieldsComponent.listOfCategories){//run over categories
+      if(this.constantsFieldsComponent.listOfCategories[category][1]==categoryName){ //we found the category
+        for(let field in this.constantsFieldsComponent.listOfCategories[category][2]){ //for fields of this category
+          if(this.constantsFieldsComponent.listOfCategories[category][2][field][0]==fieldName){ //we found the field
+            return this.constantsFieldsComponent.listOfCategories[category][2][field][1] // //return the corresponding id
+          }
+        }
+      }
+    }
+  }
+
+  getNameFromFieldId(categoryName: string, id: number){
+    for(let category in this.constantsFieldsComponent.listOfCategories){//run over categories
+      if(this.constantsFieldsComponent.listOfCategories[category][1]==categoryName){ //we found the category
+        for(let field in this.constantsFieldsComponent.listOfCategories[category][2]){ //for fields of this category
+          if(this.constantsFieldsComponent.listOfCategories[category][2][field][1]==id){ //we found the id
+            return this.constantsFieldsComponent.listOfCategories[category][2][field][0] //return the corresponding name
+          }
+        }
+      }
+    }
+  }
 
   save() {
     this.form = this.eventStatusForm.pushFormFields<FormType>(this.form);
     const formData: FormData = new FormData();
     // insert lostForm to FormData object
     for(let [key, value] of Object.entries(this.form)){
+      if(this.isConstantField(key)){
+        console.log(key);
+
+        value = this.getIdFromFieldName(key, value)!=undefined?this.getIdFromFieldName(key, value):value
+        console.log(value);
+      }
+      //console.log("key", key, "--value", value);
       if (value && ! this.eventFilesFields.includes(key)) { formData.append(key, value); }
     }
     // insert all files to FormData object
@@ -239,6 +290,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
     }
   }
+  
 
   getFileName(fileNameWithPath){
     if (fileNameWithPath) return fileNameWithPath.substring(fileNameWithPath.lastIndexOf('/') + 1)

@@ -47,3 +47,8 @@ nb-card.inline-form-card nb-card-body {
       display: none;
   }
 }
+::ng-deep  .ngx-select__choices
+    {
+      color: black !important;
+      text-align: right; 
+    }

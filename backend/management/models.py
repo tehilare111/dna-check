@@ -20,3 +20,11 @@ class ConstantsFields(models.Model):
     eventStatus = ArrayField(models.CharField(max_length=20, blank=True), null=True, blank=True)
     rank = ArrayField(models.CharField(max_length=20, blank=True), null=True, blank=True)
     handlingStatus = ArrayField(models.CharField(max_length=20, blank=True), null=True, blank=True)
+
+class ConstantFieldsWithId(models.Model):
+    idOfConstantField = models.IntegerField(primary_key=True, blank=False, default=0)
+    constantFieldName = models.CharField(blank=True, max_length = 20)
+    categroryId = models.IntegerField(default= -1)
+    fieldOfCategoryId = models.IntegerField(default= -1)
+    isCategory = models.BooleanField(default= False)
+ 

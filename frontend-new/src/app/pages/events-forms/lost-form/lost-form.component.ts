@@ -22,6 +22,7 @@ export class LostFormComponent extends FormBaseComponent<LostFormTemplate, Event
   @ViewChild("directingDialog") directingDialog : ElementRef;
   @ViewChild("simpleDialog") simpleDialog : ElementRef;
   
+ 
   eventStatusOptions = ["טופל", "טרם טופל"]
   handlingStatusOptions = []
   units = []
@@ -42,7 +43,6 @@ export class LostFormComponent extends FormBaseComponent<LostFormTemplate, Event
 
     // Set eventType field according to the form event type
     this.form.eventType = this.eventType
-    
     super.ngOnInit()
   }
 
@@ -67,17 +67,25 @@ export class LostFormComponent extends FormBaseComponent<LostFormTemplate, Event
   
   getConstasFeilds() {
     this.RestApiService.getConstansFieldsAndUnitsArray().subscribe((data) => {  
-      this.equipmentsType = data.equipmentType
-      this.ranks = data.rank
-      this.materialsType = data.materialType
-      this.eventStatusOptions = data.eventStatus
-      this.handlingStatusOptions = data.handlingStatus
       this.units = data.units
-      this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
-      //this.equipmentsTypeOptions = this.equipments.map(el => {if(el['name']==this.form.equipment) return el['list']; else return undefined; }).filter(el => el!=null)[0]
     });
-  }
 
+    this.RestApiService.getConstatnsFields().subscribe(
+      (data) => {
+        this.constantsFieldsComponent.fillListOfCategoryfromdata(data);
+        this.constantsFieldsComponent.listOfCategories;
+        this.equipmentsType = this.constantsFieldsComponent.getFieldsFromCategoryName("equipmentType")
+        this.ranks = this.constantsFieldsComponent.getFieldsFromCategoryName("rank")
+        this.materialsType = this.constantsFieldsComponent.getFieldsFromCategoryName("materialType")
+        this.eventStatusOptions = this.constantsFieldsComponent.getFieldsFromCategoryName("eventStatus")
+        this.handlingStatusOptions = this.constantsFieldsComponent.getFieldsFromCategoryName("handlingStatus")
+        this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+        this.equipmentsTypeOptions = this.equipments.map(el => {if(el['name']==this.form.equipment) return el['list']; else return undefined; }).filter(el => el!=null)[0]
+      },
+      err => {
+      }
+    );
+  }
   onSubmit() {
     this.uploadLoading = true
     
