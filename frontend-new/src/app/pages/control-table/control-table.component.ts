@@ -14,6 +14,11 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatMenuTrigger, MatTableDataSource} from '@angular/material';
 import { AngularMultiSelect} from 'angular2-multiselect-dropdown';
 
+import { ConstantsFieldsComponent } from '../constants-fields/constants-fields.component';
+import { throwIfAlreadyLoaded } from '../../@core/module-import-guard';
+import {DomSanitizer} from '@angular/platform-browser';
+import {MatIconRegistry} from '@angular/material/icon';
+
 @Component({
   selector: 'ngx-control-table',
   templateUrl: './control-table.component.html',
@@ -62,7 +67,7 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
       'color':'#6bcef7',
       'route': '/pages/events-forms/lost-form',
       'title': ['הודעות שלא נקראו/נקראו','סימוכין','שם מדווח','יחידת מדווח', 'סטאטוס טיפול','סטאטוס אירוע' ,'סוג ציוד/חומר' , 'סימון ציוד/חומר', 'מספר ציוד/חומר', 'תאריך דיווח','תאריך מציאה', 'תאריך בירור','תאריך טיפול'],
-      'columns': ['reference','reporterName', 'reporterUnit','eventStatusShorted', 'eventStatus', 'equipmnetsType', 'equipmnetsMark', 'equipmnetsMakat', 'reportDate','bargainDate','clarificationDate','shortDate',"unreadeMessages"],
+      'columns': ['reference','reporterName', 'reporterUnit','eventStatusShorted', 'eventStatus', 'eventType', 'equipmentMakat', 'equipmentMark', 'date','findingDate','investigationDate','handlingDate',"unreadeMessages"],
     },  
 }
 
@@ -70,19 +75,26 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
   public arrayItems=[];
   jsonArrayItems=[]
   routeDrafts=true
+  pageindex=0
+  pageSize=5
   formalsUrl: string = '/forms/';
   draftsUrl: string = '/draft-forms/';
   data = [];
   public toppingList: string[] = [];
   isDraft:boolean = false;
   userIsAllowedToReport:boolean = false;
-  userUnreadedMessages = [{}];
   displayedColumns=[];
   @ViewChild("dialog") dialog : TemplateRef<any>;
   @ViewChild(MatSort) sort: MatSort;
   allowedUsers = ['מדווח אירועים', 'מנהלן מערכת'];
-  constructor(private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router, private activatedRoute: ActivatedRoute, private dialogService: NbDialogService) { 
+  constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer,private service: SmartTableData,private RestApiService:RestApiService,private ToastService:ToastService,private router:Router, private activatedRoute: ActivatedRoute, private dialogService: NbDialogService) { 
     this.isUserAllowedToReport();
+    iconRegistry.addSvgIcon(
+      'menu',
+      sanitizer.bypassSecurityTrustResourceUrl('assets\\images\\menu_bar.svg'));
+      iconRegistry.addSvgIcon(
+        'readMessage',
+        sanitizer.bypassSecurityTrustResourceUrl('assets\\images\\readMessage.svg'));
   } 
   
   isUserAllowedToReport(){
@@ -90,19 +102,24 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
   }
 
   ngOnInit():void {
+    const paginatorIntl = this.paginator._intl;
+    paginatorIntl.nextPageLabel = '';
+    paginatorIntl.lastPageLabel=''
+    paginatorIntl.previousPageLabel = '';
+    paginatorIntl.itemsPerPageLabel='';
     this.loadData('');
-    this.userUnreadedMessages = JSON.parse(localStorage.getItem('unreadedMessages'))
-    this.dropdownSettings = { 
+    this.dropdownSettings = {
       singleSelection: false, 
       selectAllText:'בחר הכל',
       unSelectAllText:'הסר הכל',
       enableSearchFilter: true,
       searchFilter:"חייפוש",
+      noDataLabel:"חיפוש",
       classes:"myclass custom-class-example"
 
     }
     this.dropdownSettingsMessage={
-      singleSelection: true, 
+      singleSelection: false, 
       selectAllText:'בחר הכל',
       unSelectAllText:'הסר הכל',
       enableSearchFilter: true,
@@ -119,6 +136,7 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
   }
 
   ngAfterViewInit(){
+    this.dataSourceFilter.paginator = this.paginator;
     this.dataSourceFilter.sort = this.sort;
     if(this.activatedRoute.snapshot.params.isLogin) this.openJustLoginDialog();
   }
@@ -126,6 +144,7 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
     document.getElementsByClassName("list-area")[0].setAttribute("height","180px")
     document.getElementsByClassName("c-btn")[0].setAttribute("hidden","true")
     document.getElementsByClassName("dropdown-list animated fadeIn")[0].removeAttribute("hidden")
+    document.getElementsByClassName("c-input ng-untouched")[0].setAttribute("placeholder","חיפוש מרובה")
   }
   applyFilter() {
     var arrayEmpty=[];
@@ -138,8 +157,9 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
         for (let j in tempData)
         {   
           if(option===this.read ||option===this.unread){
-              var re=tempData[j]["unreadeMessages"].split(";")
-              if((re[0]=='undefined' && option===this.read) || (re[0]!='undefined' && option===this.unread)){
+              var re=''
+              re=tempData[j]["unreadeMessages"].split(";")
+              if(((re[0]=='undefined' && option===this.read) || (re[0]!='undefined' && option===this.unread))&& !arrayEmpty.includes(tempData[j])){
                 arrayEmpty.push(tempData[j])
             } 
             }
@@ -160,6 +180,7 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
     }
 
   createArraySeclect(value,index){
+      if(!this.jsonArrayItems[index].arrayByColumnOption.includes(value))
       this.jsonArrayItems[index].arrayByColumnOption.push(value.itemName)
     }
   removeArraySelect(value,index){
@@ -180,17 +201,18 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
     }
 
   getArrayItems(title,index){
+    var currName=""
+    var count=0
       for(let i in this.dataSource.data)
       {
-        var currName = this.dataSource.data[i][title];
-        var doesExist = false; 
         for (let j of this.arrayItems) {
+        currName = this.dataSource.data[i][title]
+        var doesExist = false; 
           if (!currName.toString().localeCompare(j.itemName)) {
             doesExist = true;
             break;
           }
         }
-      
         if (!doesExist ){
           this.arrayItems.push({"id":i,"itemName":this.dataSource.data[i][title].toString()})
         }
@@ -257,13 +279,12 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${eventType}`).subscribe((data_from_server) => {
       this.data=data_from_server
       // Update unread messages amount of the user in the table, parallel to the event's reference
-      this.data.forEach((element) => { element['unreadeMessages'] = `${this.userUnreadedMessages[element['reference']]};${element['reference']}` });
+      // this.pageinatorTable()
       this.dataSource.data=this.data
       this.dataSourceFilter.data=this.data
       this.isDraft=false
-    });
+      });
   }
-
   formClicked(event) {
     let path = ''
     for(let [key, value] of Object.entries(this.eventsToPickUp)){

@@ -98,6 +98,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         //db can save only strings, but datepicker excpect Date object.
         else if (regEx.test(value)) {this.form[key]= new Date(value)}
 
+
       }
       /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
@@ -105,7 +106,6 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         }else{
           this.form.editStateBlocked = true
         }*/
-        
       });
     // this.get_constas_feilds()
   }
@@ -284,7 +284,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
           this.uploadLoading = false;
           this.reference = data.reference;
           this.popUpDialogContext = `האירוע ${!this.drafting?'נוצר':'נשמר'} בהצלחה, סימוכין: ${this.reference}`;
-          
+          this.fieldsValid =false
         },
         error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
     }
