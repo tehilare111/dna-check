@@ -37,7 +37,6 @@ def msgs(request, reference, user):
 @csrf_exempt
 @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_USER=True)
 def user_read_msg(request, reference, user):
-    
     if str(reference) in user.unreadedMessages:
         del user.unreadedMessages[str(reference)]
         user.save()

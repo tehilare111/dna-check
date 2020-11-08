@@ -38,7 +38,19 @@ def forms_list(request, event_type, user):
             forms = FormsTable.objects.filter(eventType=event_type, reporterUnit__in=get_inferior_units(user.unit))
         
         form_serializer = FormsSerializer(forms, many=True)
-
+        is_exist=False
+    
+        for form in form_serializer.data:
+            is_exist = False
+      
+            for key,value in user.unreadedMessages.items():
+         
+                if(form["reference"]==int(key)):
+                    is_exist=True
+                    form.update({"unreadeMessages":str(value)+";"+key})
+                elif not is_exist:
+                    is_exist = False
+                    form.update({"unreadeMessages":"undefined"+";"+str(form["reference"])})
         return JsonResponse(form_serializer.data, safe=False) 
     
     elif request.method == 'DELETE':
