@@ -6,6 +6,7 @@ import { FormBaseComponent } from '../form-base.component'
 import { CorruptionFormTemplate } from '../events-forms.templates';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
 import { DataRowOutlet } from '@angular/cdk/table';
+import { ConstantsFieldsComponent } from '../../constants-fields/constants-fields.component';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -30,6 +31,7 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
   equipmentsType = []
   materialsType = []
   equipments = [{"name": "ציוד", "list" : this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+  equipmentsTypeOptions: any [];
   
   constructor(
     ) {
@@ -48,14 +50,26 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
 
   getConstasFeilds() {
     this.RestApiService.getConstansFieldsAndUnitsArray().subscribe((data) => {
-      this.equipmentsType = data.equipmentType
-      this.ranks = data.rank
       this.units = data.units
-      this.materialsType = data.materialType
-      this.eventStatusOptions = data.eventStatus
-      this.handlingStatusOptions = data.handlingStatus
-      this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
     });
+    
+    this.RestApiService.getConstatnsFields().subscribe(
+      (data) => {
+        this.constantsFieldsComponent.fillListOfCategoryfromdata(data);
+        this.constantsFieldsComponent.listOfCategories;
+        console.log(this.constantsFieldsComponent.listOfCategories)
+        this.equipmentsType = this.constantsFieldsComponent.getFieldsFromCategoryName("equipmentType")
+        this.ranks = this.constantsFieldsComponent.getFieldsFromCategoryName("rank")
+        this.materialsType = this.constantsFieldsComponent.getFieldsFromCategoryName("materialType")
+        this.eventStatusOptions = this.constantsFieldsComponent.getFieldsFromCategoryName("eventStatus")
+        this.handlingStatusOptions = this.constantsFieldsComponent.getFieldsFromCategoryName("handlingStatus")
+        this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+        this.equipmentsTypeOptions = this.equipments.map(el => {if(el['name']==this.form.equipment) return el['list']; else return undefined; }).filter(el => el!=null)[0]
+        console.log()
+      },
+      err => {
+      }
+    );
   }
 
   updateValidationFormGroup(){

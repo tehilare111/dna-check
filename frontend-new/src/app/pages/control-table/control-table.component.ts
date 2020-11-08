@@ -13,7 +13,6 @@ import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatMenuTrigger, MatTableDataSource} from '@angular/material';
 import { AngularMultiSelect} from 'angular2-multiselect-dropdown';
-import { ConstantsFieldsComponent } from '../constants-fields/constants-fields.component';
 
 @Component({
   selector: 'ngx-control-table',
@@ -268,7 +267,6 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
   formClicked(event) {
     let path = ''
     for(let [key, value] of Object.entries(this.eventsToPickUp)){
-      console.log(value)
       if(value['name'] == event.eventType){
         path = value['route']
         this.ToastService.showToast('success', 'הועברת לטופס: '+event.eventType, '')

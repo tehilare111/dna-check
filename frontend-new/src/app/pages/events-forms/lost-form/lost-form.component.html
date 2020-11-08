@@ -6,7 +6,7 @@
 <div class="row" id="print-section">
 <div class="col-md-3">
   <ngx-event-details [form]="form"></ngx-event-details>
-  <ngx-event-status #status [eventForm]="form" [readonly]="this.form.editStateBlocked" [eventStatusOptions]="eventStatusOptions"></ngx-event-status>
+  <ngx-event-status #status [eventForm]="form" [readonly]="this.form.editStateBlocked" [handlingStatusOptions]="handlingStatusOptions" [eventStatusOptions]="eventStatusOptions"></ngx-event-status>
 </div>
 <div class="col-md-9">
   <nb-card>
@@ -22,20 +22,21 @@
                 <label for="signerUnit" class="label">יחידת החתום</label>
                 <ngx-select [dropDownMenuOtherClasses]="ngx-selectt" id="signerUnit" name="signerUnit"
                 [items]="units" [disabled]="this.form.editStateBlocked" [(ngModel)]="form.signerUnit" [autoClearSearch]="true"
-                noResultsFound= "לא נמצאו תוצאות" [placeholder]="form.signerUnit? form.signerUnit : 'יחידת החתום'"></ngx-select>
+                noResultsFound= "לא נמצאו תוצאות" [placeholder]="form.signerUnit? form.signerUnit : 'יחידת החתום'">
+              </ngx-select>
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label for="signerName" class="label">שם החתום</label>
-              <input [readonly]="this.form.editStateBlocked" type="text" nbInput fullWidth #signerName="ngModel" name="signerName" id="signerName" status="primary" placeholder="שם החתום" [(ngModel)]="form.signerName" stdFieldValidation>
+              <input [readonly]="this.form.editStateBlocked" type="text" (input)="checkChangeData()" nbInput fullWidth #signerName="ngModel" name="signerName" id="signerName" status="primary" placeholder="שם החתום" [(ngModel)]="form.signerName" stdFieldValidation>
               <div *ngIf="signerName.invalid&&signerName.dirty"><label class="label red">מוגבל ל-30 תווים</label></div>
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label for="signerId" class="label">מ.א./ת.ז.</label>
-              <input [readonly]="this.form.editStateBlocked" type="text" nbInput fullWidth name="signerId" id="signerId" #signerId="ngModel" status="primary" placeholder="מ.א./ת.ז." [(ngModel)]="form.signerId" idValidation>
+              <input [readonly]="this.form.editStateBlocked" type="text"  (input)="checkChangeData()" nbInput fullWidth name="signerId" id="signerId" #signerId="ngModel" status="primary" placeholder="מ.א./ת.ז." [(ngModel)]="form.signerId" idValidation>
               <div *ngIf="signerId.invalid&&signerId.dirty" (click)="console.log(signerId)"><label class="label red">ת.ז מורכב מ-9 ספרות</label></div>
             </div>
           </div>
@@ -43,14 +44,14 @@
             <div class="form-group">
               <label for="rank" class="label">דרגה</label>
               <nb-select [disabled]="this.form.editStateBlocked" name="rank" id="rank" status="primary" placeholder="דרגה" [(ngModel)]="form.rank">
-                <nb-option *ngFor="let rank of ranks" [value]="rank">{{rank}}</nb-option>  
+                <nb-option *ngFor="let rank of ranks" (click)='checkChangeData()' [value]="rank">{{rank}}</nb-option>  
               </nb-select>
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label for="position" class="label">תפקיד</label>
-              <input [readonly]="this.form.editStateBlocked" type="text" nbInput fullWidth #position="ngModel" name="position" id="position" status="primary" placeholder="תפקיד" [(ngModel)]="form.position" stdFieldValidation>
+              <input [readonly]="this.form.editStateBlocked" type="text" (input)="checkChangeData()" nbInput fullWidth #position="ngModel" name="position" id="position" status="primary" placeholder="תפקיד" [(ngModel)]="form.position" stdFieldValidation>
               <div *ngIf="position.invalid&&position.dirty"><label class="label red">מוגבל ל-30 תווים</label></div>
             </div>
           </div>
@@ -61,7 +62,7 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="eventDate" class="label">תאריך גילוי האירוע</label>
-                <input [disabled]="this.form.editStateBlocked" [nbDatepicker]="eventdatepicker" nbInput fullWidth name="eventDate" id="eventDate" #eventDate="ngModel" status="primary" placeholder="תאריך גילוי האירוע" [(ngModel)]="this.form.eventDate"  dateValidation >
+                <input  (click)="checkChangeData()"[disabled]="this.form.editStateBlocked"  [nbDatepicker]="eventdatepicker" nbInput fullWidth name="eventDate" id="eventDate" #eventDate="ngModel" status="primary" placeholder="תאריך גילוי האירוע" [(ngModel)]="this.form.eventDate"  dateValidation >
                 <nb-datepicker  status="primary" #eventdatepicker format="dd/MM/yyyy"></nb-datepicker>
                 <!-- <div *ngIf="eventDate.invalid&&eventDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div> -->
               </div>
@@ -81,29 +82,29 @@
               <div class="form-group">
                 <label for="equipment" class="label">ציוד/חומר</label>
                 <nb-select [disabled]="this.form.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="form.equipment">
-                  <nb-option *ngFor="let equipment of equipments" [value]="equipment.name" (click)="equipmentsTypeOptions=equipment.list; form.equipmentType=''">{{equipment.name}}</nb-option>  
+                  <nb-option *ngFor="let equipment of equipments"  [value]="equipment.name" (click)="equipmentsTypeOptions=equipment.list;checkChangeData(); form.equipmentType=''">{{equipment.name}}</nb-option>  
                 </nb-select>
               </div>
             </div>
             <div class="col-md-2">
               <div class="form-group">
                 <label for="equipmentType" class="label">סוג ציוד/חומר</label>
-                <nb-select [disabled]="this.form.editStateBlocked" name="equipmentType" id="equipmentType" status="primary" placeholder="סוג ציוד/חומר" [(ngModel)]="form.equipmentType">
-                  <nb-option *ngFor="let equipment of equipmentsTypeOptions" [value]="equipment">{{equipment}}</nb-option>  
+                <nb-select [disabled]="this.form.editStateBlocked" name="equipmentType" id="equipmentType" status="primary" [placeholder]="form.equipmentType?form.equipmentType:'סוג ציוד/חומר'" [(ngModel)]="form.equipmentType">
+                  <nb-option *ngFor="let equipment of equipmentsTypeOptions" (click)='checkChangeData()' [value]="equipment">{{equipment}}</nb-option>  
                 </nb-select>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="equipmentMark" class="label">סימון ציוד/חומר</label>
-                <input [readonly]="this.form.editStateBlocked" type="text" nbInput fullWidth #equipmentMark="ngModel" name="equipmentMark" id="equipmentMark" status="primary" placeholder="סימון ציוד/חומר" [(ngModel)]="form.equipmentMark" markValidation>
+                <input [readonly]="this.form.editStateBlocked" type="text" (input)="checkChangeData()" nbInput fullWidth #equipmentMark="ngModel" name="equipmentMark" id="equipmentMark" status="primary" placeholder="סימון ציוד/חומר" [(ngModel)]="form.equipmentMark" markValidation>
                 <div *ngIf="equipmentMark.invalid&&equipmentMark.dirty"><label class="label red">XXXXXXXXX או YYYYYY-XXX</label></div>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="equipmentMakat" class="label">מק"ט ציוד/עותק חומר</label>
-                <input [readonly]="this.form.editStateBlocked" type="text" nbInput fullWidth #equipmentMakat="ngModel" name="equipmentMakat" id="equipmentMakat" status="primary" placeholder="מק''ט ציוד/עותק חומר" [(ngModel)]="form.equipmentMakat" makatCopyValidation>
+                <input [readonly]="this.form.editStateBlocked" type="text" (input)="checkChangeData()" nbInput fullWidth #equipmentMakat="ngModel" name="equipmentMakat" id="equipmentMakat" status="primary" placeholder="מק''ט ציוד/עותק חומר" [(ngModel)]="form.equipmentMakat" makatCopyValidation>
                 <div *ngIf="equipmentMakat.invalid&&equipmentMakat.dirty"><label class="label red">3 ספרות או 12 תווים</label></div>
               </div>
             </div>
@@ -112,7 +113,7 @@
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
-                <input [readonly]="this.form.editStateBlocked" type="text" nbInput fullWidth #eventRelevantPlacesAndFactors="ngModel" name="eventRelevantPlacesAndFactors" id="eventRelevantPlacesAndFactors" status="primary" placeholder="מלל חופשי" [(ngModel)]="form.eventRelevantPlacesAndFactors" textValidation>
+                <input [readonly]="this.form.editStateBlocked" type="text" (input)="checkChangeData()" nbInput fullWidth #eventRelevantPlacesAndFactors="ngModel" name="eventRelevantPlacesAndFactors" id="eventRelevantPlacesAndFactors" status="primary" placeholder="מלל חופשי" [(ngModel)]="form.eventRelevantPlacesAndFactors" textValidation>
                 <div *ngIf="eventRelevantPlacesAndFactors.invalid&&eventRelevantPlacesAndFactors.dirty"><label class="label red">עד 100 תווים</label></div>
               </div>
             </div>
@@ -121,7 +122,7 @@
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
-                <input [readonly]="this.form.editStateBlocked" type="text" nbInput fullWidth #eventInitialDetails="ngModel" name="eventInitialDetails" id="eventInitialDetails" status="primary" placeholder="מלל חופשי" [(ngModel)]="form.eventInitialDetails" textValidation>
+                <input [readonly]="this.form.editStateBlocked" type="text" nbInput fullWidth  (input)="checkChangeData()" #eventInitialDetails="ngModel" name="eventInitialDetails" id="eventInitialDetails" status="primary" placeholder="מלל חופשי" [(ngModel)]="form.eventInitialDetails" textValidation>
                 <div *ngIf="eventInitialDetails.invalid&&eventInitialDetails.dirty"><label class="label red">עד 100 תווים</label></div>
               </div>
             </div>
@@ -136,7 +137,7 @@
           <div class="col-md-2">
             <div class="form-group">
               <label for="investigationDate" class="label">תאריך הבירור</label>
-              <input [disabled]="this.form.editStateBlocked" [nbDatepicker]="investigationDate" nbInput fullWidth name="investigationDate" #investigationDate="ngModel" id="investigationDate" status="primary" placeholder="תאריך הבירור" [(ngModel)]="form.investigationDate"  dateValidation>
+              <input (click)="checkChangeData()" [disabled]="this.form.editStateBlocked" [nbDatepicker]="investigationDate" (input)="checkChangeData()" nbInput fullWidth name="investigationDate" #investigationDate="ngModel" id="investigationDate" status="primary" placeholder="תאריך הבירור" [(ngModel)]="form.investigationDate"  dateValidation>
               <nb-datepicker  status="primary" #investigationDate format="dd/MM/yyyy"></nb-datepicker>
               <!-- <div *ngIf="investigationDate.invalid&&investigationDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div> -->
             </div>
@@ -151,7 +152,7 @@
         <div class="col-md-2">
           <div class="form-group">
             <label for="investigationFile" class="label">צרף קובץ</label>
-            <input [readonly]="this.form.editStateBlocked" type="file" (change)="handleFileUpload($event)" name="investigationFile" id="investigationFile" multiple>
+            <input [readonly]="this.form.editStateBlocked" type="file" (change)="handleFileUpload($event);checkChangeData()" name="investigationFile" id="investigationFile" multiple>
           </div>
         </div>
       </div>
@@ -160,7 +161,7 @@
         <div class="col-md-2">
           <div class="form-group">
             <label for="findingDate" class="label">תאריך המציאה</label>
-            <input [disabled]="this.form.editStateBlocked" [nbDatepicker]="findingDate" nbInput fullWidth #findingDate="ngModel" name="findingDate" id="findingDate" status="primary" placeholder="תאריך המציאה" [(ngModel)]="form.findingDate"  dateValidation>
+            <input (click)="checkChangeData()" [disabled]="this.form.editStateBlocked" [nbDatepicker]="findingDate" (input)="checkChangeData()" nbInput fullWidth #findingDate="ngModel" name="findingDate" id="findingDate" status="primary" placeholder="תאריך המציאה" [(ngModel)]="form.findingDate"  dateValidation>
             <nb-datepicker status="primary" #findingDate format="dd/MM/yyyy"></nb-datepicker>
             <!-- <div *ngIf="findingDate.invalid&&findingDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div> -->
           </div>
@@ -176,7 +177,7 @@
         <div class="col-md-2">
           <div class="form-group">
             <label for="findingFile" class="label">צרף קובץ</label>
-            <input [readonly]="this.form.editStateBlocked" type="file" (change)="handleFileUpload($event)" name="findingFile" id="findingFile" multiple>
+            <input [readonly]="this.form.editStateBlocked" type="file" (change)="handleFileUpload($event);checkChangeData()" name="findingFile" id="findingFile" multiple>
 
           </div>
         </div>
@@ -186,7 +187,7 @@
         <div class="col-md-2">
           <div class="form-group">
             <label for="handlingDate" class="label">תאריך הטיפול</label>
-            <input [disabled]="this.form.editStateBlocked" [nbDatepicker]="handlingDatepicker" nbInput fullWidth #handlingDate="ngModel" name="handlingDate" id="handlingDate" status="primary" placeholder="תאריך הטיפול" [(ngModel)]="form.handlingDate"  dateValidation>
+            <input (click)="checkChangeData()" [disabled]="this.form.editStateBlocked" [nbDatepicker]="handlingDatepicker" (input)="checkChangeData()" nbInput fullWidth #handlingDate="ngModel" name="handlingDate" id="handlingDate" status="primary" placeholder="תאריך הטיפול" [(ngModel)]="form.handlingDate"  dateValidation>
             <nb-datepicker  status="primary" #handlingDatepicker format="dd/MM/yyyy"></nb-datepicker>
             <!-- <div *ngIf="handlingDate.invalid&&handlingDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div> -->
           </div>
@@ -200,7 +201,7 @@
         <div class="col-md-2">
           <div class="form-group">
             <label for="handlingFile" class="label">צרף קובץ</label>
-            <input  [readonly]="this.form.editStateBlocked" type="file" (change)="handleFileUpload($event)" name="handlingFile" id="handlingFile" multiple>
+            <input  [readonly]="this.form.editStateBlocked" type="file" (change)="handleFileUpload($event);checkChangeData()" name="handlingFile" id="handlingFile" multiple>
           </div>
         </div>
       </div>

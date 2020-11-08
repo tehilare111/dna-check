@@ -1,5 +1,5 @@
 from rest_framework import serializers 
-from management.models import UnitsTree, ConstantsFields
+from management.models import UnitsTree, ConstantsFields, ConstantFieldsWithId
 
 class UnitsTreeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,5 +20,16 @@ class ConstantsFieldsSerializer(serializers.ModelSerializer):
             'eventStatus',
             'rank',
             'handlingStatus'
+        )
+
+class ConstantFieldsWithIdSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConstantFieldsWithId
+        fields = (
+            'idOfConstantField',
+            'constantFieldName',
+            'categroryId',
+            'fieldOfCategoryId',
+            'isCategory',
         )
 

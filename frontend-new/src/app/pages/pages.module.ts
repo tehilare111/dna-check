@@ -26,7 +26,7 @@ import {AngularMaterialModule} from '../material-module';
 //time picker
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import {NbDateFnsDateModule} from '@nebular/date-fns';
-
+import { PendingChangesGuardGuard } from './pending-changes-guard.guard';
 const PAGES_COMPONENTS = [
   PagesComponent,
 ];
@@ -47,6 +47,9 @@ const PAGES_COMPONENTS = [
     MatFormFieldModule,
     NbDateFnsDateModule,
     AngularMultiSelectModule,
+    ],
+    providers:[
+      [PendingChangesGuardGuard],
     ],
   entryComponents: [
     NotReadMsgsColComponent,

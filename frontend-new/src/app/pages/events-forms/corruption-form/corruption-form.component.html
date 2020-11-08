@@ -18,12 +18,13 @@
         <form> <!--[ngFormOptions]="{updateOn: 'blur'}">-->
           <h6>פרטי החתום האחרון:</h6>
           <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-3">
               <div class="form-group">
                 <label for="signerUnit" class="label">יחידת החתום</label>
-                <nb-select [disabled]="this.form.editStateBlocked" name="signerUnit" id="signerUnit" status="primary" placeholder="יחידת החתום" [(ngModel)]="form.signerUnit">
-                  <nb-option *ngFor="let unit of units" [value]="unit">{{unit}}</nb-option>  
-                </nb-select>
+                <ngx-select [dropDownMenuOtherClasses]="ngx-selectt" id="signerUnit" name="signerUnit"
+                [items]="units" [disabled]="this.form.editStateBlocked" [(ngModel)]="form.signerUnit" [autoClearSearch]="true"
+                noResultsFound= "לא נמצאו תוצאות" [placeholder]="form.signerUnit? form.signerUnit : 'יחידת החתום'">
+              </ngx-select>
               </div>
             </div>
             <div class="col-md-2">

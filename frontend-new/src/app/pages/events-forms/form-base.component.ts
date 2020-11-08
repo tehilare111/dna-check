@@ -1,5 +1,5 @@
-import { OnInit, Injector, ElementRef } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { OnInit, Injector, ElementRef,HostListener } from '@angular/core';
+import { Router, ActivatedRoute,CanDeactivate  } from '@angular/router';
 import { NbDialogService } from '@nebular/theme';
 import { FormGroup } from "@angular/forms";
 
@@ -18,10 +18,12 @@ import { makatCopyValidator } from "./validation-directives/makat-copy.directive
 import { markValidator } from "./validation-directives/mark.directive";
 import { timeValidator } from "./validation-directives/time.directive";
 import { textValidator } from './validation-directives/text.directive';
-
+import {ConstantsFieldsComponent} from '../constants-fields/constants-fields.component'
 import { EventStatusBase } from './components/event-status-base.component';
 import { EventForm } from './events-forms.templates';
 import {format} from 'date-fns'
+import { Observable } from 'rxjs';
+
 
 export abstract class FormBaseComponent<FormType extends EventForm, EventStatusType extends EventStatusBase> implements OnInit {
   
@@ -62,7 +64,8 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   protected draftsUrl: string = '/drafts-event-forms/';
   protected isDraft: boolean; // For a given form, determine if it is a draft or not
   protected drafting: boolean; // Determine whether to save the form or send it
-
+  constantsFieldsComponent = new ConstantsFieldsComponent(null, null)
+  fieldsValid =false
 
   constructor(){
       this.RestApiService = AppInjector.injector.get(RestApiService);
@@ -71,12 +74,12 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       this.dialogService = AppInjector.injector.get(NbDialogService);
       this.router = AppInjector.injector.get(Router);
   }
-
+    
   ngOnInit(){
     // Recieve form data from db according to its reference
     this.reference = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.reference;
     this.isDraft = this.router.parseUrl(this.router.url).root.children.primary.segments[2].parameters.isDraft == 'true';
-
+    
     if (this.reference){
       this.exisitingFormLoadData(this.reference);
     } else {
@@ -88,10 +91,14 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   exisitingFormLoadData(reference: string){
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
       let regEx = /^\d\d\d\d\-\d\d\-\d\d$/i; //django represention of date in db
-      for(let [key, value] of Object.entries(data))
-      //db can save only strings, but datepicker excpect Date object.
-      {if (regEx.test(value)) {data[key]= new Date(value)}} 
       this.form = data;
+      for(let [key, value] of Object.entries(this.form)){
+        if(this.isConstantField(key)){
+          this.form[key] = this.getNameFromFieldId(key, value)!=undefined?this.getNameFromFieldId(key, value):null           }
+        //db can save only strings, but datepicker excpect Date object.
+        else if (regEx.test(value)) {this.form[key]= new Date(value)}
+
+      }
       /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
           this.form.editStateBlocked = false 
@@ -122,15 +129,19 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
 
   checkFieldsValid(){
     /* Each form should have its own fields to be validated */ 
-    let fieldsValid = true
+    this.fieldsValid = true
     for (const field in this.formGroup.controls){
       if (!this.formGroup.controls[field].valid){
     //  if(field.valid && field.dirty) {
-        fieldsValid = false
+      this.fieldsValid = false
       }
     }
-    return fieldsValid
+    return this.fieldsValid
   }
+  checkChangeData(){
+    //if input chanegd or selected then we want the guard to be activated.
+    this.fieldsValid=true
+}
   printForm() {
     window.print()
   }
@@ -169,7 +180,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
 
   sendEvent(){
     this.drafting = false;
-    this.form.editStateBlocked = true;
+    this.fieldsValid=false
     this.onSubmit();
     if(this.isDraft){
       this.DeleteFormFromDrafts(this.reference)
@@ -190,8 +201,10 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       this.popUpDialogContext = `שדה אחד לפחות לא תקין או חסר`;
       this.openWithoutBackdropClick(this.simpleDialog)
     } else {
+      this.form.editStateBlocked = true;
       this.openWithoutBackdropClick(this.directingDialog);
-    this.save();
+      this.form.editStateBlocked = true;
+      this.save();
     }
   }
 
@@ -203,15 +216,48 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         },
         error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${reference}`; })
   }
+  isConstantField(key : string){
+    for(let category in this.constantsFieldsComponent.listOfCategories){
+      if(this.constantsFieldsComponent.listOfCategories[category][1]==key){
+        return true 
+      }
+    }
+    return false
+  }
+
+  getIdFromFieldName(categoryName: string, fieldName: string){
+    for(let category in this.constantsFieldsComponent.listOfCategories){//run over categories
+      if(this.constantsFieldsComponent.listOfCategories[category][1]==categoryName){ //we found the category
+        for(let field in this.constantsFieldsComponent.listOfCategories[category][2]){ //for fields of this category
+          if(this.constantsFieldsComponent.listOfCategories[category][2][field][0]==fieldName){ //we found the field
+            return this.constantsFieldsComponent.listOfCategories[category][2][field][1] // //return the corresponding id
+          }
+        }
+      }
+    }
+  }
+
+  getNameFromFieldId(categoryName: string, id: number){
+    for(let category in this.constantsFieldsComponent.listOfCategories){//run over categories
+      if(this.constantsFieldsComponent.listOfCategories[category][1]==categoryName){ //we found the category
+        for(let field in this.constantsFieldsComponent.listOfCategories[category][2]){ //for fields of this category
+          if(this.constantsFieldsComponent.listOfCategories[category][2][field][1]==id){ //we found the id
+            return this.constantsFieldsComponent.listOfCategories[category][2][field][0] //return the corresponding name
+          }
+        }
+      }
+    }
+  }
 
   save() {
-    
     this.form = this.eventStatusForm.pushFormFields<FormType>(this.form);
-
     const formData: FormData = new FormData();
-
     // insert lostForm to FormData object
     for(let [key, value] of Object.entries(this.form)){
+      if(this.isConstantField(key)){
+       value = this.getIdFromFieldName(key, value)!=undefined?this.getIdFromFieldName(key, value):value}      
+
+
       if (value && ! this.eventFilesFields.includes(key)) 
       { if (value instanceof Date) { value = format(value,"yyyy-MM-dd")} //for django save in db
         formData.append(key, value);}  }
@@ -220,7 +266,6 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     for( let formFile of this.formFiles ){
       formData.append(formFile['id'], formFile['file'], formFile['file'].name);
     }
-    
     // If form has a reference we need to check if it's already written in the relevenat DB: Formals or Drafts
     if (this.reference != undefined && ((this.drafting && this.isDraft) || (!this.isDraft))){
       this.RestApiService.put(`${(this.drafting)?this.draftsUrl:this.formalsUrl}${(this.reference)?this.reference:''}`, formData, {headers: {'enctype': 'multipart/form-data'}})
@@ -244,6 +289,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
     }
   }
+  
 
   getFileName(fileNameWithPath){
     if (fileNameWithPath) return fileNameWithPath.substring(fileNameWithPath.lastIndexOf('/') + 1)
@@ -266,5 +312,10 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
           },
           error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${this.reference}`; })
     }  
+  }
+  @HostListener('window:beforeunload')
+  canDeactivate(): boolean |Observable<boolean>{
+    if(this.fieldsValid!=false) {return this.fieldsValid? false:true;}
+    else {return true}
   }
 }
