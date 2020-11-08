@@ -55,13 +55,13 @@ class FormsTable(EventForm):
     eventInitialDetails = models.CharField(max_length=70, blank=False, default='')
     investigationDate = models.CharField(max_length=70, blank=False, default='')
     investigationFile = MultipleFileModelField(name="investigationFile",upload_to=UploadTo('investigationFile'), max_length=1000, blank=True, null=True)
-    handlingDate = models.CharField(max_length=70, blank=False, default='')
+    handlingDate =models.CharField(max_length=70, blank=False, default='')
     findingDate = models.CharField(max_length=70, blank=False, default='')
     findingFile = MultipleFileModelField(name="findingFile", upload_to=UploadTo('findingFile'), max_length=1000, blank=True, null=True)
     handlingFile = MultipleFileModelField(name="handlingFile",upload_to=UploadTo('handlingFile'), max_length=1000, blank=True, null=True)
     
     # Reviews Form
     reviewFile = models.FileField(upload_to=UploadTo('reviewFile'), max_length=100, blank=True, null=True)
-    reviewDate = models.CharField(max_length=70, blank=False, default='')
+    reviewDate =models.CharField(max_length=70, blank=False, default='')
     reviewReference = models.CharField(max_length=70, blank=False, default='')
     isMatchToReport = models.BooleanField(default=False)

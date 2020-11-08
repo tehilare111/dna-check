@@ -148,6 +148,6 @@ def constants_fields(request):
 @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER])
 def constans_fields_and_units(request):
     if request.method == 'GET':
-        data = constants_fields_array()
+        data = {}
         data["units"] = units_array()
         return JsonResponse(data)
