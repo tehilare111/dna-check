@@ -99,6 +99,8 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         else if (regEx.test(value)) {this.form[key]= new Date(value)}
 
       }
+      if (!this.isDraft) {this.form.editStateBlocked=true} // block from editing (only if not draft).
+      else {this.form.editStateBlocked=false}
       /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
           this.form.editStateBlocked = false 
@@ -201,9 +203,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       this.popUpDialogContext = `שדה אחד לפחות לא תקין או חסר`;
       this.openWithoutBackdropClick(this.simpleDialog)
     } else {
-      this.form.editStateBlocked = true;
       this.openWithoutBackdropClick(this.directingDialog);
-      this.form.editStateBlocked = true;
       this.save();
     }
   }
@@ -258,7 +258,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
        value = this.getIdFromFieldName(key, value)!=undefined?this.getIdFromFieldName(key, value):value}      
 
 
-      if (value && ! this.eventFilesFields.includes(key)) 
+     if (value && ! this.eventFilesFields.includes(key) && value.length!=0 && !(Array.isArray(value) && value.length==0)) 
       { if (value instanceof Date) { value = format(value,"yyyy-MM-dd")} //for django save in db
         formData.append(key, value);}  }
 
