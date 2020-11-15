@@ -57,7 +57,6 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
       (data) => {
         this.constantsFieldsComponent.fillListOfCategoryfromdata(data);
         this.constantsFieldsComponent.listOfCategories;
-        console.log(this.constantsFieldsComponent.listOfCategories)
         this.equipmentsType = this.constantsFieldsComponent.getFieldsFromCategoryName("equipmentType")
         this.ranks = this.constantsFieldsComponent.getFieldsFromCategoryName("rank")
         this.materialsType = this.constantsFieldsComponent.getFieldsFromCategoryName("materialType")
@@ -65,7 +64,6 @@ export class CorruptionFormComponent extends FormBaseComponent<CorruptionFormTem
         this.handlingStatusOptions = this.constantsFieldsComponent.getFieldsFromCategoryName("handlingStatus")
         this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
         this.equipmentsTypeOptions = this.equipments.map(el => {if(el['name']==this.form.equipment) return el['list']; else return undefined; }).filter(el => el!=null)[0]
-        console.log()
       },
       err => {
       }

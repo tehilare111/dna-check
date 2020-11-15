@@ -1,5 +1,5 @@
 from rest_framework import serializers 
-from management.models import UnitsTree, ConstantsFields, ConstantFieldsWithId
+from management.models import UnitsTree, ConstantFieldsWithId
 
 class UnitsTreeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,17 +10,7 @@ class UnitsTreeSerializer(serializers.ModelSerializer):
             'treeNode',
         )
 
-class ConstantsFieldsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ConstantsFields
-        fields = (
-            'equipmentType',
-            'materialType',
-            'equipmentMakat',
-            'eventStatus',
-            'rank',
-            'handlingStatus'
-        )
+
 
 class ConstantFieldsWithIdSerializer(serializers.ModelSerializer):
     class Meta:
@@ -31,5 +21,7 @@ class ConstantFieldsWithIdSerializer(serializers.ModelSerializer):
             'categroryId',
             'fieldOfCategoryId',
             'isCategory',
+            'isDeleted',
+            'constantFieldNameHebrew'
         )
 

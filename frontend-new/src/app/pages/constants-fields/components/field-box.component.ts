@@ -50,12 +50,9 @@ export class FieldBoxComponent implements OnInit {
     },
   }
   removeDuplicatesFormArray(array){
-    var uniqueElements  = []
-    for(var element in array){
-      if(!uniqueElements.includes(array[element]))
-        uniqueElements.push(array[element])
-    }
-    return uniqueElements
+    var uniqNewFields = new Set(array);
+    array = Array.from(uniqNewFields.values())
+    return array
   }
   removeFieldIsAlreadyInDatabase(array){
     var arrayWithoutDuplicates  = []
@@ -83,6 +80,7 @@ export class FieldBoxComponent implements OnInit {
   ngOnInit(): void { }
 
   addFields(){
+    this.inputFieldOptions = this.removeDuplicatesFormArray(this.inputFieldOptions)
     this.fieldOptions = this.fieldOptions.concat(this.inputFieldOptions).map(
       el => { 
         if (el.field) return el; 
@@ -100,10 +98,13 @@ export class FieldBoxComponent implements OnInit {
   }
 
   addFieldToDatabase(constantFieldGroupName, newFields){
+    var uniqNewFields = new Set(newFields);
+    newFields = Array.from(uniqNewFields.values())
     var jsonData = {"constantFieldGroupName" : constantFieldGroupName, "newFields" : newFields}
     this.RestApiService.addConstantFields(jsonData).subscribe(
       (data_from_server) => {
-        if(data_from_server == "success") { this.ToastService.showToast('success', 'נשמר בהצלחה!', '') }
+        console.log(data_from_server);
+        this.ToastService.showToast('success', 'נשמר בהצלחה!', '') 
         this.uploadLoading = false
       },
       err => {
@@ -121,6 +122,7 @@ export class FieldBoxComponent implements OnInit {
   }
 
   setTable(loadedFields : string[]){
+    loadedFields = this.removeDuplicatesFormArray(loadedFields)
     this.fieldOptions = loadedFields.map(el => { return { field: el } });
     this.reloadFieldOptions();
   }
@@ -176,7 +178,8 @@ export class FieldBoxComponent implements OnInit {
 
   onDeleteConfirm(event){
      if (window.confirm('האם אתה בטוח שברצונך למחוק? מחיקה תסיר את השדה משימוש עתידי, אך לא תשנה את ערכו באירועים קיימים')) {
-       // Delete item from array
+      this.deleteField(this.fieldName, event.data)
+      // Delete item from array
       let index = this.fieldOptions.indexOf(event.data);
       this.fieldOptions.splice(index, 1);
 
@@ -187,23 +190,36 @@ export class FieldBoxComponent implements OnInit {
       event.confirm.reject();
     }
   }
-
+  deleteField(constantFieldGroupName, fieldToDelete){
+    var jsonData = {"constantFieldGroupName" : constantFieldGroupName, "fieldToDelete" : fieldToDelete['field']}
+     this.RestApiService.deleteConstantField(jsonData).subscribe(
+      (data_from_server) => {
+        this.uploadLoading = false
+        this.ToastService.showToast('success', 'נשמר בהצלחה!', '')
+      },
+      err => {
+        this.ToastService.showToast('fail', 'לא נשמר בהצלחה!', '')
+        this.uploadLoading = false
+      }
+    )
+  }
   onEditConfirm(event) {
     if (window.confirm('האם אתה בטוח שברצונך לערוך את השדה? עריכה תשנה את ערכו של השדה בכל האירועים, רטרואקטיבית')) {
       this.editField(this.fieldName, event.data, event.newData)
       event.confirm.resolve(event.newData);
+
     } else {
       event.confirm.reject();
     }
   }
 
   editField(constantFieldGroupName, previousField, newField){
-    console.log(constantFieldGroupName, previousField['field'], newField['field']);
     var jsonData = {"constantFieldGroupName" : constantFieldGroupName,
      "previousField" : previousField['field'],
      "newField" : newField['field']}
      this.RestApiService.editConstantField(jsonData).subscribe(
       (data_from_server) => {
+        this.ToastService.showToast('success', 'נשמר בהצלחה!', '') 
         this.uploadLoading = false
       },
       err => {

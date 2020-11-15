@@ -7,9 +7,9 @@ from rest_framework import status
 from django.conf import settings
 
 from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
-from management.models import UnitsTree, ConstantsFields, ConstantFieldsWithId
-from management.serializers import UnitsTreeSerializer, ConstantsFieldsSerializer, ConstantFieldsWithIdSerializer
-from management.utils import get_inferior_units, constants_fields_array, units_array, UNITS_TREE_OBJECT_STATIC_ID, CONSTATNS_FIELDS_OBJECT_STATIC_ID
+from management.models import UnitsTree, ConstantFieldsWithId
+from management.serializers import UnitsTreeSerializer, ConstantFieldsWithIdSerializer
+from management.utils import get_inferior_units, units_array, UNITS_TREE_OBJECT_STATIC_ID
 
 #############################################################
 #                        Units tree                         #
@@ -68,7 +68,7 @@ def add_constant_fields(request):
         data = JSONParser().parse(request)
         constantFieldGroupName = data["constantFieldGroupName"]
         newFields = data["newFields"]
-        constant_field_category = ConstantFieldsWithId.objects.get(constantFieldName=constantFieldGroupName)
+        constant_field_category = ConstantFieldsWithId.objects.get(constantFieldNameHebrew=constantFieldGroupName)
         constantFieldsWithIdSerializer = ConstantFieldsWithIdSerializer(constant_field_category)
         constant_field_category_id = constantFieldsWithIdSerializer.data["idOfConstantField"]
         for newFieldName in newFields :
@@ -105,17 +105,37 @@ def edit_constant_field(request):
         constantFieldGroupName = data["constantFieldGroupName"]
         previousField = data["previousField"]
         newField = data["newField"]
-        fieldToModify = ConstantFieldsWithId.objects.get(constantFieldName=previousField)
-        fieldToModify.constantFieldName = newField
-        fieldToModify.save()
+        try:
+            categoryOfFieldToModify = ConstantFieldsWithId.objects.get(constantFieldNameHebrew=constantFieldGroupName)
+            fieldToModify = ConstantFieldsWithId.objects.get(constantFieldName=previousField, categroryId=categoryOfFieldToModify.idOfConstantField, isDeleted=False)
+            fieldToModify.constantFieldName = newField
+            fieldToModify.save()
+        except:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
         return HttpResponse(status=status.HTTP_200_OK)
-           
+
+@csrf_exempt 
+def delete_constant_field(request):
+     if request.method == 'POST':
+        data = JSONParser().parse(request)
+        constantFieldGroupName = data["constantFieldGroupName"]
+        fieldNameToDelete = data["fieldToDelete"]
+        try:
+            categoryOfFieldToDelete = ConstantFieldsWithId.objects.get(constantFieldNameHebrew=constantFieldGroupName)
+            fieldToDelete = ConstantFieldsWithId.objects.get(constantFieldName=fieldNameToDelete, categroryId=categoryOfFieldToDelete.idOfConstantField, isDeleted=False)
+            fieldToDelete.isDeleted = True
+            fieldToDelete.save()
+        except:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        return HttpResponse(status=status.HTTP_200_OK)
+
+
 @csrf_exempt
 @check_permissions_dec([MANAGER])
 def constants_fields(request):
     try: 
         constants_fields = ConstantFieldsWithId.objects.all()
-    except ConstantsFields.DoesNotExist: 
+    except ConstantFieldsWithId.DoesNotExist: 
         constants_fields = None
     
     if request.method == 'GET':
@@ -124,20 +144,16 @@ def constants_fields(request):
         
         constants_fields_serializer = ConstantFieldsWithIdSerializer(constants_fields, many=True)
         return JsonResponse(constants_fields_serializer.data, safe=False)
-    
-    elif request.method == 'POST': 
-        data = JSONParser().parse(request) 
-        constants_fields_serializer = ConstantsFieldsSerializer(data=data) if not constants_fields else ConstantsFieldsSerializer(constants_fields, data=data) 
-            
-        if constants_fields_serializer.is_valid():              
-            constants_fields_serializer.save(constantFieldId=CONSTATNS_FIELDS_OBJECT_STATIC_ID) 
-            return JsonResponse(constants_fields_serializer.data) 
-        else:
-            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE':
-        ConstantsFields.objects.all().delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+@csrf_exempt
+@check_permissions_dec([MANAGER])   
+def add_field_category_name(request) :
+    data = JSONParser().parse(request)
+    dataToSerialize = {'idOfConstantField' : findNewConstantFieldId(), 'categroryId' : -1, 'constantFieldName' : data['constantFieldCategoryName'], 'fieldOfCategoryId' : -1, 'isCategory' : True, 'constantFieldNameHebrew' : data['constantFieldCategoryNameHebrew']}
+    constants_fields_serializer = ConstantFieldsWithIdSerializer(data = dataToSerialize)
+    if constants_fields_serializer.is_valid():
+        constants_fields_serializer.save()
+    return HttpResponse(status=status.HTTP_200_OK)
 
 #################################################################
 #                Constanas fields and Units                     #
@@ -148,6 +164,6 @@ def constants_fields(request):
 @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER])
 def constans_fields_and_units(request):
     if request.method == 'GET':
-        data = constants_fields_array()
+        data = {}
         data["units"] = units_array()
         return JsonResponse(data)

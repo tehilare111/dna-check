@@ -5,8 +5,7 @@ from rest_framework.parsers import JSONParser
 from django.http import HttpResponse, JsonResponse
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
-from management.utils import constants_fields_array
-from management.models import UnitsTree, ConstantsFields
+from management.models import UnitsTree
 from users.utils import check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER, check_token, create_jwt
 
 

@@ -90,15 +90,10 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
       this.form = data;
       for(let [key, value] of Object.entries(this.form)){
-        console.log(key, value );
         if(this.isConstantField(key)){
           this.form[key] = this.getNameFromFieldId(key, value)!=undefined?this.getNameFromFieldId(key, value):null
-          console.log(this.form[key]);
-          console.log(this.form.eventStatus);
-          
         }
       }
-      console.log(this.constantsFieldsComponent.listOfCategories)
       /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
           this.form.editStateBlocked = false 
@@ -201,9 +196,9 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       this.popUpDialogContext = `שדה אחד לפחות לא תקין או חסר`;
       this.openWithoutBackdropClick(this.simpleDialog)
     } else {
-      this.form.editStateBlocked = true;
+      //this.form.editStateBlocked = true;
       this.openWithoutBackdropClick(this.directingDialog);
-      this.form.editStateBlocked = true;
+      //this.form.editStateBlocked = true;
       this.save();
     }
   }
@@ -258,7 +253,6 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         console.log(key);
 
         value = this.getIdFromFieldName(key, value)!=undefined?this.getIdFromFieldName(key, value):value
-        console.log(value);
       }
       //console.log("key", key, "--value", value);
       if (value && ! this.eventFilesFields.includes(key)) { formData.append(key, value); }
@@ -285,7 +279,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
           this.uploadLoading = false;
           this.reference = data.reference;
           this.popUpDialogContext = `האירוע ${!this.drafting?'נוצר':'נשמר'} בהצלחה, סימוכין: ${this.reference}`;
-          
+          this.fieldsValid =false
         },
         error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
     }

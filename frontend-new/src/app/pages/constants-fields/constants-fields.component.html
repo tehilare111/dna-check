@@ -3,16 +3,17 @@
     <nb-card-header>
         <h1>שדות קבועים</h1>
     </nb-card-header>
+    <nb-card>
+        <nb-card-body>
+            <input type="text" name="constantFieldCategoryName" [(ngModel)]="constantFieldCategoryName" id="constantFieldCategoryName" nbInput placeholder="Constant field name">
+            <input type="text" name="constantFieldCategoryNameHebrew" [(ngModel)]="constantFieldCategoryNameHebrew" id="constantFieldCategoryNameHebrew" nbInput placeholder="Constant field name hebrew">
+            <button nbButton (click)="addCategory()" status="basic">Add Constant Field</button>
+        </nb-card-body>
+    </nb-card>
     <nb-card-body>
-        <div class="row actionButton">
-            <button nbButton (click)="saveData()" class="saveButton buttonColor">שמירת שדות קבועים</button>
-        </div>
         <div class="row">
-            <!-- <ngx-field-box #rank fieldName="rank"></ngx-field-box> -->
             <div class="col-md-4" *ngFor="let item of listOfCategories; let i=index">
-            
-                <ngx-field-box #{{item[1]}} fieldName="{{item[1]}}"></ngx-field-box>
-                
+                <ngx-field-box #{{item[1]}} fieldName="{{item[3]}}"></ngx-field-box>
             </div>
         </div>
     </nb-card-body>

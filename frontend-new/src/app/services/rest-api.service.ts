@@ -85,15 +85,17 @@ export class RestApiService {
   getConstansFialdsNotPermissions(faild:string[]):Observable<any> {
     return this.http.get(`${this.baseUrl}/get_constats_fields/${faild}`,);
   }
-
-  postConstatnsFields(data): Observable<any>{
-     return this.http.post(`${this.baseUrl}/constants-fields/`, data);
-  }
   addConstantFields(jsonData): Observable<any>{
     return this.http.post(`${this.baseUrl}/add-constant-fields/`, jsonData);
   }
   editConstantField(jsonData): Observable<any>{
     return this.http.post(`${this.baseUrl}/edit-constant-field/`, jsonData);
+  }
+  deleteConstantField(jsonData): Observable<any>{
+    return this.http.post(`${this.baseUrl}/delete-constant-field/`, jsonData);
+  }
+  addFieldCategoryName(jsonData) {
+    return this.http.post(`${this.baseUrl}/add-field-category-name/`, jsonData);
   }
   
   getConstansFieldsAndUnitsArray():Observable<any> {

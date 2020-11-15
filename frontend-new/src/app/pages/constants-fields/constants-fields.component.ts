@@ -6,15 +6,7 @@ import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
 import {componentCanDeactivate}from '../pending-changes-guard.guard';
-class ConstantsFields{
-  equipmentType: string[];
-  materialType: string[];
-  equipmentMakat: string[];
-  eventStatus: string[];
-  rank: string[];
-  handlingStatus: string[];
-}
-class ConstantsFieldsnew{
+class ConstantsFieldsWithId{
   idOfConstantField: number;
   constantFieldName: string;
   categroryId: number;
@@ -29,9 +21,10 @@ class ConstantsFieldsnew{
   styleUrls: ['./constants-fields.component.scss']
 })
 export class ConstantsFieldsComponent implements OnInit {
+  constantFieldCategoryName = ''
+  constantFieldCategoryNameHebrew = ''
   uploadLoading = false
-  ConstantsFields: ConstantsFields = new ConstantsFields();
-  ConstantsFieldsnew: ConstantsFieldsnew = new ConstantsFieldsnew();
+  ConstantsFieldsWithId: ConstantsFieldsWithId = new ConstantsFieldsWithId();
   listOfCategories = []
 
   @ViewChildren(FieldBoxComponent) fieldbox : QueryList<FieldBoxComponent>
@@ -45,14 +38,22 @@ export class ConstantsFieldsComponent implements OnInit {
     let fields = []
     for (var category in this.listOfCategories){
       fields = this.getFieldArrayFromCategory(category);
+   //   fields = this.removeDeletedFields(fields)
       this.fieldbox.toArray()[category].setTable(fields);
     }
     
   }
+  // def removeDeletedFields(fields){
+  //   for (var field in fields){
+  //     if (!field.isDeleted)
+  //   }
+  // }
+
   private getFieldArrayFromCategory(category) {
 
     let fields = []
     for (var field in this.listOfCategories[category][2]) {
+      if(!this.listOfCategories[category][2][field][2])
       fields.push(this.listOfCategories[category][2][field][0]);
     }
     return fields
@@ -71,42 +72,11 @@ export class ConstantsFieldsComponent implements OnInit {
       }
     }
   }
-  
-  loadData(){
-    this.uploadLoading = true
-    //this.rank.setTable([])
-    this.RestApiService.getConstatnsFields().subscribe(
-      (data: ConstantsFieldsnew) => {
-        
-        this.fillListOfCategoryfromdata(data);
-      },
-      err => {
-      }
-    );
-    this.ConstantsFields = {eventStatus: [], materialType: [], equipmentType:[], equipmentMakat:[], handlingStatus:[], rank:[]};
-    this.uploadLoading = false
-  }
-
-  fillListOfCategoryfromdata(data) {
-    this.ConstantsFieldsnew = data;
-    for (var tableEntry in this.ConstantsFieldsnew) {
-      if (this.ConstantsFieldsnew[tableEntry].isCategory) {
-        let fieldsOfCategory = [];
-        for (var field in this.ConstantsFieldsnew) {
-          if (this.ConstantsFieldsnew[field].categroryId == this.ConstantsFieldsnew[tableEntry].idOfConstantField) {
-            fieldsOfCategory.push([this.ConstantsFieldsnew[field].constantFieldName, this.ConstantsFieldsnew[field].fieldOfCategoryId]);
-          }
-        }
-        this.listOfCategories.push([this.ConstantsFieldsnew[tableEntry].idOfConstantField, this.ConstantsFieldsnew[tableEntry].constantFieldName, fieldsOfCategory]);
-      }
-    }
-  }
-
-  saveData(){
-    this.uploadLoading = true    
-    this.RestApiService.postConstatnsFields(this.ConstantsFields).subscribe(
-      (data_from_server: ConstantsFields) => {
-        if(data_from_server) { this.ToastService.showToast('success', 'נשמר בהצלחה!', '') }
+  addCategory(){
+    var jsonData = {"constantFieldCategoryName" : this.constantFieldCategoryName, "constantFieldCategoryNameHebrew" : this.constantFieldCategoryNameHebrew}
+     this.RestApiService.addFieldCategoryName(jsonData).subscribe(
+      (data_from_server) => {
+        this.ToastService.showToast('success', 'נשמר בהצלחה!', '') 
         this.uploadLoading = false
       },
       err => {
@@ -114,6 +84,35 @@ export class ConstantsFieldsComponent implements OnInit {
         this.uploadLoading = false
       }
     )
+  }
+    
+  
+  loadData(){
+    this.uploadLoading = true
+    this.RestApiService.getConstatnsFields().subscribe(
+      (data: ConstantsFieldsWithId) => {
+        
+        this.fillListOfCategoryfromdata(data);
+      },
+      err => {
+      }
+    );
+    this.uploadLoading = false
+  }
+
+  fillListOfCategoryfromdata(data) {
+    this.ConstantsFieldsWithId = data;
+    for (var tableEntry in this.ConstantsFieldsWithId) {
+      if (this.ConstantsFieldsWithId[tableEntry].isCategory) {
+        let fieldsOfCategory = [];
+        for (var field in this.ConstantsFieldsWithId) {
+          if (this.ConstantsFieldsWithId[field].categroryId == this.ConstantsFieldsWithId[tableEntry].idOfConstantField) {
+              fieldsOfCategory.push([this.ConstantsFieldsWithId[field].constantFieldName, this.ConstantsFieldsWithId[field].fieldOfCategoryId, this.ConstantsFieldsWithId[field].isDeleted]);
+          }
+        }
+        this.listOfCategories.push([this.ConstantsFieldsWithId[tableEntry].idOfConstantField, this.ConstantsFieldsWithId[tableEntry].constantFieldName, fieldsOfCategory, this.ConstantsFieldsWithId[tableEntry].constantFieldNameHebrew]);
+      }
+    }
   }
   
 }
