@@ -222,7 +222,6 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
     }
    }
   draftsColumns(){
-    this.DisplayFlagDraft=!this.DisplayFlagDraft
     this.routeDrafts=false
     this.sliceUnreadMessage=0
     this.isDraft=true
@@ -241,12 +240,8 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
   }
   
   loadTable(value){
-    if(this.DisplayFlagDraft!=true){
-    this.DisplayFlagDraft=!this.DisplayFlagDraft
-    }
-    this.routeDrafts=true
-    if (value.name == "טויוטות") {this.isDraft = true,this.sliceUnreadMessage=0}
-    else {this.isDraft = false,this.sliceUnreadMessage=1}
+    this.routeDrafts=true //if button pressed is not drafts, then we want the plus button to be active.
+    if (value.name != "טיוטות") {this.isDraft = false,this.sliceUnreadMessage=1} //slice messages colunm from table on drafts table.
     this.displayedColumnsTitle=value.title
     this.displayedColumns=value.columns
     this.createJsonItems(this.displayedColumns)
@@ -260,7 +255,6 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
       this.data.forEach((element) => { element['unreadeMessages'] = `${this.userUnreadedMessages[element['reference']]};${element['reference']}` });
       this.dataSource.data=this.data
       this.dataSourceFilter.data=this.data
-      this.isDraft=false
     });
   }
 
