@@ -21,8 +21,10 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="reviewDate" class="label">תאריך הביקורת</label>
-                <input [readonly]="this.form.editStateBlocked" (input)="checkChangeData()" type="text" nbInput fullWidth #reviewDate="ngModel" name="reviewDate" id="reviewDate" status="primary" placeholder="תאריך הביקורת" [(ngModel)]="form.reviewDate"  dateValidation>
-                <div *ngIf="reviewDate.invalid&&reviewDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div>
+                <input (click)="checkChangeData()" [readonly]="this.form.editStateBlocked" type="text" nbInput fullWidth [nbDatepicker]="reviewdatepicker" #reviewDate="ngModel" name="reviewDate" id="reviewDate" status="primary" placeholder="תאריך הביקורת" [(ngModel)]="form.reviewDate"  dateValidation>
+                <nb-datepicker  status="primary" #reviewdatepicker format="dd/MM/yyyy"></nb-datepicker>
+
+                <!-- <div *ngIf="reviewDate.invalid&&reviewDate.dirty"><label class="label red">פורמט התאריך הוא: dd/mm/yyyy</label></div> -->
               </div>
             </div>
             <div *ngIf="form.reviewFile" class="col-md-3">

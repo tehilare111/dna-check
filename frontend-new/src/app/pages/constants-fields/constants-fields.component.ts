@@ -13,6 +13,14 @@ class ConstantsFieldsWithId{
   fieldOfCategoryId: number;
   isCategory: boolean;
 }
+class ConstantsFieldsnew{
+  idOfConstantField: number;
+  constantFieldName: string;
+  categroryId: number;
+  fieldOfCategoryId: number;
+  isCategory: boolean;
+}
+
 
 
 @Component({
@@ -38,17 +46,10 @@ export class ConstantsFieldsComponent implements OnInit {
     let fields = []
     for (var category in this.listOfCategories){
       fields = this.getFieldArrayFromCategory(category);
-   //   fields = this.removeDeletedFields(fields)
       this.fieldbox.toArray()[category].setTable(fields);
     }
     
   }
-  // def removeDeletedFields(fields){
-  //   for (var field in fields){
-  //     if (!field.isDeleted)
-  //   }
-  // }
-
   private getFieldArrayFromCategory(category) {
 
     let fields = []

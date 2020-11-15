@@ -66,6 +66,7 @@ export class LostFormComponent extends FormBaseComponent<LostFormTemplate, Event
   }
   
   getConstasFeilds() {
+    this.form.eventHour="12:34" //default time
     this.RestApiService.getConstansFieldsAndUnitsArray().subscribe((data) => {  
       this.units = data.units
     });
