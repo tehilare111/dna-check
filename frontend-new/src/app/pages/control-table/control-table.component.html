@@ -2,7 +2,7 @@
   <nb-card-body>
     <div class="row">
       <div class="col-md-12" style="margin-bottom:3px;">
-        <button nbButton status="success" [disabled]="(pickedUpEvent.route!=undefined && this.routeDrafts?false:true)" [routerLink]="[pickedUpEvent.route]" hero style="margin: 3px;">
+        <button *ngIf="this.userIsAllowedToReport" nbButton status="success" [disabled]="(pickedUpEvent.route!=undefined && this.routeDrafts?false:true)" [routerLink]="[pickedUpEvent.route]" hero style="margin: 3px;">
           <i class="ion-plus-round" [nbPopover]="icon" ></i>
         </button>
       <button  *ngFor="let button of eventsToPickUp |keyvalue" class="buttonColor"  nbButton (click)="loadTable(pickedUpEvent=button.value)" style="margin: 3px;" >{{button.value.name}}</button>
