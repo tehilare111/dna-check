@@ -28,7 +28,6 @@ export class LoginComponent implements OnInit {
 
     this.RestApiService.CheckLogin({username,password}).subscribe(
       data => {
-        console.log(data)
         localStorage.setItem("access_token", data["access_token"])
         localStorage.setItem("permissions", data["permissions"])
         localStorage.setItem("unit", data["unit"])

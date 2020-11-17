@@ -78,6 +78,7 @@ export class ConstantsFieldsComponent implements OnInit {
      this.RestApiService.addFieldCategoryName(jsonData).subscribe(
       (data_from_server) => {
         this.ToastService.showToast('success', 'נשמר בהצלחה!', '') 
+        this.ngOnInit
         this.uploadLoading = false
       },
       err => {

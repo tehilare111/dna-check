@@ -99,6 +99,8 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         else if (regEx.test(value)) {this.form[key]= new Date(value)}
 
       }
+      if (!this.isDraft) {this.form.editStateBlocked=true} // block from editing (only if not draft).
+      else {this.form.editStateBlocked=false}
       /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
         {
           this.form.editStateBlocked = false 
@@ -158,8 +160,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: FormType) => {
-            console.log(data);
-            this.uploadLoading = false;
+           this.uploadLoading = false;
             if (data.editStateBlocked){
               this.popUpDialogContext = `האירוע נסגר לעריכה`;
             } else {
@@ -201,9 +202,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
       this.popUpDialogContext = `שדה אחד לפחות לא תקין או חסר`;
       this.openWithoutBackdropClick(this.simpleDialog)
     } else {
-      //this.form.editStateBlocked = true;
       this.openWithoutBackdropClick(this.directingDialog);
-      this.form.editStateBlocked = true;
       this.save();
     }
   }
@@ -226,6 +225,11 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   }
 
   getIdFromFieldName(categoryName: string, fieldName: string){
+    if(categoryName == "equipmentType"){
+      if(this.form.equipment == "חומר פיסי" || this.form.equipment == "חומר לוגי"){
+        categoryName = "materialType"
+      }
+    }
     for(let category in this.constantsFieldsComponent.listOfCategories){//run over categories
       if(this.constantsFieldsComponent.listOfCategories[category][1]==categoryName){ //we found the category
         for(let field in this.constantsFieldsComponent.listOfCategories[category][2]){ //for fields of this category
@@ -238,6 +242,11 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   }
 
   getNameFromFieldId(categoryName: string, id: number){
+    if(categoryName == "equipmentType"){
+      if(this.form.equipment == "חומר פיסי" || this.form.equipment == "חומר לוגי"){
+        categoryName = "materialType"
+      }
+    }
     for(let category in this.constantsFieldsComponent.listOfCategories){//run over categories
       if(this.constantsFieldsComponent.listOfCategories[category][1]==categoryName){ //we found the category
         for(let field in this.constantsFieldsComponent.listOfCategories[category][2]){ //for fields of this category
@@ -254,11 +263,10 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     const formData: FormData = new FormData();
     // insert lostForm to FormData object
     for(let [key, value] of Object.entries(this.form)){
-      if(this.isConstantField(key)){
-       value = this.getIdFromFieldName(key, value)!=undefined?this.getIdFromFieldName(key, value):value}      
-
-
-      if (value && ! this.eventFilesFields.includes(key)) 
+     if(this.isConstantField(key)){
+       value = this.getIdFromFieldName(key, value)!=undefined?this.getIdFromFieldName(key, value):value
+      }
+     if (value && ! this.eventFilesFields.includes(key) && value.length!=0 && !(Array.isArray(value) && value.length==0)) 
       { if (value instanceof Date) { value = format(value,"yyyy-MM-dd")} //for django save in db
         formData.append(key, value);}  }
 

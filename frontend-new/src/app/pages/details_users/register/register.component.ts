@@ -59,7 +59,6 @@ export class RegisterComponent implements OnInit {
       for(i=0;i<=data_from_server.treeNode.length-1;i+=1){
         this.units_array.push(data_from_server.treeNode[i].name)
         for(j=0;j<=data_from_server.treeNode[i].children.length-1;j+=1){
-          console.log(data_from_server.treeNode[i].children[j].name)
           this.units_array.push(data_from_server.treeNode[i].children[j].name)
         } 
       }

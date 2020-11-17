@@ -88,7 +88,6 @@ export class ControlTableComponent implements OnInit{
         return {'data': event}
       })
       new_data = new_data.concat(this.data);
-      console.log(new_data)
       this.dataSource = this.dataSourceBuilder.create(new_data);
     });
   }

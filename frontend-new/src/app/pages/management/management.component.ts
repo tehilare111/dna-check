@@ -149,7 +149,6 @@ export class ManagementComponent implements OnInit {
   LoadUserForUnit() {
     this.RestApiService.getUsersList(this.pickedUpUnit).subscribe((data) => {
       this.data_table=data
-      console.log(this.data_table)
       this.source.load(this.data_table);
     });
   }

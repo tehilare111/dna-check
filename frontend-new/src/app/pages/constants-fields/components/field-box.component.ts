@@ -103,7 +103,6 @@ export class FieldBoxComponent implements OnInit {
     var jsonData = {"constantFieldGroupName" : constantFieldGroupName, "newFields" : newFields}
     this.RestApiService.addConstantFields(jsonData).subscribe(
       (data_from_server) => {
-        console.log(data_from_server);
         this.ToastService.showToast('success', 'נשמר בהצלחה!', '') 
         this.uploadLoading = false
       },

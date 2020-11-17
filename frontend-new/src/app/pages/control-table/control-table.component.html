@@ -54,7 +54,7 @@
           </th>
        
         <td mat-cell *matCellDef="let element">
-          <ngx-not-read-msgs-col *ngIf="this.DisplayFlagDraft" [value]="element.unreadeMessages"></ngx-not-read-msgs-col></td>
+          <ngx-not-read-msgs-col [value]="element.unreadeMessages"></ngx-not-read-msgs-col></td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true;" ></tr>
       <tr mat-row (click)='formClicked(myRowData)' *matRowDef="let myRowData; columns: displayedColumns;"></tr>
