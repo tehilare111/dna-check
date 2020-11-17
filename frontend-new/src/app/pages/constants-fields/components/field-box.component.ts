@@ -203,6 +203,12 @@ export class FieldBoxComponent implements OnInit {
     )
   }
   onEditConfirm(event) {
+    for(var field in this.fieldOptions){
+      if(this.fieldOptions[field].field == event.newData['field']){
+        window.confirm("this name is already in the database")
+        return;
+      }
+    }
     if (window.confirm('האם אתה בטוח שברצונך לערוך את השדה? עריכה תשנה את ערכו של השדה בכל האירועים, רטרואקטיבית')) {
       this.editField(this.fieldName, event.data, event.newData)
       event.confirm.resolve(event.newData);
@@ -216,6 +222,7 @@ export class FieldBoxComponent implements OnInit {
     var jsonData = {"constantFieldGroupName" : constantFieldGroupName,
      "previousField" : previousField['field'],
      "newField" : newField['field']}
+     
      this.RestApiService.editConstantField(jsonData).subscribe(
       (data_from_server) => {
         this.ToastService.showToast('success', 'נשמר בהצלחה!', '') 
