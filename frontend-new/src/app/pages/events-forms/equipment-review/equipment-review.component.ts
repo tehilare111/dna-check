@@ -6,6 +6,8 @@ import { FormBaseComponent } from '../form-base.component'
 import { EquipmentReviewTemplate } from '../events-forms.templates';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
 import { ConstantsFieldsComponent } from '../../constants-fields/constants-fields.component';
+import { EquipmentTableComponent } from '../components/equipment-table/equipment-table.component';
+
 
 @Component({
   selector: 'ngx-equipment-review',
@@ -21,17 +23,19 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
   // @ViewChild("chat") chatMessages : ChatComponent;
   @ViewChild("directingDialog") directingDialog : ElementRef;
   @ViewChild("simpleDialog") simpleDialog : ElementRef;
+  @ViewChild("equipmentTable")equipmentTable:EquipmentTableComponent
   
  eventStatusOptions = ["טופל", "טרם טופל"]
   units = []
   ranks = []
-  equipmentsType = []
-  materialsType = []
-  equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+  equipmentsType=[]
+  materialsType=[]
   equipmentsTypeOptions = []
   
   constructor(
+    
     ) {
+      
       super();
     }
   
@@ -56,8 +60,8 @@ export class EquipmentReviewComponent extends FormBaseComponent<EquipmentReviewT
         this.ranks = this.constantsFieldsComponent.getFieldsFromCategoryName("rank")
         this.materialsType = this.constantsFieldsComponent.getFieldsFromCategoryName("materialType")
         this.eventStatusOptions = this.constantsFieldsComponent.getFieldsFromCategoryName("eventStatus")
-        this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
-        this.equipmentsTypeOptions = this.equipments.map(el => {if(el['name']==this.form.equipment) return el['list']; else return undefined; }).filter(el => el!=null)[0]
+        // this.equipments = [{"name": "ציוד", "list":this.equipmentsType} , {"name": "חומר פיסי", "list" : this.materialsType}, {"name": "חומר לוגי", "list" : this.materialsType}]
+        // this.equipmentsTypeOptions = this.equipments.map(el => {if(el['name']==this.form.equipment) return el['list']; else return undefined; }).filter(el => el!=null)[0]
         console.log()
       },
       err => {

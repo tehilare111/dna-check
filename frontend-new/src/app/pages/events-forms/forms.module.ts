@@ -45,6 +45,8 @@ import { FormTopButtonsComponent } from './components/form-top-buttons/form-top-
 
 import {NbDateFnsDateModule} from '@nebular/date-fns';
 import { PendingChangesGuardGuard } from '../pending-changes-guard.guard';
+import { EquipmentTableComponent } from './components/equipment-table/equipment-table.component';
+import { AgGridModule } from 'ag-grid-angular';
 
 
 @NgModule({
@@ -67,7 +69,8 @@ import { PendingChangesGuardGuard } from '../pending-changes-guard.guard';
     NbSpinnerModule,
     NbChatModule,
     AngularMaterialModule,
-    NbDateFnsDateModule
+    NbDateFnsDateModule,
+    AgGridModule.withComponents([])
   ],
   providers:[
     [PendingChangesGuardGuard],
@@ -91,6 +94,7 @@ import { PendingChangesGuardGuard } from '../pending-changes-guard.guard';
     EventStatusShortedComponent,
     FileDownloadButtonComponent,
     FormTopButtonsComponent,
+    EquipmentTableComponent,
   ],
 })
 export class FormsModule { }

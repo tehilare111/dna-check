@@ -1,0 +1,14 @@
+<button (click)="getSelectedRows()">Get Selected Rows</button>
+<ag-grid-angular
+    style="width: 100%;height: 100px;direction: rtl !important;"
+    class="ag-theme-balham"
+    [modules]="data"
+    [rowData]="rowData"
+    [columnDefs]="columnDefs"
+    [animateRows]="true"
+    (cellValueChanged)="onCellValueChanged($event)"
+    [frameworkComponents]="frameworkComponents"
+   
+    [singleClickEdit]="true"
+>
+</ag-grid-angular>

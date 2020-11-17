@@ -1,11 +1,14 @@
 // themes - our custom or/and out of the box themes
 @import 'themes';
+@import "~ag-grid-community/dist/styles/ag-grid.css";
+@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
 
 // framework component themes (styles tied to theme variables)
 @import '~@nebular/theme/styles/globals';
 @import '~@nebular/auth/styles/all';
 @import '~@nebular/bootstrap/styles/globals';
 // ...
+
 
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
@@ -17,7 +20,7 @@
 
 // install the framework and custom global styles
 @include nb-install() {
-
+ 
   // framework global styles
   @include nb-theme-global();
   @include nb-auth-global();
@@ -26,3 +29,4 @@
   // loading progress bar
   @include ngx-pace-theme();
 };
+
