@@ -20,9 +20,10 @@ import { timeValidator } from "./validation-directives/time.directive";
 import { textValidator } from './validation-directives/text.directive';
 import {ConstantsFieldsComponent} from '../constants-fields/constants-fields.component'
 import { EventStatusBase } from './components/event-status-base.component';
-import { EventForm } from './events-forms.templates';
+import { EquipmentReviewTemplate, EventForm, LostFormTemplate } from './events-forms.templates';
 import {format} from 'date-fns'
 import { Observable } from 'rxjs';
+import { EquipmentReviewComponent } from './equipment-review/equipment-review.component';
 
 
 export abstract class FormBaseComponent<FormType extends EventForm, EventStatusType extends EventStatusBase> implements OnInit {
@@ -223,12 +224,22 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     }
     return false
   }
+  determineIfMateriaOrEquipmentType(categoryName){
+    var typeOfForm
+      if(this.form.eventType == "ספירות"){
+        typeOfForm  = this.form as any as EquipmentReviewTemplate
+        return this.formHasMaterialType(typeOfForm);
+      }
+      if(this.form.eventType == "אובדנים"){
+        typeOfForm  = this.form as any as LostFormTemplate
+        return this.formHasMaterialType(typeOfForm);
+      }
+      return categoryName
+  }
 
   getIdFromFieldName(categoryName: string, fieldName: string){
     if(categoryName == "equipmentType"){
-      if(this.form.equipment == "חומר פיסי" || this.form.equipment == "חומר לוגי"){
-        categoryName = "materialType"
-      }
+      categoryName = this.determineIfMateriaOrEquipmentType(categoryName)
     }
     for(let category in this.constantsFieldsComponent.listOfCategories){//run over categories
       if(this.constantsFieldsComponent.listOfCategories[category][1]==categoryName){ //we found the category
@@ -241,12 +252,21 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     }
   }
 
+  formHasMaterialType(typeOfForm: any) {
+    if (typeOfForm.equipment == "חומר פיסי" || typeOfForm.equipment == "חומר לוגי") {
+      return "materialType";
+    }
+    if (typeOfForm.equipment == "ציוד" ){
+      return "equipmentType";
+    }
+  }
+  
+
   getNameFromFieldId(categoryName: string, id: number){
     if(categoryName == "equipmentType"){
-      if(this.form.equipment == "חומר פיסי" || this.form.equipment == "חומר לוגי"){
-        categoryName = "materialType"
-      }
+      categoryName = this.determineIfMateriaOrEquipmentType(categoryName)
     }
+    
     for(let category in this.constantsFieldsComponent.listOfCategories){//run over categories
       if(this.constantsFieldsComponent.listOfCategories[category][1]==categoryName){ //we found the category
         for(let field in this.constantsFieldsComponent.listOfCategories[category][2]){ //for fields of this category

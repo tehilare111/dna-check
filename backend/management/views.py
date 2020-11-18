@@ -95,6 +95,8 @@ def findNewFieldId(constant_field_category_id):
 
 @csrf_exempt
 def findNewConstantFieldId():
+    if(ConstantFieldsWithId.objects.count() == 0):
+        return 1
     return ConstantFieldsWithId.objects.latest('idOfConstantField').idOfConstantField + 1
 
 
@@ -131,7 +133,7 @@ def delete_constant_field(request):
 
 
 @csrf_exempt
-@check_permissions_dec([MANAGER])
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER])
 def constants_fields(request):
     try: 
         constants_fields = ConstantFieldsWithId.objects.all()
