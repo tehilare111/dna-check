@@ -61,8 +61,7 @@ export class FieldBoxComponent implements OnInit {
       elementApears = false
       for(var field in this.fieldOptions){
         if(this.fieldOptions[field].field == array[element]){
-          window.confirm("this name is already in the database")
-
+          this.ToastService.showToast('fail', 'השדה כבר קיים במערכת', '') 
           elementApears = true
         }
       }
@@ -206,7 +205,7 @@ export class FieldBoxComponent implements OnInit {
   onEditConfirm(event) {
     for(var field in this.fieldOptions){
       if(this.fieldOptions[field].field == event.newData['field']){
-        this.ToastService.showToast('fail', 'השם כבר קיים במערכת', '') 
+        this.ToastService.showToast('fail', 'השדה כבר קיים במערכת', '') 
         return;
       }
     }
