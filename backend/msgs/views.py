@@ -11,7 +11,7 @@ from msgs.models import Msgs
 from msgs.utils import update_message_for_relevant_users
 
 @csrf_exempt
-@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_USER=True)
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER], RETURN_USER=True)
 def msgs(request, reference, user):
     try: 
         event_form_msgs = Msgs.objects.get(reference=reference) 
@@ -35,7 +35,7 @@ def msgs(request, reference, user):
 
 
 @csrf_exempt
-@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_USER=True)
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER], RETURN_USER=True)
 def user_read_msg(request, reference, user):
     
     if str(reference) in user.unreadedMessages:
@@ -47,7 +47,7 @@ def user_read_msg(request, reference, user):
 
 
 @csrf_exempt
-@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], RETURN_USER=True)
+@check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_CHECKER, REPORTER_MANAGER, EVENT_AUTHORIZER], RETURN_USER=True)
 def user_not_read_msg(request, reference, user):
     try:
         user.unreadedMessages[str(reference)] = 0

@@ -400,7 +400,7 @@ export class ManagementComponent implements OnInit {
 
   authService : AuthService = new AuthService(); // used to custom this page for reporter manager
   isReporterManager:boolean = false;
-  reporterManager:string = "מנהלן הרשאות";
+  reporterManager:string = "מדווח מנהלן";
 
   constructor(private _database: UnitDatabase, private ToastService: ToastService, private RestApiService:RestApiService, public dialog: MatDialog) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,

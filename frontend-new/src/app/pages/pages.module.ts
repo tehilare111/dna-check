@@ -41,15 +41,14 @@ const PAGES_COMPONENTS = [
     MiscellaneousModule,
     NbDateFnsDateModule,
     AngularMultiSelectModule,
+    FormsModule,
+    ReactiveFormsModule,
     ],
     providers:[
       [PendingChangesGuardGuard],
     ],
   entryComponents: [
     NotReadMsgsColComponent,
-    AngularMaterialModule,
-    FormsModule,
-    ReactiveFormsModule,
     ConfirmationDialogComponent,
     UserPermissionsComponent,
     UserPermissionsRenderComponent

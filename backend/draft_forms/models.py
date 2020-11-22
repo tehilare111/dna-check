@@ -22,7 +22,7 @@ class DraftForm(models.Model):
     editStateBlocked = models.BooleanField(default=False)
     writtenInFormals = models.BooleanField(default=False)
     writtenInDrafts = models.BooleanField(default=False)
-    eventAuthorizers = ArrayField(models.CharField(blank=True, max_length=70), default=[]) # array of event_authorizers personal number . type : string[] 
+    eventAuthorizers = ArrayField(models.CharField(blank=True, max_length=70), default=list()) # array of event_authorizers personal number . type : string[] 
 
     class Meta:
       abstract = True

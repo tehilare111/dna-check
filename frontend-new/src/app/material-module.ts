@@ -15,6 +15,7 @@ import {MatTreeModule} from '@angular/material/tree';
 import {MatNativeDateModule} from '@angular/material/';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatChipsModule} from '@angular/material/chips';
+import { MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
   exports: [
@@ -33,7 +34,8 @@ import {MatChipsModule} from '@angular/material/chips';
     MatTabsModule,
     MatTreeModule,
     MatChipsModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatMenuModule,
   ]
 })
 export class AngularMaterialModule {}
