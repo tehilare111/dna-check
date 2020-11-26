@@ -98,6 +98,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         //db can save only strings, but datepicker excpect Date object.
         else if (regEx.test(value)) {this.form[key]= new Date(value)}
 
+
       }
       if (!this.isDraft) {this.form.editStateBlocked=true} // block from editing (only if not draft).
       else {this.form.editStateBlocked=false}
@@ -107,7 +108,6 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
         }else{
           this.form.editStateBlocked = true
         }*/
-        
       });
     // this.get_constas_feilds()
   }
@@ -160,7 +160,6 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
     this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: FormType) => {
-            console.log(data);
             this.uploadLoading = false;
             if (data.editStateBlocked){
               this.popUpDialogContext = `האירוע נסגר לעריכה`;
@@ -274,6 +273,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
             this.uploadLoading = false;
             this.reference = data.reference;
             this.popUpDialogContext = `האירוע התעדכן בהצלחה, סימוכין: ${this.reference}`;
+            this.fieldsValid =false
           },
           error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
           
@@ -284,7 +284,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
           this.uploadLoading = false;
           this.reference = data.reference;
           this.popUpDialogContext = `האירוע ${!this.drafting?'נוצר':'נשמר'} בהצלחה, סימוכין: ${this.reference}`;
-          
+          this.fieldsValid =false
         },
         error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
     }
