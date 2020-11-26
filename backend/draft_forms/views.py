@@ -10,8 +10,8 @@ from django.conf import settings
 from rest_framework.views import APIView
 
 from forms.views import generate_reference
-from draft_forms.models import DraftFormsTable
-from draft_forms.serializers import DraftFormsSerializer
+from draft_forms.models import DraftFormsTable,DraftEventsEquipments
+from draft_forms.serializers import DraftFormsSerializer,DraftEquipmentSerializer
 from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
 from management.utils import get_inferior_units
 from msgs.utils import new_event_msgs, delete_event_messages, update_user_event_deleted
@@ -53,7 +53,7 @@ class DraftEventFrom(APIView):
             reference = generate_reference(reference)
             # Create instance for this event form in the messages database
             new_event_msgs(reference, draft_form_serializer.validated_data['reporterUnit'])
-            draft_form_serializer.save(reference=reference, writtenInDrafts=True)
+            d=draft_form_serializer.saveAll(request,reference)
             return JsonResponse(draft_form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
@@ -62,25 +62,34 @@ class DraftEventFrom(APIView):
     def put(self, request, reference,*args, **kwargs):
         try: 
             draft_event_form = DraftFormsTable.objects.get(reference=reference) 
+            draft_event_form_equipments=DraftEventsEquipments.objects.filter(reference1_id=reference)
+            draft_event_form_equipments.delete()
         except DraftFormsTable.DoesNotExist: 
             return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
 
         draft_form_serializer = DraftFormsSerializer(draft_event_form, data=request.data)
         if draft_form_serializer.is_valid():
-            draft_form_serializer.save()
-            return JsonResponse(draft_form_serializer.data, status=status.HTTP_201_CREATED ) 
+            if("equipmentsArray" not in request.data):
+                draft_form_serializer.save()
+                return JsonResponse(draft_form_serializer.data, status=status.HTTP_201_CREATED ) 
+            draft_form_serializer.saveAll(request,reference)
+            return JsonResponse({"reference":reference}, status=status.HTTP_200_OK)
         else:
             return HttpResponse(draft_form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        
     
     @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], API_VIEW=True)
     def get(self, request, reference, *args, **kwargs):
         try: 
             draft_event_form = DraftFormsTable.objects.get(reference=reference)
-        except DraftFormsTable.DoesNotExist: 
+            event_form_equipments=DraftEventsEquipments.objects.filter(reference1=reference)
+        except DraftFormsTable.DoesNotExist and DraftEventsEquipments.DoesNotExist: 
             return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
     
         draft_form_serializer = DraftFormsSerializer(draft_event_form)
-        return JsonResponse(draft_form_serializer.data)
+        equipments_serializer=DraftEquipmentSerializer(event_form_equipments,many=True)
+        return JsonResponse({"form_event":draft_form_serializer.data,"event_form_equipments":equipments_serializer.data})
 
     @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True, RETURN_USER=True)
     def delete(self, request, reference, user, *args, **kwargs):

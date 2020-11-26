@@ -41,12 +41,15 @@ def forms_list(request, event_type, user):
         is_exist=False
         for form in form_serializer.data:
             is_exist = False
-            for key,value in user.unreadedMessages.items():
-                if(form["reference"]==int(key)):
-                    is_exist=True
-                    form.update({"unreadeMessages":str(value)+";"+key})
-                elif not is_exist:
-                    form.update({"unreadeMessages":"undefined"+";"+str(form["reference"])})
+            if(user.unreadedMessages=={}):
+                form.update({"unreadeMessages":"undefined"+";"+str(form["reference"])})
+            else:
+                for key,value in user.unreadedMessages.items():
+                    if(form["reference"]==int(key)):
+                        is_exist=True
+                        form.update({"unreadeMessages":str(value)+";"+key})
+                    elif not is_exist:
+                        form.update({"unreadeMessages":"undefined"+";"+str(form["reference"])})
         return JsonResponse(form_serializer.data, safe=False) 
     
     elif request.method == 'DELETE':
@@ -130,34 +133,27 @@ class OfficialEventFrom(APIView):
     def put(self, request, reference,*args, **kwargs):
         try: 
             event_form = FormsTable.objects.get(reference=reference)
-            event_form_equipments=EventsEquipments.objects.filter(reference1=reference)
+            event_form_equipments=EventsEquipments.objects.filter(reference1_id=reference)
+            event_form_equipments.delete()
         except FormsTable.DoesNotExist and EventsEquipments.DoesNotExist: 
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
         form_serializer = FormsSerializer(event_form, data=request.data)
-        if("equipmentsArray" not in request.data):
-            if form_serializer.is_valid():
+        if form_serializer.is_valid():
+            if("equipmentsArray" not in request.data):
                 form_serializer.save()
                 return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED )
-        if("equipmentsArray" in request.data):
-            event_form_equipments.delete()
-            equipments_Serilazer = EquipmentSerializer(data=request.data)
-            if equipments_Serilazer.is_valid():
-                f=equipments_Serilazer.put_equipment(request,reference)
-                # print("hahahaha",f)
-                return JsonResponse({"reference":reference}, status=status.HTTP_200_OK)
-            else:
-                print("error",equipments_Serilazer.errors)
-                return HttpResponse(equipments_Serilazer.errors, status=status.HTTP_400_BAD_REQUEST)
+            form_serializer.saveAll(request,reference)
+            return JsonResponse({"reference":reference}, status=status.HTTP_200_OK)
         else:
-            print("errorsss",form_serializer.errors)
             return HttpResponse(form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
     @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], API_VIEW=True)
     def get(self, request, reference, *args, **kwargs):
         try: 
             event_form = FormsTable.objects.get(reference=reference)
-            print("e",event_form)
+          
             event_form_equipments=EventsEquipments.objects.filter(reference1=reference)
-            print("equip",event_form_equipments)
+          
         except FormsTable.DoesNotExist and EventsEquipments.DoesNotExist: 
             return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
     

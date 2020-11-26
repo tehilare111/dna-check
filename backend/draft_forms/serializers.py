@@ -40,8 +40,8 @@ class DraftEquipmentSerializer(serializers.ModelSerializer):
         ]
 
 class DraftFormsSerializer(DraftEventFormSerializer):
+    equipments=DraftEquipmentSerializer(many=True,required=False)
     class Meta:
-        equipments=DraftEquipmentSerializer(many=True,required=False)
         model = DraftFormsTable
         fields = DraftEventFormSerializer.Meta.fields + (
             'signerUnit',
@@ -74,7 +74,7 @@ class DraftFormsSerializer(DraftEventFormSerializer):
         print("self after save",self)
         print("SELF",request)
         equip=" "
-        data=request.data["equipments"]
+        data=request.data["equipmentsArray"]
         data = data.split("$$")[1:-1]
         data2=[json.loads(eq[1:-1]) for eq in data]
         for equipment in data2:
@@ -85,8 +85,6 @@ class DraftFormsSerializer(DraftEventFormSerializer):
                 print("shalom tehila")
                 equip.save(reference1=self.instance)
                 print("equips after",equip)
-                
-                
             else:
                 print(equip.errors)
                 return equip.errors

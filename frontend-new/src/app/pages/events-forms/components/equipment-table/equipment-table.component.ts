@@ -2,7 +2,6 @@ import { Component, OnInit,ViewChild,Input} from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
 import { RestApiService } from '../../../../services/rest-api.service';
 import { ConstantsFieldsComponent } from '../../../constants-fields/constants-fields.component';
-import { CellCustomComponent } from '../../components/equipment-table/cell-custom/cell-custom.component';
 import 'ag-grid-enterprise';
 import { CountryOrderService } from '../../../../@core/mock/country-order.service';
 import { HttpClient } from '@angular/common/http';
@@ -11,7 +10,7 @@ import { AppInjector } from '../../../../services/app-injector.service';
 import { Observable } from 'rxjs';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
-import { EventEquipments } from '../../events-forms.templates';
+
 
 @Component({
   selector: 'ngx-equipment-table',
@@ -59,6 +58,7 @@ export class EquipmentTableComponent implements OnInit {
   },
     {headerName:'ציוד/חומר',field: 'equipment', sortable: true, filter: true,editable:true,cellEditor: 'agRichSelectCellEditor',
     cellEditorParams: {
+      
       values: this.equipmentsTitle,
     },
   },
@@ -119,6 +119,10 @@ this.columnDefs2 = [
 }
 
   onCellValueChanged(event) {
+    var selectedCategory=event.colDef
+    if (selectedCategory["field"]==="equipment") {
+      event.node.setDataValue('equipmentType', null);
+    }
     for(let i in  this.form.equipmentsArray){
       if(i==event.rowIndex){
         this.form.equipmentsArray[i]=event.data
@@ -128,27 +132,29 @@ this.columnDefs2 = [
 
   exisitingFormLoadData(array:any[]){
     this.rowData=array.slice()
-}
+  }
 }
 
 function cellCellEditorParams(params) {
   var selectedCategory = params.data.equipment;
   if(selectedCategory==="ציוד"){
-  var allowedCities = constantsChoice("equipmentType");
+    return {
+      values:constantsChoice("equipmentType"),
+    }
   }
   else{
-    var allowedCities = constantsChoice("materialType");
+    return {
+      values:constantsChoice("materialType"),
+    }
   }
-  return {
-    values: allowedCities,
-  };
+  
 }
 var eqArray = [];
 var shouldGetConstatnsFields=true
 function constantsChoice(match) {
   let equipmentType=undefined
   let materialType=undefined
- 
+  
   if(shouldGetConstatnsFields){
     var constantsFieldsComponent = new ConstantsFieldsComponent(null, null)
     var restApiService:RestApiService=AppInjector.injector.get(RestApiService);
@@ -157,7 +163,6 @@ function constantsChoice(match) {
     (data) => {
         constantsFieldsComponent.fillListOfCategoryfromdata(data);
         constantsFieldsComponent.listOfCategories;
-        console.log(constantsFieldsComponent)
         materialType = constantsFieldsComponent.getFieldsFromCategoryName("materialType")
         equipmentType = constantsFieldsComponent.getFieldsFromCategoryName("equipmentType")
         setEquipmentsArray([materialType, equipmentType]);

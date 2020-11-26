@@ -78,35 +78,8 @@
 
           <h6><b>פרטי האובדן:</b></h6>
           <div class="row">
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="equipment" class="label">ציוד/חומר</label>
-                <nb-select [disabled]="this.form.editStateBlocked" name="equipment" id="equipment" status="primary" placeholder="ציוד/חומר" [(ngModel)]="form.equipment">
-                  <nb-option *ngFor="let equipment of equipments"  [value]="equipment.name" (click)="equipmentsTypeOptions=equipment.list;checkChangeData(); form.equipmentType=''">{{equipment.name}}</nb-option>  
-                </nb-select>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="equipmentType" class="label">סוג ציוד/חומר</label>
-                <nb-select [disabled]="this.form.editStateBlocked" name="equipmentType" id="equipmentType" status="primary" [placeholder]="form.equipmentType?form.equipmentType:'סוג ציוד/חומר'" [(ngModel)]="form.equipmentType">
-                  <nb-option *ngFor="let equipment of equipmentsTypeOptions" (click)='checkChangeData()' [value]="equipment">{{equipment}}</nb-option>  
-                </nb-select>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="equipmentMark" class="label">סימון ציוד/חומר</label>
-                <input [readonly]="this.form.editStateBlocked" type="text" (input)="checkChangeData()" nbInput fullWidth #equipmentMark="ngModel" name="equipmentMark" id="equipmentMark" status="primary" placeholder="סימון ציוד/חומר" [(ngModel)]="form.equipmentMark" markValidation>
-                <div *ngIf="equipmentMark.invalid&&equipmentMark.dirty"><label class="label red">XXXXXXXXX או YYYYYY-XXX</label></div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="equipmentMakat" class="label">מק"ט ציוד/עותק חומר</label>
-                <input [readonly]="this.form.editStateBlocked" type="text" (input)="checkChangeData()" nbInput fullWidth #equipmentMakat="ngModel" name="equipmentMakat" id="equipmentMakat" status="primary" placeholder="מק''ט ציוד/עותק חומר" [(ngModel)]="form.equipmentMakat" makatCopyValidation>
-                <div *ngIf="equipmentMakat.invalid&&equipmentMakat.dirty"><label class="label red">3 ספרות או 12 תווים</label></div>
-              </div>
+            <div class="col-md-12">
+              <ngx-equipment-table [equipments]="equipments" [editBlockState]="this.form.editStateBlocked" [form]="form" [equipmentsType]="this.equipmentsType" [materialsType]="this.materialsType" ></ngx-equipment-table>
             </div>
           </div>
           <h6><b>גורמים ומקומות רלוונטים לאירוע:</b></h6>

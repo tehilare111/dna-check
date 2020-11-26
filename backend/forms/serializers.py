@@ -39,38 +39,6 @@ class EquipmentSerializer(serializers.ModelSerializer):
         'equipmentMark',
         'equipmentMakat',
         ]
-    def put_equipment(self,request,reference):
-        print('***************************************')
-        print("self",self)
-        # self.save(reference=reference,writtenInFormals=True)
-        equip=" "
-        data=request
-        data=JSONParser().parse(request)
-        print("data",data)
-        if data !="$$":
-            data = data.split("$$")[1:-1]
-            data2=[json.loads(eq[1:-1]) for eq in data]
-            for equipment in data2:
-                print("befor equipmnetsSerilaazers",equipment)
-                equip=EquipmentSerializer(data=equipment)
-                if equip.is_valid():
-                    equip.save(reference1=self.instance)
-                    return equip
-                else:
-                    print(equip.errors)
-                    return equip.errors
-            if equip!=" ":
-                return equip
-        else:
-            data=["No_Row_To_Show"]
-            equip=EquipmentSerializer(data=data)
-            if equip.is_valid():
-                equip.save(reference1_id=reference)
-            else:
-                print(equip.errors)
-                return equip.errors
-            if equip!=" ":
-                return equip
 
 class FormsSerializer(serializers.ModelSerializer):
     equipments=EquipmentSerializer(many=True,required=False)

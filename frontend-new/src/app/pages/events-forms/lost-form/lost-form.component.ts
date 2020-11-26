@@ -5,7 +5,7 @@ import { FormGroup, FormControl } from "@angular/forms";
 import { FormBaseComponent } from '../form-base.component'
 import { LostFormTemplate } from '../events-forms.templates';
 import { EventStatusComponent } from '../components/event-status/event-status.component';
-
+import { EquipmentTableComponent } from '../components/equipment-table/equipment-table.component';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -21,7 +21,7 @@ export class LostFormComponent extends FormBaseComponent<LostFormTemplate, Event
   // @ViewChild("chat") chatMessages : ChatComponent;
   @ViewChild("directingDialog") directingDialog : ElementRef;
   @ViewChild("simpleDialog") simpleDialog : ElementRef;
-  
+  @ViewChild("equipmentTable")equipmentTable:EquipmentTableComponent
  
   eventStatusOptions = ["טופל", "טרם טופל"]
   handlingStatusOptions = []
@@ -43,6 +43,7 @@ export class LostFormComponent extends FormBaseComponent<LostFormTemplate, Event
 
     // Set eventType field according to the form event type
     this.form.eventType = this.eventType
+    this.form.equipmentsArray=[]
     super.ngOnInit()
   }
 
