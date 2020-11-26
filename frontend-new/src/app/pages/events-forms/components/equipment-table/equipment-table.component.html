@@ -1,14 +1,22 @@
-<button (click)="getSelectedRows()">Get Selected Rows</button>
+<!-- <button nbButton (click)="addNewRow()">Add_New_Row</button> -->
+<button [disabled]="this.form.editStateBlocked" nbButton status="success" (click)="addNewRow()" hero style="margin: 3px;">
+    <i class="ion-plus-round" [nbPopover]="icon"  ></i>
+  </button>
+<button [disabled]="this.form.editStateBlocked" nbButton status="danger" (click)="onRemoveSelected()" hero style="margin: 3px;">
+    <i class="ion-trash-b" [nbPopover]="icon" style="size: 6px;"></i>
+</button>
+<!-- <mat-icon svgIcon="delete" aria-hidden="false"(click)="onRemoveSelected()"></mat-icon> -->
 <ag-grid-angular
-    style="width: 100%;height: 100px;direction: rtl !important;"
+    style="width: 100%;height: 350px;direction: rtl !important;"
     class="ag-theme-balham"
     [modules]="data"
-    [rowData]="rowData"
-    [columnDefs]="columnDefs"
+    [rowData]="this.form.equipmentsArray!=undefined?this.form.equipmentsArray:rowData"
+    [columnDefs]="this.form.editStateBlocked?columnDefs2:columnDefs"
     [animateRows]="true"
     (cellValueChanged)="onCellValueChanged($event)"
     [frameworkComponents]="frameworkComponents"
-   
-    [singleClickEdit]="true"
+    (gridReady)="onGridReady($event)"
+    [singleClickEdit]="false"
+    rowSelection='single'
 >
 </ag-grid-angular>

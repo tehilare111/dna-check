@@ -48,7 +48,6 @@ import { PendingChangesGuardGuard } from '../pending-changes-guard.guard';
 import { EquipmentTableComponent } from './components/equipment-table/equipment-table.component';
 import { AgGridModule } from 'ag-grid-angular';
 
-
 @NgModule({
   imports: [
     NbDialogModule.forChild(),
@@ -70,7 +69,7 @@ import { AgGridModule } from 'ag-grid-angular';
     NbChatModule,
     AngularMaterialModule,
     NbDateFnsDateModule,
-    AgGridModule.withComponents([])
+    AgGridModule.withComponents([]),
   ],
   providers:[
     [PendingChangesGuardGuard],

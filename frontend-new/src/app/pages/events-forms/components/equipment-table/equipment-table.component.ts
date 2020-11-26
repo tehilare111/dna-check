@@ -1,9 +1,17 @@
 import { Component, OnInit,ViewChild,Input} from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
-import { ClientSideRowModelModule } from '@ag-grid-community';
 import { RestApiService } from '../../../../services/rest-api.service';
 import { ConstantsFieldsComponent } from '../../../constants-fields/constants-fields.component';
-import { GenderCellRenderer } from './gender-cell-renderer.component';
+import { CellCustomComponent } from '../../components/equipment-table/cell-custom/cell-custom.component';
+import 'ag-grid-enterprise';
+import { CountryOrderService } from '../../../../@core/mock/country-order.service';
+import { HttpClient } from '@angular/common/http';
+import { ThemeSettingsComponent } from '../../../../@theme/components';
+import { AppInjector } from '../../../../services/app-injector.service';
+import { Observable } from 'rxjs';
+import {MatIconRegistry} from '@angular/material/icon';
+import {DomSanitizer} from '@angular/platform-browser';
+import { EventEquipments } from '../../events-forms.templates';
 
 @Component({
   selector: 'ngx-equipment-table',
@@ -17,119 +25,153 @@ export class EquipmentTableComponent implements OnInit {
   @Input() form
   @Input()equipmentsType
   @Input()materialsType
+  @Input()editBlockState
   equipmentsType2=[]
   materialsType2=[]
-  private frameworkComponents;
-  equipmentChoice=["נשר"]
+  saveArrayEquipment=[]
+  equipmentChoice=[]
   equipmentsTitle=["ציוד","חומר פיסי","חומר לוגי"]
   // public modules: Module[] = [ClientSideRowModelModule];
+  private gridApi;
+  private gridColumnApi;
+  private arrayRemoveingInTable=[]
   private columnDefs;
+  private columnDefs2;
   private defaultColDef;
-  private rowData;
-  editType = 'fullRow';
+  rowData;
+  arraySaveEqupments=[]
+  protected iconRegistry:MatIconRegistry;
+  protected sanitizer: DomSanitizer;
+  protected restApiService:RestApiService;
   constantsFieldsComponent = new ConstantsFieldsComponent(null, null)
-  constructor(private RestApiService:RestApiService) {
-  this.getConstasFeilds()
-  this.returnCall(this)
+  constructor() {
+  this.restApiService = AppInjector.injector.get(RestApiService);
+  this.iconRegistry=AppInjector.injector.get(MatIconRegistry);
+  this.sanitizer=AppInjector.injector.get(DomSanitizer);
+    this.iconRegistry.addSvgIcon(
+      'delete',
+      this.sanitizer.bypassSecurityTrustResourceUrl('assets\\images\\delete_outline-24px.svg'));
   this.columnDefs = [
-    {headerName:'מקט ציוד' ,field:'equipmentMakat', sortable: true, filter: true,editable: true,},
-    {headerName:'מספר ציוד' ,field: 'equipmentMark', sortable: true, filter: true,editable: true, },
-    {headerName:'סוג ציוד/חומר' ,field: "equipmentType", sortable: true, filter: true,editable: true,cellEditor: 'agSelectCellEditor',
-    cellEditorParams: 
-    {refData: this.equipmentChoice}
-    ,
+    {headerName:'מקט ציוד' ,field:'equipmentMakat', sortable: true, filter: true,editable:true},
+    {headerName:'מספר ציוד' ,field: 'equipmentMark', sortable: true, filter: true,editable:true},
+    {headerName:'סוג ציוד/חומר' ,field: "equipmentType", sortable: true, filter: true,editable:true,cellEditor: 'agRichSelectCellEditor',
+    cellEditorParams: cellCellEditorParams,
   },
-    {headerName:'ציוד/חומר',field: 'equipment', sortable: true, filter: true,editable: true,cellEditor: 'agSelectCellEditor',
+    {headerName:'ציוד/חומר',field: 'equipment', sortable: true, filter: true,editable:true,cellEditor: 'agRichSelectCellEditor',
     cellEditorParams: {
       values: this.equipmentsTitle,
     },
   },
 ];
-this.defaultColDef=[{
-  showRowGroup: true,
-  resizable: true,
-}
-]
-this.rowData = [
-  { equipment: 'ציוד', equipmentType: 'סוג ציוד/חומר', equipmentMark: "" ,equipmentMakat:""},
+this.columnDefs2 = [
+  {headerName:'מקט ציוד' ,field:'equipmentMakat', sortable: true, filter: true,editable:false},
+  {headerName:'מספר ציוד' ,field: 'equipmentMark', sortable: true, filter: true,editable:false},
+  {headerName:'סוג ציוד/חומר' ,field: "equipmentType", sortable: true, filter: true,editable:false,cellEditor: 'agRichSelectCellEditor',
+  cellEditorParams: cellCellEditorParams,
+},
+  {headerName:'ציוד/חומר',field: 'equipment', sortable: true, filter: true,editable:false,cellEditor: 'agRichSelectCellEditor',
+  cellEditorParams: {
+    values: this.equipmentsTitle,
+  },
+},
 ];
-//   columnDefs = [
- 
- 
-  console.log(this.columnDefs)
- 
-  
+  this.defaultColDef=[{
+    suppressChangeDetection:true,
+    showRowGroup: true,
+    resizable: true,
+    editable:true
+    }]
+  this.rowData = [];
 }
-
   ngOnInit(){
+   constantsChoice("ציוד")
   }
-  extractValues(mappings) {
- 
-  console.log(mappings.data.equipment)
-  if(mappings.data.equipment==="ציוד"){
-    this.equipmentChoice=Object.keys(this.equipmentsType);
-}
-else{
-  this.equipmentChoice=Object.keys(this.materialsType);
-}
-}
 
-  getConstasFeilds() {
-    this.RestApiService.getConstatnsFields().subscribe(
-      (data) => {
-        this.constantsFieldsComponent.fillListOfCategoryfromdata(data);
-        this.constantsFieldsComponent.listOfCategories;
-        console.log(this.constantsFieldsComponent.listOfCategories)
-        this.equipmentsType2 = this.constantsFieldsComponent.getFieldsFromCategoryName("equipmentType")
-        this.materialsType2 = this.constantsFieldsComponent.getFieldsFromCategoryName("materialType")
-      })
+  addNewRow(){
+    this.gridApi.api.updateRowData({
+      add: [{equipment: 'ציוד/חומר', equipmentType: 'סוג ציוד/חומר', equipmentMark: "מספר ציוד",equipmentMakat:"מקט ציוד"}]
+    });
+    if(this.form.equipmentsArray==undefined){
+      this.arraySaveEqupments.push(JSON.stringify({equipment: 'ציוד/חומר', equipmentType: 'סוג ציוד/חומר', equipmentMark: "מספר ציוד",equipmentMakat:"מקט ציוד"}))
+      this.form.equipmentsArray=this.arraySaveEqupments.slice()
+    }
+    else{
+      this.form.equipmentsArray.push(JSON.stringify({equipment: 'ציוד/חומר', equipmentType: 'סוג ציוד/חומר', equipmentMark: "מספר ציוד",equipmentMakat:"מקט ציוד"}))
+    }
+
+  }
+
+  onRemoveSelected() {
+    var selectedData = this.gridApi.api.getSelectedRows();
+    console.log("selected",selectedData[0])
+    this.gridApi.api.updateRowData({ remove: selectedData });
+    const index =  this.form.equipmentsArray.indexOf(selectedData[0]);
+    if (index > -1) {
+      this.form.equipmentsArray.splice(index, 1);
     
   }
 
-  onCellValueChanged(event) {
-    // countyToCityMap({"arraylists":{"equipmentType":this.equipmentsType,"materialType":this.materialsType}})
-    // this.columnDefs[2].cellEditorParams(arrayEquip)
-    var selectedCountry = event.data.equipment;
-    if(selectedCountry==="ציוד"){
-    this.equipmentChoice = this.equipmentsType;
-    }
-    else{
-      this.equipmentChoice = this.materialsType;
-    }
-    console.log('Data after change is',this.equipmentChoice);
+  }
 
-  }
-  returnCall(params){
-    console.log(params)
-  //   if(params.data.equipment==="ציוד"){
-  //     return this.materialsType2
-  // }else{
-  //   return this.materialsType2
-      
-  //   }  
-  }
+  onGridReady(params) {
+    this.gridApi = params;
+    this.gridColumnApi = params.columnApi;
 }
+
+  onCellValueChanged(event) {
+    for(let i in  this.form.equipmentsArray){
+      if(i==event.rowIndex){
+        this.form.equipmentsArray[i]=event.data
+      }
+    }
+  }
+
+  exisitingFormLoadData(array:any[]){
+    this.rowData=array.slice()
+}
+}
+
 function cellCellEditorParams(params) {
-  
-  console.log(params)
-  var selectedCountry = params.data.equipment;
-  if(selectedCountry==="ציוד"){
-  var allowedCities = countyToCityMap("equipmentType",this,this);
+  var selectedCategory = params.data.equipment;
+  if(selectedCategory==="ציוד"){
+  var allowedCities = constantsChoice("equipmentType");
   }
   else{
-    var allowedCities = countyToCityMap("materialType",this,this);
+    var allowedCities = constantsChoice("materialType");
   }
   return {
     values: allowedCities,
   };
 }
-function countyToCityMap(match,equipmentType,meterialType) {
-  console.log(match,equipmentType,meterialType)
-  var map = {
-    equipmentType:this.equipmentType,
-    materialType:this.meterialType
-  };
-  return map[match];
+var eqArray = [];
+var shouldGetConstatnsFields=true
+function constantsChoice(match) {
+  let equipmentType=undefined
+  let materialType=undefined
+ 
+  if(shouldGetConstatnsFields){
+    var constantsFieldsComponent = new ConstantsFieldsComponent(null, null)
+    var restApiService:RestApiService=AppInjector.injector.get(RestApiService);
+    shouldGetConstatnsFields=false
+    restApiService.getConstatnsFields().subscribe(
+    (data) => {
+        constantsFieldsComponent.fillListOfCategoryfromdata(data);
+        constantsFieldsComponent.listOfCategories;
+        console.log(constantsFieldsComponent)
+        materialType = constantsFieldsComponent.getFieldsFromCategoryName("materialType")
+        equipmentType = constantsFieldsComponent.getFieldsFromCategoryName("equipmentType")
+        setEquipmentsArray([materialType, equipmentType]);
+    },
+    (err) => {
+    });
   }
-
+    var map={
+      equipmentType:eqArray[1],
+      materialType:eqArray[0]
+    }
+    return map[match]}
+ 
+function setEquipmentsArray(newArr)
+{
+  eqArray = newArr.slice();
 }

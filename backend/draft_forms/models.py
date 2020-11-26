@@ -62,3 +62,10 @@ class DraftFormsTable(DraftEventForm):
     reviewDate = models.CharField(max_length=70, blank=False, default='')
     reviewReference = models.CharField(max_length=70, blank=False, default='')
     isMatchToReport = models.BooleanField(default=False)
+
+class DraftEventsEquipments(models.Model):
+    reference1=models.ForeignKey(DraftFormsTable, primary_key=False, related_name='equipments',on_delete=models.CASCADE)
+    equipment = models.CharField(max_length=70, blank=False, default='')
+    equipmentType = models.CharField(max_length=70, blank=False, default='')
+    equipmentMark = models.CharField(max_length=70, blank=False, default='')
+    equipmentMakat = models.CharField(max_length=70, blank=False, default='')

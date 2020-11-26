@@ -1,6 +1,7 @@
 
 from rest_framework import serializers 
-from draft_forms.models import DraftForm, DraftEventForm, DraftFormsTable
+import json
+from draft_forms.models import DraftForm, DraftEventForm, DraftFormsTable,DraftEventsEquipments
 
 
 class DraftFormSerializer(serializers.ModelSerializer):
@@ -28,9 +29,19 @@ class DraftEventFormSerializer(DraftFormSerializer):
             'eventStatus',
             'handlingStatus',
         )
+class DraftEquipmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=DraftEventsEquipments
+        fields=[
+        'equipment',
+        'equipmentType',
+        'equipmentMark',
+        'equipmentMakat',
+        ]
 
 class DraftFormsSerializer(DraftEventFormSerializer):
     class Meta:
+        equipments=DraftEquipmentSerializer(many=True,required=False)
         model = DraftFormsTable
         fields = DraftEventFormSerializer.Meta.fields + (
             'signerUnit',
@@ -55,8 +66,32 @@ class DraftFormsSerializer(DraftEventFormSerializer):
             'reviewDate',
             'reviewFile',
             'reviewReference',
-            'isMatchToReport'
+            'isMatchToReport',
+            'equipments',
         )
+    def saveAll(self,request,reference):
+        self.save(reference=reference,writtenInFormals=True)
+        print("self after save",self)
+        print("SELF",request)
+        equip=" "
+        data=request.data["equipments"]
+        data = data.split("$$")[1:-1]
+        data2=[json.loads(eq[1:-1]) for eq in data]
+        for equipment in data2:
+            equip=DraftEquipmentSerializer(data=equipment)
+            print("data beffor ",equip)
+            if equip.is_valid():
+                print("Data: ",self.instance)
+                print("shalom tehila")
+                equip.save(reference1=self.instance)
+                print("equips after",equip)
+                
+                
+            else:
+                print(equip.errors)
+                return equip.errors
+        if equip!=" ":
+            return equip
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:

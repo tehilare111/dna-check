@@ -1,7 +1,9 @@
 
 from rest_framework import serializers 
-from forms.models import Form, EventForm, FormsTable
-
+from forms.models import Form, EventForm, FormsTable,EventsEquipments
+import json
+from django import forms
+from rest_framework.parsers import JSONParser
 
 class FormSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,9 +30,51 @@ class EventFormSerializer(FormSerializer):
             'eventStatus',
             'handlingStatus',
         )
-
-class FormsSerializer(EventFormSerializer):
+class EquipmentSerializer(serializers.ModelSerializer):
     class Meta:
+        model=EventsEquipments
+        fields=[
+        'equipment',
+        'equipmentType',
+        'equipmentMark',
+        'equipmentMakat',
+        ]
+    def put_equipment(self,request,reference):
+        print('***************************************')
+        print("self",self)
+        # self.save(reference=reference,writtenInFormals=True)
+        equip=" "
+        data=request
+        data=JSONParser().parse(request)
+        print("data",data)
+        if data !="$$":
+            data = data.split("$$")[1:-1]
+            data2=[json.loads(eq[1:-1]) for eq in data]
+            for equipment in data2:
+                print("befor equipmnetsSerilaazers",equipment)
+                equip=EquipmentSerializer(data=equipment)
+                if equip.is_valid():
+                    equip.save(reference1=self.instance)
+                    return equip
+                else:
+                    print(equip.errors)
+                    return equip.errors
+            if equip!=" ":
+                return equip
+        else:
+            data=["No_Row_To_Show"]
+            equip=EquipmentSerializer(data=data)
+            if equip.is_valid():
+                equip.save(reference1_id=reference)
+            else:
+                print(equip.errors)
+                return equip.errors
+            if equip!=" ":
+                return equip
+
+class FormsSerializer(serializers.ModelSerializer):
+    equipments=EquipmentSerializer(many=True,required=False)
+    class Meta(FormSerializer.Meta):
         model = FormsTable
         fields = EventFormSerializer.Meta.fields + (
             'signerUnit',
@@ -40,10 +84,6 @@ class FormsSerializer(EventFormSerializer):
             'position',
             'eventDate',
             'eventHour',
-            'equipment',
-            'equipmentType',
-            'equipmentMark',
-            'equipmentMakat',
             'eventRelevantPlacesAndFactors',
             'eventInitialDetails',
             'investigationDate',
@@ -55,8 +95,38 @@ class FormsSerializer(EventFormSerializer):
             'reviewDate',
             'reviewFile',
             'reviewReference',
-            'isMatchToReport'
+            'isMatchToReport',
+            'equipments',
         )
+    def saveAll(self,request,reference):
+        self.save(reference=reference,writtenInFormals=True)
+        print("self after save",self)
+        print("SELF",request)
+        equip=" "
+      
+        data=request.data["equipmentsArray"]
+        print(data)
+        data = data.split("$$")[1:-1]
+        data2=[json.loads(eq[1:-1]) for eq in data]
+        for equipment in data2:
+            equip=EquipmentSerializer(data=equipment)
+            print("data beffor ",equip)
+            if equip.is_valid():
+                print("Data: ",self.instance)
+                print("shalom tehila")
+                equip.save(reference1=self.instance)
+                print("equips after",equip)
+                
+                
+            else:
+                print(equip.errors)
+                return equip.errors
+        if equip!=" ":
+            return equip
+    
+                
+    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:

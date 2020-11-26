@@ -6,12 +6,12 @@ from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser
 from rest_framework import status
 from django.db.models import Max
 from django.conf import settings
-
+from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
 
 from draft_forms.models import DraftFormsTable
-from forms.models import FormsTable
-from forms.serializers import FormsSerializer
+from forms.models import FormsTable,EventsEquipments
+from forms.serializers import FormsSerializer,EquipmentSerializer
 from users.utils import check_permissions, check_permissions_dec , MANAGER, EVENTS_REPORTER, EVENTS_VIEWER
 from management.utils import get_inferior_units
 from msgs.utils import new_event_msgs, delete_event_messages, update_user_event_deleted
@@ -118,36 +118,52 @@ class OfficialEventFrom(APIView):
         form_serializer = FormsSerializer(data=request.data)
         if form_serializer.is_valid():
             reference = generate_reference(reference)
-            # Create instance for this event form in the messages database
+            # Cyreate instance for this eveynt form in the messages database
             new_event_msgs(reference, form_serializer.validated_data['reporterUnit'])
-            form_serializer.save(reference=reference, writtenInFormals=True)
+            f=form_serializer.saveAll(request,reference)
             return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+            
         
     @check_permissions_dec([MANAGER, EVENTS_REPORTER], API_VIEW=True)
     def put(self, request, reference,*args, **kwargs):
         try: 
             event_form = FormsTable.objects.get(reference=reference)
-        except FormsTable.DoesNotExist: 
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
+            event_form_equipments=EventsEquipments.objects.filter(reference1=reference)
+        except FormsTable.DoesNotExist and EventsEquipments.DoesNotExist: 
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
         form_serializer = FormsSerializer(event_form, data=request.data)
-        if form_serializer.is_valid():
-            form_serializer.save()
-            return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED ) 
+        if("equipmentsArray" not in request.data):
+            if form_serializer.is_valid():
+                form_serializer.save()
+                return JsonResponse(form_serializer.data, status=status.HTTP_201_CREATED )
+        if("equipmentsArray" in request.data):
+            event_form_equipments.delete()
+            equipments_Serilazer = EquipmentSerializer(data=request.data)
+            if equipments_Serilazer.is_valid():
+                f=equipments_Serilazer.put_equipment(request,reference)
+                # print("hahahaha",f)
+                return JsonResponse({"reference":reference}, status=status.HTTP_200_OK)
+            else:
+                print("error",equipments_Serilazer.errors)
+                return HttpResponse(equipments_Serilazer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
+            print("errorsss",form_serializer.errors)
             return HttpResponse(form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    
     @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], API_VIEW=True)
     def get(self, request, reference, *args, **kwargs):
         try: 
             event_form = FormsTable.objects.get(reference=reference)
-        except FormsTable.DoesNotExist: 
+            print("e",event_form)
+            event_form_equipments=EventsEquipments.objects.filter(reference1=reference)
+            print("equip",event_form_equipments)
+        except FormsTable.DoesNotExist and EventsEquipments.DoesNotExist: 
             return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
     
         form_serializer = FormsSerializer(event_form)
-        return JsonResponse(form_serializer.data)
+        equipments_serializer=EquipmentSerializer(event_form_equipments,many=True)
+        return JsonResponse({"form_event":form_serializer.data,"event_form_equipments":equipments_serializer.data})
 
     @check_permissions_dec([MANAGER], API_VIEW=True, RETURN_USER=True)
     def delete(self, request, reference, user, *args, **kwargs):

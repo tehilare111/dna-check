@@ -15,6 +15,7 @@ export class EventForm extends Form{
     handlingResults: string;
     eventStatus: string;
     handlingStatus: string;
+    equipmentsArray:any[];
 }
 
 export class LostFormTemplate extends EventForm {

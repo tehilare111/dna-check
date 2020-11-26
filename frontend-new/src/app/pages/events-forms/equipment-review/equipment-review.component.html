@@ -6,7 +6,7 @@
 <div class="row" id="print-section">
   <div class="col-md-3">
     <ngx-event-details [form]="form"></ngx-event-details>
-    <ngx-event-status-shorted #status [eventForm]="form" [readonly]="!(auth.check_permissions(['מנהלן מערכת']))" [eventStatusOptions]="eventStatusOptions"></ngx-event-status-shorted>
+    <ngx-event-status-shorted #status [eventForm]="form" [readonly]="!(auth.checkPermissions(['מנהלן מערכת']))" [eventStatusOptions]="eventStatusOptions"></ngx-event-status-shorted>
   </div>
 
   <div class="col-md-9">
@@ -98,7 +98,7 @@
                 <div *ngIf="reviewReference.invalid&&reviewReference.dirty"><label class="label red">עד 100 תווים</label></div>
               </div>
             </div> -->
-            <ngx-equipment-table [equipments]="equipments" [form]="form" [equipmentsType]="this.equipmentsType" [materialsType]="this.materialsType" ></ngx-equipment-table>
+            <ngx-equipment-table [equipments]="equipments" [editBlockState]="this.form.editStateBlocked" [form]="form" [equipmentsType]="this.equipmentsType" [materialsType]="this.materialsType" ></ngx-equipment-table>
           </div>
           </div>
         </form>

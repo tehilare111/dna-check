@@ -4,12 +4,12 @@
     <button type="submit" nbButton class="buttonColor" *ngIf ="checkPermissions()"  [disabled]="this.editStateBlocked" (click)="sendEventEmtr()">שלח אירוע</button>
 
 
-    <button *ngIf="auth.check_permissions(['מנהלן מערכת'])&&reference!=undefined && !isDraft"  nbButton  class="buttonColor" (click)="updateEditStateEmtr()">פתח/סגור אירוע לעריכה</button>
+    <button *ngIf="auth.checkPermissions(['מנהלן מערכת'])&&reference!=undefined && !isDraft"  nbButton  class="buttonColor" (click)="updateEditStateEmtr()">פתח/סגור אירוע לעריכה</button>
 
     <button *ngIf="true" nbButton class="buttonColor" (click)="printFormEmtr()">הדפס אירוע</button>
 
 
-    <button *ngIf="auth.check_permissions(['מנהלן מערכת'])&&reference!=undefined" nbButton class="buttonColor"  (click)="deleteEventFormEmtr()">מחק אירוע</button>
+    <button *ngIf="auth.checkPermissions(['מנהלן מערכת'])&&reference!=undefined" nbButton class="buttonColor"  (click)="deleteEventFormEmtr()">מחק אירוע</button>
 
 
     <button type="submit" *ngIf="checkPermissions() && (isDraft || reference==undefined)" nbButton class="buttonColor"  (click)="saveEventEmtr()" nbTooltip="האירוע לא יועבר לגורם הממונה" nbTooltipPlacement="top">שמור כטיוטה</button>

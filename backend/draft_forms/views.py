@@ -70,7 +70,7 @@ class DraftEventFrom(APIView):
             draft_form_serializer.save()
             return JsonResponse(draft_form_serializer.data, status=status.HTTP_201_CREATED ) 
         else:
-            return HttpResponse(form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponse(draft_form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     @check_permissions_dec([MANAGER, EVENTS_REPORTER, EVENTS_VIEWER], API_VIEW=True)
     def get(self, request, reference, *args, **kwargs):

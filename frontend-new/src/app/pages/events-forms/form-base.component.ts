@@ -20,12 +20,13 @@ import { timeValidator } from "./validation-directives/time.directive";
 import { textValidator } from './validation-directives/text.directive';
 import {ConstantsFieldsComponent} from '../constants-fields/constants-fields.component'
 import { EventStatusBase } from './components/event-status-base.component';
-import { EventForm } from './events-forms.templates';
+import {  EventForm, Form } from './events-forms.templates';
 import {format} from 'date-fns'
 import { Observable } from 'rxjs';
+import { EquipmentTableComponent } from './components/equipment-table/equipment-table.component';
 
 
-export abstract class FormBaseComponent<FormType extends EventForm, EventStatusType extends EventStatusBase> implements OnInit {
+export abstract class FormBaseComponent<FormType extends EventForm,EventStatusType extends EventStatusBase> implements OnInit {
   
   /* Angular and ngx-admin imports */
   protected activatedRoute: ActivatedRoute;
@@ -35,7 +36,6 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   /* Our app services imports */ 
   protected RestApiService: RestApiService;
   protected auth: AuthService;
-
   /* Our app fields validators */
   protected dateValidator = dateValidator;
   protected stdFieldValidator = stdFieldValidator;
@@ -48,7 +48,6 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   /* components value */
   protected form: FormType;
   protected eventFilesFields: string[];
-  
   protected directingDialog: ElementRef;
   protected simpleDialog: ElementRef;
   protected eventStatusForm: EventStatusType;
@@ -91,30 +90,33 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
   exisitingFormLoadData(reference: string){
     this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${reference}`).subscribe((data: FormType) => {
       let regEx = /^\d\d\d\d\-\d\d\-\d\d$/i; //django represention of date in db
-      this.form = data;
+      this.form = data["form_event"];
+      this.form.equipmentsArray=data["event_form_equipments"].slice()
       for(let [key, value] of Object.entries(this.form)){
         if(this.isConstantField(key)){
-          this.form[key] = this.getNameFromFieldId(key, value)!=undefined?this.getNameFromFieldId(key, value):null           }
+          this.form[key] = this.getNameFromFieldId(key, value)!=undefined?this.getNameFromFieldId(key, value):null
+        }
         //db can save only strings, but datepicker excpect Date object.
         else if (regEx.test(value)) {this.form[key]= new Date(value)}
-
-
       }
-      /*if(this.form.editStateBlocked || this.auth.check_permissions(['מנהלן מערכת', 'מדווח אירועים']))
-        {
-          this.form.editStateBlocked = false 
+      //Displays fixed fields in the table
+      for(let value in this.form.equipmentsArray){
+        if(this.form.equipmentsArray[value]["equipment"]=="ציוד"){
+          this.form.equipmentsArray[value]["equipmentType"]=this.getNameFromFieldId("equipmentType",this.form.equipmentsArray[value]["equipmentType"])
         }else{
-          this.form.editStateBlocked = true
-        }*/
-      });
-    // this.get_constas_feilds()
-  }
+          this.form.equipmentsArray[value]["equipmentType"]=this.getNameFromFieldId("materialType",this.form.equipmentsArray[value]["equipmentType"])
+        }
+        //db can save only strings, but datepicker excpect Date object.
+        // if (regEx.test(value)) {this.form.equipmentsArray[key]= new Date(value)}
+      }
+  });
+}
 
   newFormLoadData() {
     this.RestApiService.getNewEventForm().subscribe((data) => {
       this.form.date = data.datetime
       this.form.reporterName = localStorage.getItem("firstName")
-      this.form.reporterUnit = localStorage.getItem("unit")      
+      this.form.reporterUnit = localStorage.getItem("unit")   
     });
   }
 
@@ -251,33 +253,48 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
 
   save() {
     this.form = this.eventStatusForm.pushFormFields<FormType>(this.form);
+    let equipmentFields=[]
+    let arrayEquipments=this.form.equipmentsArray
+    for(let i in arrayEquipments){
+      if(arrayEquipments[i]["equipment"]==="ציוד"){
+        arrayEquipments[i]["equipmentType"]=this.getIdFromFieldName("equipmentType",arrayEquipments[i]["equipmentType"])
+      }else{
+        arrayEquipments[i]["equipmentType"]=this.getIdFromFieldName("materialType",arrayEquipments[i]["equipmentType"])
+      }
+      equipmentFields.push("$$",JSON.stringify(arrayEquipments[i]))
+    }
+    equipmentFields.push("$$")
     const formData: FormData = new FormData();
     // insert lostForm to FormData object
+    // formData.append("equipments",equipmentFields.toString())
     for(let [key, value] of Object.entries(this.form)){
       if(this.isConstantField(key)){
-       value = this.getIdFromFieldName(key, value)!=undefined?this.getIdFromFieldName(key, value):value}      
-
+       value = this.getIdFromFieldName(key, value)!=undefined?this.getIdFromFieldName(key, value):value
+      }      
 
       if (value && ! this.eventFilesFields.includes(key)) 
       { if (value instanceof Date) { value = format(value,"yyyy-MM-dd")} //for django save in db
+       if (key == "equipmentsArray") {value=equipmentFields.toString();console.log("barrrrr");} // for django save in db
         formData.append(key, value);}  }
-
+      
     // insert all files to FormData object
     for( let formFile of this.formFiles ){
       formData.append(formFile['id'], formFile['file'], formFile['file'].name);
     }
     // If form has a reference we need to check if it's already written in the relevenat DB: Formals or Drafts
-    if (this.reference != undefined && ((this.drafting && this.isDraft) || (!this.isDraft))){
+    if (this.reference != undefined && ((this.drafting && this.isDraft) || (!this.isDraft))){ 
       this.RestApiService.put(`${(this.drafting)?this.draftsUrl:this.formalsUrl}${(this.reference)?this.reference:''}`, formData, {headers: {'enctype': 'multipart/form-data'}})
         .subscribe(
           (data: FormType) => {
             this.uploadLoading = false;
             this.reference = data.reference;
             this.popUpDialogContext = `האירוע התעדכן בהצלחה, סימוכין: ${this.reference}`;
+            this.fieldsValid =false
           },
-          error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
+          error => { console.log(error); this.uploadLoading = false; this.fieldsValid =false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
           
-    } else {
+    } 
+    else {
       this.RestApiService.post(`${(this.drafting)?this.draftsUrl:this.formalsUrl}${(this.reference)?this.reference:''}`, formData, {headers: {'enctype': 'multipart/form-data'}})
       .subscribe(
         (data: FormType) => {
@@ -286,7 +303,7 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
           this.popUpDialogContext = `האירוע ${!this.drafting?'נוצר':'נשמר'} בהצלחה, סימוכין: ${this.reference}`;
           this.fieldsValid =false
         },
-        error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
+        error => {this.fieldsValid =false;console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${(this.reference)?this.reference:''}`; })
     }
   }
   
@@ -309,8 +326,9 @@ export abstract class FormBaseComponent<FormType extends EventForm, EventStatusT
           (data: FormType) => {
             this.uploadLoading = false;
             this.popUpDialogContext = `אירוע עם סימוכין ${this.reference} נמחק`;
+            this.fieldsValid =false
           },
-          error => { console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${this.reference}`; })
+          error => { this.fieldsValid =false ;console.log(error); this.uploadLoading = false; this.popUpDialogContext = `אירעה שגיאה בשליחת הטופס ${this.reference}`; })
     }  
   }
   @HostListener('window:beforeunload')
