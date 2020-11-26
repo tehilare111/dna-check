@@ -108,10 +108,7 @@ export abstract class FormBaseComponent<FormType extends EventForm,EventStatusTy
         }
       if (!this.isDraft) {this.form.editStateBlocked=true} // block from editing (only if not draft).
       else {this.form.editStateBlocked=false}
-
-       
         //db can save only strings, but datepicker excpect Date object.
-        // if (regEx.test(value)) {this.form.equipmentsArray[key]= new Date(value)}
       }
   });
 }
@@ -164,7 +161,6 @@ export abstract class FormBaseComponent<FormType extends EventForm,EventStatusTy
     this.RestApiService.updateExistingEventForm(this.reference, formData)
         .subscribe(
           (data: FormType) => {
-            console.log(data);
             this.uploadLoading = false;
             if (data.editStateBlocked){
               this.popUpDialogContext = `האירוע נסגר לעריכה`;

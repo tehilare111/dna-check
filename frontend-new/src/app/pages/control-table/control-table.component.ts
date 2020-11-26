@@ -7,7 +7,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NbDialogService } from '@nebular/theme';
 
 import { NotReadMsgsColComponent } from './components/not-read-msgs-col/not-read-msgs-col.component';
-
 import { User } from '../management/users';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
@@ -29,7 +28,6 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
   read="נקראו"
   unread="לא נקראו"
   UnreadRead=[{"id":0,"itemName":this.read},{"id":1,"itemName":this.unread}]
-  sliceUnreadMessage=1
   dropdownSettings = {};
   dropdownSettingsMessage = {};
   selectedItems = [];
@@ -39,8 +37,8 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild('dropdownRef')dropdownRef: AngularMultiSelect;
-  draftsTtile=['סימוכין','סוג אירוע','תאריך פתיחת האירוע','שם מדווח','יחידת מדווח']
-  draftsColumn=['reference','eventType','date','reporterName','reporterUnit']
+  draftsTtile=['סימוכין','סוג אירוע','תאריך פתיחת האירוע','שם מדווח','יחידת מדווח','הודעות שלא נקראו/נקרא']
+  draftsColumn=['reference','eventType','date','reporterName','reporterUnit','unreadeMessages']
   eventsToPickUp = {
     'a_defaultForms': {
       'name':"אירועים",
@@ -79,7 +77,7 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
   pageSize=5
   formalsUrl: string = '/forms/';
   draftsUrl: string = '/draft-forms/';
-  data = [];
+  data:any[] = [];
   public toppingList: string[] = [];
   isDraft:boolean = false;
   userIsAllowedToReport:boolean = false;
@@ -141,9 +139,10 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
     if(this.activatedRoute.snapshot.params.isLogin) this.openJustLoginDialog();
   }
   removeHiddenToSelcet(){
+    var dropDownListFilter=document.getElementsByClassName("dropdown-list animated fadeIn")[0]
+    if(dropDownListFilter){dropDownListFilter.removeAttribute("hidden")}
     document.getElementsByClassName("list-area")[0].setAttribute("height","180px")
     document.getElementsByClassName("c-btn")[0].setAttribute("hidden","true")
-    document.getElementsByClassName("dropdown-list animated fadeIn")[0].removeAttribute("hidden")
     document.getElementsByClassName("c-input ng-untouched")[0].setAttribute("placeholder","חיפוש מרובה")
   }
   applyFilter() {
@@ -155,21 +154,21 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
       for (let option of this.jsonArrayItems[item].arrayByColumnOption)
       {
         for (let j in tempData)
-        {   
+        {
           if(option===this.read ||option===this.unread){
               var re=''
               re=tempData[j]["unreadeMessages"].split(";")
               if(((re[0]=='undefined' && option===this.read) || (re[0]!='undefined' && option===this.unread))&& !arrayEmpty.includes(tempData[j])){
                 arrayEmpty.push(tempData[j])
             } 
-            }
+          }
           else{
               if (!tempData[j][this.jsonArrayItems[item].title].toString().localeCompare(option))
               {
                 arrayEmpty.push(tempData[j])
               }
             }
-        }
+      }
       }
         if(this.jsonArrayItems[item].arrayByColumnOption.length!=0){
           tempData = arrayEmpty
@@ -245,7 +244,6 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
    }
   draftsColumns(){
     this.routeDrafts=false
-    this.sliceUnreadMessage=0
     this.isDraft=true
     this.displayedColumns=this.draftsColumn
     this.displayedColumnsTitle=this.draftsTtile
@@ -263,7 +261,7 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
   
   loadTable(value){
     this.routeDrafts=true //if button pressed is not drafts, then we want the plus button to be active.
-    if (value.name != "טיוטות") {this.isDraft = false,this.sliceUnreadMessage=1} //slice messages colunm from table on drafts table.
+    if (value.name != "טיוטות") {this.isDraft = false} //slice messages colunm from table on drafts table.
     this.displayedColumnsTitle=value.title
     this.displayedColumns=value.columns
     this.createJsonItems(this.displayedColumns)
@@ -271,10 +269,9 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
   }
 
   loadData(eventType: string) {
-    this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${eventType}`).subscribe((data_from_server) => {
+      this.RestApiService.get(`${(this.isDraft)?this.draftsUrl:this.formalsUrl}${eventType}`).subscribe((data_from_server) => {
       this.data=data_from_server
       // Update unread messages amount of the user in the table, parallel to the event's reference
-      // this.pageinatorTable()
       this.dataSource.data=this.data
       this.dataSourceFilter.data=this.data
       });

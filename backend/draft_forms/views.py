@@ -33,7 +33,16 @@ def draft_forms_list(request, event_type, user):
     if request.method == 'GET':
         forms = DraftFormsTable.objects.filter(reporterUnit__in=[user.unit])
         draft_form_serializer = DraftFormsSerializer(forms, many=True)
-
+        is_exist_draft=False
+        for draft in draft_form_serializer.data:
+            is_exist_draft = False
+            for key,value in user.unreadedMessages.items():
+                if(draft["reference"]==int(key)):
+                    is_exist_draft=True
+                    draft.update({"unreadeMessages":str(value)+";"+key})
+                elif not is_exist_draft:
+                    is_exist_draft = False
+                    draft.update({"unreadeMessages":"undefined"+";"+str(draft["reference"])})
         return JsonResponse(draft_form_serializer.data, safe=False) 
     
     elif request.method == 'DELETE':
