@@ -139,9 +139,10 @@ export class ControlTableComponent implements OnInit,  AfterViewInit {
     if(this.activatedRoute.snapshot.params.isLogin) this.openJustLoginDialog();
   }
   removeHiddenToSelcet(){
+    var dropDownListFilter=document.getElementsByClassName("dropdown-list animated fadeIn")[0]
+    if(dropDownListFilter){dropDownListFilter.removeAttribute("hidden")}
     document.getElementsByClassName("list-area")[0].setAttribute("height","180px")
     document.getElementsByClassName("c-btn")[0].setAttribute("hidden","true")
-    document.getElementsByClassName("dropdown-list animated fadeIn")[0].removeAttribute("hidden")
     document.getElementsByClassName("c-input ng-untouched")[0].setAttribute("placeholder","חיפוש מרובה")
   }
   applyFilter() {
