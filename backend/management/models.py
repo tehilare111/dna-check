@@ -14,10 +14,10 @@ class UnitsTree(models.Model):
 
 class ConstantFieldsWithId(models.Model):
     idOfConstantField = models.IntegerField(primary_key=True, blank=False, default=0)
-    constantFieldName = models.CharField(blank=True, max_length = 30)
+    constantFieldName = models.CharField(max_length = 30)
     categroryId = models.IntegerField(default= -1)
     fieldOfCategoryId = models.IntegerField(default= -1)
     isCategory = models.BooleanField(default= False)
     isDeleted = models.BooleanField(default= False)
-    constantFieldNameHebrew = models.CharField(blank=True, max_length = 30)
+    constantFieldNameHebrew = models.CharField(max_length = 30)
  

@@ -97,13 +97,6 @@ export class RestApiService {
   addFieldCategoryName(jsonData) {
     return this.http.post(`${this.baseUrl}/add-field-category-name/`, jsonData);
   }
-  addConstantFields(jsonData): Observable<any>{
-    return this.http.post(`${this.baseUrl}/add-constant-fields/`, jsonData);
-  }
-  editConstantField(jsonData): Observable<any>{
-    return this.http.post(`${this.baseUrl}/edit-constant-field/`, jsonData);
-  }
-  
   getConstansFieldsAndUnitsArray():Observable<any> {
     return this.http.get(`${this.baseUrl}/constants-fields-and-units/`);
   }
