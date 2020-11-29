@@ -46,6 +46,9 @@ border: 1px solid #ccc;
 color: #333; 
 ;}
 
+/deep/ .mat-paginator-container{
+    direction: ltr;
+}
 /deep/ .selected-list .c-list .c-token {
 background:#6bcef7;
 direction: ltr !important; }
@@ -95,13 +98,6 @@ padding-left: 35px;
 padding-right: 7px;
 
 }
-/deep/ .pure-checkbox input[type=checkbox]+label{
-    
-}
-
-
-
-
 /deep/  .list-filter .c-search svg {
 fill: #888; }
 /deep/  .list-filter .c-clear svg {
@@ -120,8 +116,13 @@ fill: #888; }
     font-weight: 300;
     display: flex;
 }
-
-
+/deep/ .mat-paginator-icon{
+    transform:rotate(0deg) !important;
+    direction: rtl;
+}
+/deep/ .mat-icon {
+    cursor: pointer;
+}
 /deep/ .pure-checkbox input[type="checkbox"]:focus + label:before, .pure-checkbox input[type="checkbox"]:hover + label:before {
 border-color: #6bcef7;
 background-color: #f2f2f2;
