@@ -83,6 +83,8 @@ def add_constant_field(newIdOfConstantField, constant_field_category_id, newFiel
     constants_fields_serializer = ConstantFieldsWithIdSerializer(data = data)
     if constants_fields_serializer.is_valid():
         constants_fields_serializer.save() 
+    else:
+        return HttpResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @csrf_exempt
 def findNewFieldId(constant_field_category_id):

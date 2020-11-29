@@ -19,5 +19,5 @@ class ConstantFieldsWithId(models.Model):
     fieldOfCategoryId = models.IntegerField(default= -1)
     isCategory = models.BooleanField(default= False)
     isDeleted = models.BooleanField(default= False)
-    constantFieldNameHebrew = models.CharField(max_length = 30)
+    constantFieldNameHebrew = models.CharField(max_length = 30, default = "")
  
