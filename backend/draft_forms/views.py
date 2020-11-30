@@ -104,3 +104,19 @@ class DraftEventFrom(APIView):
         update_user_event_deleted(reference, user.unit)
         draft_event_form.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+    @csrf_exempt
+    @check_permissions_dec([MANAGER, EVENTS_REPORTER])
+    def deleteFromDraftsWhenFormIsSent(request, reference):
+        if request.method == 'POST':
+            try:
+                draft_event_form = DraftFormsTable.objects.get(reference=reference)
+            except DraftFormsTable.DoesNotExist: 
+                return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
+
+            draft_event_form.delete()
+            return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+
+
+    

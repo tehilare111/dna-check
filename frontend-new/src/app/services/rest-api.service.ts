@@ -67,6 +67,10 @@ export class RestApiService {
     return this.http.delete(`${this.baseUrl}/event-forms/${reference}`);
   }
 
+  deleteFromDraftsWhenSent(reference: string): Observable<any> {
+  return this.http.post(`${this.baseUrl}/delete-from-drafts-when-sent/${reference}`);
+  }
+
   getTreeUnits(): Observable<any>  {
     return this.http.get(`${this.baseUrl}/units-management/`);
   }

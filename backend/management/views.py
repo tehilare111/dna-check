@@ -155,6 +155,8 @@ def add_field_category_name(request) :
     data = JSONParser().parse(request)
     dataToSerialize = {'idOfConstantField' : findNewConstantFieldId(), 'categroryId' : -1, 'constantFieldName' : data['constantFieldCategoryName'], 'fieldOfCategoryId' : -1, 'isCategory' : True, 'constantFieldNameHebrew' : data['constantFieldCategoryNameHebrew']}
     constants_fields_serializer = ConstantFieldsWithIdSerializer(data = dataToSerialize)
+    if (ConstantFieldsWithId.objects.filter(constantFieldName=data['constantFieldCategoryName']).count() != 0):
+         return HttpResponse(status=status.HTTP_406_NOT_ACCEPTABLE)
     if constants_fields_serializer.is_valid():
         constants_fields_serializer.save()
     return HttpResponse(status=status.HTTP_200_OK)
