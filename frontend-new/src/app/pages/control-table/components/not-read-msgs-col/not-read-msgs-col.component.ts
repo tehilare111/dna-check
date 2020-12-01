@@ -63,9 +63,10 @@ export class NotReadMsgsColComponent implements ViewCell, OnInit {
 
     this.RestApiService.put(`${this.urlRead}${this.reference}`, {}).subscribe(
       (data) => {
-        this.renderValue = 0;
+        this.renderValue = undefined;
         delete unreadedMessages[this.reference];
         localStorage.setItem("unreadedMessages", JSON.stringify(unreadedMessages))
+        console.log(localStorage.getItem("unreadedMessages"));
         this.updateMsgsInControlTable.emit({'value': this.renderValue, 'row': this.rowData});
       },
       (error) => { this.ToastService.showToast('fail', 'בעיה בעדכון השרת', ''); }
