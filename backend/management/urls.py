@@ -10,7 +10,6 @@ urlpatterns = [
     url(r'^add-constant-fields/$', views.add_constant_fields),
     url(r'^delete-constant-field/$', views.delete_constant_field),
     url(r'^edit-constant-field/$', views.edit_constant_field),
-    url(r'^add-field-category-name/$',views.add_field_category_name),
     url(r'^get_array_units/$',views.units_tree_register),
     url(r'^constants-fields-and-units/$',views.constans_fields_and_units)
 ]
