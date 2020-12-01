@@ -68,7 +68,7 @@ export class RestApiService {
   }
 
   deleteFromDraftsWhenSent(reference: string): Observable<any> {
-  return this.http.post(`${this.baseUrl}/delete-from-drafts-when-sent/${reference}`);
+  return this.http.post(`${this.baseUrl}/delete-from-drafts-when-sent/${reference}`,reference);
   }
 
   getTreeUnits(): Observable<any>  {
@@ -98,9 +98,7 @@ export class RestApiService {
   deleteConstantField(jsonData): Observable<any>{
     return this.http.post(`${this.baseUrl}/delete-constant-field/`, jsonData);
   }
-  addFieldCategoryName(jsonData) {
-    return this.http.post(`${this.baseUrl}/add-field-category-name/`, jsonData);
-  }
+
   getConstansFieldsAndUnitsArray():Observable<any> {
     return this.http.get(`${this.baseUrl}/constants-fields-and-units/`);
   }

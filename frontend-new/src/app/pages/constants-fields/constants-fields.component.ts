@@ -73,21 +73,7 @@ export class ConstantsFieldsComponent implements OnInit {
       }
     }
   }
-  addCategory(){
-    var jsonData = {"constantFieldCategoryName" : this.constantFieldCategoryName, "constantFieldCategoryNameHebrew" : this.constantFieldCategoryNameHebrew}
-     this.RestApiService.addFieldCategoryName(jsonData).subscribe(
-      (data_from_server) => {
-        this.ToastService.showToast('success', 'נשמר בהצלחה!', '') 
-        this.ngOnInit
-        this.uploadLoading = false
-      },
-      err => {
-        this.ToastService.showToast('fail', 'לא נשמר בהצלחה!', '')
-        this.uploadLoading = false
-      }
-    )
-  }
-    
+
   
   loadData(){
     this.uploadLoading = true
