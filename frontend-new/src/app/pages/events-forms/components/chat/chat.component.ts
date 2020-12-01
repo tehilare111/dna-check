@@ -36,13 +36,15 @@ export class ChatComponent implements OnInit {
   }
 
   sendMessage(event: any) {
+    console.log(localStorage)
     let msg = {
       text: event.message,
-      date: new Date("12/9/2020"),
+      date: new Date(),
       type: 'text',
       //files: files,
       user: { 
         name: localStorage.getItem("firstName"),
+        unit: localStorage.getItem("unit")
         //avatar: 'https://i.gifer.com/no.gif',
       },
     }

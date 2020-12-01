@@ -6,7 +6,7 @@
                         [type]="msg.type"
                         [message]="msg.text"
                         [reply]="isReply(msg.user.name)"
-                        [sender]="msg.user.name"
+                        [sender]="msg.user.name + '  '+  msg.user.unit"
                         [date]="msg.date"
                         [files]="msg.files"
                         [quote]="msg.quote"

@@ -28,7 +28,7 @@ def msgs(request, reference, user):
         
         if event_form_msgs_serializer.is_valid():
             event_form_msgs_serializer.save()
-            update_message_for_relevant_users(user.unit, event_form_msgs_serializer.data['reporterUnit'], reference)
+            update_message_for_relevant_users(user, user.unit, event_form_msgs_serializer.data['reporterUnit'], reference)
             return JsonResponse(event_form_msgs_serializer.data) 
         else:
             return HttpResponse(event_form_msgs_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -50,7 +50,7 @@ export class NotReadMsgsColComponent implements ViewCell, OnInit {
     this.RestApiService.put(`${this.urlNotRead}${this.reference}`, {}).subscribe(
       (data) => {
         this.renderValue = '';
-        unreadedMessages[this.reference] = 0;
+        unreadedMessages[this.reference] = 1;
         localStorage.setItem("unreadedMessages", JSON.stringify(unreadedMessages))
         this.updateMsgsInControlTable.emit({'value': this.renderValue, 'row': this.rowData});
       },

@@ -26,7 +26,7 @@ def delete_event_messages(reference):
         event_form_msgs.delete()
 
 
-def update_message_for_relevant_users(sender_unit, reporterUnit, reference):
+def update_message_for_relevant_users(sender_username, sender_unit, reporterUnit, reference):
     '''
         Update all messages in the relevant users 
     '''
@@ -36,8 +36,9 @@ def update_message_for_relevant_users(sender_unit, reporterUnit, reference):
     # remove sender_user from this units_to_update_msg users array - so the message wont update for him
     # Will be possible after merging with constatnts-fields redesign(Sender User object is accessible more easly in this branch)
     for user in users_to_update_msg:
-        user.unreadedMessages[str(reference)] = user.unreadedMessages.get(str(reference), 0) + 1
-        user.save()
+        if(user != sender_username):
+            user.unreadedMessages[str(reference)] = user.unreadedMessages.get(str(reference), 0) + 1
+            user.save() 
         
 
 def update_user_event_deleted(reference, reporterUnit):
