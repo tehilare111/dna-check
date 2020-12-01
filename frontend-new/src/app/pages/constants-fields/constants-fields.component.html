@@ -3,12 +3,6 @@
     <nb-card-header>
         <h1>שדות קבועים</h1>
     </nb-card-header>
-    <nb-card>
-        <nb-card-body>
-            <input type="text" name="constantFieldCategoryName" [(ngModel)]="constantFieldCategoryName" id="constantFieldCategoryName" nbInput placeholder="Constant field name">
-            <input type="text" name="constantFieldCategoryNameHebrew" [(ngModel)]="constantFieldCategoryNameHebrew" id="constantFieldCategoryNameHebrew" nbInput placeholder="Constant field name hebrew">
-        </nb-card-body>
-    </nb-card>
     <nb-card-body>
         <div class="row">
             <div class="col-md-4" *ngFor="let item of listOfCategories; let i=index">
